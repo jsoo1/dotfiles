@@ -1,0 +1,1 @@
+/home/john/.config/haskell-vim-now/.vimrc
