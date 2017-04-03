@@ -453,5 +453,10 @@ This function is called at the very end of Spacemacs initialization."
    ;; Tracking this issue in:
    ;; https://github.com/TheBB/spaceline/issues/37
    '(spacemacs-normal-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "DarkGoldenrod2"))))
+   '(spacemacs-insert-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "chartreuse3"))))
+   '(spacemacs-emacs-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "SkyBlue2"))))
+   '(spacemacs-motion-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "plum3"))))
+   '(spacemacs-replace-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "chocolate"))))
+   '(spacemacs-visual-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "gray"))))
    )
   )
