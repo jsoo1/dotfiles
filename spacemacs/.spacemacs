@@ -360,6 +360,9 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
+  ;; ------ Key Bindings ------
+  (spacemacs/set-leader-keys "hdF" 'describe-face)
+
   ;; ------ Fish Shell ------
   (add-hook 'term-mode-hook 'toggle-truncate-lines)
 
@@ -458,5 +461,8 @@ This function is called at the very end of Spacemacs initialization."
    '(spacemacs-motion-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "plum3"))))
    '(spacemacs-replace-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "chocolate"))))
    '(spacemacs-visual-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "gray"))))
+   '(spaceline-highlight-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "DarkGoldenrod2"))))
+   '(spaceline-read-only ((t (:inherit 'mode-line :foreground "#3E3D31" :background "plum3"))))
+   '(spaceline-modified ((t (:inherit 'mode-line :foreground "#3E3D31" :background "SkyBlue2"))))
    )
   )
