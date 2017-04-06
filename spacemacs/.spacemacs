@@ -45,6 +45,7 @@ values."
              :port "6697"
              :ssl t
              :nick "jsoo")))
+     fsharp
      emacs-lisp
      erlang
      evil-cleverparens
@@ -365,6 +366,9 @@ you should place your code here."
 
   ;; ------ Fish Shell ------
   (add-hook 'term-mode-hook 'toggle-truncate-lines)
+  ;; Fish outputs a bunch of junk from "call-process"
+  ;; and clogs up ivy/counsel buffers :(
+  (setq shell-file-name "/bin/sh")
 
   ;; ------ Eshell as default ------
   (setq shell-default-shell 'eshell)
@@ -400,7 +404,9 @@ you should place your code here."
   ;; Agenda files
   (with-eval-after-load 'org (setq org-agenda-files (list "~/Dropbox/org/"
                                                           "~/Dropbox/org/pi-slice"
-                                                          "~/Dropbox/org/haskell-beginner")))
+                                                          "~/Dropbox/org/haskell-beginner"
+                                                          "~/Dropbox/org/topology"
+                                                          "~/Dropbox/org/build-lisp" )))
 
   ;; ------ Email ------
   ;; sendmail
