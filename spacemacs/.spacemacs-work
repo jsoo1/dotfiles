@@ -350,10 +350,6 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  ;; ispell setup for spell checking (use ispell)
-  (setq ispell-program-name "/usr/local/bin/ispell")
-  ;; No port collision between skewer and tomcat
-  (setq httpd-port 9090)
   )
 
 (defun dotspacemacs/user-config ()
@@ -371,7 +367,7 @@ you should place your code here."
   (add-to-list 'auto-mode-alist '("\\.tag\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nand2tetris))
+  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nand2tetris-mode))
 
   ;; ------ Key Bindings ------
   ;; Woman under help
@@ -426,12 +422,25 @@ you should place your code here."
     (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
     (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
 
-  ;; ----- LaTex ------
+  ;; ------ Mode-Line ------
+  ;; no time in mode line by default
+  (spacemacs/toggle-display-time-off)
+
+  ;; ------- LaTex -------
   ;; LaTeX auto load on save
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
+  ;; ------ Haskell ------
+  ;; Thanks to:
+  ;; https://github.com/cpitclaudel/.emacs.d/blob/master/lisp/prettify-alists/haskell-prettify.el
+  ;; No thanks to:
+  ;; https://github.com/haskell/haskell-mode/issues/823
+  (load-file "~/.emacs.d/private/haskell-prettify.el")
+  (add-hook 'haskell-mode-hook 'haskell-prettify-enable)
+  (add-hook 'haskell-mode-hook 'prettify-symbols-mode)
+
   ;; ------ Projectile ------
-  ;; Speed it up
+  ;; Speed it up and eschew fish issues
   (setq shell-file-name "/bin/bash")
   (setq projectile-enable-cachine t)
 
@@ -464,6 +473,14 @@ you should place your code here."
        (add-to-list 'grep-find-ignored-directories "bin")
        (add-to-list 'grep-find-ignored-directories ".accurev")
        (add-to-list 'grep-find-ignored-directories ".git")))
+
+  ;; ------ JavaScript ------
+  ;; No port collision between skewer and tomcat for skewer
+  (setq httpd-port 9090)
+
+  ;; ------ Spelling ------
+  ;; ispell setup for spell checking (use ispell)
+  (setq ispell-program-name "/usr/local/bin/ispell")
   )
 
 (defun dotspacemacs/emacs-custom-settings ()
