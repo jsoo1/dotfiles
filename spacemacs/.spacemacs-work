@@ -96,7 +96,8 @@ values."
                                       groovy-mode
                                       nand2tetris
                                       eclim
-                                      ac-emacs-eclim)
+                                      ac-emacs-eclim
+                                      js-comint)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -374,9 +375,14 @@ you should place your code here."
   (define-key evil-normal-state-map (kbd "SPC h m") 'woman)
   ;; Emmet under web-mode
   (spacemacs/set-leader-keys-for-major-mode 'web-mode "E" 'emmet-expand-line)
+  ;; cider-restart
+  (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
 
   ;; ------ Paradox ------
   (setq paradox-github-token 'paradox)
+
+  ;; ------ JavaScript ------
+  (setq inferior-js-program-command "node --interactive")
 
   ;; ------ Slack ------
   (load-file "~/.emacs.d/private/slack-config.el")
