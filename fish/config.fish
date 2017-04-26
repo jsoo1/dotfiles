@@ -20,6 +20,13 @@ if test -n "$EMACS"
   set -x TERM eterm-color
 end
 
+# hopeful fix for no binding error messages
+# See issue 1907:
+# https://github.com/fish-shell/fish-shell/issues/1907
+if test "$TERM" = "dumb"
+  function fish_title; end
+end
+
 # this function may be required
 function fish_title
   true
