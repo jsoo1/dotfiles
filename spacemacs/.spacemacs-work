@@ -67,6 +67,7 @@ values."
      python
      ranger
      react
+     restclient
      ruby
      (shell :variables
             shell-default-height 30
@@ -310,7 +311,7 @@ values."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers t
+   dotspacemacs-line-numbers '(:relative nil :disabled-for-modes dired-mode org-mode text-mode doc-view-mode :size-limit-kb 1500)
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -458,6 +459,7 @@ you should place your code here."
   (load-file "~/.emacs.d/private/haskell-prettify.el")
   (add-hook 'haskell-mode-hook 'haskell-prettify-enable)
   (add-hook 'haskell-mode-hook 'prettify-symbols-mode)
+  (add-hook 'haskell-mode-hook 'company-quickhelp-mode)
 
   ;; ------ Projectile ------
   ;; Speed it up and eschew fish issues
