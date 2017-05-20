@@ -31,6 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     csv
      (auto-completion
       (haskell :variables haskell-completion-backend 'company-ghci))
      clojure
@@ -78,6 +79,7 @@ values."
      python
      ranger
      react
+     restclient
      rust
      (shell :variables
             shell-default-height 50
@@ -362,8 +364,14 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
   ;; ------ Key Bindings ------
+  ;; Face description
   (spacemacs/set-leader-keys "hdF" 'describe-face)
+  ;; Clojure
   (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
+  ;; Haskell
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s X" 'haskell-process-restart)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s c" 'haskell-interactive-mode-clear)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s X" 'haskell-process-restart)
 
   ;; ------ Fish Shell ------
   (add-hook 'term-mode-hook 'toggle-truncate-lines)
