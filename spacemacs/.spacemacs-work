@@ -56,6 +56,7 @@ values."
             latex-build-command "LaTeX"
             latex-enable-auto-fill t
             latex-enable-folding t)
+     lua
      (markdown :variables markdown-live-preview-engine 'vmd)
      mu4e
      nginx
