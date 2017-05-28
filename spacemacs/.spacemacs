@@ -31,6 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     sql
      csv
      (auto-completion
       (haskell :variables haskell-completion-backend 'company-ghci))
