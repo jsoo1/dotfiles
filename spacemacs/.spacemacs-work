@@ -58,7 +58,6 @@ values."
             latex-enable-folding t)
      lua
      (markdown :variables markdown-live-preview-engine 'vmd)
-     mu4e
      nginx
      (org :variables
           org-enable-reveal-js-support t
@@ -357,7 +356,7 @@ values."
    ;; %n - Narrow if appropriate
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
-   dotspacemacs-frame-title-format "%t   %F   %b   %n   %p"
+   dotspacemacs-frame-title-format "%t    %F    %b    %n   %p"
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
