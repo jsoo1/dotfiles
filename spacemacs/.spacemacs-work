@@ -32,7 +32,7 @@ values."
    dotspacemacs-configuration-layers
    '(
      (auto-completion
-      (haskell :variables haskell-completion-backend 'intero))
+      (haskell :variables haskell-completion-backend 'dante))
      c-c++
      clojure
      common-lisp
@@ -46,7 +46,9 @@ values."
      fsharp
      git
      (gtags :variables gtags-enable-by-default t)
-     (haskell :variables haskell-process-type 'stack-ghci)
+     (haskell :variables
+              haskell-process-type 'stack-ghci
+              haskell-enable-hindent-style "fundamental")
      html
      ivy
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
