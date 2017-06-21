@@ -116,9 +116,8 @@ let g:org_agenda_files=['~/Desktop/agenda/', '~/projects/AACom-Release/TODOs.org
 command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --no-ignore --follow --glob "!*.log" --glob "!.git/*" --glob "!.gradle/*" --glob "!build/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
 
 " Keybindings
-let maplocalleader = ","
-nnoremap <leader><tab> :Find <CR>
-let g:lmap.tab = ['Find', 'Find']
+nnoremap <leader>/ :Find <CR>
+let g:lmap.slash = ['/', 'Find']
 
 " Make escape key instant
 set timeoutlen=1000 ttimeoutlen=0
@@ -149,10 +148,41 @@ vnoremap <localleader> :<c-u>LeaderGuideVisual  ','<CR>
 
 " Group names can be defined by filetype. Add the following lines:
 let g:llmap = {}
-autocmd FileType tex let g:llmap.l = { 'name' : 'vimtex' }
 call leaderGuide#register_prefix_descriptions(",", "g:llmap")
-" to name the <localleader>-n group vimtex in tex files.
 
 " Haskell
 " completions
 let g:ycm_semantic_triggers = {'haskell' : ['.']}
+
+" local filetype keys
+autocmd FileType haskell let g:llmap.h = { 'name': 'Help' }
+
+nnoremap <localleader>ht :GhcModType<CR>
+autocmd FileType haskell let g:llmap.h.t = [':GhcModType', 'Type']
+
+nnoremap <localleader>hc :GhcModTypeClear<CR>
+autocmd FileType haskell let g:llmap.h.c = [':GhcModTypeClear', 'Clear']
+
+nnoremap <localleader>c :GhcModCheck<CR>
+autocmd FileType haskell let g:llmap.c = [':GhcModCheck', 'Compile Check']
+
+nnoremap <localleader>f :GhcModLint<CR>
+autocmd FileType haskell let g:llmap.f = [':GhcModLint', 'Lint']
+
+nnoremap <localleader>e :GhcModExpand<CR>
+autocmd FileType haskell let g:llmap.e = [':GhcModExpand', 'Expand']
+
+nnoremap <localleader>hh :Hoogle<CR>
+autocmd FileType haskell let g:llmap.h.h = [':Hoogle', 'Hoogle']
+
+nnoremap <localleader>ha :HoogleInfo<CR>
+autocmd FileType haskell let g:llmap.h.a = [':HoogleInfo', 'Haddocks']
+
+nnoremap <localleader>hk :HoogleClear<CR>
+autocmd FileType haskell let g:llmap.h.k = [':HoogleClear', 'Clear Hoogle']
+
+" display compile errors in status line
+let &l:statusline = '%{empty(getqflist()) ? "[No Errors]" : "[Errors Found]"}' . (empty(&l:statusline) ? &statusline : &l:statusline)
+
+" asynchronously check for errors
+autocmd BufWritePost *.hs GhcModCheckAndLintAsync

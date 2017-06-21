@@ -1,9 +1,11 @@
 " Leader
 let mapleader = " "
+let maplocalleader = ","
 
-" Prefix dictionary
+" Prefix dictionary for leader
+" Prefix dictionary for localleader in local rc
 let g:lmap = {}
-let g:lmap.g = { 'name' : 'Goto' }
+let g:lmap.g = { 'name': 'Goto' }
 
 set backspace=2   " Backspace deletes like most programs in insert mode
 set nobackup
@@ -102,8 +104,8 @@ inoremap <Tab> <c-r>=InsertTabWrapper()<cr>
 inoremap <S-Tab> <c-n>
 
 " Switch between the last two files
-nnoremap <leader><leader> <c-^>
-let g:lmap.spc = ['<c-^>', 'Toggle btwn files']
+nnoremap <leader><tab> <c-^>
+let g:lmap.tab = ['<c-^>', 'Toggle btwn files']
 
 " vim-test mappings
 nnoremap <silent> <Leader>t :TestFile<CR>
