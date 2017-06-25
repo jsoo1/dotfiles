@@ -36,6 +36,7 @@ This function should only modify configuration layer settings."
       (haskell :variables haskell-completion-backend 'dante))
      clojure
      common-lisp
+     dash
      docker
      (elm :variables
           elm-format-command "elm-format-0.17"
@@ -51,7 +52,6 @@ This function should only modify configuration layer settings."
      erlang
      evil-cleverparens
      evil-snipe
-     extra-langs
      git
      gtags
      (haskell :variables haskell-process-type 'stack-ghci)
@@ -65,6 +65,7 @@ This function should only modify configuration layer settings."
             latex-build-command "LaTeX"
             latex-enable-auto-fill t
             latex-enable-folding t)
+     major-modes
      markdown
      (mu4e :variables
            mu4e-installation-path "/usr/share/emacs/site-lisp"
@@ -480,4 +481,8 @@ you should place your code here."
   ;; Prettify symbols
   (load-file "~/.emacs.d/private/haskell-prettify.el")
   (add-hook 'haskell-mode-hook 'haskell-prettify-enable)
+
+  ;; Customize
+  (setq custom-file "~/.customize.el")
+  (load-file custom-file)
   )
