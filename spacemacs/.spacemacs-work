@@ -416,6 +416,8 @@ you should place your code here."
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h h" 'hoogle)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h i" 'haskell-process-do-info)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h t" 'haskell-process-do-type)
+  ;; Month view
+  (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode "m" 'org-agenda-month-view)
 
   ;; ------ Paradox ------
   (setq paradox-github-token 'paradox)
@@ -439,9 +441,6 @@ you should place your code here."
                              "~/projects/AACom-Release/STORIEs.org"
                              "~/projects/AACom-Release/MEETINGs.org"
                              "~/projects/nostradamus_node/TODOs.org"))
-    (spacemacs/set-leader-keys "oan" 'org-agenda-next-line)
-    (spacemacs/set-leader-keys "oat" 'org-agenda-toggle-time-grid)
-    (spacemacs/set-leader-keys "oaf" 'org-agenda-filter-remove-all)
     ;; Agenda notifications
     (load-file "~/.emacs.d/private/agenda-notify.el")
     ;; Org HTML presentations with reveal.js
