@@ -36,6 +36,7 @@ This function should only modify configuration layer settings."
      clojure
      common-lisp
      csv
+     dash
      docker
      emacs-lisp
      erlang
@@ -456,6 +457,16 @@ you should place your code here."
     (setq org-export-time-stamp-file nil)
     (setq org-export-with-section-numbers nil)
     (setq org-export-with-todo-keywords nil)
+    ;; Capture Templates
+    (setq org-capture-templates
+          '(("m" "AA Meeting"
+             entry (file "~/Desktop/agenda/aa/TODOs.org" "Meetings")
+             "%[~/Desktop/agenda/templates/meeting.org]")
+
+            ;; ("s" "Story"
+            ;;  entry (file ))
+
+            ))
     )
 
   ;; ----- Indent Guide ------
