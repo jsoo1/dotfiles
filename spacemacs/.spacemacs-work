@@ -84,6 +84,7 @@ This function should only modify configuration layer settings."
      syntax-checking
      systemd
      tmux
+     twitter
      version-control
      vimscript
      vinegar
@@ -393,9 +394,6 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  ;; ------ Powerline ------
-  ;; (setq powerline-default-separator 'arrow)
-
   ;; ------ Mode Hooks ------
   (add-to-list 'auto-mode-alist '("\\.tag\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
@@ -425,6 +423,9 @@ you should place your code here."
 
   ;; ------ JavaScript ------
   (setq inferior-js-program-command "/usr/local/bin/node")
+  (setq js2-strict-missing-semi-warning nil)
+  (setq js2-mode-show-strict-warnings nil)
+  (setq js2-mode-show-parse-errors nil)
 
   ;; ------ Slack ------
   (load-file "~/.emacs.d/private/slack-config.el")
@@ -460,17 +461,13 @@ you should place your code here."
     ;; Capture Templates
     (setq org-capture-templates
           '(("m" "AA Meeting"
-             entry (file "~/Desktop/agenda/aa/TODOs.org" "Meetings")
+             entry (file "~/Desktop/agenda/aa/TODOs.org")
              "%[~/Desktop/agenda/templates/meeting.org]")
 
-            ;; ("s" "Story"
-            ;;  entry (file ))
-
-            ))
+            ("s" "User Story"
+             entry (file "~/Desktop/agenda/aa/TODOs.org")
+             "%[~/Desktop/agenda/templates/story.org]")))
     )
-
-  ;; ----- Indent Guide ------
-  ;; (spacemacs/toggle-indent-guide-globally-on)
 
   ;; ------ Mouse Support ------
   (unless window-system
@@ -547,4 +544,7 @@ you should place your code here."
   ;; Custom Settings
   (setq custom-file "~/.customize.el")
   (load-file custom-file)
+
+  ;; Symlinks
+  (setq vc-follow-symlinks t)
   )
