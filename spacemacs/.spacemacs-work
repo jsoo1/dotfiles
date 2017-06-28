@@ -423,9 +423,12 @@ you should place your code here."
 
   ;; ------ JavaScript ------
   (setq inferior-js-program-command "/usr/local/bin/node")
+  ;; Use Flycheck for linting instead of js2-mode
   (setq js2-strict-missing-semi-warning nil)
   (setq js2-mode-show-strict-warnings nil)
   (setq js2-mode-show-parse-errors nil)
+  ;; No port collision between skewer and tomcat for skewer
+  (setq httpd-port 9090)
 
   ;; ------ Slack ------
   (load-file "~/.emacs.d/private/slack-config.el")
@@ -529,10 +532,6 @@ you should place your code here."
        (add-to-list 'grep-find-ignored-directories "bin")
        (add-to-list 'grep-find-ignored-directories ".accurev")
        (add-to-list 'grep-find-ignored-directories ".git")))
-
-  ;; ------ JavaScript ------
-  ;; No port collision between skewer and tomcat for skewer
-  (setq httpd-port 9090)
 
   ;; ------ Spelling ------
   ;; ispell setup for spell checking (use ispell)
