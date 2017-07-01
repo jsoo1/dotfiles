@@ -33,7 +33,7 @@ This function should only modify configuration layer settings."
      sql
      csv
      (auto-completion
-      (haskell :variables haskell-completion-backend 'dante))
+      (haskell :variables haskell-completion-backend 'ghc-mod))
      clojure
      common-lisp
      dash
@@ -55,11 +55,11 @@ This function should only modify configuration layer settings."
      git
      gtags
      (haskell :variables haskell-process-type 'stack-ghci)
-     helm
+     ;; helm
      html
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      idris
-     ;; ivy
+     ivy
      javascript
      (latex :variables
             latex-build-command "LaTeX"
@@ -485,4 +485,11 @@ you should place your code here."
   ;; Customize
   (setq custom-file "~/.customize.el")
   (load-file custom-file)
+
+  ;; Golden Ratio
+  (spacemacs/toggle-golden-ratio-on)
+
+  ;; Symlinks
+  (setq vc-follow-symlinks t)
   )
+
