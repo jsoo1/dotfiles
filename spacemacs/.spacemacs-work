@@ -503,8 +503,12 @@ you should place your code here."
   (setq projectile-enable-cachine t)
 
   ;; ------ Shell -----
-  ;; Default to Eshell
-  (setq shell-default-shell 'eshell)
+  ;; Default: multi-term, fish
+  (setq multi-term-program "/usr/local/bin/fish")
+  (setq shell-default-shell 'multi-term)
+
+  ;; ------ Eshell ------
+  ;; eshell has an annoying banner
   (setq eshell-banner-message "")
 
   ;; ------ Nand2Tetris ------
