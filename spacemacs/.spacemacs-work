@@ -39,6 +39,7 @@ This function should only modify configuration layer settings."
      dash
      docker
      emacs-lisp
+     emoji
      erlang
      evil-cleverparens
      evil-snipe
@@ -333,7 +334,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-highlight-delimiters 'all
    ;; If non-nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server nil
+   dotspacemacs-persistent-server t
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
    ;; (default '("rg" "ag" "pt" "ack" "grep"))
@@ -469,6 +470,7 @@ you should place your code here."
             ("s" "User Story"
              entry (file "~/Desktop/agenda/aa/TODOs.org")
              "%[~/Desktop/agenda/templates/story.org]")))
+    (add-hook 'org-mode-hook 'emojify-mode)
     )
 
   ;; ------ Mouse Support ------
@@ -479,6 +481,11 @@ you should place your code here."
   ;; ------ Mode-Line ------
   ;; no time in mode line by default
   (spacemacs/toggle-display-time-off)
+  ;; diminish symbols
+  (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮" "$"))
+  (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠" ""))
+  (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" ""))
+  (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
 
   ;; ------- LaTex -------
   ;; LaTeX auto load on save
@@ -553,3 +560,4 @@ you should place your code here."
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+
