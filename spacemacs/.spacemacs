@@ -432,9 +432,11 @@ you should place your code here."
   (with-eval-after-load 'org
     (require 'ob-python)
     (require 'ob-clojure)
+    (require 'ob-sh)
     (org-babel-do-load-languages
      'org-babel-load-languages
-     '((clojure . t))))
+     '((clojure . t)
+       (sh . t))))
   ;; Agenda files
   (with-eval-after-load 'org (setq org-agenda-files (list "~/Dropbox/org/"
                                                           "~/Dropbox/org/pi-slice"

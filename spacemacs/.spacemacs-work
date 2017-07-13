@@ -415,6 +415,9 @@ you should place your code here."
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h h" 'hoogle)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h i" 'haskell-process-do-info)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h t" 'haskell-process-do-type)
+  ;; Haskell mode restart GHCI
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s x" 'haskell-process-restart)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s x" 'haskell-process-restart)
   ;; Month view
   (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode "m" 'org-agenda-month-view)
 
@@ -446,14 +449,19 @@ you should place your code here."
                              "~/projects/AACom-Release/STORIEs.org"
                              "~/projects/AACom-Release/MEETINGs.org"
                              "~/projects/nostradamus_node/TODOs.org"))
+
     ;; Agenda notifications
     (load-file "~/.emacs.d/private/agenda-notify.el")
+
     ;; Org HTML presentations with reveal.js
     (setq org-reveal-root "file:///usr/local/lib/node_modules/reveal/")
+
     ;; Remove pesky validate link
     (setq org-html-validation-link nil)
+
     ;; Don't show scheduled items in global todo list
     (setq org-agenda-todo-ignore-with-date t)
+
     ;; Prettify exports for email
     (setq org-export-with-author nil)
     (setq org-export-with-toc nil)
@@ -461,6 +469,7 @@ you should place your code here."
     (setq org-export-time-stamp-file nil)
     (setq org-export-with-section-numbers nil)
     (setq org-export-with-todo-keywords nil)
+
     ;; Capture Templates
     (setq org-capture-templates
           '(("m" "AA Meeting"
@@ -471,6 +480,12 @@ you should place your code here."
              entry (file "~/Desktop/agenda/aa/TODOs.org")
              "%[~/Desktop/agenda/templates/story.org]")))
     (add-hook 'org-mode-hook 'emojify-mode)
+
+    ;; Babel
+    (require 'ob-sh)
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((sh . t)))
     )
 
   ;; ------ Mouse Support ------
