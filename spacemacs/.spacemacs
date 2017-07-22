@@ -30,12 +30,12 @@ This function should only modify configuration layer settings."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     sql
-     csv
      (auto-completion
       (haskell :variables haskell-completion-backend 'ghc-mod))
+     c-c++
      clojure
      common-lisp
+     csv
      dash
      docker
      (elm :variables
@@ -55,7 +55,6 @@ This function should only modify configuration layer settings."
      git
      gtags
      (haskell :variables haskell-process-type 'stack-ghci)
-     ;; helm
      html
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      idris
@@ -89,9 +88,11 @@ This function should only modify configuration layer settings."
      shell-scripts
      slack
      (spell-checking :variables spell-checking-enable-by-default nil)
+     sql
      syntax-checking
      systemd
      tmux
+     twitter
      version-control
      vimscript
      vinegar
@@ -458,6 +459,10 @@ you should place your code here."
   (require 'mu4e-contrib)
   (setq mu4e-html2text-command 'mu4e-shr2text)
 
+  ;; ------ Zeal/Dash ------
+  ;; zeal docset location
+  (setq counsel-dash-docsets-path "~/.local/Zeal/Zeal/docsets")
+
   ;; ------ LaTeX ------
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
@@ -493,3 +498,5 @@ you should place your code here."
   (setq vc-follow-symlinks t)
   )
 
+;; Do not write anything past this comment. This is where Emacs will
+;; auto-generate custom variable definitions.

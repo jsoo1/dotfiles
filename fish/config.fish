@@ -8,6 +8,9 @@ set -xg GPG2KEY 802CD0C2
 set -xg EDITOR 'emacsclient -t'
 set -xg ALTERNATE_EDITOR 'vim'
 
+# i3 Sensible Terminal
+set -xg TERMINAL 'konsole'
+
 # Fuzzy Finder
 set -x FZF_DEFAULT_COMMAND 'rg --files --hidden --ignore .git --smartcase --glob "!.git/*"'
 
