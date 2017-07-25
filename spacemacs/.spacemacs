@@ -318,12 +318,12 @@ It should only modify the values of Spacemacs settings."
    ;;   :size-limit-kb 1000)
    ;; (default nil)
    dotspacemacs-line-numbers '(:relative nil
-                               :disabled-for-modes dired-mode
-                                                   doc-view-mode
-                                                   org-mode
-                                                   text-mode
-                                                   pdf-view-mode
-                               :size-limit-kb 1000)
+                                         :disabled-for-modes dired-mode
+                                         doc-view-mode
+                                         org-mode
+                                         text-mode
+                                         pdf-view-mode
+                                         :size-limit-kb 1000)
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -409,6 +409,8 @@ you should place your code here."
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s X" 'haskell-process-restart)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s c" 'haskell-interactive-mode-clear)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s X" 'haskell-process-restart)
+  ;; Woman in ivy/counsel
+  (evil-leader/set-key "h m" 'woman)
 
   ;; ------ Fish Shell ------
   (add-hook 'term-mode-hook 'toggle-truncate-lines)
@@ -444,9 +446,12 @@ you should place your code here."
   (with-eval-after-load 'org
     (require 'ob-python)
     (require 'ob-clojure)
+    (require 'ob-shell)
     (org-babel-do-load-languages
      'org-babel-load-languages
-     '((clojure . t))))
+     '((clojure . t)
+       (python . t)
+       (shell . t))))
   ;; Agenda files
   (with-eval-after-load 'org (setq org-agenda-files (list "~/Dropbox/org/"
                                                           "~/Dropbox/org/pi-slice"
@@ -474,6 +479,18 @@ you should place your code here."
 
   ;; ------ Spaceline ------
   (when window-system (setq powerline-default-separator 'arrow))
+
+  ;; ------ Surround ------
+  ;; don't put spaces between my shit!
+  (evil-add-to-alist
+   'evil-surround-pairs-alist
+   ?\s '(" " . " ")
+   ?\( '("(" . ")")
+   ?\[ '("[" . "]")
+   ?\{ '("{" . "}")
+   ?\) '("( " . " )")
+   ?\] '("[ " . " ]")
+   ?\} '("{ " . " }"))
 
   ;; ------ Haskell ------
   ;; Indent sanely per:
