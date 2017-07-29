@@ -50,6 +50,8 @@ This function should only modify configuration layer settings."
               haskell-process-type 'stack-ghci
               haskell-enable-hindent-style "fundamental")
      html
+     (ibuffer :variables ibuffer-group-buffers-by 'projects)
+     idris
      ivy
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      java
@@ -455,6 +457,7 @@ you should place your code here."
 
     ;; Org HTML presentations with reveal.js
     (setq org-reveal-root "file:///usr/local/lib/node_modules/reveal/")
+    (setq org-reveal-title-slide nil)
 
     ;; Remove pesky validate link
     (setq org-html-validation-link nil)

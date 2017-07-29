@@ -31,7 +31,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layers
    '(
      (auto-completion
-      (haskell :variables haskell-completion-backend 'ghc-mod))
+      (haskell :variables haskell-completion-backend 'dante))
      c-c++
      clojure
      common-lisp
@@ -52,6 +52,7 @@ This function should only modify configuration layer settings."
      erlang
      evil-cleverparens
      evil-snipe
+     fsharp
      git
      gtags
      (haskell :variables haskell-process-type 'stack-ghci)
@@ -96,17 +97,25 @@ This function should only modify configuration layer settings."
      version-control
      vimscript
      vinegar
+     windows-scripts
      yaml
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(clojars
+                                      clojure-cheatsheet
+                                      gradle-mode
+                                      groovy-mode
+                                      nand2tetris
+                                      eclim
+                                      ac-emacs-eclim
+                                      js-comint)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(meghanada)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and deletes any unused
@@ -137,7 +146,7 @@ It should only modify the values of Spacemacs settings."
    ;; when the current branch is not `develop'. Note that checking for
    ;; new versions works via git commands, thus it calls GitHub services
    ;; whenever you start Emacs. (default nil)
-   dotspacemacs-check-for-update t
+   dotspacemacs-check-for-update nil
    ;; If non-nil, a form that evaluates to a package directory. For example, to
    ;; use different package directories for different Emacs versions, set this
    ;; to `emacs-version'.
@@ -164,8 +173,8 @@ It should only modify the values of Spacemacs settings."
    ;; `recents' `bookmarks' `projects' `agenda' `todos'."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((agenda . 5)
-                                (todos . 5)
+   dotspacemacs-startup-lists '((agenda . 7)
+                                (todos . 7)
                                 (projects . 3)
                                 (recents . 3))
    ;; True if the home buffer should respond to resize events.
@@ -183,7 +192,7 @@ It should only modify the values of Spacemacs settings."
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
                                :size 13
-                               :weight semi-bold
+                               :weight normal
                                :width normal
                                :powerline-scale 1.1)
    ;; The leader key
@@ -317,13 +326,7 @@ It should only modify the values of Spacemacs settings."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers '(:relative nil
-                                         :disabled-for-modes dired-mode
-                                         doc-view-mode
-                                         org-mode
-                                         text-mode
-                                         pdf-view-mode
-                                         :size-limit-kb 1000)
+   dotspacemacs-line-numbers '(:relative nil :disabled-for-modes dired-mode org-mode text-mode doc-view-mode :size-limit-kb 1500)
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
@@ -381,7 +384,7 @@ It should only modify the values of Spacemacs settings."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs nil
+   dotspacemacs-pretty-docs t
    ))
 
 (defun dotspacemacs/user-init ()
@@ -399,6 +402,12 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+
+  ;; ------ Mode Hooks ------
+  (add-to-list 'auto-mode-alist '("\\.tag\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
+  (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nand2tetris-mode))
 
   ;; ------ Key Bindings ------
   ;; Face description
@@ -431,6 +440,15 @@ you should place your code here."
   ;; ------ Paradox ------
   (setq paradox-github-token 'paradox)
 
+  ;; ------ JavaScript ------
+  (setq inferior-js-program-command "/usr/local/bin/node")
+  ;; Use Flycheck for linting instead of js2-mode
+  (setq js2-strict-missing-semi-warning nil)
+  (setq js2-mode-show-strict-warnings nil)
+  (setq js2-mode-show-parse-errors nil)
+  ;; No port collision between skewer and tomcat for skewer
+  (setq httpd-port 9090)
+
   ;; ------ Slack ------
   (load-file "~/.emacs.d/private/slack-config.el")
 
@@ -454,13 +472,16 @@ you should place your code here."
      'org-babel-load-languages
      '((clojure . t)
        (python . t)
-       (shell . t))))
-  ;; Agenda files
-  (with-eval-after-load 'org (setq org-agenda-files (list "~/Dropbox/org/"
-                                                          "~/Dropbox/org/pi-slice"
-                                                          "~/Dropbox/org/haskell-beginner"
-                                                          "~/Dropbox/org/topology"
-                                                          "~/Dropbox/org/build-lisp" )))
+       (shell . t)))
+    ;; Agenda files
+    (setq org-agenda-files (list "~/Dropbox/org/"
+                                 "~/Dropbox/org/pi-slice"
+                                 "~/Dropbox/org/haskell-beginner"
+                                 "~/Dropbox/org/topology"
+                                 "~/Dropbox/org/build-lisp" ))
+    ;; Org Export
+    (setq org-reveal-title-slide nil)
+    )
 
   ;; ------ Email ------
   ;; sendmail
