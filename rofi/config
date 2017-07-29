@@ -1,5 +1,7 @@
 rofi.combi-modi:                     window,ssh,drun,run
 
+rofi.kb-cancel:                      Escape,Control+g
+
 rofi.kb-accept-entry:                Control+m,Return,KP_Enter
 rofi.kb-remove-char-back:            BackSpace
 rofi.kb-row-left:                    Control+h,Control+Page_Up

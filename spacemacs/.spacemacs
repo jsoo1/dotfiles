@@ -411,6 +411,9 @@ you should place your code here."
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s X" 'haskell-process-restart)
   ;; Woman in ivy/counsel
   (evil-leader/set-key "h m" 'woman)
+  ;; Idris clear REPL
+  (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
+  (spacemacs/set-leader-keys-for-major-mode 'idris-repl-mode "s c" 'idris-repl-clear-buffer)
 
   ;; ------ Fish Shell ------
   (add-hook 'term-mode-hook 'toggle-truncate-lines)
@@ -419,8 +422,8 @@ you should place your code here."
   (setq shell-file-name "/bin/sh")
 
   ;; ------ Eshell as default ------
-  (setq shell-default-shell 'eshell)
-  (setq eshell-banner-message "")
+  ;; (setq shell-default-shell 'eshell)
+  ;; (setq eshell-banner-message "")
 
   ;; ------ Boot is in Nix ------
   (add-to-list 'exec-path "~/.nix-profile/bin/")
