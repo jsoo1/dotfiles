@@ -1,0 +1,43 @@
+let abbr cmd arg = return $ ":! " ++ cmd ++ " " ++ arg
+
+-- hoogle
+:def! haddocks (\arg -> return $ ":! hoogle --color --info \'" ++ arg ++ "\'")
+:def! hoogle (\arg -> return $ ":! hoogle --color \'" ++ arg ++ "\'")
+
+-- vpin
+:def! vpin (abbr "vpin")
+:def! vpout (abbr "vpout")
+:def! vpst (abbr "vpst")
+
+-- gradle
+:def! gradlew (abbr "./gradlew")
+
+-- rest
+:def! rest (abbr "vpout && pmset sleepnow")
+
+-- emacsclient
+:def! em (abbr "emacsclient -t")
+
+-- vim
+:def! vim (abbr "vim")
+
+-- standards
+:def! pwd (abbr "pwd")
+:def! lsa (abbr "ls -lsa")
+:def! ls (abbr "ls")
+:def! clear (abbr "clear")
+:def! ssh (abbr "ssh")
+
+-- git
+:def! gst (abbr "git status")
+:def! gf (abbr "git fetch")
+:def! gl (abbr "git pull")
+:def! ga (abbr "git add")
+:def! gc (abbr "git commit")
+:def! glg (abbr "git log")
+:def! gb (abbr "git branch")
+:def! grb (abbr "git rebase")
+:def! gd (abbr "git diff")
+:def! gm (abbr "git merge")
+:def! gp (abbr "git push")
+:def! gco (abbr "git checkout")

@@ -1,0 +1,188 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+" set rtp+=~/.vim/bundle/Vundle.vim
+call plug#begin()
+" Vundle, required
+Plug 'VundleVim/Vundle.vim'
+
+" CtrlP
+Plug 'ctrlpvim/ctrlp.vim'
+
+" YouCompleteMe
+Plug 'Valloric/YouCompleteMe'
+
+" Airline
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" Tpope
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-speeddating'
+Plug 'tpope/vim-vinegar'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+
+" Syntastic
+Plug 'vim-syntastic/syntastic'
+Plug 'Scuilion/gradle-syntastic-plugin'
+
+" UI
+Plug 'colepeters/spacemacs-theme.vim'
+Plug 'powerline/powerline'
+
+" Leader Guide
+Plug 'hecal3/vim-leader-guide'
+
+"Auto Pairs
+Plug 'jiangmiao/auto-pairs'
+
+" Eclim
+" Plug 'dansomething/vim-eclim'
+
+" Org Mode
+Plug 'jceb/vim-orgmode'
+
+" Tmux
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'edkolev/tmuxline.vim'
+
+" FZF
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'  }
+Plug 'junegunn/fzf.vim'
+
+" Haskell
+Plug 'eagletmt/neco-ghc'
+Plug 'eagletmt/ghcmod-vim'
+Plug 'Twinside/vim-hoogle'
+Plug 'vim-scripts/haskell.vim'
+Plug 'vim-scripts/Cabal.vim'
+Plug 'Shougo/vimproc.vim', {'do' : 'make'}
+
+call plug#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+" filetype plugin on
+
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just
+" :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to
+" auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+" UI Settings
+" Airline
+let g:airline_theme='ravenpower'
+let g:airline_powerline_fonts=1
+
+" Theme
+set background=dark
+if (has("termguicolors"))
+  set termguicolors
+  colorscheme spacemacs-theme
+endif
+
+" Tmux compatibility in gnu terminal
+if &term =~ '256color'
+  " disable Background Color Erase (BCE) so that color schemes
+  "   " render properly when inside 256-color tmux and GNU screen.
+  "     " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
+  set t_ut=
+endif
+
+" Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': []  }
+nnoremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
+
+" Org Mode
+let g:org_agenda_files=['~/Desktop/agenda/', '~/projects/AACom-Release/TODOs.org', '~/projects/AACom-Release/STORIEs.org', '~/projects/nostradamus_node/TODOs.org']
+
+" FZF find stuff
+command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --no-ignore --follow --glob "!*.log" --glob "!.git/*" --glob "!.gradle/*" --glob "!build/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+
+" Keybindings
+nnoremap <leader>/ :Find <CR>
+let g:lmap.slash = ['/', 'Find']
+
+" Make escape key instant
+set timeoutlen=1000 ttimeoutlen=0
+
+" Copy and paste maybe
+set clipboard=unnamed
+
+" Ignorecase
+set ic
+
+" XML Folding
+augroup XML
+      autocmd!
+          autocmd FileType xml setlocal foldmethod=indent foldlevelstart=999 foldminlines=0
+        augroup END
+augroup END
+
+" Leader Guide
+" Leader
+call leaderGuide#register_prefix_descriptions("<Space>", "g:lmap")
+nnoremap <silent> <leader> :<c-u>LeaderGuide '<Space>'<CR>
+vnoremap <silent> <leader> :<c-u>LeaderGuideVisual '<Space>'<CR>"
+
+" Local Leader
+nnoremap <localleader> :<c-u>LeaderGuide  ','<CR>
+vnoremap <localleader> :<c-u>LeaderGuideVisual  ','<CR>
+
+
+" Group names can be defined by filetype. Add the following lines:
+let g:llmap = {}
+call leaderGuide#register_prefix_descriptions(",", "g:llmap")
+
+" Haskell
+" completions
+let g:ycm_semantic_triggers = {'haskell' : ['.']}
+
+" local filetype keys
+autocmd FileType haskell let g:llmap.h = { 'name': 'Help' }
+
+nnoremap <localleader>ht :GhcModType<CR>
+autocmd FileType haskell let g:llmap.h.t = [':GhcModType', 'Type']
+
+nnoremap <localleader>hc :GhcModTypeClear<CR>
+autocmd FileType haskell let g:llmap.h.c = [':GhcModTypeClear', 'Clear']
+
+nnoremap <localleader>c :GhcModCheck<CR>
+autocmd FileType haskell let g:llmap.c = [':GhcModCheck', 'Compile Check']
+
+nnoremap <localleader>f :GhcModLint<CR>
+autocmd FileType haskell let g:llmap.f = [':GhcModLint', 'Lint']
+
+nnoremap <localleader>e :GhcModExpand<CR>
+autocmd FileType haskell let g:llmap.e = [':GhcModExpand', 'Expand']
+
+nnoremap <localleader>hh :Hoogle<CR>
+autocmd FileType haskell let g:llmap.h.h = [':Hoogle', 'Hoogle']
+
+nnoremap <localleader>ha :HoogleInfo<CR>
+autocmd FileType haskell let g:llmap.h.a = [':HoogleInfo', 'Haddocks']
+
+nnoremap <localleader>hk :HoogleClear<CR>
+autocmd FileType haskell let g:llmap.h.k = [':HoogleClear', 'Clear Hoogle']
+
+" display compile errors in status line
+let &l:statusline = '%{empty(getqflist()) ? "[No Errors]" : "[Errors Found]"}' . (empty(&l:statusline) ? &statusline : &l:statusline)
+
+" asynchronously check for errors
+autocmd BufWritePost *.hs GhcModCheckAndLintAsync

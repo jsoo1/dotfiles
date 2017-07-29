@@ -3,9 +3,8 @@
 ;; It must be stored in your home directory.
 
 (defun dotspacemacs/layers ()
-  "Configuration Layers declaration.
-You should not put any user code in this function besides modifying the variable
-values."
+  "Layer configuration:
+This function should only modify configuration layer settings."
   (setq-default
    ;; Base distribution to use. This is a layer contained in the directory
    ;; `+distribution'. For now available distributions are `spacemacs-base'
@@ -32,21 +31,24 @@ values."
    dotspacemacs-configuration-layers
    '(
      (auto-completion
-      (haskell :variables haskell-completion-backend 'intero))
+      (haskell :variables haskell-completion-backend 'dante))
      c-c++
      clojure
      common-lisp
      csv
+     dash
      docker
      emacs-lisp
+     emoji
      erlang
      evil-cleverparens
      evil-snipe
-     extra-langs
      fsharp
      git
      (gtags :variables gtags-enable-by-default t)
-     (haskell :variables haskell-process-type 'stack-ghci)
+     (haskell :variables
+              haskell-process-type 'stack-ghci
+              haskell-enable-hindent-style "fundamental")
      html
      ivy
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
@@ -57,8 +59,8 @@ values."
             latex-enable-auto-fill t
             latex-enable-folding t)
      lua
+     major-modes
      (markdown :variables markdown-live-preview-engine 'vmd)
-     mu4e
      nginx
      (org :variables
           org-enable-reveal-js-support t
@@ -82,6 +84,7 @@ values."
      syntax-checking
      systemd
      tmux
+     twitter
      version-control
      vimscript
      vinegar
@@ -114,11 +117,10 @@ values."
    dotspacemacs-install-packages 'used-only))
 
 (defun dotspacemacs/init ()
-  "Initialization function.
-This function is called at the very startup of Spacemacs initialization
-before layers configuration.
-You should not put any user code in there besides modifying the variable
-values."
+  "Initialization:
+This function is called at the very beginning of Spacemacs startup,
+before layer configuration.
+It should only modify the values of Spacemacs settings."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
@@ -159,7 +161,7 @@ values."
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
-   ;; `recents' `bookmarks' `projects' `agenda' `todos'."
+   ;; `recents' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    dotspacemacs-startup-lists '((agenda . 7)
@@ -332,7 +334,7 @@ values."
    dotspacemacs-highlight-delimiters 'all
    ;; If non-nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server nil
+   dotspacemacs-persistent-server t
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
    ;; (default '("rg" "ag" "pt" "ack" "grep"))
@@ -357,7 +359,7 @@ values."
    ;; %n - Narrow if appropriate
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
-   dotspacemacs-frame-title-format "%t   %F   %b   %n   %p"
+   dotspacemacs-frame-title-format "%t    %F    %b    %n   %p"
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
@@ -370,15 +372,18 @@ values."
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
    dotspacemacs-zone-out-when-idle nil
+   ;; Run `spacemacs/prettify-org-buffer' when
+   ;; visiting README.org files of Spacemacs.
+   ;; (default nil)
+   dotspacemacs-pretty-docs t
    ))
 
 (defun dotspacemacs/user-init ()
-  "Initialization function for user code.
-It is called immediately after `dotspacemacs/init', before layer configuration
-executes.
- This function is mostly useful for variables that need to be set
-before packages are loaded. If you are unsure, you should try in setting them in
-`dotspacemacs/user-config' first."
+  "Initialization for user code:
+This function is called immediately after `dotspacemacs/init', before layer
+configuration.
+It is mostly for variables that should be set before packages are loaded.
+If you are unsure, try setting them in `dotspacemacs/user-config' first."
   )
 
 (defun dotspacemacs/user-config ()
@@ -388,9 +393,6 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-
-  ;; ------ Powerline ------
-  ;; (setq powerline-default-separator 'arrow)
 
   ;; ------ Mode Hooks ------
   (add-to-list 'auto-mode-alist '("\\.tag\\'" . web-mode))
@@ -413,12 +415,23 @@ you should place your code here."
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h h" 'hoogle)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h i" 'haskell-process-do-info)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h t" 'haskell-process-do-type)
+  ;; Haskell mode restart GHCI
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s x" 'haskell-process-restart)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s x" 'haskell-process-restart)
+  ;; Month view
+  (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode "m" 'org-agenda-month-view)
 
   ;; ------ Paradox ------
   (setq paradox-github-token 'paradox)
 
   ;; ------ JavaScript ------
   (setq inferior-js-program-command "/usr/local/bin/node")
+  ;; Use Flycheck for linting instead of js2-mode
+  (setq js2-strict-missing-semi-warning nil)
+  (setq js2-mode-show-strict-warnings nil)
+  (setq js2-mode-show-parse-errors nil)
+  ;; No port collision between skewer and tomcat for skewer
+  (setq httpd-port 9090)
 
   ;; ------ Slack ------
   (load-file "~/.emacs.d/private/slack-config.el")
@@ -436,17 +449,19 @@ you should place your code here."
                              "~/projects/AACom-Release/STORIEs.org"
                              "~/projects/AACom-Release/MEETINGs.org"
                              "~/projects/nostradamus_node/TODOs.org"))
-    (spacemacs/set-leader-keys "oan" 'org-agenda-next-line)
-    (spacemacs/set-leader-keys "oat" 'org-agenda-toggle-time-grid)
-    (spacemacs/set-leader-keys "oaf" 'org-agenda-filter-remove-all)
+
     ;; Agenda notifications
     (load-file "~/.emacs.d/private/agenda-notify.el")
+
     ;; Org HTML presentations with reveal.js
     (setq org-reveal-root "file:///usr/local/lib/node_modules/reveal/")
+
     ;; Remove pesky validate link
     (setq org-html-validation-link nil)
+
     ;; Don't show scheduled items in global todo list
     (setq org-agenda-todo-ignore-with-date t)
+
     ;; Prettify exports for email
     (setq org-export-with-author nil)
     (setq org-export-with-toc nil)
@@ -454,10 +469,24 @@ you should place your code here."
     (setq org-export-time-stamp-file nil)
     (setq org-export-with-section-numbers nil)
     (setq org-export-with-todo-keywords nil)
-    )
 
-  ;; ----- Indent Guide ------
-  ;; (spacemacs/toggle-indent-guide-globally-on)
+    ;; Capture Templates
+    (setq org-capture-templates
+          '(("m" "AA Meeting"
+             entry (file "~/Desktop/agenda/aa/TODOs.org")
+             "%[~/Desktop/agenda/templates/meeting.org]")
+
+            ("s" "User Story"
+             entry (file "~/Desktop/agenda/aa/TODOs.org")
+             "%[~/Desktop/agenda/templates/story.org]")))
+    (add-hook 'org-mode-hook 'emojify-mode)
+
+    ;; Babel
+    (require 'ob-sh)
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((sh . t)))
+    )
 
   ;; ------ Mouse Support ------
   (unless window-system
@@ -467,6 +496,11 @@ you should place your code here."
   ;; ------ Mode-Line ------
   ;; no time in mode line by default
   (spacemacs/toggle-display-time-off)
+  ;; diminish symbols
+  (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮" "$"))
+  (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠" ""))
+  (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" ""))
+  (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
 
   ;; ------- LaTex -------
   ;; LaTeX auto load on save
@@ -491,8 +525,12 @@ you should place your code here."
   (setq projectile-enable-cachine t)
 
   ;; ------ Shell -----
-  ;; Default to Eshell
-  (setq shell-default-shell 'eshell)
+  ;; Default: multi-term, fish
+  (setq multi-term-program "/usr/local/bin/fish")
+  (setq shell-default-shell 'multi-term)
+
+  ;; ------ Eshell ------
+  ;; eshell has an annoying banner
   (setq eshell-banner-message "")
 
   ;; ------ Nand2Tetris ------
@@ -520,43 +558,21 @@ you should place your code here."
        (add-to-list 'grep-find-ignored-directories ".accurev")
        (add-to-list 'grep-find-ignored-directories ".git")))
 
-  ;; ------ JavaScript ------
-  ;; No port collision between skewer and tomcat for skewer
-  (setq httpd-port 9090)
-
   ;; ------ Spelling ------
   ;; ispell setup for spell checking (use ispell)
   (setq ispell-program-name "/usr/local/bin/ispell")
+
+  ;; Golden Ratio
+  (spacemacs/toggle-golden-ratio-on)
+
+  ;; Custom Settings
+  (setq custom-file "~/.customize.el")
+  (load-file custom-file)
+
+  ;; Symlinks
+  (setq vc-follow-symlinks t)
   )
 
-(defun dotspacemacs/emacs-custom-settings ()
-  "Emacs custom settings.
-This is an auto-generated function, do not modify its content directly, use
-Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(package-selected-packages
-     (quote
-      (helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag define-word ace-jump-helm-line yapfify yaml-mode xterm-color ws-butler wolfram-mode winum which-key wgrep web-mode web-beautify volatile-highlights vmd-mode vimrc-mode vi-tilde-fringe uuidgen use-package toc-org thrift tagedit systemd symon swift-mode string-inflection stan-mode sql-indent spotify spaceline smex smeargle slime-company slim-mode slack shell-pop scss-mode scad-mode sayid sass-mode rvm ruby-tools ruby-test-mode ruby-refactor rubocop rspec-mode robe reveal-in-osx-finder restart-emacs realgud rbenv ranger rake rainbow-delimiters qml-mode pyvenv pytest pyenv-mode py-isort pug-mode powershell popwin pip-requirements persp-mode pbcopy password-generator paradox ox-reveal ox-gfm osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file ob-restclient ob-http nginx-mode neotree nand2tetris multi-term mu4e-maildirs-extension mu4e-alert move-text mmm-mode minitest matlab-mode markdown-toc magit-gitflow lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl julia-mode js2-refactor js-doc js-comint ivy-purpose ivy-hydra intero insert-shebang info+ indent-guide ibuffer-projectile hy-mode hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make haskell-snippets groovy-mode groovy-imports gradle-mode google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md ggtags fuzzy fsharp-mode flyspell-correct-ivy flycheck-pos-tip flycheck-haskell flycheck-bashate flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-snipe evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eshell-z eshell-prompt-extras esh-help erlang ensime emoji-cheat-sheet-plus emmet-mode elisp-slime-nav editorconfig dumb-jump dockerfile-mode docker disaster diff-hl dante dactyl-mode cython-mode csv-mode counsel-projectile company-web company-tern company-statistics company-shell company-restclient company-lua company-ghci company-ghc company-emoji company-emacs-eclim company-cabal company-c-headers company-auctex company-anaconda common-lisp-snippets column-enforce-mode coffee-mode cmm-mode cmake-mode clojure-snippets clojure-cheatsheet clojars clj-refactor clean-aindent-mode clang-format cider-eval-sexp-fu chruby bundler browse-at-remote auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile arduino-mode aggressive-indent adaptive-wrap ace-window ace-link ac-ispell ac-emacs-eclim))))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   ;; Tracking this issue in:
-   ;; https://github.com/TheBB/spaceline/issues/37
-   '(spacemacs-normal-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "DarkGoldenrod2"))))
-   '(spacemacs-insert-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "chartreuse3"))))
-   '(spacemacs-emacs-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "SkyBlue2"))))
-   '(spacemacs-motion-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "plum3"))))
-   '(spacemacs-replace-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "chocolate"))))
-   '(spacemacs-visual-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "gray"))))
-   '(spaceline-highlight-face ((t (:inherit 'mode-line :foreground "#3E3D31" :background "DarkGoldenrod2"))))
-   '(spaceline-read-only ((t (:inherit 'mode-line :foreground "#3E3D31" :background "plum3"))))
-   '(spaceline-modified ((t (:inherit 'mode-line :foreground "#3E3D31" :background "SkyBlue2"))))
-   )
-  )
+;; Do not write anything past this comment. This is where Emacs will
+;; auto-generate custom variable definitions.
+
