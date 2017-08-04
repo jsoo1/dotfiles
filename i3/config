@@ -13,6 +13,20 @@
 # is used in the bar {} block below.
 font pango:Source Code Pro 13px
 
+# i3-gaps
+for_window [class="^.*"] border pixel 0
+smart_gaps on
+smart_borders no_gaps
+gaps inner 15
+gaps outer 10
+
+# Compton
+exec /usr/bin/compton --config /home/john/.config/compton/compton.conf
+
+# Wallpaper
+# exec feh --bg-fill /home/john/Downloads/richter-abstract-dark.jpg
+exec feh --bg-fill  Downloads/richter-iceberg.jpg
+
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8

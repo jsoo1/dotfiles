@@ -28,7 +28,7 @@ abbr upgrade! "sudo apt-get update; sudo apt-get -y upgrade"
 abbr install! "sudo apt-get update; sudo apt-get install"
 
 # Emacs
-abbr emc "emacsclient -c --socket-name=frame . &"
+abbr emc "emacsclient -c --socket-name=frame &"
 abbr em "emacsclient -t --socket-name=term"
 
 # Systemctl
