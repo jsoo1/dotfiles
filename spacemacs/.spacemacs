@@ -491,6 +491,7 @@ you should place your code here."
     (setq org-export-time-stamp-file nil)
     (setq org-export-with-section-numbers nil)
     (setq org-export-with-todo-keywords nil)
+    (setq org-html-validation-link nil)
     )
 
   ;; ------ Email ------
