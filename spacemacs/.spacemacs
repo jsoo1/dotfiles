@@ -483,6 +483,14 @@ you should place your code here."
                                  "~/Dropbox/org/build-lisp" ))
     ;; Org Reveal
     (setq org-reveal-title-slide 'auto)
+
+    ;; Org Export less crappy
+    (setq org-export-with-author nil)
+    (setq org-export-with-toc nil)
+    (setq org-export-with-email nil)
+    (setq org-export-time-stamp-file nil)
+    (setq org-export-with-section-numbers nil)
+    (setq org-export-with-todo-keywords nil)
     )
 
   ;; ------ Email ------
