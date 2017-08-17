@@ -11,6 +11,9 @@ set -xg ALTERNATE_EDITOR 'vim'
 # i3 Sensible Terminal
 set -xg TERMINAL 'konsole'
 
+# printer for lp
+set -xg PRINTER 'HP-ENVY-4500-series'
+
 # Fuzzy Finder
 set -x FZF_DEFAULT_COMMAND 'rg --files --hidden --ignore .git --smartcase --glob "!.git/*"'
 
@@ -40,7 +43,7 @@ if test -e /home/john/.config/fish/aliases.fish
   source /home/john/.config/fish/aliases.fish
 end
 
-# :( no fzf defaults in fish
+# TODO :( no fzf defaults in fish
 # if test -e ~/.fzf.zsh
 #   source ~/.fzf.zsh
 # end
