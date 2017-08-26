@@ -30,7 +30,8 @@ This function is called at the very end of Spacemacs initialization."
  '(spacemacs-motion-face ((t (:inherit (quote mode-line) :foreground "#3E3D31" :background "plum3"))))
  '(spacemacs-normal-face ((t (:inherit (quote mode-line) :foreground "#3E3D31" :background "DarkGoldenrod2"))))
  '(spacemacs-replace-face ((t (:inherit (quote mode-line) :foreground "#3E3D31" :background "chocolate"))))
- '(spacemacs-visual-face ((t (:inherit (quote mode-line) :foreground "#3E3D31" :background "gray")))))
+ '(spacemacs-visual-face ((t (:inherit (quote mode-line) :foreground "#3E3D31" :background "gray"))))
+ '(spacemacs-evilified-face ((t (:inherit (quote mode-line) :foreground "#3E3D31" :background "LightGoldenrod3")))))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
