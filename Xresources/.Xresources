@@ -1,2 +1,2 @@
 URxvt.font: xft:SauceCodePro:pixelsize=12
-#include ".config/rofi/config"
+include: "/home/john/.config/rofi/config"

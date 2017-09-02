@@ -1,7 +1,7 @@
 rofi.combi-modi:                     window,ssh,drun,run
 
-rofi.kb-cancel:                      Escape,Control+g
-
+rofi.kb-cancel:                      Escape,Control+g,Control+c
+rofi.kb-remove-to-eol:               Shift+d
 rofi.kb-accept-entry:                Control+m,Return,KP_Enter
 rofi.kb-remove-char-back:            BackSpace
 rofi.kb-row-left:                    Control+h,Control+Page_Up
@@ -9,31 +9,11 @@ rofi.kb-row-down:                    Control+j,Down,Control+n
 rofi.kb-row-up:                      Control+k,Up,Control+p,Shift+Tab
 rofi.kb-row-right:                   Control+l,Control+Page_Down
 
-! Foreground color
-rofi.fg:                             #f4f4f4
-! Background color
-rofi.bg:                             #292b2e
-! Foreground color for active row
-rofi.fg-active:                      #bc6ec5
-! Foreground color for urgent row
-rofi.fg-urgent:                      #292b2e
-! Foreground color for highlighted active row
-rofi.hlfg-active:                    #212026
-! Foreground color for highlighted urgent row
-rofi.hlfg-urgent:                    #5d4d7a
-! Background color for active row
-rofi.bg-active:                      #212026
-! Background color for urgent row
-rofi.bg-urgent:                      #292b2e
-! Background color for highlighted active row
-rofi.hlbg-active:                    #2aa1ae
-! Background color for highlighted urgent row
-rofi.hlbg-urgent:                    #2aa1ae
-! Background color for alternating row
-rofi.bgalt:                          #212026
-! Foreground color for highlighted row
-rofi.hlfg:                           #EEE8D5
-! Background color for highlighted row
-rofi.hlbg:                           #5d4d7a
-! Border color
-rofi.bc:                             #5d4d7a
+! Theme
+
+rofi.color-enabled: true
+rofi.color-window: #292b2e, #5d4d7a, #000000
+rofi.color-normal: #292b2e, #f4f4f4, #333333, #5d4d7a, #f4f4f4
+rofi.color-active: #292b2e, #2aa1ae, #333333, #2aa1ae, #212026
+rofi.color-urgent: #212026, #bc6ec5, #292b2e, #bc6ec5, #292b2e
+
