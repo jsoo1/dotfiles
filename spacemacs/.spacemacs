@@ -300,11 +300,11 @@ It should only modify the values of Spacemacs settings."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-active-transparency 70
+   dotspacemacs-active-transparency 80
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-inactive-transparency 90
+   dotspacemacs-inactive-transparency 70
    ;; If non-nil show the titles of transient states. (default t)
    dotspacemacs-show-transient-state-title t
    ;; If non-nil show the color guide hint for transient state keys. (default t)
@@ -515,7 +515,9 @@ you should place your code here."
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
   ;; ------ Spaceline ------
-  (when window-system (setq powerline-default-separator 'arrow))
+  (when (display-graphic-p)
+    (setq powerline-default-separator 'arrow)
+    (spaceline-compile))
 
   ;; ------ Surround ------
   ;; don't put spaces between my shit!
@@ -547,13 +549,13 @@ you should place your code here."
   (load-file "~/.emacs.d/private/haskell-prettify.el")
   (add-hook 'haskell-mode-hook 'haskell-prettify-enable)
 
-  ;; Customize
-  (setq custom-file "~/.customize.el")
-  (load-file custom-file)
-
   ;; Golden Ratio
   (spacemacs/toggle-golden-ratio-on)
 
   ;; Symlinks
   (setq vc-follow-symlinks t)
+
+  ;; Customize
+  (setq custom-file "~/.customize.el")
+  (load-file custom-file)
   )
