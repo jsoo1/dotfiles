@@ -140,7 +140,7 @@ bar {
         separator #68727C
 
         focused_workspace  #5d4d7a #bc6ec5 #212026
-        active_workspace   #333333 #5f676a #BC6ec5
+        active_workspace #333333 #222222 #888888
         inactive_workspace #333333 #222222 #888888
         urgent_workspace   #2f343a #900000 #ffffff
     }
@@ -160,7 +160,7 @@ bar {
         separator #68727C
 
         focused_workspace  #5d4d7a #bc6ec5 #212026
-        active_workspace   #333333 #5f676a #BC6ec5
+        active_workspace #333333 #222222 #888888
         inactive_workspace #333333 #222222 #888888
         urgent_workspace   #2f343a #900000 #ffffff
     }
