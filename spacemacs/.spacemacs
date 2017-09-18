@@ -104,14 +104,19 @@ This function should only modify configuration layer settings."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(clojars
+   dotspacemacs-additional-packages '(ac-emacs-eclim
+                                      clojars
                                       clojure-cheatsheet
+                                      eclim
                                       gradle-mode
                                       groovy-mode
                                       nand2tetris
-                                      eclim
-                                      ac-emacs-eclim
-                                      js-comint)
+                                      js-comint
+                                      (shen-elisp
+                                       :location (recipe :repo "deech/shen-elisp"
+                                                         :fetcher github
+                                                         :files ("shen*.el"))
+                                       :upgrade 't))
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -547,7 +552,7 @@ you should place your code here."
   (add-hook 'haskell-mode-hook 'company-quickhelp-mode)
   ;; Prettify symbols
   (load-file "~/.emacs.d/private/haskell-prettify.el")
-  (add-hook 'haskell-mode-hook 'haskell-prettify-enable)
+  ;; (add-hook 'haskell-mode-hook 'haskell-prettify-enable)
 
   ;; Golden Ratio
   (spacemacs/toggle-golden-ratio-on)

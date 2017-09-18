@@ -23,11 +23,8 @@ client.focused #292b2E #5d4D7A #B2B2B2 #68727C #5D4d7A
 # Swap control and caps... ??
 exec /usr/bin/setxkbmap -layout us -option ctrl:swapcaps
 
-# Make laptop display less tiny
-exec /usr/bin/xrandr --output eDP-1-1 --mode 1360x768
-
-# Setup monitor to left of laptop
-exec /usr/bin/xrandr --output HDMI-1-1 --primary --left-of eDP-1-1
+# Setup monitor to left of laptop, laptop display with lower resolution
+exec /usr/bin/xrandr --output HDMI-1-1 --primary --left-of eDP-1-1 --output eDP-1-1 --mode 1360x768
 
 # Vim keys
 set $up k
@@ -36,7 +33,7 @@ set $left h
 set $right l
 
 # Konsole
-bindsym Mod1+Return exec konsole
+bindsym Mod1+Return exec alacritty
 
 # Rofi
 bindsym Mod1+space exec rofi -show combi -modi combi
