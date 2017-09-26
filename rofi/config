@@ -1,0 +1,25 @@
+rofi.combi-modi:                     window,ssh,drun,run
+
+rofi.kb-cancel:                      Escape,Control+g,Control+c
+
+rofi.kb-remove-to-eol:               Shift+d
+rofi.kb-accept-entry:                Control+m,Return,KP_Enter
+rofi.kb-remove-char-back:            BackSpace
+
+rofi.kb-row-left:                    Control+h,Control+Page_Up
+rofi.kb-row-down:                    Control+j,Down,Control+n
+rofi.kb-row-up:                      Control+k,Up,Control+p,Shift+Tab
+rofi.kb-row-right:                   Control+l,Control+Page_Down
+
+rofi.kb-remove-char-forward:         Delete
+rofi.kb-remove-to-sol:               Control+Delete
+rofi.kb-page-prev:                   Control+u
+rofi.kb-page-next:                   Control+d
+
+
+! Theme
+rofi.color-enabled: true
+rofi.color-window: #292b2e, #292b2e, #5d4d7a
+rofi.color-normal: #292b2e, #f4f4f4, #292b2e, #5d4d7a, #f4f4f4
+rofi.color-active: #292b2e, #2aa1ae, #292b2e, #2aa1ae, #212026
+rofi.color-urgent: #212026, #bc6ec5, #292b2e, #bc6ec5, #292b2e

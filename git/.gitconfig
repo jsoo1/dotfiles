@@ -1,7 +1,7 @@
 [color]
 	ui = auto
 [core]
-	editor = /usr/bin/vim
+	editor = /usr/bin/emacsclient -nw --socket-name term
 	autocrlf = input
 	safecrlf = true
 	excludesfile = /home/john/.gitignore
