@@ -38,6 +38,7 @@ This function should only modify configuration layer settings."
      csv
      dash
      docker
+     elm
      emacs-lisp
      emoji
      erlang
@@ -50,9 +51,10 @@ This function should only modify configuration layer settings."
               haskell-process-type 'stack-ghci
               haskell-enable-hindent-style "fundamental")
      html
+     idris
      ivy
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
-     java
+     (java :variables java-backend nil)
      javascript
      (latex :variables
             latex-build-command "LaTeX"
@@ -95,18 +97,18 @@ This function should only modify configuration layer settings."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(clojars
+   dotspacemacs-additional-packages '(all-the-icons
+                                      applescript-mode
+                                      company-sourcekit
+                                      clojars
                                       clojure-cheatsheet
                                       gradle-mode
                                       groovy-mode
-                                      nand2tetris
-                                      eclim
-                                      ac-emacs-eclim
-                                      js-comint)
+                                      nand2tetris)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(meghanada)
+   dotspacemacs-excluded-packages '()
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and deletes any unused
@@ -132,6 +134,7 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-elpa-https t
    ;; Maximum allowed time in seconds to contact an ELPA repository.
+   ;; (default 5)
    dotspacemacs-elpa-timeout 5
    ;; If non-nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. Note that checking for
@@ -140,7 +143,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-check-for-update nil
    ;; If non-nil, a form that evaluates to a package directory. For example, to
    ;; use different package directories for different Emacs versions, set this
-   ;; to `emacs-version'.
+   ;; to `emacs-version'. (default nil)
    dotspacemacs-elpa-subdirectory nil
    ;; One of `vim', `emacs' or `hybrid'.
    ;; `hybrid' is like `vim' except that `insert state' is replaced by the
@@ -157,7 +160,7 @@ It should only modify the values of Spacemacs settings."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner nil
+   dotspacemacs-startup-banner 'random
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
@@ -168,7 +171,7 @@ It should only modify the values of Spacemacs settings."
                                 (todos . 7)
                                 (projects . 3)
                                 (recents . 3))
-   ;; True if the home buffer should respond to resize events.
+   ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'org-mode
@@ -178,6 +181,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-themes '(spacemacs-dark
                          spacemacs-light)
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
+   ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
@@ -186,7 +190,7 @@ It should only modify the values of Spacemacs settings."
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
-   ;; The leader key
+   ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands `M-x' (after pressing on the leader key).
    ;; (default "SPC")
@@ -229,7 +233,7 @@ It should only modify the values of Spacemacs settings."
    ;; start. (default nil)
    dotspacemacs-auto-resume-layouts nil
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
-   ;; effect when using the "jump to layout by number" commands.
+   ;; effect when using the "jump to layout by number" commands. (default nil)
    dotspacemacs-auto-generate-layout-names nil
    ;; Size (in MB) above which spacemacs will prompt to open the large file
    ;; literally to avoid performance issues. Opening a file literally means that
@@ -255,8 +259,9 @@ It should only modify the values of Spacemacs settings."
    ;; source settings. Else, disable fuzzy matching in all sources.
    ;; (default 'always)
    dotspacemacs-helm-use-fuzzy 'always
-   ;; If non-nil the paste micro-state is enabled. When enabled pressing `p'
-   ;; several times cycle between the kill ring content. (default nil)
+   ;; If non-nil, the paste transient-state is enabled. While enabled, pressing
+   ;; `p' several times cycles through the elements in the `kill-ring'.
+   ;; (default nil)
    dotspacemacs-enable-paste-transient-state t
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
@@ -399,6 +404,7 @@ you should place your code here."
   (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.asm\\'" . nand2tetris-mode))
+  (add-to-list 'auto-mode-alist '("\\.scpt\\'" . applescript-mode))
 
   ;; ------ Key Bindings ------
   ;; Woman under help
@@ -408,9 +414,10 @@ you should place your code here."
   ;; cider-restart
   (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
   ;; JavaScript use js-comint instead of skewer
-  (spacemacs/set-leader-keys-for-major-mode 'js2-mode "'" 'run-js)
-  (spacemacs/set-leader-keys-for-major-mode 'js2-mode "s b" 'js-send-buffer)
-  (spacemacs/set-leader-keys-for-major-mode 'js2-mode "s B" 'js-send-buffer-and-go)
+  ;; (spacemacs/set-leader-keys-for-major-mode 'js2-mode "'" 'run-js)
+  ;; (spacemacs/set-leader-keys-for-major-mode 'js2-mode "s b" 'js-send-buffer)
+  ;; (spacemacs/set-leader-keys-for-major-mode 'js2-mode "s B" 'js-send-buffer-and-go)
+
   ;; Haskell interactive include hoogle
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h h" 'hoogle)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h i" 'haskell-process-do-info)
@@ -420,12 +427,19 @@ you should place your code here."
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s x" 'haskell-process-restart)
   ;; Month view
   (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode "m" 'org-agenda-month-view)
+  ;; df == fd
+  (setq evil-escape-unordered-key-sequence t)
+  ;; Idris clear repl
+  (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
+  (spacemacs/set-leader-keys-for-major-mode 'idris-repl "s c" 'idris-repl-clear-buffer)
 
   ;; ------ Paradox ------
   (setq paradox-github-token 'paradox)
 
   ;; ------ JavaScript ------
-  (setq inferior-js-program-command "/usr/local/bin/node")
+  ;; Sensible indentation
+  (setq-default js2-basic-offset 4)
+  (setq-default js-indent-level 4)
   ;; Use Flycheck for linting instead of js2-mode
   (setq js2-strict-missing-semi-warning nil)
   (setq js2-mode-show-strict-warnings nil)
@@ -501,6 +515,10 @@ you should place your code here."
   (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠" ""))
   (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" ""))
   (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
+  (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
+  (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode "M" "M"))
+  ;; Make spaceline look better on MacOS
+  (setq ns-use-srgb-colorspace nil)
 
   ;; ------- LaTex -------
   ;; LaTeX auto load on save
@@ -524,6 +542,12 @@ you should place your code here."
   (setq shell-file-name "/bin/bash")
   (setq projectile-enable-cachine t)
 
+  ;; ------ DirEd ------
+  ;; Icons
+  (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")
+  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+
+
   ;; ------ Shell -----
   ;; Default: multi-term, fish
   (setq multi-term-program "/usr/local/bin/fish")
@@ -538,12 +562,8 @@ you should place your code here."
   (add-hook 'nand2tetris-mode (lambda () (setq tab-width 4)))
 
   ;; ------ American Airlines/Java/Gradle ------
-  ;; Use STS eclipse with eclim
-  (setq eclim-eclipse-dirs "~/springsource/sts-3.5.0.RELEASE/"
-        eclim-executable "~/springsource/sts-3.5.0.RELEASE/eclim")
-  ;; Use Gradle and eclim in Java files
+  ;; Use Gradle in Java files
   (add-hook 'java-mode-hook gradle-mode)
-  (add-hook 'java-mode-hook 'eclim-mode)
   ;; Recognize .tag files as jsp
   (setq web-mode-engines-alist '(("jsp" . "\\.tag\\'")))
   ;; Ignore AA project directories while searching
@@ -571,8 +591,10 @@ you should place your code here."
 
   ;; Symlinks
   (setq vc-follow-symlinks t)
+
+  ;; ----- Swift ------
+  ;; Autocompletion like
+  ;; https://gist.github.com/fiveNinePlusR/611afb16f1cafdf45044f66f0d16e4cc
+  (with-eval-after-load 'company-sourcekit
+    (add-to-list 'company-backends 'company-sourcekit))
   )
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
-
