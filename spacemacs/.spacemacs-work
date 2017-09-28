@@ -584,9 +584,6 @@ you should place your code here."
   ;; ispell setup for spell checking (use ispell)
   (setq ispell-program-name "/usr/local/bin/ispell")
 
-  ;; Golden Ratio
-  (spacemacs/toggle-golden-ratio-on)
-
   ;; Custom Settings
   (setq custom-file "~/.customize.el")
   (load-file custom-file)
