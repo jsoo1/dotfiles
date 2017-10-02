@@ -499,6 +499,12 @@ you should place your code here."
     (setq org-export-with-section-numbers nil)
     (setq org-export-with-todo-keywords nil)
     (setq org-html-validation-link nil)
+
+    ;; Org Capture Templates
+    (setq org-capture-templates
+          '(("p" "RevealJS Presentation"
+             plain (function (lambda() (buffer-file-name)))
+             "%[~/Dropbox/org/templates/presentation.org]")))
     )
 
   ;; ------ Email ------
