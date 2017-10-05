@@ -437,7 +437,7 @@ you should place your code here."
   (setq evil-escape-unordered-key-sequence t)
   ;; Idris clear repl
   (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
-  (spacemacs/set-leader-keys-for-major-mode 'idris-repl "s c" 'idris-repl-clear-buffer)
+  (spacemacs/set-leader-keys-for-major-mode 'idris-repl-mode "s c" 'idris-repl-clear-buffer)
 
   ;; ------ Paradox ------
   (setq paradox-github-token 'paradox)
