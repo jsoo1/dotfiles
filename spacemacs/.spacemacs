@@ -162,7 +162,7 @@ It should only modify the values of Spacemacs settings."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style 'vim
+   dotspacemacs-editing-style 'hybrid
    ;; If non-nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -305,7 +305,7 @@ It should only modify the values of Spacemacs settings."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-active-transparency 80
+   dotspacemacs-active-transparency 85
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -439,10 +439,6 @@ you should place your code here."
   ;; and clogs up ivy/counsel buffers :(
   (setq shell-file-name "/bin/sh")
 
-  ;; ------ Eshell as default ------
-  ;; (setq shell-default-shell 'eshell)
-  ;; (setq eshell-banner-message "")
-
   ;; ------ Boot is in Nix ------
   (add-to-list 'exec-path "~/.nix-profile/bin/")
 
@@ -560,13 +556,13 @@ you should place your code here."
   (load-file "~/.emacs.d/private/haskell-prettify.el")
   ;; (add-hook 'haskell-mode-hook 'haskell-prettify-enable)
 
-  ;; Golden Ratio
-  (spacemacs/toggle-golden-ratio-on)
-
-  ;; Symlinks
+  ;; ------ Symlinks ------
   (setq vc-follow-symlinks t)
 
-  ;; Customize
+  ;; ------ Customize ------
   (setq custom-file "~/.customize.el")
   (load-file custom-file)
+
+  ;; ------ Transparency ------
+  (spacemacs/toggle-transparency)
   )
