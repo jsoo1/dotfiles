@@ -597,11 +597,11 @@ you should place your code here."
   ;; ispell setup for spell checking (use ispell)
   (setq ispell-program-name "/usr/local/bin/ispell")
 
-  ;; Custom Settings
+  ;; ------ Custom Settings ------
   (setq custom-file "~/.customize.el")
   (load-file custom-file)
 
-  ;; Symlinks
+  ;; ------ Symlinks ------
   (setq vc-follow-symlinks t)
 
   ;; ----- Swift ------
