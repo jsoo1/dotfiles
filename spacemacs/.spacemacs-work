@@ -99,6 +99,7 @@ This function should only modify configuration layer settings."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(all-the-icons
+                                      spaceline-all-the-icons
                                       applescript-mode
                                       company-sourcekit
                                       clojars
@@ -556,6 +557,11 @@ you should place your code here."
   (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")
   (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
 
+  ;; ------ Spaceline All The Icons ------
+  (when (display-graphic-p)
+    (use-package spaceline-all-the-icons
+     :after spaceline
+     :config (spaceline-all-the-icons-theme)))
 
   ;; ------ Shell -----
   ;; Default: multi-term, fish
