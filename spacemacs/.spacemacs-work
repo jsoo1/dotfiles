@@ -56,7 +56,7 @@ This function should only modify configuration layer settings."
      ivy
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      (java :variables java-backend nil)
-     javascript
+     (javascript :variables tern-command '("node" "/usr/local/bin/tern"))
      (latex :variables
             latex-build-command "LaTeX"
             latex-enable-auto-fill t
@@ -301,7 +301,7 @@ It should only modify the values of Spacemacs settings."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-active-transparency 90
+   dotspacemacs-active-transparency 85
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
