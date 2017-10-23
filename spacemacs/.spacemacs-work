@@ -471,8 +471,8 @@ you should place your code here."
     (load-file "~/.emacs.d/private/agenda-notify.el")
 
     ;; Org HTML presentations with reveal.js
-    (setq org-reveal-root "file:///usr/local/lib/node_modules/reveal/")
-    (setq org-reveal-title-slide nil)
+    (setq org-reveal-root "file:///usr/local/lib/node_modules/reveal/"
+          org-reveal-title-slide nil)
 
     ;; Remove pesky validate link
     (setq org-html-validation-link nil)
@@ -481,12 +481,12 @@ you should place your code here."
     (setq org-agenda-todo-ignore-with-date t)
 
     ;; Prettify exports for email
-    (setq org-export-with-author nil)
-    (setq org-export-with-toc nil)
-    (setq org-export-with-email nil)
-    (setq org-export-time-stamp-file nil)
-    (setq org-export-with-section-numbers nil)
-    (setq org-export-with-todo-keywords nil)
+    (setq org-export-with-author nil
+          org-export-with-toc nil
+          org-export-with-email nil
+          org-export-time-stamp-file nil
+          org-export-with-section-numbers nil
+          org-export-with-todo-keywords nil)
 
     ;; Capture Templates
     (setq org-capture-templates
@@ -546,8 +546,8 @@ you should place your code here."
 
   ;; ------ Projectile ------
   ;; Speed it up and eschew fish issues
-  (setq shell-file-name "/bin/bash")
-  (setq projectile-enable-cachine t)
+  (setq shell-file-name "/bin/bash"
+        projectile-enable-cachine t)
 
   ;; ------ DirEd ------
   ;; Icons
@@ -562,8 +562,8 @@ you should place your code here."
 
   ;; ------ Shell -----
   ;; Default: multi-term, fish
-  (setq multi-term-program "/usr/local/bin/fish")
-  (setq shell-default-shell 'multi-term)
+  (setq multi-term-program "/usr/local/bin/fish"
+        shell-default-shell 'multi-term)
 
   ;; ------ Eshell ------
   ;; eshell has an annoying banner
