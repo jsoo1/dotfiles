@@ -506,10 +506,6 @@ you should place your code here."
     (add-hook 'org-mode-hook 'emojify-mode)
 
     ;; Babel
-    (require 'ob-sh)
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((sh . t)))
     )
 
   ;; ------ Mouse Support ------
