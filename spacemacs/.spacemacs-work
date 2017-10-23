@@ -41,6 +41,12 @@ This function should only modify configuration layer settings."
      elm
      emacs-lisp
      emoji
+     (erc :variables
+          erc-server-list
+          '(("irc.freenode.net"
+             :port "6697"
+             :ssl t
+             :nick "jsoo")))
      erlang
      evil-cleverparens
      evil-snipe
@@ -601,9 +607,16 @@ you should place your code here."
   ;; ------ Symlinks ------
   (setq vc-follow-symlinks t)
 
+  ;; ------ Truncate Lines ------
+  (set-default 'truncate-lines t)
+
   ;; ----- Swift ------
   ;; Autocompletion like
   ;; https://gist.github.com/fiveNinePlusR/611afb16f1cafdf45044f66f0d16e4cc
   (with-eval-after-load 'company-sourcekit
     (add-to-list 'company-backends 'company-sourcekit))
+
+  ;; ------ ERC ------
+  ;; Ignore annoying crap
+  (setq erc-hide-list '("JOIN" "PART" "QUIT"))
   )
