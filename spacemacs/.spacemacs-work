@@ -420,10 +420,6 @@ you should place your code here."
   (spacemacs/set-leader-keys-for-major-mode 'web-mode "E" 'emmet-expand-line)
   ;; cider-restart
   (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
-  ;; JavaScript use js-comint instead of skewer
-  ;; (spacemacs/set-leader-keys-for-major-mode 'js2-mode "'" 'run-js)
-  ;; (spacemacs/set-leader-keys-for-major-mode 'js2-mode "s b" 'js-send-buffer)
-  ;; (spacemacs/set-leader-keys-for-major-mode 'js2-mode "s B" 'js-send-buffer-and-go)
 
   ;; Haskell interactive include hoogle
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h h" 'hoogle)
@@ -445,12 +441,12 @@ you should place your code here."
 
   ;; ------ JavaScript ------
   ;; Sensible indentation
-  (setq-default js2-basic-offset 4)
-  (setq-default js-indent-level 4)
+  (setq-default js2-basic-offset 4
+                js-indent-level 4)
   ;; Use Flycheck for linting instead of js2-mode
-  (setq js2-strict-missing-semi-warning nil)
-  (setq js2-mode-show-strict-warnings nil)
-  (setq js2-mode-show-parse-errors nil)
+  (setq js2-strict-missing-semi-warning nil
+        js2-mode-show-strict-warnings nil
+        js2-mode-show-parse-errors nil)
   ;; No port collision between skewer and tomcat for skewer
   (setq httpd-port 9090)
 
@@ -535,7 +531,8 @@ you should place your code here."
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
   ;; ------ SCSS/SASS ------
-  (add-hook 'scss-mode-hook (lambda () (setq css-indent-offset 2)))
+  ;; SCSS indented 4 spaces
+  (add-hook 'scss-mode-hook (lambda () (setq css-indent-offset 4)))
 
   ;; ------ Haskell ------
   ;; Thanks to:
