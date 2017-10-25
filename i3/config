@@ -147,7 +147,7 @@ bar {
     output HDMI-1-1
     status_command i3status -c ~/.i3status.conf
     tray_output primary
-    font pango:Fantasque Sans Mono 14px
+    font pango:Fantasque Sans Mono 16px
     position top
     workspace_buttons yes
 
