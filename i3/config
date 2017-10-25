@@ -1,5 +1,5 @@
 # Beloved Source Code Pro
-font pango:Source Code Pro 13px
+font pango:Fantasque Sans Mono 16px
 
 # i3-gaps
 for_window [class="^.*"] border pixel 0
@@ -127,7 +127,7 @@ bar {
     output eDP-1-1
     status_command i3status -c ~/.i3status.conf
     tray_output primary
-    font pango:Source Code Pro 14px
+    font pango:Fantasque Sans Mono 14px
     position top
     workspace_buttons yes
 
@@ -147,7 +147,7 @@ bar {
     output HDMI-1-1
     status_command i3status -c ~/.i3status.conf
     tray_output primary
-    font pango:Source Code Pro 14px
+    font pango:Fantasque Sans Mono 14px
     position top
     workspace_buttons yes
 
