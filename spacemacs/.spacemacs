@@ -109,13 +109,16 @@ This function should only modify configuration layer settings."
                                       gradle-mode
                                       groovy-mode
                                       nand2tetris
-                                      eclim
-                                      ac-emacs-eclim
-                                      js-comint)
+                                      js-comint
+                                      (shen-elisp
+                                       :location (recipe :repo "deech/shen-elisp"
+                                                         :fetcher github
+                                                         :files ("shen*.el"))
+                                       :upgrade 't))
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(meghanada)
+   dotspacemacs-excluded-packages '()
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and deletes any unused
@@ -141,6 +144,7 @@ It should only modify the values of Spacemacs settings."
    ;; (default t)
    dotspacemacs-elpa-https t
    ;; Maximum allowed time in seconds to contact an ELPA repository.
+   ;; (default 5)
    dotspacemacs-elpa-timeout 5
    ;; If non-nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. Note that checking for
@@ -149,7 +153,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-check-for-update nil
    ;; If non-nil, a form that evaluates to a package directory. For example, to
    ;; use different package directories for different Emacs versions, set this
-   ;; to `emacs-version'.
+   ;; to `emacs-version'. (default nil)
    dotspacemacs-elpa-subdirectory nil
    ;; One of `vim', `emacs' or `hybrid'.
    ;; `hybrid' is like `vim' except that `insert state' is replaced by the
@@ -157,7 +161,7 @@ It should only modify the values of Spacemacs settings."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style 'vim
+   dotspacemacs-editing-style 'hybrid
    ;; If non-nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -191,11 +195,16 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro for Powerline"
-                               :size 13
-                               :weight normal
-                               :width normal
-                               :powerline-scale 1.1)
+   dotspacemacs-default-font '(("Fantasque Sans Mono"
+                                :size 16
+                                :weight normal
+                                :width wide
+                                :powerline-scale 1.4)
+                               ("Source Code Pro for Powerline"
+                                :size 13
+                                :weight normal
+                                :width normal
+                                :powerline-scale 1.1))
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands `M-x' (after pressing on the leader key).
@@ -300,7 +309,7 @@ It should only modify the values of Spacemacs settings."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-active-transparency 80
+   dotspacemacs-active-transparency 85
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -434,10 +443,6 @@ you should place your code here."
   ;; and clogs up ivy/counsel buffers :(
   (setq shell-file-name "/bin/sh")
 
-  ;; ------ Eshell as default ------
-  ;; (setq shell-default-shell 'eshell)
-  ;; (setq eshell-banner-message "")
-
   ;; ------ Boot is in Nix ------
   (add-to-list 'exec-path "~/.nix-profile/bin/")
 
@@ -455,6 +460,9 @@ you should place your code here."
 
   ;; ------ Slack ------
   (load-file "~/.emacs.d/private/slack-config.el")
+
+  ;; ------ Erc ------
+  (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
   ;; ------ Copying to clipboard in terminal ------
   (load-file "~/.emacs.d/private/xclip-copy-paste.el")
@@ -484,16 +492,30 @@ you should place your code here."
                                  "~/Dropbox/org/topology"
                                  "~/Dropbox/org/build-lisp" ))
     ;; Org Reveal
-    (setq org-reveal-title-slide 'auto)
+    (setq org-reveal-title-slide 'auto
+          org-reveal-progress nil
+          org-reveal-history t
+          org-reveal-rolling-links t
+          org-reveal-keyboard t
+          org-reveal-mathjax t
+          org-reveal-overview t
+          org-reveal-slide-number nil)
 
     ;; Org Export less crappy
-    (setq org-export-with-author nil)
-    (setq org-export-with-toc nil)
-    (setq org-export-with-email nil)
-    (setq org-export-time-stamp-file nil)
-    (setq org-export-with-section-numbers nil)
-    (setq org-export-with-todo-keywords nil)
-    (setq org-html-validation-link nil)
+    (setq org-export-with-author nil
+          org-export-with-creator nil
+          org-export-with-toc nil
+          org-export-with-email nil
+          org-export-time-stamp-file nil
+          org-export-with-section-numbers nil
+          org-export-with-todo-keywords nil
+          org-html-validation-link nil)
+
+    ;; Org Capture Templates
+    (setq org-capture-templates
+          '(("p" "RevealJS Presentation"
+             plain (function (lambda() (buffer-file-name)))
+             "%[~/Dropbox/org/templates/presentation.org]")))
     )
 
   ;; ------ Email ------
@@ -501,15 +523,11 @@ you should place your code here."
   (setq send-mail-function    'smtpmail-send-it
         smtpmail-smtp-server  "smtp.gmail.com"
         smtpmail-stream-type  'ssl
-        smtpmail-smtp-service 587)
-  (setq message-send-mail-function 'smtpmail-send-it)
+        smtpmail-smtp-service 587
+        message-send-mail-function 'smtpmail-send-it)
   ;; mu4e html
   (require 'mu4e-contrib)
   (setq mu4e-html2text-command 'mu4e-shr2text)
-
-  ;; ------ Zeal/Dash ------
-  ;; zeal docset location
-  (setq counsel-dash-docsets-path "~/.local/Zeal/Zeal/docsets")
 
   ;; ------ LaTeX ------
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
@@ -546,16 +564,20 @@ you should place your code here."
 
   (add-hook 'haskell-mode-hook 'company-quickhelp-mode)
   ;; Prettify symbols
-  (load-file "~/.emacs.d/private/haskell-prettify.el")
-  (add-hook 'haskell-mode-hook 'haskell-prettify-enable)
+  (add-hook 'haskell-mode-hook (lambda ()
+                                 (load-file  "~/.emacs.d/private/haskell-prettify.el")
+                                 (haskell-prettify-enable)))
 
-  ;; Golden Ratio
-  (spacemacs/toggle-golden-ratio-on)
+  ;; ------ Truncate Long Lines Always ------
+  (set-default 'truncate-lines t)
 
-  ;; Symlinks
+  ;; ------ Symlinks ------
   (setq vc-follow-symlinks t)
 
-  ;; Customize
+  ;; ------ Customize ------
   (setq custom-file "~/.customize.el")
   (load-file custom-file)
+
+  ;; ------ Transparency ------
+  (spacemacs/toggle-transparency)
   )

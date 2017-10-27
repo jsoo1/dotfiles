@@ -9,7 +9,7 @@ set -xg EDITOR 'emacsclient -t'
 set -xg ALTERNATE_EDITOR 'vim'
 
 # i3 Sensible Terminal
-set -xg TERMINAL 'konsole'
+set -xg TERMINAL 'alacritty'
 
 # printer for lp
 set -xg PRINTER 'HP-ENVY-4500-series'
