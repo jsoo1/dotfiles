@@ -51,7 +51,7 @@ This function should only modify configuration layer settings."
      evil-cleverparens
      evil-snipe
      fsharp
-     git
+     (git :varieables git-magit-status-fullscreen t)
      (gtags :variables gtags-enable-by-default t)
      (haskell :variables
               haskell-process-type 'stack-ghci
@@ -93,6 +93,7 @@ This function should only modify configuration layer settings."
      syntax-checking
      systemd
      tmux
+     treemacs
      twitter
      version-control
      vimscript
@@ -116,7 +117,7 @@ This function should only modify configuration layer settings."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(wolfram-mode)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and deletes any unused
@@ -596,10 +597,6 @@ you should place your code here."
   ;; ispell setup for spell checking (use ispell)
   (setq ispell-program-name "/usr/local/bin/ispell")
 
-  ;; ------ Custom Settings ------
-  (setq custom-file "~/.customize.el")
-  (load-file custom-file)
-
   ;; ------ Symlinks ------
   (setq vc-follow-symlinks t)
 
@@ -615,4 +612,9 @@ you should place your code here."
   ;; ------ ERC ------
   ;; Ignore annoying crap
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
+
+  ;; ------ Custom Settings ------
+  (setq custom-file "~/.customize.el")
+  (load-file custom-file)
   )
+
