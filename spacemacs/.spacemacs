@@ -443,20 +443,19 @@ you should place your code here."
   ;; and clogs up ivy/counsel buffers :(
   (setq shell-file-name "/bin/sh")
 
-  ;; ------ Boot is in Nix ------
-  (add-to-list 'exec-path "~/.nix-profile/bin/")
-
   ;; ------ Paradox ------
   (setq paradox-github-token 'paradox)
 
   ;; ------ JavaScript ------
-  (setq inferior-js-program-command "/usr/local/bin/node")
-  ;; Use Flycheck for linting instead of js2-mode
-  (setq js2-strict-missing-semi-warning nil)
-  (setq js2-mode-show-strict-warnings nil)
-  (setq js2-mode-show-parse-errors nil)
-  ;; No port collision between skewer and tomcat for skewer
-  (setq httpd-port 9090)
+  (setq inferior-js-program-command "/usr/local/bin/node"
+
+        ;; Use Flycheck for linting instead of js2-mode
+        js2-strict-missing-semi-warning nil
+        js2-mode-show-strict-warnings nil
+        js2-mode-show-parse-errors nil
+
+        ;; No port collision between skewer and tomcat for skewer
+        httpd-port 9090)
 
   ;; ------ Slack ------
   (load-file "~/.emacs.d/private/slack-config.el")
@@ -473,6 +472,8 @@ you should place your code here."
   (setq clojure-enable-fancify-symbols t
         cider-repl-display-help-banner nil
         cider-stacktrace-default-filters '(tooling dup java))
+  ;; Boot is in Nix
+  (add-to-list 'exec-path "~/.nix-profile/bin/")
 
   ;; ------ Org Mode ------
   ;; Babel
@@ -485,37 +486,38 @@ you should place your code here."
      '((clojure . t)
        (python . t)
        (shell . t)))
-    ;; Agenda files
-    (setq org-agenda-files (list "~/Dropbox/org/"
-                                 "~/Dropbox/org/pi-slice"
-                                 "~/Dropbox/org/haskell-beginner"
-                                 "~/Dropbox/org/topology"
-                                 "~/Dropbox/org/build-lisp" ))
-    ;; Org Reveal
-    (setq org-reveal-title-slide 'auto
-          org-reveal-progress nil
-          org-reveal-history t
-          org-reveal-rolling-links t
-          org-reveal-keyboard t
-          org-reveal-mathjax t
-          org-reveal-overview t
-          org-reveal-slide-number nil)
 
-    ;; Org Export less crappy
-    (setq org-export-with-author nil
-          org-export-with-creator nil
-          org-export-with-toc nil
-          org-export-with-email nil
-          org-export-time-stamp-file nil
-          org-export-with-section-numbers nil
-          org-export-with-todo-keywords nil
-          org-html-validation-link nil)
+    (setq
+     ;; Agenda files
+     org-agenda-files (list "~/Dropbox/org/"
+                            "~/Dropbox/org/pi-slice"
+                            "~/Dropbox/org/haskell-beginner"
+                            "~/Dropbox/org/topology"
+                            "~/Dropbox/org/build-lisp" )
+     ;; Org Reveal
+     org-reveal-title-slide 'auto
+     org-reveal-progress nil
+     org-reveal-history t
+     org-reveal-rolling-links t
+     org-reveal-keyboard t
+     org-reveal-mathjax t
+     org-reveal-overview t
+     org-reveal-slide-number nil
 
-    ;; Org Capture Templates
-    (setq org-capture-templates
-          '(("p" "RevealJS Presentation"
-             plain (function (lambda() (buffer-file-name)))
-             "%[~/Dropbox/org/templates/presentation.org]")))
+     ;; Org Export less crappy
+     org-export-with-author nil
+     org-export-with-creator nil
+     org-export-with-toc nil
+     org-export-with-email nil
+     org-export-time-stamp-file nil
+     org-export-with-section-numbers nil
+     org-export-with-todo-keywords nil
+     org-html-validation-link nil
+
+     ;; Org Capture Templates
+     org-capture-templates '(("p" "RevealJS Presentation"
+                              plain (function (lambda() (buffer-file-name)))
+                              "%[~/Dropbox/org/templates/presentation.org]")))
     )
 
   ;; ------ Email ------
