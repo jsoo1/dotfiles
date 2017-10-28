@@ -29,12 +29,12 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
-     (auto-completion
+   '((auto-completion
       (haskell :variables haskell-completion-backend 'dante))
      c-c++
      clojure
      common-lisp
+     coq
      csv
      dash
      docker
@@ -47,13 +47,13 @@ This function should only modify configuration layer settings."
              :port "6697"
              :ssl t
              :nick "jsoo")))
-     fsharp
      emacs-lisp
      erlang
      evil-cleverparens
      evil-snipe
      fsharp
      git
+     graphviz
      gtags
      (haskell :variables haskell-process-type 'stack-ghci)
      html
@@ -379,7 +379,7 @@ It should only modify the values of Spacemacs settings."
    ;; %n - Narrow if appropriate
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
-   dotspacemacs-frame-title-format "%t %a %b %"
+   dotspacemacs-frame-title-format "%t %a"
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
