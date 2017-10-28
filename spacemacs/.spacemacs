@@ -52,7 +52,7 @@ This function should only modify configuration layer settings."
      evil-cleverparens
      evil-snipe
      fsharp
-     git
+     (git :variables git-magit-status-fullscreen t)
      graphviz
      gtags
      (haskell :variables haskell-process-type 'stack-ghci)
