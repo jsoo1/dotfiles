@@ -622,3 +622,4 @@ you should place your code here."
   (setq custom-file "~/.customize.el")
   (load-file custom-file)
   )
+
