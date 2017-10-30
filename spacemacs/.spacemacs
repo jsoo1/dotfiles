@@ -92,6 +92,7 @@ This function should only modify configuration layer settings."
      sql
      syntax-checking
      systemd
+     treemacs
      tmux
      twitter
      version-control
@@ -118,7 +119,7 @@ This function should only modify configuration layer settings."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(wolfram-mode)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and deletes any unused
@@ -538,6 +539,14 @@ you should place your code here."
   (when (display-graphic-p)
     (setq powerline-default-separator 'arrow)
     (spaceline-compile))
+
+  ;; Diminish symbols
+  (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮" "$"))
+  (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠" ""))
+  (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" ""))
+  (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
+  (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
+  (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode "M" "M"))
 
   ;; ------ Surround ------
   ;; don't put spaces between my shit!
