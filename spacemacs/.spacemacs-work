@@ -51,7 +51,7 @@ This function should only modify configuration layer settings."
      evil-cleverparens
      evil-snipe
      fsharp
-     (git :varieables git-magit-status-fullscreen t)
+     (git :variables git-magit-status-fullscreen t)
      (gtags :variables gtags-enable-by-default t)
      (haskell :variables
               haskell-process-type 'stack-ghci
@@ -451,11 +451,14 @@ you should place your code here."
   (setq-default js2-basic-offset 4
                 js-indent-level 4)
   ;; Use Flycheck for linting instead of js2-mode
-  (setq js2-strict-missing-semi-warning nil
-        js2-mode-show-strict-warnings nil
-        js2-mode-show-parse-errors nil)
-  ;; No port collision between skewer and tomcat for skewer
-  (setq httpd-port 9090)
+  (setq
+   ;; Use Flycheck for linting instead of js2-mode
+   js2-strict-missing-semi-warning nil
+   js2-mode-show-strict-warnings nil
+   js2-mode-show-parse-errors nil
+
+   ;; No port collision between skewer and tomcat for skewer
+   httpd-port 9090)
 
   ;; ------ Slack ------
   (load-file "~/.emacs.d/private/slack-config.el")
@@ -466,47 +469,49 @@ you should place your code here."
         cider-stacktrace-default-filters '(tooling dup java))
 
   ;; ------ Org Mode ------
-  ;; Agenda mode files
   (with-eval-after-load 'org
-    (setq org-agenda-files '("~/Desktop/agenda/"
-                             "~/projects/AACom-Release/TODOs.org"
-                             "~/projects/AACom-Release/STORIEs.org"
-                             "~/projects/AACom-Release/MEETINGs.org"
-                             "~/projects/nostradamus_node/TODOs.org"))
 
     ;; Agenda notifications
     (load-file "~/.emacs.d/private/agenda-notify.el")
 
-    ;; Org HTML presentations with reveal.js
-    (setq org-reveal-root "file:///usr/local/lib/node_modules/reveal/"
-          org-reveal-title-slide nil)
+    (setq
+     ;; Agenda mode files
+     org-agenda-files '("~/Desktop/agenda/"
+                        "~/projects/AACom-Release/TODOs.org"
+                        "~/projects/AACom-Release/STORIEs.org"
+                        "~/projects/AACom-Release/MEETINGs.org"
+                        "~/projects/nostradamus_node/TODOs.org")
 
-    ;; Remove pesky validate link
-    (setq org-html-validation-link nil)
+     ;; Org HTML presentations with reveal.js
+     org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"
+     org-reveal-title-slide nil
 
-    ;; Don't show scheduled items in global todo list
-    (setq org-agenda-todo-ignore-with-date t)
+     ;; Remove pesky validate link
+     org-html-validation-link nil
 
-    ;; Prettify exports for email
-    (setq org-export-with-author nil
-          org-export-with-toc nil
-          org-export-with-email nil
-          org-export-time-stamp-file nil
-          org-export-with-section-numbers nil
-          org-export-with-todo-keywords nil)
+     ;; Don't show scheduled items in global todo list
+     org-agenda-todo-ignore-with-date t
 
-    ;; Capture Templates
-    (setq org-capture-templates
-          '(("m" "AA Meeting"
-             entry (file "~/Desktop/agenda/aa/TODOs.org")
-             "%[~/Desktop/agenda/templates/meeting.org]")
+     ;; Prettify exports for email
+     org-export-with-author nil
+     org-export-with-toc nil
+     org-export-with-email nil
+     org-export-time-stamp-file nil
+     org-export-with-section-numbers nil
+     org-export-with-todo-keywords nil
 
-            ("s" "User Story"
-             plain (function buffer-file-name)
-             "%[~/Desktop/agenda/templates/story.org]")))
+     ;; Capture Templates
+     org-capture-templates '(("m" "AA Meeting"
+                              entry (file "~/Desktop/agenda/aa/TODOs.org")
+                              "%[~/Desktop/agenda/templates/meeting.org]")
+
+                             ("s" "User Story"
+                              plain (function buffer-file-name)
+                              "%[~/Desktop/agenda/templates/story.org]")))
+
     (add-hook 'org-mode-hook 'emojify-mode)
 
-    ;; Babel
+    ;; Org-Babel
     )
 
   ;; ------ Mouse Support ------
@@ -560,8 +565,8 @@ you should place your code here."
   ;; ------ Spaceline All The Icons ------
   (when (display-graphic-p)
     (use-package spaceline-all-the-icons
-     :after spaceline
-     :config (spaceline-all-the-icons-theme)))
+      :after spaceline
+      :config (spaceline-all-the-icons-theme)))
 
   ;; ------ Shell -----
   ;; Default: multi-term, fish
