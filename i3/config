@@ -125,7 +125,7 @@ bindsym Mod1+r mode "resize"
 # status bar
 bar {
     output eDP-1-1
-    status_command i3status -c ~/.i3status.conf
+    status_command i3status
     tray_output primary
     font pango:Fantasque Sans Mono 14px
     position top
@@ -145,7 +145,7 @@ bar {
 
 bar {
     output HDMI-1-1
-    status_command i3status -c ~/.i3status.conf
+    status_command i3status
     tray_output primary
     font pango:Fantasque Sans Mono 16px
     position top
