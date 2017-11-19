@@ -114,3 +114,4 @@ fi
 
 sudo loadkeys /usr/share/keymaps/Caps2Ctrl.map
 set -o vi
+alias lsa="ls -lsaH"
