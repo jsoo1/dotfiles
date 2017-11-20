@@ -442,7 +442,8 @@ you should place your code here."
   ;; Idris clear repl
   (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
   (spacemacs/set-leader-keys-for-major-mode 'idris-repl-mode "s c" 'idris-repl-clear-buffer)
-  (define-key idris-repl-mode-map "C-c C-k" 'idris-repl-clear-buffer)
+  (with-eval-after-load 'idris-mode
+    (define-key idris-repl-mode-map (kbd "C-c C-k") 'idris-repl-clear-buffer))
 
   ;; ------ Paradox ------
   (setq paradox-github-token 'paradox)
@@ -623,3 +624,5 @@ you should place your code here."
   (setq custom-file "~/.customize.el")
   (load-file custom-file)
   )
+
+
