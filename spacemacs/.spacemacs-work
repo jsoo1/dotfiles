@@ -521,6 +521,9 @@ you should place your code here."
     (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
     (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
 
+  ;; ------ Fullscreen ------
+  (when (display-graphic-p) (spacemacs/toggle-fullscreen-frame-on))
+
   ;; ------ Mode-Line ------
   ;; no time in mode line by default
   (spacemacs/toggle-display-time-off)
@@ -620,9 +623,16 @@ you should place your code here."
   ;; Ignore annoying crap
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
+
+  ;; ------ ATS ------
+  (load-file "~/.emacs.d/private/ats2-mode.el")
+  (load-file "~/.emacs.d/private/flycheck-ats2.el")
+  (load-file "~/.emacs.d/private/flymake-ats2.el")
+  (require 'ats-mode)
+  (require 'ats2-flycheck)
+  (require 'ats2-flymake)
+
   ;; ------ Custom Settings ------
   (setq custom-file "~/.customize.el")
   (load-file custom-file)
   )
-
-
