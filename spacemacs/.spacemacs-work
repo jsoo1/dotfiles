@@ -145,6 +145,13 @@ It should only modify the values of Spacemacs settings."
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    ;; (default 5)
    dotspacemacs-elpa-timeout 5
+   ;; If non-nil then Spacelpa repository is the primary source to install
+   ;; a locked version of packages. If nil then Spacemacs will install the lastest
+   ;; version of packages from MELPA. (default nil)
+   dotspacemacs-use-spacelpa t
+   ;; If non-nil then verify the signature for downloaded Spacelpa archives.
+   ;; (default nil)
+   dotspacemacs-verify-spacelpa-archives t
    ;; If non-nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. Note that checking for
    ;; new versions works via git commands, thus it calls GitHub services
@@ -520,6 +527,8 @@ you should place your code here."
   (unless window-system
     (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
     (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
+  (global-set-key [wheel-right] 'scroll-left)
+  (global-set-key [wheel-left] 'scroll-right)
 
   ;; ------ Fullscreen ------
   (when (display-graphic-p) (spacemacs/toggle-fullscreen-frame-on))
@@ -553,9 +562,10 @@ you should place your code here."
   ;; No thanks to:
   ;; https://github.com/haskell/haskell-mode/issues/823
   (load-file "~/.emacs.d/private/haskell-prettify.el")
-  (add-hook 'haskell-mode-hook 'haskell-prettify-enable)
-  (add-hook 'haskell-mode-hook 'prettify-symbols-mode)
-  (add-hook 'haskell-mode-hook 'company-quickhelp-mode)
+  (dolist (mode '('haskell-prettify-enable
+                  'prettify-symbols-mode
+                  'company-quickhelp-mode))
+    (add-hook 'haskell-mode-hook mode))
 
   ;; ------ Projectile ------
   ;; Speed it up and eschew fish issues
