@@ -442,6 +442,8 @@ you should place your code here."
   ;; Idris clear repl
   (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
   (spacemacs/set-leader-keys-for-major-mode 'idris-repl-mode "s c" 'idris-repl-clear-buffer)
+  (with-eval-after-load 'idris-mode
+    (define-key idris-repl-mode-map (kbd "C-c C-k") 'idris-repl-clear-buffer))
 
   ;; ------ Paradox ------
   (setq paradox-github-token 'paradox)
@@ -518,6 +520,9 @@ you should place your code here."
   (unless window-system
     (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
     (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
+
+  ;; ------ Fullscreen ------
+  (when (display-graphic-p) (spacemacs/toggle-fullscreen-frame-on))
 
   ;; ------ Mode-Line ------
   ;; no time in mode line by default
@@ -618,8 +623,16 @@ you should place your code here."
   ;; Ignore annoying crap
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
+
+  ;; ------ ATS ------
+  (load-file "~/.emacs.d/private/ats2-mode.el")
+  (load-file "~/.emacs.d/private/flycheck-ats2.el")
+  (load-file "~/.emacs.d/private/flymake-ats2.el")
+  (require 'ats-mode)
+  (require 'ats2-flycheck)
+  (require 'ats2-flymake)
+
   ;; ------ Custom Settings ------
   (setq custom-file "~/.customize.el")
   (load-file custom-file)
   )
-
