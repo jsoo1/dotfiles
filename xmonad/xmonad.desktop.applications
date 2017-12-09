@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Xmonad
+Type=Application
+Encoding=UTF-8
+Exec=/home/john/.local/bin/xmonad
+NoDisplay=true
+X-GNOME-WMName=Xmonad
+X-GNOME-Autostart-Phase=WindowManager
+X-GNOME-Provides=windowmanager
+X-GNOME-Autostart-Notify=false
