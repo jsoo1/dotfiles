@@ -435,6 +435,8 @@ you should place your code here."
   ;; Idris clear REPL
   (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
   (spacemacs/set-leader-keys-for-major-mode 'idris-repl-mode "s c" 'idris-repl-clear-buffer)
+  (with-eval-after-load 'idris-mode
+    (define-key idris-repl-mode-map (kbd "C-c C-k") 'idris-repl-clear-buffer))
   ;; df == fd
   (setq evil-escape-unordered-key-sequence t)
 
