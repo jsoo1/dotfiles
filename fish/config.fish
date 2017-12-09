@@ -17,6 +17,9 @@ set -xg PRINTER 'HP-ENVY-4500-series'
 # Fuzzy Finder
 set -x FZF_DEFAULT_COMMAND 'rg --files --hidden --ignore .git --smartcase --glob "!.git/*"'
 
+# fish cwd color
+set -x fish_color_cwd magenta
+
 # vi mode
 fish_vi_key_bindings
 
