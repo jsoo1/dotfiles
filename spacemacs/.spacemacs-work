@@ -29,8 +29,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
-     (auto-completion
+   '((auto-completion
       (haskell :variables haskell-completion-backend 'dante))
      c-c++
      clojure
@@ -81,11 +80,14 @@ This function should only modify configuration layer settings."
      react
      restclient
      ruby
+     rust
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
      shell-scripts
-     slack
+     (slack :variables
+            slack-spacemacs-layout-name "@Slack"
+            slack-spacemacs-layout-binding "s")
      (spell-checking :variables spell-checking-enable-by-default nil)
      spotify
      sql
