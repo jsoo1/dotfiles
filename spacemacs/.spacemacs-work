@@ -486,10 +486,8 @@ you should place your code here."
     (setq
      ;; Agenda mode files
      org-agenda-files '("~/Desktop/agenda/"
-                        "~/projects/AACom-Release/TODOs.org"
-                        "~/projects/AACom-Release/STORIEs.org"
-                        "~/projects/AACom-Release/MEETINGs.org"
-                        "~/projects/nostradamus_node/TODOs.org")
+                        "~/projects/AACom-Release/"
+                        "~/projects/nostradamus_node/")
 
      ;; Org HTML presentations with reveal.js
      org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"
