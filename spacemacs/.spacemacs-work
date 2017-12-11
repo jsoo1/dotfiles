@@ -472,7 +472,7 @@ you should place your code here."
    httpd-port 9090)
 
   ;; ------ Slack ------
-  (load-file "~/.emacs.d/private/slack-config.el")
+  (with-eval-after-load 'slack (load-file "~/.emacs.d/private/slack-config.el"))
 
   ;; ------ Cider and Clojure ------
   (setq clojure-enable-fancify-symbols t
