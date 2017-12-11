@@ -570,7 +570,7 @@ you should place your code here."
   ;; ------ Projectile ------
   ;; Speed it up and eschew fish issues
   (setq shell-file-name "/bin/bash"
-        projectile-enable-cachine t)
+        projectile-enable-caching t)
 
   ;; ------ DirEd ------
   ;; Icons
