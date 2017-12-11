@@ -537,12 +537,22 @@ you should place your code here."
   ;; no time in mode line by default
   (spacemacs/toggle-display-time-off)
   ;; diminish symbols
-  (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮" "$"))
-  (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠" ""))
-  (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" ""))
-  (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
-  (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
-  (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode "M" "M"))
+  (setq spacemacs--diminished-minor-modes
+        (seq-map
+         (lambda (mode)
+           (pcase (car mode)
+             ('hybrid-mode                          '(hybrid-mode "Ⓔ h" " Eh"))
+             ('holy-mode                            '(holy-mode "Ⓔ e" " Eh"))
+             ('server-buffer-clients                '(server-buffer-clients " ⒮ " " $"))
+             ('emoji-cheat-sheet-plus-display-mode  '(emoji-cheat-sheet-plus-display-mode " ⒠ " ""))
+             ('interactive-haskell-mode             '(interactive-haskell-mode " ⒤ " ""))
+             ('dired-omit-mode                      '(dired-omit-mode nil nil))
+             ('all-the-icons-dired-mode             '(all-the-icons-dired-mode nil nil))
+             ('meghanada-mode                       '(meghanada-mode " M" " M"))
+             ('which-key-mode                       '(which-key-mode "Ⓚ " " M"))
+             (_                                     mode)))
+         spacemacs--diminished-minor-modes))
+
   ;; Use the arrow separator on GUI
   (when (display-graphic-p)
     (setq powerline-default-separator 'arrow)
