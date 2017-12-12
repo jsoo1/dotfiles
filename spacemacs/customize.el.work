@@ -21,6 +21,7 @@ This function is called at the very end of Spacemacs initialization."
    '(spaceline-modified ((t (:inherit (quote mode-line) :foreground "#3E3D31" :background "SkyBlue2"))))
    '(spaceline-read-only ((t (:inherit (quote mode-line) :foreground "#3E3D31" :background "plum3"))))
    '(spacemacs-emacs-face ((t (:inherit (quote mode-line) :foreground "#3E3D31" :background "SkyBlue2"))))
+   '(spacemacs-hybrid-face ((t (:inherit (quote mode-line) :foreground "#3E3D31" :background "SkyBlue2"))))
    '(spacemacs-evilified-face ((t (:inherit (quote mode-line) :foreground "#3E3D31" :background "LightGoldenrod3"))))
    '(spacemacs-insert-face ((t (:inherit (quote mode-line) :foreground "#3E3D31" :background "chartreuse3"))))
    '(spacemacs-motion-face ((t (:inherit (quote mode-line) :foreground "#3E3D31" :background "plum3"))))
