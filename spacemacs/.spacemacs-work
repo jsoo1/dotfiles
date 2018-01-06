@@ -29,8 +29,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
-     (auto-completion
+   '((auto-completion
       (haskell :variables haskell-completion-backend 'dante))
      c-c++
      clojure
@@ -81,11 +80,14 @@ This function should only modify configuration layer settings."
      react
      restclient
      ruby
+     rust
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
      shell-scripts
-     slack
+     (slack :variables
+            slack-spacemacs-layout-name "@Slack"
+            slack-spacemacs-layout-binding "s")
      (spell-checking :variables spell-checking-enable-by-default nil)
      spotify
      sql
@@ -145,6 +147,13 @@ It should only modify the values of Spacemacs settings."
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    ;; (default 5)
    dotspacemacs-elpa-timeout 5
+   ;; If non-nil then Spacelpa repository is the primary source to install
+   ;; a locked version of packages. If nil then Spacemacs will install the lastest
+   ;; version of packages from MELPA. (default nil)
+   dotspacemacs-use-spacelpa t
+   ;; If non-nil then verify the signature for downloaded Spacelpa archives.
+   ;; (default nil)
+   dotspacemacs-verify-spacelpa-archives t
    ;; If non-nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. Note that checking for
    ;; new versions works via git commands, thus it calls GitHub services
@@ -463,7 +472,7 @@ you should place your code here."
    httpd-port 9090)
 
   ;; ------ Slack ------
-  (load-file "~/.emacs.d/private/slack-config.el")
+  (with-eval-after-load 'slack (load-file "~/.emacs.d/private/slack-config.el"))
 
   ;; ------ Cider and Clojure ------
   (setq clojure-enable-fancify-symbols t
@@ -479,10 +488,8 @@ you should place your code here."
     (setq
      ;; Agenda mode files
      org-agenda-files '("~/Desktop/agenda/"
-                        "~/projects/AACom-Release/TODOs.org"
-                        "~/projects/AACom-Release/STORIEs.org"
-                        "~/projects/AACom-Release/MEETINGs.org"
-                        "~/projects/nostradamus_node/TODOs.org")
+                        "~/projects/AACom-Release/"
+                        "~/projects/nostradamus_node/")
 
      ;; Org HTML presentations with reveal.js
      org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"
@@ -520,6 +527,8 @@ you should place your code here."
   (unless window-system
     (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
     (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
+  (global-set-key [wheel-right] 'scroll-left)
+  (global-set-key [wheel-left] 'scroll-right)
 
   ;; ------ Fullscreen ------
   (when (display-graphic-p) (spacemacs/toggle-fullscreen-frame-on))
@@ -528,12 +537,23 @@ you should place your code here."
   ;; no time in mode line by default
   (spacemacs/toggle-display-time-off)
   ;; diminish symbols
-  (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮" "$"))
-  (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠" ""))
-  (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" ""))
+  (setq spacemacs--diminished-minor-modes
+        (seq-map
+         (lambda (mode)
+           (pcase (car mode)
+             ('hybrid-mode                          '(hybrid-mode "Ⓔ h" " Eh"))
+             ('holy-mode                            '(holy-mode "Ⓔ e" " Eh"))
+             ('which-key-mode                       '(which-key-mode "Ⓚ  " " K"))
+             (_                                     mode)))
+         spacemacs--diminished-minor-modes))
+
+  (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠ " ""))
+  (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮ " " $"))
+  (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤ " ""))
   (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
-  (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode "M" "M"))
+  (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode " M" " M"))
+
   ;; Use the arrow separator on GUI
   (when (display-graphic-p)
     (setq powerline-default-separator 'arrow)
@@ -553,14 +573,15 @@ you should place your code here."
   ;; No thanks to:
   ;; https://github.com/haskell/haskell-mode/issues/823
   (load-file "~/.emacs.d/private/haskell-prettify.el")
-  (add-hook 'haskell-mode-hook 'haskell-prettify-enable)
-  (add-hook 'haskell-mode-hook 'prettify-symbols-mode)
-  (add-hook 'haskell-mode-hook 'company-quickhelp-mode)
+  (dolist (mode '('haskell-prettify-enable
+                  'prettify-symbols-mode
+                  'company-quickhelp-mode))
+    (add-hook 'haskell-mode-hook mode))
 
   ;; ------ Projectile ------
   ;; Speed it up and eschew fish issues
   (setq shell-file-name "/bin/bash"
-        projectile-enable-cachine t)
+        projectile-enable-caching t)
 
   ;; ------ DirEd ------
   ;; Icons
