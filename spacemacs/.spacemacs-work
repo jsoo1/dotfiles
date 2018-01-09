@@ -33,7 +33,6 @@ This function should only modify configuration layer settings."
       (haskell :variables haskell-completion-backend 'dante))
      c-c++
      clojure
-     common-lisp
      csv
      dash
      docker
@@ -47,7 +46,6 @@ This function should only modify configuration layer settings."
              :ssl t
              :nick "jsoo")))
      erlang
-     evil-cleverparens
      evil-snipe
      fsharp
      (git :variables git-magit-status-fullscreen t)
@@ -60,7 +58,7 @@ This function should only modify configuration layer settings."
      idris
      ivy
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
-     (java :variables java-backend nil)
+     (java :variables java-backend 'ensime)
      (javascript :variables tern-command '("node" "/usr/local/bin/tern"))
      (latex :variables
             latex-build-command "LaTeX"
@@ -161,8 +159,8 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-check-for-update nil
    ;; If non-nil, a form that evaluates to a package directory. For example, to
    ;; use different package directories for different Emacs versions, set this
-   ;; to `emacs-version'. (default nil)
-   dotspacemacs-elpa-subdirectory nil
+   ;; to `emacs-version'. (default 'emacs-version)
+   dotspacemacs-elpa-subdirectory 'emacs-version
    ;; One of `vim', `emacs' or `hybrid'.
    ;; `hybrid' is like `vim' except that `insert state' is replaced by the
    ;; `hybrid state' with `emacs' key bindings. The value can also be a list
@@ -412,7 +410,8 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (setq nand2tetris-core-base-dir "~/projects/nand2tetris"))
+  (setq nand2tetris-core-base-dir "~/projects/nand2tetris")
+  (setq custom-file "~/.customize.el"))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -428,6 +427,7 @@ you should place your code here."
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.asm\\'" . nand2tetris-mode))
   (add-to-list 'auto-mode-alist '("\\.scpt\\'" . applescript-mode))
+  (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . xml-mode))
 
   ;; ------ Key Bindings ------
   ;; Woman under help
@@ -533,7 +533,7 @@ you should place your code here."
   ;; ------ Fullscreen ------
   (when (display-graphic-p) (spacemacs/toggle-fullscreen-frame-on))
 
-  ;; ------ Mode-Line ------
+  ;; ------ Spaceline ------
   ;; no time in mode line by default
   (spacemacs/toggle-display-time-off)
   ;; diminish symbols
@@ -543,7 +543,7 @@ you should place your code here."
            (pcase (car mode)
              ('hybrid-mode                          '(hybrid-mode "Ⓔ h" " Eh"))
              ('holy-mode                            '(holy-mode "Ⓔ e" " Eh"))
-             ('which-key-mode                       '(which-key-mode "Ⓚ " " K"))
+             ('which-key-mode                       '(which-key-mode "Ⓚ  " " K"))
              (_                                     mode)))
          spacemacs--diminished-minor-modes))
 
@@ -554,10 +554,19 @@ you should place your code here."
   (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode " M" " M"))
 
-  ;; Use the arrow separator on GUI
+  ;; use the arrow separator on GUI
   (when (display-graphic-p)
     (setq powerline-default-separator 'arrow)
     (spaceline-compile))
+
+  ;; no time
+  (spacemacs/toggle-display-time-off)
+
+  ;; Spaceline All The Icons in frame
+  (when (display-graphic-p)
+    (use-package spaceline-all-the-icons
+      :after spaceline
+      :config (spaceline-all-the-icons-theme)))
 
   ;; ------- LaTex -------
   ;; LaTeX auto load on save
@@ -587,12 +596,6 @@ you should place your code here."
   ;; Icons
   (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")
   (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
-
-  ;; ------ Spaceline All The Icons ------
-  (when (display-graphic-p)
-    (use-package spaceline-all-the-icons
-      :after spaceline
-      :config (spaceline-all-the-icons-theme)))
 
   ;; ------ Shell -----
   ;; Default: multi-term, fish
@@ -654,6 +657,5 @@ you should place your code here."
   (require 'ats2-flymake)
 
   ;; ------ Custom Settings ------
-  (setq custom-file "~/.customize.el")
   (load-file custom-file)
   )
