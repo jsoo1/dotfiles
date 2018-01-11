@@ -407,8 +407,6 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (push '("melpa-stable" . "stable.melpa.org/packages/") configuration-layer--elpa-archives)
-  (push '(ensime . "melpa-stable") package-pinned-packages)
   (setq nand2tetris-core-base-dir "~/projects/nand2tetris")
   (setq custom-file "~/.customize.el"))
 
