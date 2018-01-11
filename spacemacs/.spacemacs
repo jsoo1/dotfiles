@@ -50,7 +50,6 @@ This function should only modify configuration layer settings."
              :nick "jsoo")))
      emacs-lisp
      erlang
-     evil-cleverparens
      evil-snipe
      fsharp
      (git :variables git-magit-status-fullscreen t)
@@ -107,16 +106,16 @@ This function should only modify configuration layer settings."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(clojars
-                                      clojure-cheatsheet
-                                      gradle-mode
-                                      groovy-mode
-                                      nand2tetris
-                                      js-comint
-                                      (shen-elisp
-                                       :location (recipe :repo "deech/shen-elisp"
-                                                         :fetcher github
-                                                         :files ("shen*.el"))
-                                       :upgrade 't))
+                            clojure-cheatsheet
+                            gradle-mode
+                            groovy-mode
+                            nand2tetris
+                            js-comint
+                            (shen-elisp
+                             :location (recipe :repo "deech/shen-elisp"
+                                               :fetcher github
+                                               :files ("shen*.el"))
+                             :upgrade 't))
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -162,8 +161,8 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-check-for-update nil
    ;; If non-nil, a form that evaluates to a package directory. For example, to
    ;; use different package directories for different Emacs versions, set this
-   ;; to `emacs-version'. (default nil)
-   dotspacemacs-elpa-subdirectory nil
+   ;; to `emacs-version'. (default 'emacs-version)
+   dotspacemacs-elpa-subdirectory 'emacs-version
    ;; One of `vim', `emacs' or `hybrid'.
    ;; `hybrid' is like `vim' except that `insert state' is replaced by the
    ;; `hybrid state' with `emacs' key bindings. The value can also be a list
@@ -187,9 +186,9 @@ It should only modify the values of Spacemacs settings."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    dotspacemacs-startup-lists '((agenda . 7)
-                                (todos . 7)
-                                (projects . 3)
-                                (recents . 3))
+                      (todos . 7)
+                      (projects . 3)
+                      (recents . 3))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
@@ -198,22 +197,22 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light)
+               spacemacs-light)
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '(("Fantasque Sans Mono"
-                                :size 16
-                                :weight normal
-                                :width wide
-                                :powerline-scale 1.4)
-                               ("Source Code Pro for Powerline"
-                                :size 13
-                                :weight normal
-                                :width normal
-                                :powerline-scale 1.1))
+                      :size 16
+                      :weight normal
+                      :width wide
+                      :powerline-scale 1.4)
+                     ("Source Code Pro for Powerline"
+                      :size 13
+                      :weight normal
+                      :width normal
+                      :powerline-scale 1.1))
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands `M-x' (after pressing on the leader key).

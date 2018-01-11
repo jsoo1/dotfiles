@@ -1,5 +1,10 @@
 rofi.combi-modi:                     window,ssh,drun,run
 
+rofi.run-command:                    fish -c '{cmd}'
+rofi.run-list-command:               'fish -c functions'
+rofi.terminal:                       /usr/local/bin/alacritty
+rofi.ssh-command:                    {terminal} -e {ssh-client} {host}
+
 rofi.kb-cancel:                      Escape,Control+g,Control+c
 
 rofi.kb-remove-to-eol:               Shift+d
