@@ -551,9 +551,6 @@ you should place your code here."
     (setq powerline-default-separator 'arrow)
     (spaceline-compile))
 
-  ;; no time
-  (spacemacs/toggle-display-time-off)
-
   ;; Spaceline All The Icons in frame
   (when (display-graphic-p)
     (use-package spaceline-all-the-icons
