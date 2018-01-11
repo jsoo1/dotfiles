@@ -477,7 +477,7 @@ you should place your code here."
   (with-eval-after-load 'org
 
     ;; Agenda notifications
-    (load-file "~/.emacs.d/private/agenda-notify.el")
+    ; (load-file "~/.emacs.d/private/agenda-notify.el")
 
     (setq
      ;; Agenda mode files
@@ -575,9 +575,9 @@ you should place your code here."
   ;; https://github.com/cpitclaudel/.emacs.d/blob/master/lisp/prettify-alists/haskell-prettify.el
   ;; No thanks to:
   ;; https://github.com/haskell/haskell-mode/issues/823
-  (load-file "~/.emacs.d/private/haskell-prettify.el")
+  ; (load-file "~/.emacs.d/private/haskell-prettify.el")
   (dolist (mode '('haskell-prettify-enable
-                  'prettify-symbols-mode
+                  ; 'prettify-symbols-mode
                   'company-quickhelp-mode))
     (add-hook 'haskell-mode-hook mode))
 
@@ -588,8 +588,8 @@ you should place your code here."
 
   ;; ------ DirEd ------
   ;; Icons
-  (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")
-  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+  ; (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")
+  ; (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
 
   ;; ------ Shell -----
   ;; Default: multi-term, fish
@@ -643,12 +643,12 @@ you should place your code here."
 
 
   ;; ------ ATS ------
-  (load-file "~/.emacs.d/private/ats2-mode.el")
-  (load-file "~/.emacs.d/private/flycheck-ats2.el")
-  (load-file "~/.emacs.d/private/flymake-ats2.el")
-  (require 'ats-mode)
-  (require 'ats2-flycheck)
-  (require 'ats2-flymake)
+  ; (load-file "~/.emacs.d/private/ats2-mode.el")
+  ; (load-file "~/.emacs.d/private/flycheck-ats2.el")
+  ; (load-file "~/.emacs.d/private/flymake-ats2.el")
+  ; (require 'ats-mode)
+  ; (require 'ats2-flycheck)
+  ; (require 'ats2-flymake)
 
   ;; ------ Custom Settings ------
   (load-file custom-file)
