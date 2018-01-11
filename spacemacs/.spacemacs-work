@@ -37,7 +37,7 @@ This function should only modify configuration layer settings."
      dash
      docker
      elm
-     emacs-lisp
+     (emacs-lisp :variables emacs-lisp-hide-namespace-prefix nil)
      emoji
      (erc :variables
           erc-server-list
@@ -65,7 +65,6 @@ This function should only modify configuration layer settings."
             latex-enable-auto-fill t
             latex-enable-folding t)
      lua
-     major-modes
      (markdown :variables markdown-live-preview-engine 'vmd)
      nginx
      (org :variables
@@ -90,7 +89,6 @@ This function should only modify configuration layer settings."
      syntax-checking
      systemd
      tmux
-     treemacs
      twitter
      version-control
      vimscript
