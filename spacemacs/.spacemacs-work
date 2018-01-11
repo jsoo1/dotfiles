@@ -83,9 +83,6 @@ This function should only modify configuration layer settings."
             shell-default-height 30
             shell-default-position 'bottom)
      shell-scripts
-     (slack :variables
-            slack-spacemacs-layout-name "@Slack"
-            slack-spacemacs-layout-binding "s")
      (spell-checking :variables spell-checking-enable-by-default nil)
      spotify
      sql
@@ -472,9 +469,6 @@ you should place your code here."
 
    ;; No port collision between skewer and tomcat for skewer
    httpd-port 9090)
-
-  ;; ------ Slack ------
-  (with-eval-after-load 'slack (load-file "~/.emacs.d/private/slack-config.el"))
 
   ;; ------ Cider and Clojure ------
   (setq clojure-enable-fancify-symbols t
