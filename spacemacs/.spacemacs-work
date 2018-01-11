@@ -600,6 +600,8 @@ you should place your code here."
   (add-hook 'nand2tetris-mode (lambda () (setq tab-width 4)))
 
   ;; ------ American Airlines/Java/Gradle ------
+  ;; ENSIME
+  (setq ensime-startup-notification 'nil)
   ;; Use Gradle in Java files
   (add-hook 'java-mode-hook gradle-mode)
   ;; Recognize .tag files as jsp
