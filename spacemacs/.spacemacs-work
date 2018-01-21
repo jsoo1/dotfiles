@@ -33,7 +33,6 @@ This function should only modify configuration layer settings."
       (haskell :variables haskell-completion-backend 'dante))
      c-c++
      clojure
-     common-lisp
      csv
      dash
      docker
@@ -47,7 +46,6 @@ This function should only modify configuration layer settings."
              :ssl t
              :nick "jsoo")))
      erlang
-     evil-cleverparens
      evil-snipe
      fsharp
      (git :variables git-magit-status-fullscreen t)
@@ -60,7 +58,7 @@ This function should only modify configuration layer settings."
      idris
      ivy
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
-     (java :variables java-backend nil)
+     (java :variables java-backend 'ensime)
      (javascript :variables tern-command '("node" "/usr/local/bin/tern"))
      (latex :variables
             latex-build-command "LaTeX"
@@ -108,14 +106,14 @@ This function should only modify configuration layer settings."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(all-the-icons
-                                      spaceline-all-the-icons
-                                      applescript-mode
-                                      company-sourcekit
-                                      clojars
-                                      clojure-cheatsheet
-                                      gradle-mode
-                                      groovy-mode
-                                      nand2tetris)
+                            spaceline-all-the-icons
+                            applescript-mode
+                            company-sourcekit
+                            clojars
+                            clojure-cheatsheet
+                            gradle-mode
+                            groovy-mode
+                            nand2tetris)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -161,8 +159,8 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-check-for-update nil
    ;; If non-nil, a form that evaluates to a package directory. For example, to
    ;; use different package directories for different Emacs versions, set this
-   ;; to `emacs-version'. (default nil)
-   dotspacemacs-elpa-subdirectory nil
+   ;; to `emacs-version'. (default 'emacs-version)
+   dotspacemacs-elpa-subdirectory 'emacs-version
    ;; One of `vim', `emacs' or `hybrid'.
    ;; `hybrid' is like `vim' except that `insert state' is replaced by the
    ;; `hybrid state' with `emacs' key bindings. The value can also be a list
@@ -186,9 +184,9 @@ It should only modify the values of Spacemacs settings."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    dotspacemacs-startup-lists '((agenda . 7)
-                                (todos . 7)
-                                (projects . 3)
-                                (recents . 3))
+                      (todos . 7)
+                      (projects . 3)
+                      (recents . 3))
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
@@ -197,22 +195,22 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light)
+               spacemacs-light)
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '(("Fantasque Sans Mono"
-                                :size 14
-                                :weight normal
-                                :width wide
-                                :powerline-scale 1.3)
-                               ("Source Code Pro"
-                                :size 13
-                                :weight normal
-                                :width normal
-                                :powerline-scale 1.1))
+                      :size 14
+                      :weight normal
+                      :width wide
+                      :powerline-scale 1.3)
+                     ("Source Code Pro"
+                      :size 13
+                      :weight normal
+                      :width normal
+                      :powerline-scale 1.1))
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
    ;; The key used for Emacs commands `M-x' (after pressing on the leader key).
@@ -412,7 +410,10 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  )
+  (push '("melpa-stable" . "stable.melpa.org/packages/") configuration-layer--elpa-archives)
+  (push '(ensime . "melpa-stable") package-pinned-packages)
+  (setq nand2tetris-core-base-dir "~/projects/nand2tetris")
+  (setq custom-file "~/.customize.el"))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -428,6 +429,7 @@ you should place your code here."
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.asm\\'" . nand2tetris-mode))
   (add-to-list 'auto-mode-alist '("\\.scpt\\'" . applescript-mode))
+  (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . xml-mode))
 
   ;; ------ Key Bindings ------
   ;; Woman under help
@@ -533,7 +535,7 @@ you should place your code here."
   ;; ------ Fullscreen ------
   (when (display-graphic-p) (spacemacs/toggle-fullscreen-frame-on))
 
-  ;; ------ Mode-Line ------
+  ;; ------ Spaceline ------
   ;; no time in mode line by default
   (spacemacs/toggle-display-time-off)
   ;; diminish symbols
@@ -547,17 +549,26 @@ you should place your code here."
              (_                                     mode)))
          spacemacs--diminished-minor-modes))
 
-  (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠ " ""))
+  (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠ " nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮ " " $"))
-  (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤ " ""))
+  (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤ " nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode " M" " M"))
 
-  ;; Use the arrow separator on GUI
+  ;; use the arrow separator on GUI
   (when (display-graphic-p)
     (setq powerline-default-separator 'arrow)
     (spaceline-compile))
+
+  ;; no time
+  (spacemacs/toggle-display-time-off)
+
+  ;; Spaceline All The Icons in frame
+  (when (display-graphic-p)
+    (use-package spaceline-all-the-icons
+      :after spaceline
+      :config (spaceline-all-the-icons-theme)))
 
   ;; ------- LaTex -------
   ;; LaTeX auto load on save
@@ -587,12 +598,6 @@ you should place your code here."
   ;; Icons
   (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")
   (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
-
-  ;; ------ Spaceline All The Icons ------
-  (when (display-graphic-p)
-    (use-package spaceline-all-the-icons
-      :after spaceline
-      :config (spaceline-all-the-icons-theme)))
 
   ;; ------ Shell -----
   ;; Default: multi-term, fish
@@ -654,6 +659,5 @@ you should place your code here."
   (require 'ats2-flymake)
 
   ;; ------ Custom Settings ------
-  (setq custom-file "~/.customize.el")
   (load-file custom-file)
   )
