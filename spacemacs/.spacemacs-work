@@ -109,13 +109,27 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(applescript-mode
-                                      company-sourcekit
-                                      clojars
-                                      clojure-cheatsheet
-                                      gradle-mode
-                                      groovy-mode
-                                      nand2tetris)
+   dotspacemacs-additional-packages
+   '(
+     ;; ------ Applescript ------
+     applescript-mode
+     ;; ------ Swift ------
+     company-sourcekit
+     ;; ------ Clojure ------
+     clojars
+     clojure-cheatsheet
+     ;; ------ Gradle ------
+     gradle-mode
+     groovy-mode
+     ;; ------ Nand2Tetris ------
+     nand2tetris
+     ;; ------ Haskell Prettify -----
+     ;; Thanks to:
+     ;; https://github.com/cpitclaudel/.emacs.d/blob/master/lisp/prettify-alists/haskell-prettify.el
+     ;; No thanks to:
+     ;; https://github.com/haskell/haskell-mode/issues/823
+     (haskell-prettify :location "~/.emacs.d/private/")
+     )
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -225,7 +239,9 @@ It should only modify the values of Spacemacs settings."
    ;; to create your own spaceline theme. Value can be a symbol or list with\
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(all-the-icons :separator arrow :separator-scale 1.5)
+   dotspacemacs-mode-line-theme (if (display-graphic-p)
+                                  '(all-the-icons :separator arrow :separator-scale 1.5)
+                                  '(vim-powerline :separator arrow :separator-scale 1.5))
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -516,6 +532,21 @@ you should place your code here."
   (add-to-list 'auto-mode-alist '("\\.asm\\'" . nand2tetris-mode))
   (add-to-list 'auto-mode-alist '("\\.scpt\\'" . applescript-mode))
   (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . xml-mode))
+  (add-to-list 'auto-mode-alist '("\\.dats\\'" . (lambda ()
+                                                   (progn
+                                                     (when (not (fboundp 'ats-mode))
+                                                       (load-file "~/.emacs.d/private/ats2-mode.el"))
+                                                     (ats-mode)))))
+  (add-to-list 'auto-mode-alist '("\\.dats\\'" . (lambda ()
+                                                   (progn
+                                                     (when (not (fboundp 'ats2-flymake))
+                                                       (load-file "~/.emacs.d/private/flycheck-ats2.el"))
+                                                     (ats2-flymake)))))
+  (add-to-list 'auto-mode-alist '("\\.dats\\'" . (lambda ()
+                                                   (progn
+                                                     (when (not (fboundp 'ats2-flycheck))
+                                                       (load-file "~/.emacs.d/private/flycheck-ats2.el"))
+                                                     (ats2-flycheck)))))
 
   ;; ------ Key Bindings ------
   ;; Woman under help
@@ -568,7 +599,7 @@ you should place your code here."
   (with-eval-after-load 'org
 
     ;; Agenda notifications
-    ;; (load-file "~/.emacs.d/private/agenda-notify.el")
+    (load-file "~/.emacs.d/private/agenda-notify.el")
 
     (setq
      ;; Agenda mode files
@@ -648,11 +679,6 @@ you should place your code here."
   (add-hook 'scss-mode-hook (lambda () (setq css-indent-offset 4)))
 
   ;; ------ Haskell ------
-  ;; Thanks to:
-  ;; https://github.com/cpitclaudel/.emacs.d/blob/master/lisp/prettify-alists/haskell-prettify.el
-  ;; No thanks to:
-  ;; https://github.com/haskell/haskell-mode/issues/823
-  (load-file "~/.emacs.d/private/haskell-prettify.el")
   (dolist (mode '('haskell-prettify-enable
                   'prettify-symbols-mode
                   'company-quickhelp-mode))
@@ -665,8 +691,13 @@ you should place your code here."
 
   ;; ------ DirEd ------
   ;; Icons
-  (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")
-  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+  (add-hook
+   'dired-mode-hook
+   (lambda ()
+     (progn
+       (when (not (fboundp 'all-the-icons-dired-mode))
+         (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")))
+     (all-the-icons-dired-mode)))
 
   ;; ------ Shell -----
   ;; Default: multi-term, fish
@@ -681,7 +712,7 @@ you should place your code here."
   ;; Indent with 4 spaces
   (add-hook 'nand2tetris-mode (lambda () (setq tab-width 4)))
 
-  ;; ------ American Airlines/Java/Gradle ------
+  ;; ------ Java ------
   ;; ENSIME
   (setq ensime-startup-notification 'nil)
   ;; Use Gradle in Java files
@@ -719,15 +750,6 @@ you should place your code here."
   ;; ------ ERC ------
   ;; Ignore annoying crap
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
-
-
-  ;; ------ ATS ------
-  (load-file "~/.emacs.d/private/ats2-mode.el")
-  (load-file "~/.emacs.d/private/flycheck-ats2.el")
-  (load-file "~/.emacs.d/private/flymake-ats2.el")
-  (require 'ats-mode)
-  (require 'ats2-flycheck)
-  (require 'ats2-flymake)
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
