@@ -44,11 +44,10 @@ This function should only modify configuration layer settings."
      (emacs-lisp :variables emacs-lisp-hide-namespace-prefix nil)
      emoji
      (erc :variables
-          erc-server-list
-          '(("irc.freenode.net"
-             :port "6697"
-             :ssl t
-             :nick "jsoo")))
+          erc-server-list '(("irc.freenode.net"
+                             :port "6697"
+                             :ssl t
+                             :nick "jsoo")))
      erlang
      evil-snipe
      fsharp
@@ -555,7 +554,6 @@ you should place your code here."
   (spacemacs/set-leader-keys-for-major-mode 'web-mode "E" 'emmet-expand-line)
   ;; cider-restart
   (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
-
   ;; Haskell interactive include hoogle
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h h" 'hoogle)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h i" 'haskell-process-do-info)
@@ -604,8 +602,7 @@ you should place your code here."
     (setq
      ;; Agenda mode files
      org-agenda-files '("~/Desktop/agenda/"
-                        "~/projects/AACom-Release/"
-                        "~/projects/nostradamus_node/")
+                        "~/projects/AACom-Release/")
 
      ;; Org HTML presentations with reveal.js
      org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"
@@ -657,10 +654,10 @@ you should place your code here."
         (seq-map
          (lambda (mode)
            (pcase (car mode)
-             ('hybrid-mode                          '(hybrid-mode "Ⓔ h" " Eh"))
-             ('holy-mode                            '(holy-mode "Ⓔ e" " Eh"))
-             ('which-key-mode                       '(which-key-mode "Ⓚ  " " K"))
-             (_                                     mode)))
+             ('hybrid-mode    '(hybrid-mode "Ⓔ h" " Eh"))
+             ('holy-mode      '(holy-mode "Ⓔ e" " Eh"))
+             ('which-key-mode '(which-key-mode "Ⓚ  " " K"))
+             (_               mode)))
          spacemacs--diminished-minor-modes))
 
   (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠ " nil))
