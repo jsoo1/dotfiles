@@ -36,7 +36,7 @@ set $right l
 bindsym Mod1+Return exec alacritty
 
 # Rofi
-bindsym Mod1+space exec fish -c"rofi -show combi -modi combi"
+bindsym Mod1+space exec fish -c "rofi -show combi -modi combi"
 
 # Rofi for alt-tab
 bindsym Mod1+Tab exec fish -c "rofi -show window -modi window"
