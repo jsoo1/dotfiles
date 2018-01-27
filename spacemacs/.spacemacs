@@ -96,6 +96,7 @@ This function should only modify configuration layer settings."
      sql
      syntax-checking
      systemd
+     themes-megapack
      treemacs
      tmux
      twitter
@@ -113,10 +114,7 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(clojars
-                                      clojure-cheatsheet
-                                      gradle-mode
-                                      groovy-mode
+   dotspacemacs-additional-packages '(doom-themes
                                       nand2tetris
                                       js-comint
                                       (shen-elisp
@@ -657,6 +655,16 @@ you should place your code here."
   (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode "M" "M"))
+
+  ;; ------ DirEd ------
+  ;; Icons
+  (add-hook
+   'dired-mode-hook
+   (lambda ()
+     (progn
+       (when (not (fboundp 'all-the-icons-dired-mode))
+         (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")))
+     (all-the-icons-dired-mode)))
 
   ;; ------ Surround ------
   ;; don't put spaces between my shit!
