@@ -233,7 +233,7 @@ It should only modify the values of Spacemacs settings."
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
    dotspacemacs-mode-line-theme (if (display-graphic-p)
-                                    '(all-the-icons :separator arrow :separator-scale 1.5)
+                                    '(spacemacs :separator arrow :separator-scale 1.5)
                                   '(vim-powerline :separator arrow :separator-scale 1.5))
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
@@ -691,6 +691,7 @@ you should place your code here."
   (advice-add 'haskell-indentation-newline-and-indent
               :after 'haskell-indentation-advice)
 
+  ;; Nice little popup
   (add-hook 'haskell-mode-hook 'company-quickhelp-mode)
   ;; Prettify symbols
   (add-hook 'haskell-mode-hook (lambda ()
