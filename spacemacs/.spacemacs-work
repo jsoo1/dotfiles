@@ -33,7 +33,8 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '((auto-completion
+   '((
+      auto-completion
      (haskell :variables haskell-completion-backend 'dante))
      c-c++
      clojure
@@ -47,7 +48,8 @@ This function should only modify configuration layer settings."
           erc-server-list '(("irc.freenode.net"
                              :port "6697"
                              :ssl t
-                             :nick "jsoo")))
+                             :nick "jsoo"))
+          erc-auto-join-channels-alist '(("#idris" "#coq" "#agda")))
      erlang
      evil-snipe
      fsharp
@@ -60,7 +62,6 @@ This function should only modify configuration layer settings."
      (ibuffer :variables ibuffer-group-buffers-by 'projects)
      idris
      ivy
-     (ibuffer :variables ibuffer-group-buffers-by 'projects)
      (java :variables java-backend 'ensime)
      (javascript :variables tern-command '("node" "/usr/local/bin/tern"))
      (latex :variables
@@ -85,6 +86,7 @@ This function should only modify configuration layer settings."
             shell-default-height 30
             shell-default-position 'bottom)
      shell-scripts
+     spacemacs-layouts
      (spell-checking :variables spell-checking-enable-by-default nil)
      spotify
      sql
@@ -122,19 +124,15 @@ This function should only modify configuration layer settings."
      groovy-mode
      ;; ------ Nand2Tetris ------
      nand2tetris
-     ;; ------ Haskell Prettify -----
-     ;; Thanks to:
-     ;; https://github.com/cpitclaudel/.emacs.d/blob/master/lisp/prettify-alists/haskell-prettify.el
-     ;; No thanks to:
-     ;; https://github.com/haskell/haskell-mode/issues/823
-     (haskell-prettify :location "~/.emacs.d/private/")
+     ;; ------ Themes ------
+     doom-themes
      )
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(nameless)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -165,9 +163,15 @@ It should only modify the values of Spacemacs settings."
    ;; (default 5)
    dotspacemacs-elpa-timeout 5
 
+   ;; Set `gc-cons-threshold' and `gc-cons-percentage' when startup finishes.
+   ;; This is an advanced option and should not be changed unless you suspect
+   ;; performance issues due to garbage collection operations.
+   ;; (default '(100000000 0.1))
+   dotspacemacs-gc-cons '(100000000 0.1)
+
    ;; If non-nil then Spacelpa repository is the primary source to install
-   ;; a locked version of packages. If nil then Spacemacs will install the lastest
-   ;; version of packages from MELPA. (default nil)
+   ;; a locked version of packages. If nil then Spacemacs will install the
+   ;; lastest version of packages from MELPA. (default nil)
    dotspacemacs-use-spacelpa t
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
@@ -210,8 +214,10 @@ It should only modify the values of Spacemacs settings."
    ;; `recents' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((agenda . 7)
-                                (todos . 7)
+   dotspacemacs-startup-lists '(
+                                ;; Maybe a startup perf gain
+                                ;; (agenda . 7)
+                                ;; (todos . 7)
                                 (projects . 3)
                                 (recents . 3))
 
@@ -228,7 +234,8 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
+   dotspacemacs-themes '(doom-one
+                         spacemacs-dark
                          spacemacs-light)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
@@ -239,8 +246,8 @@ It should only modify the values of Spacemacs settings."
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
    dotspacemacs-mode-line-theme (if (display-graphic-p)
-                                  '(all-the-icons :separator arrow :separator-scale 1.5)
-                                  '(vim-powerline :separator arrow :separator-scale 1.5))
+                                  '(spacemacs :separator arrow :separator-scale 1.5)
+                                  '(vim-powerline :separator arrow))
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -384,7 +391,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
-   dotspacemacs-fullscreen-use-non-native t
+   dotspacemacs-fullscreen-use-non-native nil
 
    ;; If non-nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
@@ -484,7 +491,7 @@ It should only modify the values of Spacemacs settings."
    ;; %n - Narrow if appropriate
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
-   dotspacemacs-frame-title-format "%t    %F    %b    %n   %p"
+   dotspacemacs-frame-title-format "%t    %F    %b    %n    %p"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
@@ -514,7 +521,8 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq nand2tetris-core-base-dir "~/projects/nand2tetris")
-  (setq custom-file "~/.customize.el"))
+  (setq custom-file "~/.customize.el")
+  (setq powerline-image-apple-rgb t))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -643,9 +651,6 @@ you should place your code here."
   (global-set-key [wheel-right] 'scroll-left)
   (global-set-key [wheel-left] 'scroll-right)
 
-  ;; ------ Fullscreen ------
-  (when (display-graphic-p) (spacemacs/toggle-fullscreen-frame-on))
-
   ;; ------ Spaceline ------
   ;; no time in mode line by default
   (spacemacs/toggle-display-time-off)
@@ -654,15 +659,16 @@ you should place your code here."
         (seq-map
          (lambda (mode)
            (pcase (car mode)
-             ('hybrid-mode    '(hybrid-mode "Ⓔ h" " Eh"))
-             ('holy-mode      '(holy-mode "Ⓔ e" " Eh"))
-             ('which-key-mode '(which-key-mode "Ⓚ  " " K"))
+             ('hybrid-mode               '(hybrid-mode "Ⓔ h" " Eh"))
+             ('holy-mode                 '(holy-mode "Ⓔ e" " Eh"))
+             ('which-key-mode            '(which-key-mode "Ⓚ  " " K"))
              (_               mode)))
          spacemacs--diminished-minor-modes))
 
   (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠ " nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮ " " $"))
   (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤ " nil))
+  (add-to-list 'spacemacs--diminished-minor-modes '(idris-simple-indent-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode " M" " M"))
@@ -680,6 +686,16 @@ you should place your code here."
                   'prettify-symbols-mode
                   'company-quickhelp-mode))
     (add-hook 'haskell-mode-hook mode))
+
+  ;; Haskell Prettify Symbols
+  ;; Thanks to:
+  ;; https://github.com/cpitclaudel/.emacs.d/blob/master/lisp/prettify-alists/haskell-prettify.el
+  ;; No thanks to:
+  ;; https://github.com/haskell/haskell-mode/issues/823
+  (use-package haskell-prettify
+    :load-path "~/.emacs.d/private/"
+    :defer t
+    :mode "\\.hs\\'")
 
   ;; ------ Projectile ------
   ;; Speed it up and eschew fish issues
