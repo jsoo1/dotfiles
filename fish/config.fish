@@ -46,11 +46,6 @@ if test -e /home/john/.config/fish/aliases.fish
   source /home/john/.config/fish/aliases.fish
 end
 
-# TODO :( no fzf defaults in fish
-# if test -e ~/.fzf.zsh
-#   source ~/.fzf.zsh
-# end
-
 # pretty vi mode
 function fish_mode_prompt; end
 function fish_mode_prompt --description 'Displays the current mode'
