@@ -427,7 +427,12 @@ It should only modify the values of Spacemacs settings."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers '(:relative nil :disabled-for-modes dired-mode org-mode text-mode doc-view-mode :size-limit-kb 1500)
+   dotspacemacs-line-numbers '(:relative
+                               nil
+                               :disabled-for-modes
+                               dired-mode org-mode text-mode doc-view-mode
+                               :size-limit-kb
+                               1500)
 
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
@@ -523,42 +528,40 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  ;; ------ Mouse Support ------
-  (unless window-system
-    (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
-    (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
-  ;; (global-set-key (kbd "<mouse-6>") 'scroll-right)
-  ;; (global-set-key (kbd "<mouse-7>") 'scroll-left)
-  (global-set-key (kbd "S-<mouse-4>") 'scroll-right)
-  (global-set-key (kbd "S-<mouse-5>") 'scroll-left)
+  ;; ------ Auto Mode Alist ------
+  (dolist (mode-setting '('("\\.tag\\'" . web-mode)
+                          '("\\.gradle\\'" . groovy-mode)
+                          '("\\.xml\\'" . web-mode)
+                          '("\\.asm\\'" . nand2tetris-mode)))
+    (add-to-list 'auto-mode-alist mode-setting))
 
-  ;; ------ Mode Hooks ------
-  (add-to-list 'auto-mode-alist '("\\.tag\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
-  (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nand2tetris-mode))
-
-  ;; ------ Key Bindings ------
+  ;; ------ Global Key Bindings ------
   ;; Face description
   (spacemacs/set-leader-keys "hdF" 'describe-face)
-  ;; Clojure
-  (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
-  ;; Haskell
   ;; Woman in ivy/counsel
   (evil-leader/set-key "h m" 'woman)
-  ;; Idris clear REPL
-  (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
-  (spacemacs/set-leader-keys-for-major-mode 'idris-repl-mode "s c" 'idris-repl-clear-buffer)
-  (with-eval-after-load 'idris-mode
-    (define-key idris-repl-mode-map (kbd "C-c C-k") 'idris-repl-clear-buffer))
   ;; df == fd
   (setq evil-escape-unordered-key-sequence t)
+
+  ;; ------ Mouse Support ------
+  (unless (display-graphic-p)
+    (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
+    (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
+  (global-set-key (kbd "S-<mouse-4>") 'scroll-right)
+  (global-set-key (kbd "S-<mouse-5>") 'scroll-left)
 
   ;; ------ Fish Shell ------
   (add-hook 'term-mode-hook 'toggle-truncate-lines)
 
   ;; ------ Paradox ------
   (setq paradox-github-token 'paradox)
+
+  ;; ------ Idris ------
+  ;; Idris clear REPL keys
+  (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
+  (spacemacs/set-leader-keys-for-major-mode 'idris-repl-mode "s c" 'idris-repl-clear-buffer)
+  (with-eval-after-load 'idris-mode
+    (define-key idris-repl-mode-map (kbd "C-c C-k") 'idris-repl-clear-buffer))
 
   ;; ------ JavaScript ------
   (setq inferior-js-program-command "/usr/local/bin/node"
@@ -585,8 +588,8 @@ you should place your code here."
     :defer t
     :load-path "private"
     :config
-      (evil-leader/set-key "o y" #'copy-to-clipboard)
-      (evil-leader/set-key "o p" #'paste-from-clipboard))
+    (evil-leader/set-key "o y" #'copy-to-clipboard)
+    (evil-leader/set-key "o p" #'paste-from-clipboard))
 
   ;; ------ CIDER ------
   (add-hook 'clojure #'evil-cleverparens-mode)
@@ -596,6 +599,9 @@ you should place your code here."
         cider-stacktrace-default-filters '(tooling dup java))
   ;; Boot is in Nix
   (add-to-list 'exec-path "~/.nix-profile/bin/")
+  ;; Keys
+  ;; CIDER restart
+  (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
 
   ;; ------ Org Mode ------
   ;; Babel
@@ -657,17 +663,18 @@ you should place your code here."
   ;; ------ LaTeX ------
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
-  ;; Diminish symbols
+  ;; Diminish symbols not handled by 'spacemacs--diminished-minor-modes properly
   (when (not (display-graphic-p))
     (setq spacemacs--diminished-minor-modes
           (seq-map
            (lambda (mode)
              (pcase (car mode)
-               ('hybrid-mode                          '(hybrid-mode "Ⓔ h" " Eh"))
-               ('holy-mode                            '(holy-mode "Ⓔ e" " Eh"))
-               ('which-key-mode                       '(which-key-mode "Ⓚ  " " K"))
-               (_                                     mode)))
+               ('hybrid-mode '(hybrid-mode "Ⓔ h" " Eh"))
+               ('holy-mode '(holy-mode "Ⓔ e" " Eh"))
+               ('which-key-mode '(which-key-mode "Ⓚ  " " K"))
+               (_ mode)))
            spacemacs--diminished-minor-modes))
+
     (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮" "$"))
     (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠" ""))
     (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" ""))
