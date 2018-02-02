@@ -38,7 +38,6 @@ This function should only modify configuration layer settings."
       (haskell :variables haskell-completion-backend 'dante))
      c-c++
      clojure
-     common-lisp
      coq
      csv
      dash
