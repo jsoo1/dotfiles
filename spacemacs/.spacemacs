@@ -530,9 +530,6 @@ you should place your code here."
   ;; Clojure
   (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
   ;; Haskell
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s X" 'haskell-process-restart)
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s c" 'haskell-interactive-mode-clear)
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s X" 'haskell-process-restart)
   ;; Woman in ivy/counsel
   (evil-leader/set-key "h m" 'woman)
   ;; Idris clear REPL
