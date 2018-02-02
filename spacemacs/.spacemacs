@@ -731,7 +731,7 @@ you should place your code here."
   (setq vc-follow-symlinks t)
 
   ;; ------ Transparency ------
-  (spacemacs/toggle-transparency)
+  (when (display-graphic-p) (spacemacs/toggle-transparency))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
