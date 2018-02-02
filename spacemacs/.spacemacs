@@ -33,24 +33,27 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(agda
+   '((agda :variables agda-mode-path "~/.local/bin/agda-mode")
      (auto-completion
-      (haskell :variables haskell-completion-backend 'dante))
+      (haskell
+       :variables
+       haskell-completion-backend 'dante))
      c-c++
      clojure
      coq
      csv
      dash
      docker
-     (elm :variables
-          elm-format-command "elm-format-0.17"
-          elm-sort-imports-on-save t)
-     (erc :variables
-          erc-server-list
-          '(("irc.freenode.net"
-             :port "6697"
-             :ssl t
-             :nick "jsoo")))
+     (elm
+      :variables
+      elm-format-command "elm-format-0.17"
+      elm-sort-imports-on-save t)
+     (erc
+      :variables
+      erc-server-list '(("irc.freenode.net"
+                         :port "6697"
+                         :ssl t
+                         :nick "jsoo")))
      emacs-lisp
      erlang
      evil-snipe
@@ -64,19 +67,21 @@ This function should only modify configuration layer settings."
      idris
      ivy
      javascript
-     (latex :variables
-            latex-build-command "LaTeX"
-            latex-enable-auto-fill t
-            latex-enable-folding t)
+     (latex
+      :variables
+      latex-build-command "LaTeX"
+      latex-enable-auto-fill t
+      latex-enable-folding t)
      major-modes
      markdown
-     (mu4e :variables
-           mu4e-installation-path "/usr/share/emacs/site-lisp"
-           mu4e-maildir "~/.mail"
-           mu4e-update-interval nil
-           mu4e-compose-signature-auto-include nil
-           mu4e-view-show-images t
-           mu4e-view-show-addresses t)
+     (mu4e
+      :variables
+      mu4e-installation-path "/usr/share/emacs/site-lisp"
+      mu4e-maildir "~/.mail"
+      mu4e-update-interval nil
+      mu4e-compose-signature-auto-include nil
+      mu4e-view-show-images t
+      mu4e-view-show-addresses t)
      nginx
      nixos
      (org :variables org-enable-reveal-js-support t)
@@ -86,9 +91,10 @@ This function should only modify configuration layer settings."
      react
      restclient
      rust
-     (shell :variables
-            shell-default-height 50
-            shell-defaul-position 'bottom)
+     (shell
+      :variables
+      shell-default-height 50
+      shell-defaul-position 'bottom)
      shell-scripts
      slack
      (spell-checking :variables spell-checking-enable-by-default nil)
