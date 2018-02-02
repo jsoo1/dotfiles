@@ -517,6 +517,15 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
+  ;; ------ Mouse Support ------
+  (unless window-system
+    (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
+    (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
+  ;; (global-set-key (kbd "<mouse-6>") 'scroll-right)
+  ;; (global-set-key (kbd "<mouse-7>") 'scroll-left)
+  (global-set-key (kbd "S-<mouse-4>") 'scroll-right)
+  (global-set-key (kbd "S-<mouse-5>") 'scroll-left)
+
   ;; ------ Mode Hooks ------
   (add-to-list 'auto-mode-alist '("\\.tag\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
