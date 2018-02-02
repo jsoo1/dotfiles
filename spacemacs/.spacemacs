@@ -503,7 +503,12 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
   ;; ------ Customize ------
   (setq custom-file "~/.customize.el")
-  )
+
+  ;; ------ Default Shell ------
+  ;; Fish outputs a bunch of junk from "call-process"
+  ;; and clogs up ivy/counsel buffers :(
+  ;; It also messes up the agda-mode loading which is why it's in init:(
+  (setq shell-file-name "/bin/sh"))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -540,9 +545,6 @@ you should place your code here."
 
   ;; ------ Fish Shell ------
   (add-hook 'term-mode-hook 'toggle-truncate-lines)
-  ;; Fish outputs a bunch of junk from "call-process"
-  ;; and clogs up ivy/counsel buffers :(
-  (setq shell-file-name "/bin/sh")
 
   ;; ------ Paradox ------
   (setq paradox-github-token 'paradox)
