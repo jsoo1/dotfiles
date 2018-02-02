@@ -558,13 +558,21 @@ you should place your code here."
         httpd-port 9090)
 
   ;; ------ Slack ------
-  (load-file "~/.emacs.d/private/slack-config.el")
+  (use-package slack-config
+    :defer t
+    :load-path "private"
+    :hook (slack-start . slack-register))
 
   ;; ------ Erc ------
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
   ;; ------ Copying to clipboard in terminal ------
-  (load-file "~/.emacs.d/private/xclip-copy-paste.el")
+  (use-package xclip-integration
+    :defer t
+    :load-path "private"
+    :config
+      (evil-leader/set-key "o y" #'copy-to-clipboard)
+      (evil-leader/set-key "o p" #'paste-from-clipboard))
 
   ;; ------ CIDER ------
   (add-hook 'clojure #'evil-cleverparens-mode)
@@ -628,43 +636,38 @@ you should place your code here."
         smtpmail-smtp-service 587
         message-send-mail-function 'smtpmail-send-it)
   ;; mu4e html
-  (require 'mu4e-contrib)
-  (setq mu4e-html2text-command 'mu4e-shr2text)
+  (use-package mu4e-contrib
+    :init (setq mu4e-html2text-command 'mu4e-shr2text)
+    :defer t)
 
   ;; ------ LaTeX ------
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
-  ;; ------ Spaceline ------
-  (when (display-graphic-p)
-    (setq powerline-default-separator 'arrow)
-    (spaceline-compile))
-
   ;; Diminish symbols
-  (setq spacemacs--diminished-minor-modes
-        (seq-map
-         (lambda (mode)
-           (pcase (car mode)
-             ('hybrid-mode                          '(hybrid-mode "Ⓔ h" " Eh"))
-             ('holy-mode                            '(holy-mode "Ⓔ e" " Eh"))
-             ('which-key-mode                       '(which-key-mode "Ⓚ  " " K"))
-             (_                                     mode)))
-         spacemacs--diminished-minor-modes))
-  (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮" "$"))
-  (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠" ""))
-  (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" ""))
+  (when (not (display-graphic-p))
+    (setq spacemacs--diminished-minor-modes
+          (seq-map
+           (lambda (mode)
+             (pcase (car mode)
+               ('hybrid-mode                          '(hybrid-mode "Ⓔ h" " Eh"))
+               ('holy-mode                            '(holy-mode "Ⓔ e" " Eh"))
+               ('which-key-mode                       '(which-key-mode "Ⓚ  " " K"))
+               (_                                     mode)))
+           spacemacs--diminished-minor-modes))
+    (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮" "$"))
+    (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠" ""))
+    (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" ""))
+    (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode "M" "M")))
+
   (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
-  (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode "M" "M"))
 
   ;; ------ DirEd ------
   ;; Icons
-  (add-hook
-   'dired-mode-hook
-   (lambda ()
-     (progn
-       (when (not (fboundp 'all-the-icons-dired-mode))
-         (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")))
-     (all-the-icons-dired-mode)))
+  (use-package all-the-icons-dired
+    :defer t
+    :load-path "private/all-the-icons-dired/"
+    :hook (dired-mode . all-the-icons-dired-mode))
 
   ;; ------ Surround ------
   ;; don't put spaces between my shit!
@@ -690,13 +693,19 @@ you should place your code here."
 
   (advice-add 'haskell-indentation-newline-and-indent
               :after 'haskell-indentation-advice)
-
+  ;; Key bindings
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s X" 'haskell-process-restart)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s c" 'haskell-interactive-mode-clear)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s X" 'haskell-process-restart)
   ;; Nice little popup
   (add-hook 'haskell-mode-hook 'company-quickhelp-mode)
   ;; Prettify symbols
-  (add-hook 'haskell-mode-hook (lambda ()
-                                 (load-file  "~/.emacs.d/private/haskell-prettify.el")
-                                 (haskell-prettify-enable)))
+  (use-package haskell-prettify
+    :defer t
+    :config (spacemacs/set-leader-keys-for-major-mode
+              'haskell-mode "T s" #'prettify-symbols-mode)
+    :load-path "private"
+    :hook (haskell-mode . haskell-prettify-enable))
 
   ;; ------ Truncate Long Lines Always ------
   (set-default 'truncate-lines t)
@@ -706,10 +715,6 @@ you should place your code here."
 
   ;; ------ Transparency ------
   (spacemacs/toggle-transparency)
-
-  ;; ------ Agda Mode ------
-  (load-file (let ((coding-system-for-read 'utf-8))
-               (shell-command-to-string "agda-mode locate")))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
