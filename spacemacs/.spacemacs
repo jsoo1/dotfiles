@@ -507,14 +507,19 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
+
+
   ;; ------ Customize ------
   (setq custom-file "~/.customize.el")
+
+
 
   ;; ------ Default Shell ------
   ;; Fish outputs a bunch of junk from "call-process"
   ;; and clogs up ivy/counsel buffers :(
   ;; It also messes up the agda-mode loading which is why it's in init:(
   (setq shell-file-name "/bin/sh"))
+
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -524,12 +529,16 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
+
+
   ;; ------ Auto Mode Alist ------
   (dolist (mode-setting '('("\\.tag\\'" . web-mode)
                           '("\\.gradle\\'" . groovy-mode)
                           '("\\.xml\\'" . web-mode)
                           '("\\.asm\\'" . nand2tetris-mode)))
     (add-to-list 'auto-mode-alist mode-setting))
+
+
 
   ;; ------ Global Key Bindings ------
   ;; Face description
@@ -539,6 +548,8 @@ you should place your code here."
   ;; df == fd
   (setq evil-escape-unordered-key-sequence t)
 
+
+
   ;; ------ Mouse Support ------
   (unless (display-graphic-p)
     (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
@@ -546,11 +557,17 @@ you should place your code here."
   (global-set-key (kbd "S-<mouse-4>") 'scroll-right)
   (global-set-key (kbd "S-<mouse-5>") 'scroll-left)
 
+
+
   ;; ------ Fish Shell ------
   (add-hook 'term-mode-hook 'toggle-truncate-lines)
 
+
+
   ;; ------ Paradox ------
   (setq paradox-github-token 'paradox)
+
+
 
   ;; ------ Idris ------
   ;; Idris clear REPL keys
@@ -559,16 +576,22 @@ you should place your code here."
   (with-eval-after-load 'idris-mode
     (define-key idris-repl-mode-map (kbd "C-c C-k") 'idris-repl-clear-buffer))
 
+
+
   ;; ------ JavaScript ------
-  (setq inferior-js-program-command "/usr/local/bin/node"
+  (setq
+   ;; Use node instead of whatever js layer is using
+   inferior-js-program-command "/usr/local/bin/node"
 
-        ;; Use Flycheck for linting instead of js2-mode
-        js2-strict-missing-semi-warning nil
-        js2-mode-show-strict-warnings nil
-        js2-mode-show-parse-errors nil
+   ;; Use Flycheck for linting instead of js2-mode
+   js2-strict-missing-semi-warning nil
+   js2-mode-show-strict-warnings nil
+   js2-mode-show-parse-errors nil
 
-        ;; No port collision between skewer and tomcat for skewer
-        httpd-port 9090)
+   ;; No port collision between skewer and tomcat for skewer
+   httpd-port 9090)
+
+
 
   ;; ------ Slack ------
   (use-package slack-config
@@ -576,16 +599,21 @@ you should place your code here."
     :load-path "private"
     :hook (slack-start . slack-register))
 
+
+
   ;; ------ Erc ------
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
-  ;; ------ Copying to clipboard in terminal ------
+
+
+  ;; ------ XClip ------
   (use-package xclip-integration
     :defer t
     :load-path "private"
-    :config
-    (evil-leader/set-key "o y" #'copy-to-clipboard)
+    :config (evil-leader/set-key "o y" #'copy-to-clipboard)
     (evil-leader/set-key "o p" #'paste-from-clipboard))
+
+
 
   ;; ------ CIDER ------
   (add-hook 'clojure #'evil-cleverparens-mode)
@@ -598,6 +626,8 @@ you should place your code here."
   ;; Keys
   ;; CIDER restart
   (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
+
+
 
   ;; ------ Org Mode ------
   ;; Babel
@@ -644,6 +674,8 @@ you should place your code here."
                               "%[~/Dropbox/org/templates/presentation.org]")))
     )
 
+
+
   ;; ------ Email ------
   ;; sendmail
   (setq send-mail-function    'smtpmail-send-it
@@ -656,9 +688,14 @@ you should place your code here."
     :init (setq mu4e-html2text-command 'mu4e-shr2text)
     :defer t)
 
+
+
   ;; ------ LaTeX ------
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
+
+
+  ;; ------ Spaceline ------
   ;; Diminish symbols not handled by 'spacemacs--diminished-minor-modes properly
   (when (not (display-graphic-p))
     (setq spacemacs--diminished-minor-modes
@@ -679,12 +716,16 @@ you should place your code here."
   (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
 
+
+
   ;; ------ DirEd ------
   ;; Icons
   (use-package all-the-icons-dired
     :defer t
     :load-path "private/all-the-icons-dired/"
     :hook (dired-mode . all-the-icons-dired-mode))
+
+
 
   ;; ------ Surround ------
   ;; don't put spaces between my shit!
@@ -697,6 +738,8 @@ you should place your code here."
    ?\) '("( " . " )")
    ?\] '("[ " . " ]")
    ?\} '("{ " . " }"))
+
+
 
   ;; ------ Haskell ------
   ;; Indent sanely per:
@@ -724,11 +767,17 @@ you should place your code here."
     :load-path "private"
     :hook (haskell-mode . haskell-prettify-enable))
 
+
+
   ;; ------ Truncate Long Lines Always ------
   (set-default 'truncate-lines t)
 
+
+
   ;; ------ Symlinks ------
   (setq vc-follow-symlinks t)
+
+
 
   ;; ------ Transparency ------
   (when (display-graphic-p) (spacemacs/toggle-transparency))
