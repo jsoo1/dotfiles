@@ -663,11 +663,13 @@ you should place your code here."
     (require 'ob-python)
     (require 'ob-clojure)
     (require 'ob-shell)
+    (require 'ob-haskell)
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((clojure . t)
        (python . t)
-       (shell . t)))
+       (shell . t)
+       (haskell . t)))
 
     (setq
      ;; Agenda files
