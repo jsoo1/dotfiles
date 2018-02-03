@@ -728,20 +728,23 @@ you should place your code here."
   ;; ------ Spaceline ------
   ;; Diminish symbols not handled by 'spacemacs--diminished-minor-modes properly
   (when (not (display-graphic-p))
-    (setq spacemacs--diminished-minor-modes
-          (seq-map
-           (lambda (mode)
-             (pcase (car mode)
-               ('hybrid-mode '(hybrid-mode "Ⓔ h" " Eh"))
-               ('holy-mode '(holy-mode "Ⓔ e" " Eh"))
-               ('which-key-mode '(which-key-mode "Ⓚ  " " K"))
-               (_ mode)))
-           spacemacs--diminished-minor-modes))
-
-    (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮" "$"))
-    (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠" ""))
-    (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" ""))
-    (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode "M" "M")))
+    (progn
+      (setq spacemacs--diminished-minor-modes
+            (seq-map
+             (lambda (mode)
+               (pcase (car mode)
+                 ('hybrid-mode '(hybrid-mode "Ⓔ h" " Eh"))
+                 ('holy-mode '(holy-mode "Ⓔ e" " Eh"))
+                 ('which-key-mode '(which-key-mode "Ⓚ  " " K"))
+                 (_ mode)))
+             spacemacs--diminished-minor-modes))
+      (dolist
+          (mode-symbol
+           '(server-buffer-clients " ⒮" "$")
+           '(emoji-cheat-sheet-plus-display-mode " ⒠" "")
+           '(interactive-haskell-mode " ⒤" "")
+           '(meghanada-mode "M" "M")
+           (add-to-list 'spacemacs--diminished-minor-modes mode-symbol)))))
 
   (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
