@@ -714,9 +714,9 @@ you should place your code here."
         smtpmail-smtp-service 587
         message-send-mail-function 'smtpmail-send-it)
   ;; mu4e html
-  (use-package mu4e-contrib
-    :init (setq mu4e-html2text-command 'mu4e-shr2text)
-    :defer t)
+  ;; (use-package mu4e-contrib
+  ;;   :init (setq mu4e-html2text-command 'mu4e-shr2text)
+  ;;   :defer t)
 
 
 
