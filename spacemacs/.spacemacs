@@ -33,7 +33,10 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '((agda :variables agda-mode-path "~/.local/bin/agda-mode")
+   '(
+     (agda
+      :variables
+      agda-mode-path "~/.local/bin/agda-mode")
      (auto-completion
       (haskell
        :variables
@@ -58,12 +61,18 @@ This function should only modify configuration layer settings."
      erlang
      evil-snipe
      fsharp
-     (git :variables git-magit-status-fullscreen t)
+     (git
+      :variables
+      git-magit-status-fullscreen t)
      graphviz
      gtags
-     (haskell :variables haskell-process-type 'stack-ghci)
+     (haskell
+      :variables
+      haskell-process-type 'stack-ghci)
      html
-     (ibuffer :variables ibuffer-group-buffers-by 'projects)
+     (ibuffer
+      :variables
+      ibuffer-group-buffers-by 'projects)
      idris
      ivy
      javascript
@@ -84,7 +93,9 @@ This function should only modify configuration layer settings."
       mu4e-view-show-addresses t)
      nginx
      nixos
-     (org :variables org-enable-reveal-js-support t)
+     (org
+      :variables
+      org-enable-reveal-js-support t)
      purescript
      python
      ranger
@@ -97,7 +108,9 @@ This function should only modify configuration layer settings."
       shell-defaul-position 'bottom)
      shell-scripts
      slack
-     (spell-checking :variables spell-checking-enable-by-default nil)
+     (spell-checking
+      :variables
+      spell-checking-enable-by-default nil)
      sql
      syntax-checking
      systemd
@@ -119,14 +132,18 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '(doom-themes
-                                      nand2tetris
-                                      js-comint
-                                      (shen-elisp
-                                       :location (recipe :repo "deech/shen-elisp"
-                                                         :fetcher github
-                                                         :files ("shen*.el"))
-                                       :upgrade 't))
+   dotspacemacs-additional-packages
+   '(
+     doom-themes
+     nand2tetris
+     js-comint
+     (shen-elisp
+      :location (recipe
+                 :repo "deech/shen-elisp"
+                 :fetcher github
+                 :files ("shen*.el"))
+      :upgrade 't)
+     )
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -208,7 +225,10 @@ It should only modify the values of Spacemacs settings."
    ;; `recents' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((projects . 7) (recents . 25))
+   dotspacemacs-startup-lists '(
+                                (projects . 7)
+                                (recents . 25)
+                                )
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
@@ -223,9 +243,11 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(doom-one
+   dotspacemacs-themes '(
+                         doom-one
                          spacemacs-dark
-                         spacemacs-light)
+                         spacemacs-light
+                         )
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `vim-powerline' and `vanilla'. The first three
@@ -235,8 +257,12 @@ It should only modify the values of Spacemacs settings."
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
    dotspacemacs-mode-line-theme (if (display-graphic-p)
-                                    '(spacemacs :separator arrow :separator-scale 1.5)
-                                  '(vim-powerline :separator arrow :separator-scale 1.5))
+                                    '(spacemacs
+                                      :separator arrow
+                                      :separator-scale 1.5)
+                                  '(vim-powerline
+                                    :separator arrow
+                                    :separator-scale 1.5))
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -423,12 +449,11 @@ It should only modify the values of Spacemacs settings."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers '(:relative
-                               nil
-                               :disabled-for-modes
-                               dired-mode org-mode text-mode doc-view-mode
-                               :size-limit-kb
-                               1500)
+   dotspacemacs-line-numbers '(
+                               :relative nil
+                               :disabled-for-modes dired-mode org-mode text-mode doc-view-mode
+                               :size-limit-kb 1500
+                               )
 
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
@@ -532,10 +557,11 @@ you should place your code here."
 
 
   ;; ------ Auto Mode Alist ------
-  (dolist (mode-setting '('("\\.tag\\'" . web-mode)
-                          '("\\.gradle\\'" . groovy-mode)
-                          '("\\.xml\\'" . web-mode)
-                          '("\\.asm\\'" . nand2tetris-mode)))
+  (dolist (mode-setting
+           '('("\\.tag\\'" . web-mode)
+             '("\\.gradle\\'" . groovy-mode)
+             '("\\.xml\\'" . web-mode)
+             '("\\.asm\\'" . nand2tetris-mode)))
     (add-to-list 'auto-mode-alist mode-setting))
 
 
@@ -571,8 +597,10 @@ you should place your code here."
 
   ;; ------ Idris ------
   ;; Idris clear REPL keys
-  (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
-  (spacemacs/set-leader-keys-for-major-mode 'idris-repl-mode "s c" 'idris-repl-clear-buffer)
+  (spacemacs/set-leader-keys-for-major-mode
+    'idris-mode "s c" 'idris-repl-clear-buffer)
+  (spacemacs/set-leader-keys-for-major-mode
+    'idris-repl-mode "s c" 'idris-repl-clear-buffer)
   (with-eval-after-load 'idris-mode
     (define-key idris-repl-mode-map (kbd "C-c C-k") 'idris-repl-clear-buffer))
 
@@ -753,12 +781,15 @@ you should place your code here."
 
   (advice-add 'haskell-indentation-newline-and-indent
               :after 'haskell-indentation-advice)
+
   ;; Key bindings
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s X" 'haskell-process-restart)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s c" 'haskell-interactive-mode-clear)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s X" 'haskell-process-restart)
+
   ;; Nice little popup
   (add-hook 'haskell-mode-hook 'company-quickhelp-mode)
+
   ;; Prettify symbols
   (use-package haskell-prettify
     :defer t
