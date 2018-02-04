@@ -227,7 +227,7 @@ It should only modify the values of Spacemacs settings."
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    dotspacemacs-startup-lists '(
                                 (projects . 7)
-                                (recents . 25)
+                                (recents . 16)
                                 )
 
    ;; True if the home buffer should respond to resize events. (default t)
