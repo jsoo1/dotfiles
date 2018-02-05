@@ -719,28 +719,20 @@ you should place your code here."
   ;; `~~~~~~' `LANGUAGE-SUPPORT' `~~~~~~'
 
   ;; ------ `ATS' ------
-  ;; file types
-  (add-to-list
-   'auto-mode-alist
-   '("\\.dats\\'" . (lambda ()
-                      (progn
-                        (when (not (fboundp 'ats-mode))
-                          (load-file "~/.emacs.d/private/ats2-mode.el"))
-                        (ats-mode)))))
-  (add-to-list
-   'auto-mode-alist
-   '("\\.dats\\'" . (lambda ()
-                      (progn
-                        (when (not (fboundp 'ats2-flymake))
-                          (load-file "~/.emacs.d/private/flycheck-ats2.el"))
-                        (ats2-flymake)))))
-  (add-to-list
-   'auto-mode-alist
-   '("\\.dats\\'" . (lambda ()
-                      (progn
-                        (when (not (fboundp 'ats2-flycheck))
-                          (load-file "~/.emacs.d/private/flycheck-ats2.el"))
-                        (ats2-flycheck)))))
+  (use-package ats-mode
+    :defer t
+    :load-path "~/.emacs.d/private")
+  (use-package ats2-flymake
+    :defer t
+    :after (:all ats-mode)
+    :load-path "~/.emacs.d/private"
+    :hook (ats-mode . ats2-flymake))
+  (use-package ats2-flycheck
+    :defer t
+    :after (:all ats-mode)
+    :load-path "~/.emacs.d/private"
+    :config (flycheck-ats2-setup)
+    :hook (ats-mode . ats2-flycheck))
 
 
   ;; ------ `Applescript' ------
