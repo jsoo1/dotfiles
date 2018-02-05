@@ -560,15 +560,17 @@ you should place your code here."
     (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
     (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
 
-  ;; horizontal scrolling on macos
-  (when (string-equal system-type "darwin")
-    (progn
-      (global-set-key [wheel-right] 'scroll-left)
-      (global-set-key [wheel-left] 'scroll-right)))
+  ;; horizontal scrolling
+  (pcase system-type
+    ('darwin
+     (progn
+       (global-set-key [wheel-right] 'scroll-left)
+       (global-set-key [wheel-left] 'scroll-right)))
 
-  ;; horizontal scrolling on linux
-  (global-set-key (kbd "S-<mouse-4>") 'scroll-right)
-  (global-set-key (kbd "S-<mouse-5>") 'scroll-left)
+    ('gnu/linux
+     (progn
+       (global-set-key (kbd "S-<mouse-4>") 'scroll-right)
+       (global-set-key (kbd "S-<mouse-5>") 'scroll-left))))
 
 
   ;; ------ `DirEd' ------
