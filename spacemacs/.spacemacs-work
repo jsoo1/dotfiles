@@ -537,66 +537,89 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  ;; ------ `Mode\ Hooks' ------
-  (add-to-list 'auto-mode-alist '("\\.tag\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
-  (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nand2tetris-mode))
-  (add-to-list 'auto-mode-alist '("\\.scpt\\'" . applescript-mode))
-  (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . xml-mode))
-  (add-to-list 'auto-mode-alist '("\\.dats\\'" . (lambda ()
-                                                   (progn
-                                                     (when (not (fboundp 'ats-mode))
-                                                       (load-file "~/.emacs.d/private/ats2-mode.el"))
-                                                     (ats-mode)))))
-  (add-to-list 'auto-mode-alist '("\\.dats\\'" . (lambda ()
-                                                   (progn
-                                                     (when (not (fboundp 'ats2-flymake))
-                                                       (load-file "~/.emacs.d/private/flycheck-ats2.el"))
-                                                     (ats2-flymake)))))
-  (add-to-list 'auto-mode-alist '("\\.dats\\'" . (lambda ()
-                                                   (progn
-                                                     (when (not (fboundp 'ats2-flycheck))
-                                                       (load-file "~/.emacs.d/private/flycheck-ats2.el"))
-                                                     (ats2-flycheck)))))
+
+  ;; `~~~~~~' `EMACS-WIDE' `~~~~~~~'
 
   ;; ------ `Global\ Key\ Bindings' ------
   ;; Woman under help
   (define-key evil-normal-state-map (kbd "SPC h m") 'woman)
-  ;; df == fd
-  (setq evil-escape-unordered-key-sequence t)
+
+  (setq
+   ;; df == fd
+   evil-escape-unordered-key-sequence t)
+
+
+  ;; ------ `Mouse\ Support' ------
+  ;; scrolling in terminal
+  (unless window-system
+    (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
+    (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
+
+  ;; horizontal scrolling on macos
+  (when (string-equal system-type "darwin")
+    (progn
+      (global-set-key [wheel-right] 'scroll-left)
+      (global-set-key [wheel-left] 'scroll-right)))
+
+  ;; horizontal scrolling on linux
+  (global-set-key (kbd "S-<mouse-4>") 'scroll-right)
+  (global-set-key (kbd "S-<mouse-5>") 'scroll-left)
+
+
+  ;; ------ `DirEd' ------
+  ;; all-the-icons in dired
+  (add-hook
+   'dired-mode-hook
+   (lambda ()
+     (progn
+       (when (not (fboundp 'all-the-icons-dired-mode))
+         (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")))
+     (all-the-icons-dired-mode)))
+
 
   ;; ------ `Paradox' ------
-  (setq paradox-github-token 'paradox)
-
-  ;; ------ `JavaScript' ------
-  (setq-default
-   ;; Sensible indentation
-   js2-basic-offset 4
-   js-indent-level 4)
+  ;; key for paradox
   (setq
-   ;; Use Flycheck for linting instead of js2-mode
-   js2-strict-missing-semi-warning nil
-   js2-mode-show-strict-warnings nil
-   js2-mode-show-parse-errors nil
+   paradox-github-token 'paradox)
 
-   ;; No port collision between skewer and tomcat for skewer
-   httpd-port 9090)
 
-  ;; ------ `Cider\ and\ Clojure' ------
-  (setq clojure-enable-fancify-symbols t
-        cider-repl-display-help-banner nil
-        cider-stacktrace-default-filters '(tooling dup java))
-  ;; Keybindings
-  ;; cider-restart
-  (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
+  ;; ------ `Projectile' ------
+  (setq
+   ;; Speed it up
+   projectile-enable-caching t)
 
-  ;; ------ `Idris' ------
-  ;; Idris clear repl
-  (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
-  (spacemacs/set-leader-keys-for-major-mode 'idris-repl-mode "s c" 'idris-repl-clear-buffer)
-  (with-eval-after-load 'idris-mode
-    (define-key idris-repl-mode-map (kbd "C-c C-k") 'idris-repl-clear-buffer))
+
+  ;; ------ `Shell' -----
+  (setq
+   ;; Defaults: multi-term, fish
+   multi-term-program "/usr/local/bin/fish"
+   shell-default-shell 'multi-term)
+
+
+  ;; ------ `Eshell' ------
+  ;; eshell has an annoying banner
+  (setq eshell-banner-message "")
+
+
+  ;; ------ `Spelling' ------
+  ;; ispell setup for spell checking (use ispell)
+  (setq ispell-program-name "/usr/local/bin/ispell")
+
+
+  ;; ------ `Symlinks' ------
+  ;; don't prompt to follow symlinks
+  (setq vc-follow-symlinks t)
+
+
+  ;; ------ `Truncate\ Lines' ------
+  ;; always truncate :)
+  (set-default 'truncate-lines t)
+
+
+  ;; ------ `ERC' ------
+  ;; Ignore annoying crap
+  (setq erc-hide-list '("JOIN" "PART" "QUIT"))
+
 
   ;; ------ `Org-Mode' ------
   (with-eval-after-load 'org
@@ -657,24 +680,16 @@ you should place your code here."
   (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode "m" 'org-agenda-month-view)
 
 
-  ;; ------ `Mouse\ Support' ------
-  (unless window-system
-    (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
-    (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
-  (when (string-equal system-type "darwin")
-    (progn
-      (global-set-key [wheel-right] 'scroll-left)
-      (global-set-key [wheel-left] 'scroll-right)))
-  (global-set-key (kbd "S-<mouse-4>") 'scroll-right)
-  (global-set-key (kbd "S-<mouse-5>") 'scroll-left)
-
-
   ;; ------ `Spaceline' ------
   ;; no time in mode line by default
   (spacemacs/toggle-display-time-off)
-  ;; diminish symbols
+
+
+  ;; ------ `Diminish'
+  ;; Terminal specific
   (when (not (display-graphic-p))
     (setq spacemacs--diminished-minor-modes
+          ;; add-to-list not working for these
           (seq-map
            (lambda (mode)
              (pcase (car mode)
@@ -689,24 +704,78 @@ you should place your code here."
     (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤ " nil))
     (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode " M" " M")))
 
+  ;; all others
   (add-to-list 'spacemacs--diminished-minor-modes '(idris-simple-indent-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
 
-  ;; ------- `LaTex' -------
+
+  ;; `~~~~~~' `LANGUAGE-SUPPORT' `~~~~~~'
+
+  ;; ------ `JavaScript' ------
+  (setq-default
+   ;; Sensible indentation
+   js2-basic-offset 4
+   js-indent-level 4)
+  (setq
+   ;; Use Flycheck for linting instead of js2-mode
+   ;; Disable annoying linting errors in minibuffer
+   js2-strict-missing-semi-warning nil
+   js2-mode-show-strict-warnings nil
+   js2-mode-show-parse-errors nil
+
+   ;; No port collision between skewer and tomcat for skewer
+   httpd-port 9090)
+
+
+  ;; ------ `Cider\ and\ Clojure' ------
+  (setq
+   ;; fancy symbols
+   clojure-enable-fancify-symbols t
+   ;; no annoying banner in repl
+   cider-repl-display-help-banner nil
+   ;; only clojure related error messages
+   cider-stacktrace-default-filters '(tooling dup java))
+
+  ;; Keybindings
+  ;; cider-restart
+  (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
+
+
+  ;; ------ `Idris' ------
+  ;; Idris clear repl
+  (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
+  (spacemacs/set-leader-keys-for-major-mode 'idris-repl-mode "s c" 'idris-repl-clear-buffer)
+  (with-eval-after-load 'idris-mode
+    (define-key idris-repl-mode-map (kbd "C-c C-k") 'idris-repl-clear-buffer))
+
+
+  ;; ------ `XML' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
+
+
+  ;; -----= `LaTex' ------
   ;; LaTeX auto load on save
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
+
   ;; ------ `Web-Mode' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.tag\\'" . web-mode))
+
   ;; Keybindings
   ;; Emmet under web-mode
   (spacemacs/set-leader-keys-for-major-mode 'web-mode "E" 'emmet-expand-line)
+
 
   ;; ------ `SCSS/SASS' ------
   ;; SCSS indented 4 spaces
   (add-hook 'scss-mode-hook (lambda () (setq css-indent-offset 4)))
 
+
   ;; ------ `Haskell' ------
+  ;; Use pretty symbols and company quickhelp in haskell-mode
   (dolist (mode '('haskell-prettify-enable
                   'prettify-symbols-mode
                   'company-quickhelp-mode))
@@ -721,6 +790,7 @@ you should place your code here."
     :load-path "~/.emacs.d/private/"
     :defer t
     :mode "\\.hs\\'")
+
   ;; Keybindings
   ;; Haskell interactive include hoogle
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h h" 'hoogle)
@@ -730,42 +800,25 @@ you should place your code here."
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s x" 'haskell-process-restart)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s x" 'haskell-process-restart)
 
-  ;; ------ `Projectile' ------
-  (setq
-   ;; Speed it up
-   projectile-enable-caching t)
-
-  ;; ------ `DirEd' ------
-  ;; Icons
-  (add-hook
-   'dired-mode-hook
-   (lambda ()
-     (progn
-       (when (not (fboundp 'all-the-icons-dired-mode))
-         (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")))
-     (all-the-icons-dired-mode)))
-
-  ;; ------ `Shell' -----
-  (setq
-   ;; Defaults: multi-term, fish
-   multi-term-program "/usr/local/bin/fish"
-   shell-default-shell 'multi-term)
-
-  ;; ------ `Eshell' ------
-  ;; eshell has an annoying banner
-  (setq eshell-banner-message "")
 
   ;; ------ `Nand2Tetris' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nand2tetris-mode))
+
   ;; Indent with 4 spaces
   (add-hook 'nand2tetris-mode (lambda () (setq tab-width 4)))
+
 
   ;; ------ `Java' ------
   ;; ENSIME
   (setq ensime-startup-notification 'nil)
+
   ;; Use Gradle in Java files
   (add-hook 'java-mode-hook gradle-mode)
+
   ;; Recognize .tag files as jsp
   (setq web-mode-engines-alist '(("jsp" . "\\.tag\\'")))
+
   ;; Ignore AA project directories while searching
   (eval-after-load "grep"
     '(progn
@@ -778,25 +831,52 @@ you should place your code here."
        (add-to-list 'grep-find-ignored-directories ".accurev")
        (add-to-list 'grep-find-ignored-directories ".git")))
 
-  ;; ------ `Spelling' ------
-  ;; ispell setup for spell checking (use ispell)
-  (setq ispell-program-name "/usr/local/bin/ispell")
 
-  ;; ------ `Symlinks' ------
-  (setq vc-follow-symlinks t)
+  ;; ------ `Gradle' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
 
-  ;; ------ `Truncate\ Lines' ------
-  (set-default 'truncate-lines t)
+
+  ;; ------ `ATS' ------
+  ;; file types
+  (add-to-list
+   'auto-mode-alist
+   '("\\.dats\\'" . (lambda ()
+                      (progn
+                        (when (not (fboundp 'ats-mode))
+                          (load-file "~/.emacs.d/private/ats2-mode.el"))
+                        (ats-mode)))))
+  (add-to-list
+   'auto-mode-alist
+   '("\\.dats\\'" . (lambda ()
+                      (progn
+                        (when (not (fboundp 'ats2-flymake))
+                          (load-file "~/.emacs.d/private/flycheck-ats2.el"))
+                        (ats2-flymake)))))
+  (add-to-list
+   'auto-mode-alist
+   '("\\.dats\\'" . (lambda ()
+                      (progn
+                        (when (not (fboundp 'ats2-flycheck))
+                          (load-file "~/.emacs.d/private/flycheck-ats2.el"))
+                        (ats2-flycheck)))))
+
+
+  ;; ------ `Applescript' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.scpt\\'" . applescript-mode))
+
+
+  ;; ------ `FSharp' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . xml-mode))
+
 
   ;; ----- `Swift' ------
   ;; Autocompletion like
   ;; https://gist.github.com/fiveNinePlusR/611afb16f1cafdf45044f66f0d16e4cc
   (with-eval-after-load 'company-sourcekit
     (add-to-list 'company-backends 'company-sourcekit))
-
-  ;; ------ `ERC' ------
-  ;; Ignore annoying crap
-  (setq erc-hide-list '("JOIN" "PART" "QUIT"))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
