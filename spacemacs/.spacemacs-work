@@ -746,8 +746,10 @@ you should place your code here."
   (setq
    ;; fancy symbols
    clojure-enable-fancify-symbols t
+
    ;; no annoying banner in repl
    cider-repl-display-help-banner nil
+
    ;; only clojure related error messages
    cider-stacktrace-default-filters '(tooling dup java))
 
