@@ -560,7 +560,7 @@ you should place your code here."
                                                        (load-file "~/.emacs.d/private/flycheck-ats2.el"))
                                                      (ats2-flycheck)))))
 
-  ;; ------ `Key\ Bindings' ------
+  ;; ------ `Global\ Key\ Bindings' ------
   ;; Woman under help
   (define-key evil-normal-state-map (kbd "SPC h m") 'woman)
   ;; df == fd
