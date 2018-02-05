@@ -639,17 +639,35 @@ you should place your code here."
     (add-hook 'org-mode-hook 'emojify-mode)
 
     ;; Org-Babel
+    (require 'ob-python)
+    (require 'ob-clojure)
+    (require 'ob-shell)
+    (require 'ob-haskell)
+    (require 'ob-js)
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '(clojure . t)
+     '(python . t)
+     '(shell . t)
+     '(haskell . t)
+     '(js . t))
     )
   ;; Keybindings
   ;; Month view
   (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode "m" 'org-agenda-month-view)
 
+
   ;; ------ `Mouse\ Support' ------
   (unless window-system
     (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
     (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
-  (global-set-key [wheel-right] 'scroll-left)
-  (global-set-key [wheel-left] 'scroll-right)
+  (when (string-equal system-type "darwin")
+    (progn
+      (global-set-key [wheel-right] 'scroll-left)
+      (global-set-key [wheel-left] 'scroll-right)))
+  (global-set-key (kbd "S-<mouse-4>") 'scroll-right)
+  (global-set-key (kbd "S-<mouse-5>") 'scroll-left)
+
 
   ;; ------ `Spaceline' ------
   ;; no time in mode line by default
