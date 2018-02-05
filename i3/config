@@ -6,7 +6,7 @@ for_window [class="^.*"] border pixel 0
 smart_gaps on
 smart_borders no_gaps
 gaps inner 15
-gaps outer 10
+gaps outer 2
 
 # Compton
 exec /usr/bin/compton --config /home/john/.config/compton/compton.conf
@@ -32,11 +32,17 @@ set $down j
 set $left h
 set $right l
 
-# Konsole
+# Alacritty
 bindsym Mod1+Return exec alacritty
 
+# No Focus Follows Mouse
+focus_follows_mouse no
+
 # Rofi
-bindsym Mod1+space exec rofi -show combi -modi combi
+bindsym Mod1+space exec fish -c "rofi -show combi -modi combi"
+
+# Rofi for alt-tab
+bindsym Mod1+Tab exec fish -c "rofi -show window -modi window"
 
 # split in horizontal orientation
 bindsym Mod1+slash split h
@@ -125,6 +131,8 @@ bindsym Mod1+r mode "resize"
 # status bar
 bar {
     output eDP-1-1
+    # i3bar_command i3bar -t
+    height 25
     status_command i3status
     tray_output primary
     font pango:Fantasque Sans Mono 14px
@@ -145,6 +153,8 @@ bar {
 
 bar {
     output HDMI-1-1
+    # i3bar_command i3bar -t
+    height 25
     status_command i3status
     tray_output primary
     font pango:Fantasque Sans Mono 16px
