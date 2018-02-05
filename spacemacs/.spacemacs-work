@@ -717,133 +717,6 @@ you should place your code here."
 
   ;; `~~~~~~' `LANGUAGE-SUPPORT' `~~~~~~'
 
-  ;; ------ `JavaScript' ------
-  (setq-default
-   ;; Sensible indentation
-   js2-basic-offset 4
-   js-indent-level 4)
-
-  (setq
-   ;; Use Flycheck for linting instead of js2-mode
-   ;; Disable annoying linting errors in minibuffer
-   js2-strict-missing-semi-warning nil
-   js2-mode-show-strict-warnings nil
-   js2-mode-show-parse-errors nil
-
-   ;; No port collision between skewer and tomcat for skewer
-   httpd-port 9090)
-
-
-  ;; ------ `Cider\ and\ Clojure' ------
-  (setq
-   ;; fancy symbols
-   clojure-enable-fancify-symbols t
-   ;; no annoying banner in repl
-   cider-repl-display-help-banner nil
-   ;; only clojure related error messages
-   cider-stacktrace-default-filters '(tooling dup java))
-
-  ;; Keybindings
-  ;; cider-restart
-  (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
-
-
-  ;; ------ `Idris' ------
-  ;; Idris clear repl
-  (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
-  (spacemacs/set-leader-keys-for-major-mode 'idris-repl-mode "s c" 'idris-repl-clear-buffer)
-  (with-eval-after-load 'idris-mode
-    (define-key idris-repl-mode-map (kbd "C-c C-k") 'idris-repl-clear-buffer))
-
-
-  ;; ------ `XML' ------
-  ;; file types
-  (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
-
-
-  ;; ------ `LaTex' ------
-  ;; LaTeX auto load on save
-  (add-hook 'doc-view-mode-hook 'auto-revert-mode)
-
-
-  ;; ------ `Web-Mode' ------
-  ;; file types
-  (add-to-list 'auto-mode-alist '("\\.tag\\'" . web-mode))
-
-  ;; Keybindings
-  ;; Emmet under web-mode
-  (spacemacs/set-leader-keys-for-major-mode 'web-mode "E" 'emmet-expand-line)
-
-
-  ;; ------ `SCSS/SASS' ------
-  ;; SCSS indented 4 spaces
-  (add-hook 'scss-mode-hook (lambda () (setq css-indent-offset 4)))
-
-
-  ;; ------ `Haskell' ------
-  ;; Use pretty symbols and company quickhelp in haskell-mode
-  (dolist (mode '('haskell-prettify-enable
-                  'prettify-symbols-mode
-                  'company-quickhelp-mode))
-    (add-hook 'haskell-mode-hook mode))
-
-  ;; Haskell Prettify Symbols
-  ;; Thanks to:
-  ;; https://github.com/cpitclaudel/.emacs.d/blob/master/lisp/prettify-alists/haskell-prettify.el
-  ;; No thanks to:
-  ;; https://github.com/haskell/haskell-mode/issues/823
-  (use-package haskell-prettify
-    :load-path "~/.emacs.d/private/"
-    :defer t
-    :mode "\\.hs\\'")
-
-  ;; Keybindings
-  ;; Haskell interactive include hoogle
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h h" 'hoogle)
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h i" 'haskell-process-do-info)
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h t" 'haskell-process-do-type)
-
-  ;; Haskell mode restart GHCI
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s x" 'haskell-process-restart)
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s x" 'haskell-process-restart)
-
-
-  ;; ------ `Nand2Tetris' ------
-  ;; file types
-  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nand2tetris-mode))
-
-  ;; Indent with 4 spaces
-  (add-hook 'nand2tetris-mode (lambda () (setq tab-width 4)))
-
-
-  ;; ------ `Java' ------
-  ;; ENSIME
-  (setq ensime-startup-notification 'nil)
-
-  ;; Use Gradle in Java files
-  (add-hook 'java-mode-hook gradle-mode)
-
-  ;; Recognize .tag files as jsp
-  (setq web-mode-engines-alist '(("jsp" . "\\.tag\\'")))
-
-  ;; Ignore AA project directories while searching
-  (eval-after-load "grep"
-    '(progn
-       (add-to-list 'grep-find-ignored-directories "build")
-       (add-to-list 'grep-find-ignored-directories ".sass-cache")
-       (add-to-list 'grep-find-ignored-directories "node_modules")
-       (add-to-list 'grep-find-ignored-directories ".gradle")
-       (add-to-list 'grep-find-ignored-directories ".build")
-       (add-to-list 'grep-find-ignored-directories "bin")
-       (add-to-list 'grep-find-ignored-directories ".accurev")
-       (add-to-list 'grep-find-ignored-directories ".git")))
-
-
-  ;; ------ `Gradle' ------
-  ;; file types
-  (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
-
-
   ;; ------ `ATS' ------
   ;; file types
   (add-to-list
@@ -874,9 +747,122 @@ you should place your code here."
   (add-to-list 'auto-mode-alist '("\\.scpt\\'" . applescript-mode))
 
 
+  ;; ------ `Cider\ and\ Clojure' ------
+  (setq
+   ;; fancy symbols
+   clojure-enable-fancify-symbols t
+   ;; no annoying banner in repl
+   cider-repl-display-help-banner nil
+   ;; only clojure related error messages
+   cider-stacktrace-default-filters '(tooling dup java))
+
+  ;; Keybindings
+  ;; cider-restart
+  (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
+
+
   ;; ------ `FSharp' ------
   ;; file types
   (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . xml-mode))
+
+
+  ;; ------ `Gradle' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
+
+
+  ;; ------ `Haskell' ------
+  ;; Use pretty symbols and company quickhelp in haskell-mode
+  (dolist (mode '('haskell-prettify-enable
+                  'prettify-symbols-mode
+                  'company-quickhelp-mode))
+    (add-hook 'haskell-mode-hook mode))
+
+  ;; Haskell Prettify Symbols
+  ;; Thanks to:
+  ;; https://github.com/cpitclaudel/.emacs.d/blob/master/lisp/prettify-alists/haskell-prettify.el
+  ;; No thanks to:
+  ;; https://github.com/haskell/haskell-mode/issues/823
+  (use-package haskell-prettify
+    :load-path "~/.emacs.d/private/"
+    :defer t
+    :mode "\\.hs\\'")
+
+  ;; Keybindings
+  ;; Haskell interactive include hoogle
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h h" 'hoogle)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h i" 'haskell-process-do-info)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h t" 'haskell-process-do-type)
+
+  ;; Haskell mode restart GHCI
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s x" 'haskell-process-restart)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s x" 'haskell-process-restart)
+
+
+  ;; ------ `Idris' ------
+  ;; Idris clear repl
+  (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
+  (spacemacs/set-leader-keys-for-major-mode 'idris-repl-mode "s c" 'idris-repl-clear-buffer)
+  (with-eval-after-load 'idris-mode
+    (define-key idris-repl-mode-map (kbd "C-c C-k") 'idris-repl-clear-buffer))
+
+
+  ;; ------ `Java' ------
+  ;; ENSIME
+  (setq ensime-startup-notification 'nil)
+
+  ;; Use Gradle in Java files
+  (add-hook 'java-mode-hook gradle-mode)
+
+  ;; Recognize .tag files as jsp
+  (setq web-mode-engines-alist '(("jsp" . "\\.tag\\'")))
+
+  ;; Ignore AA project directories while searching
+  (eval-after-load "grep"
+    '(progn
+       (add-to-list 'grep-find-ignored-directories "build")
+       (add-to-list 'grep-find-ignored-directories ".sass-cache")
+       (add-to-list 'grep-find-ignored-directories "node_modules")
+       (add-to-list 'grep-find-ignored-directories ".gradle")
+       (add-to-list 'grep-find-ignored-directories ".build")
+       (add-to-list 'grep-find-ignored-directories "bin")
+       (add-to-list 'grep-find-ignored-directories ".accurev")
+       (add-to-list 'grep-find-ignored-directories ".git")))
+
+
+  ;; ------ `JavaScript' ------
+  (setq-default
+   ;; Sensible indentation
+   js2-basic-offset 4
+   js-indent-level 4)
+
+  (setq
+   ;; Use Flycheck for linting instead of js2-mode
+   ;; Disable annoying linting errors in minibuffer
+   js2-strict-missing-semi-warning nil
+   js2-mode-show-strict-warnings nil
+   js2-mode-show-parse-errors nil
+
+   ;; No port collision between skewer and tomcat for skewer
+   httpd-port 9090)
+
+
+  ;; ------ `LaTex' ------
+  ;; LaTeX auto load on save
+  (add-hook 'doc-view-mode-hook 'auto-revert-mode)
+
+
+  ;; ------ `Nand2Tetris' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nand2tetris-mode))
+
+  ;; Indent with 4 spaces
+  (add-hook 'nand2tetris-mode (lambda () (setq tab-width 4)))
+
+
+  ;; ------ `SCSS/SASS' ------
+  ;; SCSS indented 4 spaces
+  (add-hook 'scss-mode-hook (lambda () (setq css-indent-offset 4)))
 
 
   ;; ----- `Swift' ------
@@ -884,6 +870,20 @@ you should place your code here."
   ;; https://gist.github.com/fiveNinePlusR/611afb16f1cafdf45044f66f0d16e4cc
   (with-eval-after-load 'company-sourcekit
     (add-to-list 'company-backends 'company-sourcekit))
+
+
+  ;; ------ `Web-Mode' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.tag\\'" . web-mode))
+
+  ;; Keybindings
+  ;; Emmet under web-mode
+  (spacemacs/set-leader-keys-for-major-mode 'web-mode "E" 'emmet-expand-line)
+
+
+  ;; ------ `XML' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
