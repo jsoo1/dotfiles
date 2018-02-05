@@ -520,12 +520,17 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+
+  ;; nand2tetris needs this prior to user-config
   (setq nand2tetris-core-base-dir "~/projects/nand2tetris")
-  ;; :)
+
+  ;; :) no annoying changes at the bottom of .spacemacs
   (setq custom-file "~/.customize.el")
+
   ;; Apple spaceline is messed up without this for now
   (when (string-equal "darwin" system-type)
     (setq powerline-image-apple-rgb t))
+
   ;; Eschew fish issues
   (setq shell-file-name "/bin/bash"))
 
@@ -717,6 +722,7 @@ you should place your code here."
    ;; Sensible indentation
    js2-basic-offset 4
    js-indent-level 4)
+
   (setq
    ;; Use Flycheck for linting instead of js2-mode
    ;; Disable annoying linting errors in minibuffer
@@ -796,6 +802,7 @@ you should place your code here."
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h h" 'hoogle)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h i" 'haskell-process-do-info)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h t" 'haskell-process-do-type)
+
   ;; Haskell mode restart GHCI
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s x" 'haskell-process-restart)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s x" 'haskell-process-restart)
