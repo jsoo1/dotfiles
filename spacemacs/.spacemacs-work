@@ -33,9 +33,9 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '((
-      auto-completion
-     (haskell :variables haskell-completion-backend 'dante))
+   '(
+     (auto-completion
+      (haskell :variables haskell-completion-backend 'dante))
      c-c++
      clojure
      csv
@@ -112,19 +112,19 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(
-     ;; ------ Applescript ------
+     ;; ------ `Applescript' ------
      applescript-mode
-     ;; ------ Swift ------
+     ;; ------ `Swift' ------
      company-sourcekit
-     ;; ------ Clojure ------
+     ;; ------ `Clojure' ------
      clojars
      clojure-cheatsheet
-     ;; ------ Gradle ------
+     ;; ------ `Gradle' ------
      gradle-mode
      groovy-mode
-     ;; ------ Nand2Tetris ------
+     ;; ------ `Nand2Tetris' ------
      nand2tetris
-     ;; ------ Themes ------
+     ;; ------ `Themes' ------
      doom-themes
      )
 
@@ -246,7 +246,7 @@ It should only modify the values of Spacemacs settings."
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
    dotspacemacs-mode-line-theme (if (display-graphic-p)
-                                  '(spacemacs :separator arrow :separator-scale 1.5)
+                                    '(spacemacs :separator arrow :separator-scale 1.5)
                                   '(vim-powerline :separator arrow))
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
@@ -521,8 +521,13 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq nand2tetris-core-base-dir "~/projects/nand2tetris")
+  ;; :)
   (setq custom-file "~/.customize.el")
-  (setq powerline-image-apple-rgb t))
+  ;; Apple spaceline is messed up without this for now
+  (when (string-equal "darwin" system-type)
+    (setq powerline-image-apple-rgb t))
+  ;; Eschew fish issues
+  (setq shell-file-name "/bin/bash"))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -532,7 +537,7 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-  ;; ------ Mode Hooks ------
+  ;; ------ `Mode\ Hooks' ------
   (add-to-list 'auto-mode-alist '("\\.tag\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
@@ -555,38 +560,20 @@ you should place your code here."
                                                        (load-file "~/.emacs.d/private/flycheck-ats2.el"))
                                                      (ats2-flycheck)))))
 
-  ;; ------ Key Bindings ------
+  ;; ------ `Key\ Bindings' ------
   ;; Woman under help
   (define-key evil-normal-state-map (kbd "SPC h m") 'woman)
-  ;; Emmet under web-mode
-  (spacemacs/set-leader-keys-for-major-mode 'web-mode "E" 'emmet-expand-line)
-  ;; cider-restart
-  (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
-  ;; Haskell interactive include hoogle
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h h" 'hoogle)
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h i" 'haskell-process-do-info)
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h t" 'haskell-process-do-type)
-  ;; Haskell mode restart GHCI
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s x" 'haskell-process-restart)
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s x" 'haskell-process-restart)
-  ;; Month view
-  (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode "m" 'org-agenda-month-view)
   ;; df == fd
   (setq evil-escape-unordered-key-sequence t)
-  ;; Idris clear repl
-  (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
-  (spacemacs/set-leader-keys-for-major-mode 'idris-repl-mode "s c" 'idris-repl-clear-buffer)
-  (with-eval-after-load 'idris-mode
-    (define-key idris-repl-mode-map (kbd "C-c C-k") 'idris-repl-clear-buffer))
 
-  ;; ------ Paradox ------
+  ;; ------ `Paradox' ------
   (setq paradox-github-token 'paradox)
 
-  ;; ------ JavaScript ------
-  ;; Sensible indentation
-  (setq-default js2-basic-offset 4
-                js-indent-level 4)
-  ;; Use Flycheck for linting instead of js2-mode
+  ;; ------ `JavaScript' ------
+  (setq-default
+   ;; Sensible indentation
+   js2-basic-offset 4
+   js-indent-level 4)
   (setq
    ;; Use Flycheck for linting instead of js2-mode
    js2-strict-missing-semi-warning nil
@@ -596,12 +583,22 @@ you should place your code here."
    ;; No port collision between skewer and tomcat for skewer
    httpd-port 9090)
 
-  ;; ------ Cider and Clojure ------
+  ;; ------ `Cider\ and\ Clojure' ------
   (setq clojure-enable-fancify-symbols t
         cider-repl-display-help-banner nil
         cider-stacktrace-default-filters '(tooling dup java))
+  ;; Keybindings
+  ;; cider-restart
+  (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
 
-  ;; ------ Org Mode ------
+  ;; ------ `Idris' ------
+  ;; Idris clear repl
+  (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
+  (spacemacs/set-leader-keys-for-major-mode 'idris-repl-mode "s c" 'idris-repl-clear-buffer)
+  (with-eval-after-load 'idris-mode
+    (define-key idris-repl-mode-map (kbd "C-c C-k") 'idris-repl-clear-buffer))
+
+  ;; ------ `Org-Mode' ------
   (with-eval-after-load 'org
 
     ;; Agenda notifications
@@ -643,15 +640,18 @@ you should place your code here."
 
     ;; Org-Babel
     )
+  ;; Keybindings
+  ;; Month view
+  (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode "m" 'org-agenda-month-view)
 
-  ;; ------ Mouse Support ------
+  ;; ------ `Mouse\ Support' ------
   (unless window-system
     (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
     (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
   (global-set-key [wheel-right] 'scroll-left)
   (global-set-key [wheel-left] 'scroll-right)
 
-  ;; ------ Spaceline ------
+  ;; ------ `Spaceline' ------
   ;; no time in mode line by default
   (spacemacs/toggle-display-time-off)
   ;; diminish symbols
@@ -675,15 +675,20 @@ you should place your code here."
   (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
 
-  ;; ------- LaTex -------
+  ;; ------- `LaTex' -------
   ;; LaTeX auto load on save
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
-  ;; ------ SCSS/SASS ------
+  ;; ------ `Web-Mode' ------
+  ;; Keybindings
+  ;; Emmet under web-mode
+  (spacemacs/set-leader-keys-for-major-mode 'web-mode "E" 'emmet-expand-line)
+
+  ;; ------ `SCSS/SASS' ------
   ;; SCSS indented 4 spaces
   (add-hook 'scss-mode-hook (lambda () (setq css-indent-offset 4)))
 
-  ;; ------ Haskell ------
+  ;; ------ `Haskell' ------
   (dolist (mode '('haskell-prettify-enable
                   'prettify-symbols-mode
                   'company-quickhelp-mode))
@@ -698,13 +703,21 @@ you should place your code here."
     :load-path "~/.emacs.d/private/"
     :defer t
     :mode "\\.hs\\'")
+  ;; Keybindings
+  ;; Haskell interactive include hoogle
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h h" 'hoogle)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h i" 'haskell-process-do-info)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h t" 'haskell-process-do-type)
+  ;; Haskell mode restart GHCI
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s x" 'haskell-process-restart)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s x" 'haskell-process-restart)
 
-  ;; ------ Projectile ------
-  ;; Speed it up and eschew fish issues
-  (setq shell-file-name "/bin/bash"
-        projectile-enable-caching t)
+  ;; ------ `Projectile' ------
+  (setq
+   ;; Speed it up
+   projectile-enable-caching t)
 
-  ;; ------ DirEd ------
+  ;; ------ `DirEd' ------
   ;; Icons
   (add-hook
    'dired-mode-hook
@@ -714,20 +727,21 @@ you should place your code here."
          (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")))
      (all-the-icons-dired-mode)))
 
-  ;; ------ Shell -----
-  ;; Default: multi-term, fish
-  (setq multi-term-program "/usr/local/bin/fish"
-        shell-default-shell 'multi-term)
+  ;; ------ `Shell' -----
+  (setq
+   ;; Defaults: multi-term, fish
+   multi-term-program "/usr/local/bin/fish"
+   shell-default-shell 'multi-term)
 
-  ;; ------ Eshell ------
+  ;; ------ `Eshell' ------
   ;; eshell has an annoying banner
   (setq eshell-banner-message "")
 
-  ;; ------ Nand2Tetris ------
+  ;; ------ `Nand2Tetris' ------
   ;; Indent with 4 spaces
   (add-hook 'nand2tetris-mode (lambda () (setq tab-width 4)))
 
-  ;; ------ Java ------
+  ;; ------ `Java' ------
   ;; ENSIME
   (setq ensime-startup-notification 'nil)
   ;; Use Gradle in Java files
@@ -746,26 +760,26 @@ you should place your code here."
        (add-to-list 'grep-find-ignored-directories ".accurev")
        (add-to-list 'grep-find-ignored-directories ".git")))
 
-  ;; ------ Spelling ------
+  ;; ------ `Spelling' ------
   ;; ispell setup for spell checking (use ispell)
   (setq ispell-program-name "/usr/local/bin/ispell")
 
-  ;; ------ Symlinks ------
+  ;; ------ `Symlinks' ------
   (setq vc-follow-symlinks t)
 
-  ;; ------ Truncate Lines ------
+  ;; ------ `Truncate\ Lines' ------
   (set-default 'truncate-lines t)
 
-  ;; ----- Swift ------
+  ;; ----- `Swift' ------
   ;; Autocompletion like
   ;; https://gist.github.com/fiveNinePlusR/611afb16f1cafdf45044f66f0d16e4cc
   (with-eval-after-load 'company-sourcekit
     (add-to-list 'company-backends 'company-sourcekit))
 
-  ;; ------ ERC ------
+  ;; ------ `ERC' ------
   ;; Ignore annoying crap
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
-)
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
