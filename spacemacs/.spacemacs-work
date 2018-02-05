@@ -720,6 +720,11 @@ you should place your code here."
 
   ;; `~~~~~~' `LANGUAGE-SUPPORT' `~~~~~~'
 
+  ;; ------ `Applescript' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.scpt\\'" . applescript-mode))
+
+
   ;; ------ `ATS' ------
   (use-package ats-mode
     :defer t
@@ -735,11 +740,6 @@ you should place your code here."
     :load-path "~/.emacs.d/private"
     :config (flycheck-ats2-setup)
     :hook (ats-mode . ats2-flycheck))
-
-
-  ;; ------ `Applescript' ------
-  ;; file types
-  (add-to-list 'auto-mode-alist '("\\.scpt\\'" . applescript-mode))
 
 
   ;; ------ `Cider\ and\ Clojure' ------
