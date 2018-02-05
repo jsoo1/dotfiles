@@ -755,7 +755,7 @@ you should place your code here."
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
 
 
-  ;; -----= `LaTex' ------
+  ;; ------ `LaTex' ------
   ;; LaTeX auto load on save
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 
