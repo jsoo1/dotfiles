@@ -669,19 +669,18 @@ you should place your code here."
     (add-hook 'org-mode-hook 'emojify-mode)
 
     ;; Org-Babel
-    (when (not (string-equal system-type "darwin"))
-      (require 'ob-python)
-      (require 'ob-clojure)
-      (require 'ob-shell)
-      (require 'ob-haskell)
-      (require 'ob-js)
-      (org-babel-do-load-languages
-       'org-babel-load-languages
-       '((clojure . t)
-         (python . t)
-         (shell . t)
-         (haskell . t)
-         (js . t))))
+    (require 'ob-python)
+    (require 'ob-clojure)
+    (require 'ob-shell)
+    (require 'ob-haskell)
+    (require 'ob-js)
+    (org-babel-do-load-languages
+      'org-babel-load-languages
+      '((clojure . t)
+        (python . t)
+        (shell . t)
+        (haskell . t)
+        (js . t)))
     )
   ;; Keybindings
   ;; Month view
