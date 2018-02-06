@@ -727,18 +727,17 @@ you should place your code here."
   ;; ------ `ATS' ------
   (use-package ats-mode
     :defer t
-    :load-path "~/.emacs.d/private")
-  (use-package ats2-flymake
-    :defer t
-    :after (:all ats-mode)
     :load-path "~/.emacs.d/private"
-    :hook (ats-mode . ats2-flymake))
+    :mode "\\.\\(s\\|d\\|h\\)ats\\'")
+
   (use-package ats2-flycheck
     :defer t
     :after (:all ats-mode)
     :load-path "~/.emacs.d/private"
-    :config (flycheck-ats2-setup)
-    :hook (ats-mode . ats2-flycheck))
+    :commands #'flycheck-ats2-setup
+    :config (progn
+              (flycheck-ats2-setup)
+              (add-hook 'ats-mode-hook #'flycheck-mode)))
 
 
   ;; ------ `Cider\ and\ Clojure' ------
