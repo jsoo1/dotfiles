@@ -315,9 +315,11 @@ key_bindings:
   - { key: Key3,     mods: Alt|Shift, chars: "\x1b#"                       } # Alt + #
   # Zoom
   - { key: Equals,   mods: Command,   action: IncreaseFontSize             }
+  - { key: Equals,   mods: Control,   action: IncreaseFontSize             }
   - { key: Minus,    mods: Command,   action: DecreaseFontSize             }
+  - { key: Minus,    mods: Control,   action: DecreaseFontSize             }
   - { key: Key0,     mods: Command,   action: ResetFontSize                }
-
+  - { key: Key0,     mods: Control,   action: ResetFontSize                }
 # Mouse bindings
 #
 # Currently doesn't support modifiers. Both the `mouse` and `action` fields must
