@@ -692,29 +692,30 @@ you should place your code here."
   (spacemacs/toggle-display-time-off)
 
 
-  ;; ------ `Diminish'
-  ;; Terminal specific
-  (when (not (display-graphic-p))
-    (setq spacemacs--diminished-minor-modes
-          ;; add-to-list not working for these
-          (seq-map
-           (lambda (mode)
-             (pcase (car mode)
-               ('hybrid-mode               '(hybrid-mode "Ⓔ h" " Eh"))
-               ('holy-mode                 '(holy-mode "Ⓔ e" " Eh"))
-               ('which-key-mode            '(which-key-mode "Ⓚ  " " K"))
-               (_               mode)))
-           spacemacs--diminished-minor-modes))
+  ;; ------ `Diminish' ------
+  (if (display-graphic-p)
+      (progn
+        ;; Graphical
+        (add-to-list 'spacemacs--diminished-minor-modes '(idris-simple-indent-mode nil nil))
+        (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
+        (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " " nil)))
+    ;; Terminal
+    (progn
+      (setq spacemacs--diminished-minor-modes
+           ;; add-to-list not working for these
+           (seq-map
+            (lambda (mode)
+              (pcase (car mode)
+                ('hybrid-mode               '(hybrid-mode "Ⓔ h" " Eh"))
+                ('holy-mode                 '(holy-mode "Ⓔ e" " Eh"))
+                ('which-key-mode            '(which-key-mode "Ⓚ  " " K"))
+                (_               mode)))
+            spacemacs--diminished-minor-modes))
 
-    (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠ " nil))
-    (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮ " " $"))
-    (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤ " nil))
-    (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode " M" " M")))
-
-  ;; all others
-  (add-to-list 'spacemacs--diminished-minor-modes '(idris-simple-indent-mode nil nil))
-  (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
-  (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
+     (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠ " nil))
+     (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮ " " $"))
+     (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤ " nil))
+     (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode " M" " M"))))
 
 
   ;; `~~~~~~' `LANGUAGE-SUPPORT' `~~~~~~'
