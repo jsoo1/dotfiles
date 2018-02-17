@@ -35,10 +35,10 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layers
    '(
      ;; (
-      agda
-      ;; :variables
-      ;; agda-mode-path "~/.local/bin/agda-mode"
-      ;; )
+     agda
+     ;; :variables
+     ;; agda-mode-path "~/.local/bin/agda-mode"
+     ;; )
      (auto-completion
       (haskell :variables haskell-completion-backend 'dante))
      c-c++
@@ -70,8 +70,7 @@ This function should only modify configuration layer settings."
               haskell-enable-hindent-style "fundamental")
      html
      (ibuffer
-      :variables
-      ibuffer-group-buffers-by 'projects)
+      :variables ibuffer-group-buffers-by 'projects)
      idris
      ivy
      (java :variables java-backend 'ensime)
@@ -98,9 +97,8 @@ This function should only modify configuration layer settings."
             shell-default-height 30
             shell-default-position 'bottom)
      shell-scripts
-     (spell-checking
-      :variables
-      spell-checking-enable-by-default nil)
+     (spell-checking :variables
+                     spell-checking-enable-by-default nil)
      spotify
      sql
      swift
@@ -272,9 +270,11 @@ It should only modify the values of Spacemacs settings."
    ;; to create your own spaceline theme. Value can be a symbol or list with\
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs
+   dotspacemacs-mode-line-theme '(
+                                  spacemacs
                                   :separator arrow
-                                  :separator-scale 1.5)
+                                  :separator-scale 1.5
+                                  )
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -282,16 +282,22 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '(("Fantasque Sans Mono"
+   dotspacemacs-default-font '(
+                               (
+                                "Fantasque Sans Mono"
                                 :size 16
                                 :weight normal
                                 :width wide
-                                :powerline-scale 1.4)
-                               ("Source Code Pro for Powerline"
+                                :powerline-scale 1.4
+                                )
+                               (
+                                "Source Code Pro for Powerline"
                                 :size 13
                                 :weight normal
                                 :width normal
-                                :powerline-scale 1.1))
+                                :powerline-scale 1.1
+                                )
+                               )
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
@@ -413,7 +419,9 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup t
+   dotspacemacs-fullscreen-at-startup (pcase system-type
+                                        ('darwin t)
+                                        (_ nil))
 
    ;; If non-nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
@@ -552,14 +560,17 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; (setq exec-path (append exec-path "~/.local/bin"))
 
   ;; Apple spaceline is messed up without this for now
-  (when (string-equal "darwin" system-type)
-    (setq powerline-image-apple-rgb t))
+  (pcase system-type
+    ('darwin (setq powerline-image-apple-rgb t)))
 
   ;; ------ Default Shell ------
   ;; Fish outputs a bunch of junk from "call-process"
   ;; and clogs up ivy/counsel buffers :(
   ;; It also messes up the agda-mode loading which is why it's in init:(
-  (setq shell-file-name "/bin/sh"))
+  (setq shell-file-name (pcase system-type
+                          ('darwin "/bin/bash")
+                          (_ "/bin/sh")))
+  )
 
 
 (defun dotspacemacs/user-config ()
@@ -613,7 +624,7 @@ you should place your code here."
          (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")))
      (all-the-icons-dired-mode)))
 
-  ;; ------ Fish Shell ------
+  ;; ------ `Fish\ Shell' ------
   (add-hook 'term-mode-hook 'toggle-truncate-lines)
 
   ;; ------ `Paradox' ------
@@ -672,7 +683,8 @@ you should place your code here."
   (with-eval-after-load 'org
 
     ;; Agenda notifications
-    (load-file "~/.emacs.d/private/agenda-notify.el")
+    (pcase system-type
+      ('darwin (load-file "~/.emacs.d/private/agenda-notify.el")))
 
     (setq
      ;; Agenda files
