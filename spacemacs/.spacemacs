@@ -34,9 +34,11 @@ This function should only modify configuration layer settings."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     (agda
-      :variables
-      agda-mode-path "~/.local/bin/agda-mode")
+     ;; (
+      agda
+      ;; :variables
+      ;; agda-mode-path "~/.local/bin/agda-mode"
+      ;; )
      (auto-completion
       (haskell
        :variables
@@ -83,14 +85,6 @@ This function should only modify configuration layer settings."
       latex-enable-folding t)
      major-modes
      markdown
-     (mu4e
-      :variables
-      mu4e-installation-path "/usr/share/emacs/site-lisp"
-      mu4e-maildir "~/.mail"
-      mu4e-update-interval nil
-      mu4e-compose-signature-auto-include nil
-      mu4e-view-show-images t
-      mu4e-view-show-addresses t)
      nginx
      nixos
      (org
@@ -98,7 +92,6 @@ This function should only modify configuration layer settings."
       org-enable-reveal-js-support t)
      purescript
      python
-     ranger
      react
      restclient
      rust
@@ -114,7 +107,6 @@ This function should only modify configuration layer settings."
      sql
      syntax-checking
      systemd
-     themes-megapack
      treemacs
      tmux
      twitter
@@ -180,9 +172,15 @@ It should only modify the values of Spacemacs settings."
    ;; (default 5)
    dotspacemacs-elpa-timeout 5
 
+   ;; Set `gc-cons-threshold' and `gc-cons-percentage' when startup finishes.
+   ;; This is an advanced option and should not be changed unless you suspect
+   ;; performance issues due to garbage collection operations.
+   ;; (default '(100000000 0.1))
+   dotspacemacs-gc-cons '(100000000 0.1)
+
    ;; If non-nil then Spacelpa repository is the primary source to install
-   ;; a locked version of packages. If nil then Spacemacs will install the lastest
-   ;; version of packages from MELPA. (default nil)
+   ;; a locked version of packages. If nil then Spacemacs will install the
+   ;; lastest version of packages from MELPA. (default nil)
    dotspacemacs-use-spacelpa nil
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
@@ -482,11 +480,6 @@ It should only modify the values of Spacemacs settings."
    ;; (default '("rg" "ag" "pt" "ack" "grep"))
    dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
 
-   ;; The default package repository used if no explicit repository has been
-   ;; specified with an installed package.
-   ;; Not used for now. (default nil)
-   dotspacemacs-default-package-repository nil
-
    ;; Format specification for setting the frame title.
    ;; %a - the `abbreviated-file-name', or `buffer-name'
    ;; %t - `projectile-project-name'
@@ -538,6 +531,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq custom-file "~/.customize.el")
 
 
+
+  ;; ------ Make sure we get agda-mode ------
+  ;; (setq exec-path (append exec-path "~/.local/bin"))
 
   ;; ------ Default Shell ------
   ;; Fish outputs a bunch of junk from "call-process"
