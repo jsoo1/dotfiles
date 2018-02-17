@@ -595,6 +595,10 @@ you should place your code here."
    evil-escape-unordered-key-sequence t)
 
 
+  ;; ------ `Load\ Path' ------
+  (add-to-list 'exec-path "~/.nix-profile/bin/")
+
+
   ;; ------ `Mouse\ Support' ------
   ;; scrolling in terminal
   (unless window-system
