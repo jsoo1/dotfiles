@@ -40,9 +40,7 @@ This function should only modify configuration layer settings."
       ;; agda-mode-path "~/.local/bin/agda-mode"
       ;; )
      (auto-completion
-      (haskell
-       :variables
-       haskell-completion-backend 'dante))
+      (haskell :variables haskell-completion-backend 'dante))
      c-c++
      clojure
      coq
@@ -53,62 +51,63 @@ This function should only modify configuration layer settings."
       :variables
       elm-format-command "elm-format-0.17"
       elm-sort-imports-on-save t)
-     (erc
-      :variables
-      erc-server-list '(("irc.freenode.net"
-                         :port "6697"
-                         :ssl t
-                         :nick "jsoo")))
-     emacs-lisp
+     (emacs-lisp :variables emacs-lisp-hide-namespace-prefix nil)
+     emoji
+     (erc :variables
+          erc-server-list '(("irc.freenode.net"
+                             :port "6697"
+                             :ssl t
+                             :nick "jsoo"))
+          erc-auto-join-channels-alist '(("#idris" "#coq" "#agda")))
      erlang
      evil-snipe
      fsharp
-     (git
-      :variables
-      git-magit-status-fullscreen t)
+     (git :variables git-magit-status-fullscreen t)
      graphviz
-     gtags
-     (haskell
-      :variables
-      haskell-process-type 'stack-ghci)
+     (gtags :variables gtags-enable-by-default t)
+     (haskell :variables
+              haskell-process-type 'stack-ghci
+              haskell-enable-hindent-style "fundamental")
      html
      (ibuffer
       :variables
       ibuffer-group-buffers-by 'projects)
      idris
      ivy
-     javascript
-     (latex
-      :variables
-      latex-build-command "LaTeX"
-      latex-enable-auto-fill t
-      latex-enable-folding t)
-     major-modes
-     markdown
+     (java :variables java-backend 'ensime)
+     (javascript :variables tern-command '("node" "/usr/local/bin/tern"))
+     (latex :variables
+            latex-build-command "LaTeX"
+            latex-enable-auto-fill t
+            latex-enable-folding t)
+     lua
+     (markdown :variables markdown-live-preview-engine 'vmd)
      nginx
      nixos
-     (org
-      :variables
-      org-enable-reveal-js-support t)
-     purescript
+     (org :variables
+          org-enable-reveal-js-support t
+          org-enable-github-support t
+          org-projectile-file "TODOs.org")
+     osx
      python
      react
      restclient
+     ruby
      rust
-     (shell
-      :variables
-      shell-default-height 50
-      shell-defaul-position 'bottom)
+     (shell :variables
+            shell-default-height 30
+            shell-default-position 'bottom)
      shell-scripts
-     slack
      (spell-checking
       :variables
       spell-checking-enable-by-default nil)
+     spotify
      sql
+     swift
      syntax-checking
      systemd
-     treemacs
      tmux
+     treemacs
      twitter
      version-control
      vimscript
@@ -126,15 +125,33 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(
-     doom-themes
+     ;; ------ `Applescript' ------
+     applescript-mode
+     ;; ------ `Swift' ------
+     company-sourcekit
+     ;; ------ `Clojure' ------
+     clojars
+     clojure-cheatsheet
+     ;; ------ `Gradle' ------
+     gradle-mode
+     groovy-mode
+     ;; ------ `Nand2Tetris' ------
      nand2tetris
-     js-comint
+     ;; ------ `Shen\ Elisp' ------
      (shen-elisp
       :location (recipe
                  :repo "deech/shen-elisp"
                  :fetcher github
                  :files ("shen*.el"))
       :upgrade 't)
+     ;; ------ `Haskell' `Prettify' -----
+     ;; Thanks to:
+     ;; https://github.com/cpitclaudel/.emacs.d/blob/master/lisp/prettify-alists/haskell-prettify.el
+     ;; No thanks to:
+     ;; https://github.com/haskell/haskell-mode/issues/823
+     (haskell-prettify :location "~/.emacs.d/private/")
+     ;; ------ `Themes' ------
+     doom-themes
      )
 
    ;; A list of packages that cannot be updated.
@@ -150,7 +167,8 @@ This function should only modify configuration layer settings."
    ;; installs only the used packages but won't delete unused ones. `all'
    ;; installs *all* packages supported by Spacemacs and never uninstalls them.
    ;; (default is `used-only')
-   dotspacemacs-install-packages 'used-only))
+   dotspacemacs-install-packages 'used-only)
+  )
 
 (defun dotspacemacs/init ()
   "Initialization:
@@ -179,13 +197,13 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-gc-cons '(100000000 0.1)
 
    ;; If non-nil then Spacelpa repository is the primary source to install
-   ;; a locked version of packages. If nil then Spacemacs will install the
-   ;; lastest version of packages from MELPA. (default nil)
-   dotspacemacs-use-spacelpa nil
+   ;; a locked version of packages. If nil then Spacemacs will install the lastest
+   ;; version of packages from MELPA. (default nil)
+   dotspacemacs-use-spacelpa t
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
    ;; (default nil)
-   dotspacemacs-verify-spacelpa-archives nil
+   dotspacemacs-verify-spacelpa-archives t
 
    ;; If non-nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. Note that checking for
@@ -364,7 +382,7 @@ It should only modify the values of Spacemacs settings."
    ;; in all non-asynchronous sources. If set to `source', preserve individual
    ;; source settings. Else, disable fuzzy matching in all sources.
    ;; (default 'always)
-   dotspacemacs-helm-use-fuzzy 'always
+   dotspacemacs-helm-use-fuzzy 'source
 
    ;; If non-nil, the paste transient-state is enabled. While enabled, pressing
    ;; `p' several times cycles through the elements in the `kill-ring'.
@@ -395,7 +413,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup nil
+   dotspacemacs-fullscreen-at-startup t
 
    ;; If non-nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
@@ -492,7 +510,7 @@ It should only modify the values of Spacemacs settings."
    ;; %n - Narrow if appropriate
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
-   dotspacemacs-frame-title-format "%t %a"
+   dotspacemacs-frame-title-format "%t    %F    %b    %n    %p"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
@@ -503,7 +521,9 @@ It should only modify the values of Spacemacs settings."
    ;; `trailing' to delete only the whitespace at end of lines, `changed' to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup 'changed
+   dotspacemacs-whitespace-cleanup (pcase system-type
+                                     ('darwin nil)
+                                     (_ 'changed))
 
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
@@ -512,7 +532,8 @@ It should only modify the values of Spacemacs settings."
    ;; Run `spacemacs/prettify-org-buffer' when
    ;; visiting README.org files of Spacemacs.
    ;; (default nil)
-   dotspacemacs-pretty-docs t))
+   dotspacemacs-pretty-docs t
+   ))
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -521,15 +542,18 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
-
+  ;; nand2tetris needs this prior to user-config
+  (setq nand2tetris-core-base-dir "~/projects/nand2tetris")
 
-  ;; ------ Customize ------
+  ;; :) no annoying changes at the bottom of .spacemacs
   (setq custom-file "~/.customize.el")
-
-
 
   ;; ------ Make sure we get agda-mode ------
   ;; (setq exec-path (append exec-path "~/.local/bin"))
+
+  ;; Apple spaceline is messed up without this for now
+  (when (string-equal "darwin" system-type)
+    (setq powerline-image-apple-rgb t))
 
   ;; ------ Default Shell ------
   ;; Fish outputs a bunch of junk from "call-process"
@@ -546,131 +570,133 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
 
-
 
-  ;; ------ Auto Mode Alist ------
-  (dolist (mode-setting
-           '('("\\.tag\\'" . web-mode)
-             '("\\.gradle\\'" . groovy-mode)
-             '("\\.xml\\'" . web-mode)
-             '("\\.asm\\'" . nand2tetris-mode)))
-    (add-to-list 'auto-mode-alist mode-setting))
+  ;; `~~~~~~' `EMACS-WIDE' `~~~~~~~'
 
-
-
-  ;; ------ Global Key Bindings ------
+  ;; ------ `Global\ Key\ Bindings' ------
+  ;; Woman under help
+  (define-key evil-normal-state-map (kbd "SPC h m") 'woman)
   ;; Face description
   (spacemacs/set-leader-keys "hdF" 'describe-face)
-  ;; Woman in ivy/counsel
-  (evil-leader/set-key "h m" 'woman)
-  ;; df == fd
-  (setq evil-escape-unordered-key-sequence t)
 
-
+  (setq
+   ;; df == fd
+   evil-escape-unordered-key-sequence t)
 
-  ;; ------ Mouse Support ------
-  (unless (display-graphic-p)
+
+  ;; ------ `Mouse\ Support' ------
+  ;; scrolling in terminal
+  (unless window-system
     (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
     (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
-  (global-set-key (kbd "S-<mouse-4>") 'scroll-right)
-  (global-set-key (kbd "S-<mouse-5>") 'scroll-left)
 
-
+  ;; horizontal scrolling
+  (pcase system-type
+    ('darwin
+     (progn
+       (global-set-key [wheel-right] 'scroll-left)
+       (global-set-key [wheel-left] 'scroll-right)))
+
+    ('gnu/linux
+     (progn
+       (global-set-key (kbd "S-<mouse-4>") 'scroll-right)
+       (global-set-key (kbd "S-<mouse-5>") 'scroll-left))))
+
+
+  ;; ------ `DirEd' ------
+  ;; all-the-icons in dired
+  (add-hook
+   'dired-mode-hook
+   (lambda ()
+     (progn
+       (when (not (fboundp 'all-the-icons-dired-mode))
+         (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")))
+     (all-the-icons-dired-mode)))
 
   ;; ------ Fish Shell ------
   (add-hook 'term-mode-hook 'toggle-truncate-lines)
 
-
-
-  ;; ------ Paradox ------
-  (setq paradox-github-token 'paradox)
-
-
-
-  ;; ------ Idris ------
-  ;; Idris clear REPL keys
-  (spacemacs/set-leader-keys-for-major-mode
-    'idris-mode "s c" 'idris-repl-clear-buffer)
-  (spacemacs/set-leader-keys-for-major-mode
-    'idris-repl-mode "s c" 'idris-repl-clear-buffer)
-  (with-eval-after-load 'idris-mode
-    (define-key idris-repl-mode-map (kbd "C-c C-k") 'idris-repl-clear-buffer))
-
-
-
-  ;; ------ JavaScript ------
+  ;; ------ `Paradox' ------
+  ;; key for paradox
   (setq
-   ;; Use node instead of whatever js layer is using
-   inferior-js-program-command "/usr/local/bin/node"
+   paradox-github-token 'paradox)
 
-   ;; Use Flycheck for linting instead of js2-mode
-   js2-strict-missing-semi-warning nil
-   js2-mode-show-strict-warnings nil
-   js2-mode-show-parse-errors nil
 
-   ;; No port collision between skewer and tomcat for skewer
-   httpd-port 9090)
+  ;; ------ `Projectile' ------
+  (setq
+   ;; Speed it up
+   projectile-enable-caching t)
 
-
 
-  ;; ------ Slack ------
-  (use-package slack-config
-    :defer t
-    :load-path "private"
-    :hook (slack-start . slack-register))
+  ;; ------ `Shell' -----
+  (setq
+   ;; Defaults: multi-term, fish
+   multi-term-program "/usr/local/bin/fish"
+   shell-default-shell 'multi-term)
 
-
 
-  ;; ------ Erc ------
+  ;; ------ `Eshell' ------
+  ;; eshell has an annoying banner
+  (setq eshell-banner-message "")
+
+
+  ;; ------ `Spelling' ------
+  ;; ispell setup for spell checking (use ispell)
+  (setq ispell-program-name "/usr/local/bin/ispell")
+
+
+  ;; ------ `Symlinks' ------
+  ;; don't prompt to follow symlinks
+  (setq vc-follow-symlinks t)
+
+
+  ;; ------ `Truncate\ Lines' ------
+  ;; always truncate :)
+  (set-default 'truncate-lines t)
+
+
+  ;; ------ `ERC' ------
+  ;; Ignore annoying crap
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
-
 
-  ;; ------ XClip ------
+  ;; ------ `XClip' ------
   (use-package xclip-integration
     :defer t
     :load-path "private"
     :config (evil-leader/set-key "o y" #'copy-to-clipboard)
     (evil-leader/set-key "o p" #'paste-from-clipboard))
 
-
 
-  ;; ------ CIDER ------
-  (add-hook 'clojure #'evil-cleverparens-mode)
-  (add-hook 'clojure #'smartparens-strict-mode)
-  (setq
-   clojure-enable-fancify-symbols t
-   cider-repl-display-help-banner nil
-   cider-stacktrace-default-filters '(tooling dup java))
-  ;; Boot is in Nix
-  (add-to-list 'exec-path "~/.nix-profile/bin/")
-  ;; Keys
-  ;; CIDER restart
-  (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
-
-
-
-  ;; ------ Org Mode ------
-  ;; Babel
+  ;; ------ `Org-Mode' ------
   (with-eval-after-load 'org
-    (require 'ob-python)
-    (require 'ob-clojure)
-    (require 'ob-shell)
-    (require 'ob-haskell)
-    (org-babel-do-load-languages
-     'org-babel-load-languages
-     '((clojure . t)
-       (python . t)
-       (shell . t)
-       (haskell . t)))
+
+    ;; Agenda notifications
+    (load-file "~/.emacs.d/private/agenda-notify.el")
 
     (setq
      ;; Agenda files
-     org-agenda-files (list "~/Dropbox/org/"
-                            "~/Dropbox/org/pi-slice"
-                            "~/Dropbox/org/haskell-beginner"
-                            "~/Dropbox/org/topology"
-                            "~/Dropbox/org/build-lisp" )
+     org-agenda-files (pcase system-type
+                        ('gnu/linux
+                         '("~/Dropbox/org/"
+                           "~/Dropbox/org/pi-slice"
+                           "~/Dropbox/org/haskell-beginner"
+                           "~/Dropbox/org/topology"
+                           "~/Dropbox/org/build-lisp" ))
+                        ('darwin
+                         '("~/Desktop/agenda/"
+                           "~/projects/AACom-Release/")))
+
+     ;; Org HTML presentations with reveal.js
+     org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"
+     org-reveal-title-slide nil
+
+     ;; Remove pesky validate link
+     org-html-validation-link nil
+
+     ;; Don't show scheduled items in global todo list
+     org-agenda-todo-ignore-with-date t
+
      ;; Org Reveal
      org-reveal-title-slide 'auto
      org-reveal-progress nil
@@ -681,7 +707,7 @@ you should place your code here."
      org-reveal-overview t
      org-reveal-slide-number nil
 
-     ;; Org Export less crappy
+     ;; Prettify exports for email
      org-export-with-author nil
      org-export-with-creator nil
      org-export-with-toc nil
@@ -692,125 +718,238 @@ you should place your code here."
      org-html-validation-link nil
 
      ;; Org Capture Templates
-     org-capture-templates '(("p" "RevealJS Presentation"
-                              plain (function (lambda() (buffer-file-name)))
-                              "%[~/Dropbox/org/templates/presentation.org]")))
+     org-capture-templates (pcase system-type
+                             ('gnu/linux
+                              '(("p" "RevealJS Presentation"
+                                 plain (function (lambda() (buffer-file-name)))
+                                 "%[~/Dropbox/org/templates/presentation.org]")))
+
+                             ('darwin
+                              '(("m" "AA Meeting"
+                                 entry (file "~/Desktop/agenda/aa/TODOs.org")
+                                 "%[~/Desktop/agenda/templates/meeting.org]")
+
+                                ("s" "User Story"
+                                 plain (function buffer-file-name)
+                                 "%[~/Desktop/agenda/templates/story.org]")))))
+
+
+    ;; Org-Babel
+    (require 'ob-python)
+    (require 'ob-clojure)
+    (require 'ob-shell)
+    (require 'ob-haskell)
+    (require 'ob-js)
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((clojure . t)
+       (python . t)
+       (shell . t)
+       (haskell . t)
+       (js . t)))
+
+    ;; Keybindings
+    ;; Month view
+    (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode "m" 'org-agenda-month-view)
     )
 
-
 
-  ;; ------ Email ------
-  ;; sendmail
-  (setq send-mail-function    'smtpmail-send-it
-        smtpmail-smtp-server  "smtp.gmail.com"
-        smtpmail-stream-type  'ssl
-        smtpmail-smtp-service 587
-        message-send-mail-function 'smtpmail-send-it)
-  ;; mu4e html
-  ;; (use-package mu4e-contrib
-  ;;   :init (setq mu4e-html2text-command 'mu4e-shr2text)
-  ;;   :defer t)
+  ;; ------ `Spaceline' ------
+  ;; no time in mode line by default
+  (spacemacs/toggle-display-time-off)
 
-
 
-  ;; ------ LaTeX ------
-  (add-hook 'doc-view-mode-hook 'auto-revert-mode)
-
-
-
-  ;; ------ Spaceline ------
-  ;; Diminish symbols not handled by 'spacemacs--diminished-minor-modes properly
+  ;; ------ `Diminish'
+  ;; Terminal specific
   (when (not (display-graphic-p))
-    (progn
-      (setq spacemacs--diminished-minor-modes
-            (seq-map
-             (lambda (mode)
-               (pcase (car mode)
-                 ('hybrid-mode '(hybrid-mode "Ⓔ h" " Eh"))
-                 ('holy-mode '(holy-mode "Ⓔ e" " Eh"))
-                 ('which-key-mode '(which-key-mode "Ⓚ  " " K"))
-                 (_ mode)))
-             spacemacs--diminished-minor-modes))
-      (dolist
-          (mode-symbol
-           '('(server-buffer-clients " ⒮" "$")
-            '(emoji-cheat-sheet-plus-display-mode " ⒠" "")
-            '(interactive-haskell-mode " ⒤" "")
-            '(meghanada-mode "M" "M")))
-        (add-to-list 'spacemacs--diminished-minor-modes mode-symbol))))
+    (setq spacemacs--diminished-minor-modes
+          ;; add-to-list not working for these
+          (seq-map
+           (lambda (mode)
+             (pcase (car mode)
+               ('hybrid-mode               '(hybrid-mode "Ⓔ h" " Eh"))
+               ('holy-mode                 '(holy-mode "Ⓔ e" " Eh"))
+               ('which-key-mode            '(which-key-mode "Ⓚ  " " K"))
+               (_               mode)))
+           spacemacs--diminished-minor-modes))
 
+    (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠ " nil))
+    (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮ " " $"))
+    (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤ " nil))
+    (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode " M" " M")))
+
+  ;; all others
+  (add-to-list 'spacemacs--diminished-minor-modes '(idris-simple-indent-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
 
-
 
-  ;; ------ DirEd ------
-  ;; Icons
-  (use-package all-the-icons-dired
+  ;; `~~~~~~' `LANGUAGE-SUPPORT' `~~~~~~'
+
+  ;; ------ `Applescript' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.scpt\\'" . applescript-mode))
+
+
+  ;; ------ `ATS' ------
+  (use-package ats-mode
     :defer t
-    :load-path "private/all-the-icons-dired/"
-    :hook (dired-mode . all-the-icons-dired-mode))
+    :load-path "~/.emacs.d/private"
+    :mode "\\.\\(s\\|d\\|h\\)ats\\'")
 
-
+  (use-package ats2-flycheck
+    :defer t
+    :after (:all ats-mode)
+    :load-path "~/.emacs.d/private"
+    :commands #'flycheck-ats2-setup
+    :config (progn
+              (flycheck-ats2-setup)
+              (add-hook 'ats-mode-hook #'flycheck-mode)))
 
-  ;; ------ Surround ------
-  ;; don't put spaces between my shit!
-  (evil-add-to-alist
-   'evil-surround-pairs-alist
-   ?\s '(" " . " ")
-   ?\( '("(" . ")")
-   ?\[ '("[" . "]")
-   ?\{ '("{" . "}")
-   ?\) '("( " . " )")
-   ?\] '("[ " . " ]")
-   ?\} '("{ " . " }"))
 
-
+  ;; ------ `Cider\ and\ Clojure' ------
+  (setq
+   ;; fancy symbols
+   clojure-enable-fancify-symbols t
 
-  ;; ------ Haskell ------
-  ;; Indent sanely per:
-  ;; http://spacemacs.org/layers/+lang/haskell/README.html#indentation-doesnt-reset-when-pressing-return-after-an-empty-line
-  (defun haskell-indentation-advice ()
-    (when (and (< 1 (line-number-at-pos))
-               (save-excursion
-                 (forward-line -1)
-                 (string= "" (s-trim (buffer-substring (line-beginning-position) (line-end-position))))))
-      (delete-region (line-beginning-position) (point))))
+   ;; no annoying banner in repl
+   cider-repl-display-help-banner nil
 
-  (advice-add 'haskell-indentation-newline-and-indent
-              :after 'haskell-indentation-advice)
+   ;; only clojure related error messages
+   cider-stacktrace-default-filters '(tooling dup java))
 
-  ;; Key bindings
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s X" 'haskell-process-restart)
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s c" 'haskell-interactive-mode-clear)
-  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s X" 'haskell-process-restart)
+  ;; Keybindings
+  ;; cider-restart
+  (spacemacs/set-leader-keys-for-major-mode 'clojure-mode "s X" 'cider-restart)
+
+
+  ;; ------ `FSharp' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . xml-mode))
+
+
+  ;; ------ `Gradle' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
+
+  ;; ------ `Haskell' ------
+  ;; Use pretty symbols and company quickhelp in haskell-mode
+  (dolist (mode '('haskell-prettify-enable
+                  'prettify-symbols-mode
+                  'company-quickhelp-mode))
+    (add-hook 'haskell-mode-hook mode))
 
   ;; Nice little popup
   (add-hook 'haskell-mode-hook 'company-quickhelp-mode)
 
-  ;; Prettify symbols
+  ;; Haskell Prettify Symbols
+  ;; Thanks to:
+  ;; https://github.com/cpitclaudel/.emacs.d/blob/master/lisp/prettify-alists/haskell-prettify.el
+  ;; No thanks to:
+  ;; https://github.com/haskell/haskell-mode/issues/823
   (use-package haskell-prettify
+    :load-path "~/.emacs.d/private/"
     :defer t
-    :config (spacemacs/set-leader-keys-for-major-mode
-              'haskell-mode "T s" #'prettify-symbols-mode)
-    :load-path "private"
-    :hook (haskell-mode . haskell-prettify-enable))
+    :mode "\\.hs\\'")
 
-
+  ;; Keybindings
+  ;; Haskell interactive include hoogle
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h h" 'hoogle)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h i" 'haskell-process-do-info)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "h t" 'haskell-process-do-type)
 
-  ;; ------ Truncate Long Lines Always ------
-  (set-default 'truncate-lines t)
+  ;; Haskell mode restart GHCI
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s x" 'haskell-process-restart)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s x" 'haskell-process-restart)
 
-
 
-  ;; ------ Symlinks ------
-  (setq vc-follow-symlinks t)
+  ;; ------ `Idris' ------
+  ;; Idris clear repl
+  (spacemacs/set-leader-keys-for-major-mode 'idris-mode "s c" 'idris-repl-clear-buffer)
+  (spacemacs/set-leader-keys-for-major-mode 'idris-repl-mode "s c" 'idris-repl-clear-buffer)
+  (with-eval-after-load 'idris-mode
+    (define-key idris-repl-mode-map (kbd "C-c C-k") 'idris-repl-clear-buffer))
 
-
 
-  ;; ------ Transparency ------
-  (when (display-graphic-p) (spacemacs/toggle-transparency))
+  ;; ------ `Java' ------
+  ;; ENSIME
+  (setq ensime-startup-notification 'nil)
+
+  ;; Use Gradle in Java files
+  (add-hook 'java-mode-hook gradle-mode)
+
+  ;; Recognize .tag files as jsp
+  (setq web-mode-engines-alist '(("jsp" . "\\.tag\\'")))
+
+  ;; Ignore AA project directories while searching
+  (eval-after-load "grep"
+    '(progn
+       (add-to-list 'grep-find-ignored-directories "build")
+       (add-to-list 'grep-find-ignored-directories ".sass-cache")
+       (add-to-list 'grep-find-ignored-directories "node_modules")
+       (add-to-list 'grep-find-ignored-directories ".gradle")
+       (add-to-list 'grep-find-ignored-directories ".build")
+       (add-to-list 'grep-find-ignored-directories "bin")
+       (add-to-list 'grep-find-ignored-directories ".accurev")
+       (add-to-list 'grep-find-ignored-directories ".git")))
+
+
+  ;; ------ `JavaScript' ------
+  (setq-default
+   ;; Sensible indentation
+   js2-basic-offset 4
+   js-indent-level 4)
+
+  (setq
+   ;; Use Flycheck for linting instead of js2-mode
+   ;; Disable annoying linting errors in minibuffer
+   js2-strict-missing-semi-warning nil
+   js2-mode-show-strict-warnings nil
+   js2-mode-show-parse-errors nil
+
+   ;; No port collision between skewer and tomcat for skewer
+   httpd-port 9090)
+
+
+  ;; ------ `LaTex' ------
+  ;; LaTeX auto load on save
+  (add-hook 'doc-view-mode-hook 'auto-revert-mode)
+
+
+  ;; ------ `Nand2Tetris' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nand2tetris-mode))
+
+  ;; Indent with 4 spaces
+  (add-hook 'nand2tetris-mode (lambda () (setq tab-width 4)))
+
+
+  ;; ------ `SCSS/SASS' ------
+  ;; SCSS indented 4 spaces
+  (add-hook 'scss-mode-hook (lambda () (setq css-indent-offset 4)))
+
+
+  ;; ----- `Swift' ------
+  ;; Autocompletion like
+  ;; https://gist.github.com/fiveNinePlusR/611afb16f1cafdf45044f66f0d16e4cc
+  (with-eval-after-load 'company-sourcekit
+    (add-to-list 'company-backends 'company-sourcekit))
+
+
+  ;; ------ `Web-Mode' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.tag\\'" . web-mode))
+
+  ;; Keybindings
+  ;; Emmet under web-mode
+  (spacemacs/set-leader-keys-for-major-mode 'web-mode "E" 'emmet-expand-line)
+
+
+  ;; ------ `XML' ------
+  ;; file types
+  (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
   )
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

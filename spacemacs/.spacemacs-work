@@ -34,14 +34,23 @@ This function should only modify configuration layer settings."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     ;; (
+      agda
+      ;; :variables
+      ;; agda-mode-path "~/.local/bin/agda-mode"
+      ;; )
      (auto-completion
       (haskell :variables haskell-completion-backend 'dante))
      c-c++
      clojure
+     coq
      csv
      dash
      docker
-     elm
+     (elm
+      :variables
+      elm-format-command "elm-format-0.17"
+      elm-sort-imports-on-save t)
      (emacs-lisp :variables emacs-lisp-hide-namespace-prefix nil)
      emoji
      (erc :variables
@@ -54,12 +63,15 @@ This function should only modify configuration layer settings."
      evil-snipe
      fsharp
      (git :variables git-magit-status-fullscreen t)
+     graphviz
      (gtags :variables gtags-enable-by-default t)
      (haskell :variables
               haskell-process-type 'stack-ghci
               haskell-enable-hindent-style "fundamental")
      html
-     (ibuffer :variables ibuffer-group-buffers-by 'projects)
+     (ibuffer
+      :variables
+      ibuffer-group-buffers-by 'projects)
      idris
      ivy
      (java :variables java-backend 'ensime)
@@ -71,13 +83,13 @@ This function should only modify configuration layer settings."
      lua
      (markdown :variables markdown-live-preview-engine 'vmd)
      nginx
+     nixos
      (org :variables
           org-enable-reveal-js-support t
           org-enable-github-support t
           org-projectile-file "TODOs.org")
      osx
      python
-     ranger
      react
      restclient
      ruby
@@ -86,8 +98,9 @@ This function should only modify configuration layer settings."
             shell-default-height 30
             shell-default-position 'bottom)
      shell-scripts
-     spacemacs-layouts
-     (spell-checking :variables spell-checking-enable-by-default nil)
+     (spell-checking
+      :variables
+      spell-checking-enable-by-default nil)
      spotify
      sql
      swift
@@ -124,6 +137,19 @@ This function should only modify configuration layer settings."
      groovy-mode
      ;; ------ `Nand2Tetris' ------
      nand2tetris
+     ;; ------ `Shen' `Elisp' ------
+     (shen-elisp
+      :location (recipe
+                 :repo "deech/shen-elisp"
+                 :fetcher github
+                 :files ("shen*.el"))
+      :upgrade 't)
+     ;; ------ `Haskell' `Prettify' -----
+     ;; Thanks to:
+     ;; https://github.com/cpitclaudel/.emacs.d/blob/master/lisp/prettify-alists/haskell-prettify.el
+     ;; No thanks to:
+     ;; https://github.com/haskell/haskell-mode/issues/823
+     (haskell-prettify :location "~/.emacs.d/private/")
      ;; ------ `Themes' ------
      doom-themes
      )
@@ -170,8 +196,8 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-gc-cons '(100000000 0.1)
 
    ;; If non-nil then Spacelpa repository is the primary source to install
-   ;; a locked version of packages. If nil then Spacemacs will install the
-   ;; lastest version of packages from MELPA. (default nil)
+   ;; a locked version of packages. If nil then Spacemacs will install the lastest
+   ;; version of packages from MELPA. (default nil)
    dotspacemacs-use-spacelpa t
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
@@ -215,11 +241,9 @@ It should only modify the values of Spacemacs settings."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    dotspacemacs-startup-lists '(
-                                ;; Maybe a startup perf gain
-                                ;; (agenda . 7)
-                                ;; (todos . 7)
-                                (projects . 3)
-                                (recents . 3))
+                                (projects . 7)
+                                (recents . 16)
+                                )
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
@@ -234,9 +258,11 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(doom-one
+   dotspacemacs-themes '(
+                         doom-one
                          spacemacs-dark
-                         spacemacs-light)
+                         spacemacs-light
+                         )
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `vim-powerline' and `vanilla'. The first three
@@ -245,9 +271,9 @@ It should only modify the values of Spacemacs settings."
    ;; to create your own spaceline theme. Value can be a symbol or list with\
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme (if (display-graphic-p)
-                                    '(spacemacs :separator arrow :separator-scale 1.5)
-                                  '(vim-powerline :separator arrow))
+   dotspacemacs-mode-line-theme '(spacemacs
+                                  :separator arrow
+                                  :separator-scale 1.5)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -255,13 +281,12 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-
    dotspacemacs-default-font '(("Fantasque Sans Mono"
-                                :size 14
+                                :size 16
                                 :weight normal
                                 :width wide
-                                :powerline-scale 1.3)
-                               ("Source Code Pro"
+                                :powerline-scale 1.4)
+                               ("Source Code Pro for Powerline"
                                 :size 13
                                 :weight normal
                                 :width normal
@@ -435,13 +460,11 @@ It should only modify the values of Spacemacs settings."
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
    ;; (default nil)
-   dotspacemacs-line-numbers '(:relative nil
-                               :disabled-for-modes dired-mode
-                                                   org-mode
-                                                   text-mode
-                                                   doc-view-mode
-                                                   web-mode
-                               :size-limit-kb 1500)
+   dotspacemacs-line-numbers '(
+                               :relative nil
+                               :disabled-for-modes dired-mode org-mode text-mode doc-view-mode
+                               :size-limit-kb 1500
+                               )
 
    ;; Code folding method. Possible values are `evil' and `origami'.
    ;; (default 'evil)
@@ -470,11 +493,6 @@ It should only modify the values of Spacemacs settings."
    ;; (default '("rg" "ag" "pt" "ack" "grep"))
    dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
 
-   ;; The default package repository used if no explicit repository has been
-   ;; specified with an installed package.
-   ;; Not used for now. (default nil)
-   dotspacemacs-default-package-repository nil
-
    ;; Format specification for setting the frame title.
    ;; %a - the `abbreviated-file-name', or `buffer-name'
    ;; %t - `projectile-project-name'
@@ -502,7 +520,9 @@ It should only modify the values of Spacemacs settings."
    ;; `trailing' to delete only the whitespace at end of lines, `changed' to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup nil
+   dotspacemacs-whitespace-cleanup (pcase system-type
+                                     ('darwin nil)
+                                     (_ 'changed))
 
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
@@ -527,12 +547,19 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; :) no annoying changes at the bottom of .spacemacs
   (setq custom-file "~/.customize.el")
 
+  ;; ------ Make sure we get agda-mode ------
+  ;; (setq exec-path (append exec-path "~/.local/bin"))
+
   ;; Apple spaceline is messed up without this for now
   (when (string-equal "darwin" system-type)
     (setq powerline-image-apple-rgb t))
 
-  ;; Eschew fish issues
-  (setq shell-file-name "/bin/bash"))
+  ;; ------ Default Shell ------
+  ;; Fish outputs a bunch of junk from "call-process"
+  ;; and clogs up ivy/counsel buffers :(
+  ;; It also messes up the agda-mode loading which is why it's in init:(
+  (setq shell-file-name "/bin/sh"))
+
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -548,6 +575,8 @@ you should place your code here."
   ;; ------ `Global\ Key\ Bindings' ------
   ;; Woman under help
   (define-key evil-normal-state-map (kbd "SPC h m") 'woman)
+  ;; Face description
+  (spacemacs/set-leader-keys "hdF" 'describe-face)
 
   (setq
    ;; df == fd
@@ -583,6 +612,8 @@ you should place your code here."
          (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")))
      (all-the-icons-dired-mode)))
 
+  ;; ------ Fish Shell ------
+  (add-hook 'term-mode-hook 'toggle-truncate-lines)
 
   ;; ------ `Paradox' ------
   ;; key for paradox
@@ -628,6 +659,14 @@ you should place your code here."
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
 
+  ;; ------ XClip ------
+  (use-package xclip-integration
+    :defer t
+    :load-path "private"
+    :config (evil-leader/set-key "o y" #'copy-to-clipboard)
+    (evil-leader/set-key "o p" #'paste-from-clipboard))
+
+
   ;; ------ `Org-Mode' ------
   (with-eval-after-load 'org
 
@@ -635,9 +674,17 @@ you should place your code here."
     (load-file "~/.emacs.d/private/agenda-notify.el")
 
     (setq
-     ;; Agenda mode files
-     org-agenda-files '("~/Desktop/agenda/"
-                        "~/projects/AACom-Release/")
+     ;; Agenda files
+     org-agenda-files (pcase system-type
+                        ('gnu/linux
+                         '("~/Dropbox/org/"
+                           "~/Dropbox/org/pi-slice"
+                           "~/Dropbox/org/haskell-beginner"
+                           "~/Dropbox/org/topology"
+                           "~/Dropbox/org/build-lisp" ))
+                        ('darwin
+                         '("~/Desktop/agenda/"
+                           "~/projects/AACom-Release/")))
 
      ;; Org HTML presentations with reveal.js
      org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"
@@ -649,22 +696,41 @@ you should place your code here."
      ;; Don't show scheduled items in global todo list
      org-agenda-todo-ignore-with-date t
 
+     ;; Org Reveal
+     org-reveal-title-slide 'auto
+     org-reveal-progress nil
+     org-reveal-history t
+     org-reveal-rolling-links t
+     org-reveal-keyboard t
+     org-reveal-mathjax t
+     org-reveal-overview t
+     org-reveal-slide-number nil
+
      ;; Prettify exports for email
      org-export-with-author nil
+     org-export-with-creator nil
      org-export-with-toc nil
      org-export-with-email nil
      org-export-time-stamp-file nil
      org-export-with-section-numbers nil
      org-export-with-todo-keywords nil
+     org-html-validation-link nil
 
-     ;; Capture Templates
-     org-capture-templates '(("m" "AA Meeting"
-                              entry (file "~/Desktop/agenda/aa/TODOs.org")
-                              "%[~/Desktop/agenda/templates/meeting.org]")
+     ;; Org Capture Templates
+     org-capture-templates (pcase system-type
+                             ('gnu/linux
+                              '(("p" "RevealJS Presentation"
+                                 plain (function (lambda() (buffer-file-name)))
+                                 "%[~/Dropbox/org/templates/presentation.org]")))
 
-                             ("s" "User Story"
-                              plain (function buffer-file-name)
-                              "%[~/Desktop/agenda/templates/story.org]")))
+                             ('darwin
+                              '(("m" "AA Meeting"
+                                 entry (file "~/Desktop/agenda/aa/TODOs.org")
+                                 "%[~/Desktop/agenda/templates/meeting.org]")
+
+                                ("s" "User Story"
+                                 plain (function buffer-file-name)
+                                 "%[~/Desktop/agenda/templates/story.org]"))))))
 
     (add-hook 'org-mode-hook 'emojify-mode)
 
@@ -765,6 +831,8 @@ you should place your code here."
   ;; file types
   (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
 
+  ;; Nice little popup
+  (add-hook 'haskell-mode-hook 'company-quickhelp-mode)
 
   ;; ------ `Haskell' ------
   ;; Use pretty symbols and company quickhelp in haskell-mode
