@@ -642,9 +642,10 @@ you should place your code here."
   ;; ------ CIDER ------
   (add-hook 'clojure #'evil-cleverparens-mode)
   (add-hook 'clojure #'smartparens-strict-mode)
-  (setq clojure-enable-fancify-symbols t
-        cider-repl-display-help-banner nil
-        cider-stacktrace-default-filters '(tooling dup java))
+  (setq
+   clojure-enable-fancify-symbols t
+   cider-repl-display-help-banner nil
+   cider-stacktrace-default-filters '(tooling dup java))
   ;; Boot is in Nix
   (add-to-list 'exec-path "~/.nix-profile/bin/")
   ;; Keys
@@ -736,11 +737,11 @@ you should place your code here."
              spacemacs--diminished-minor-modes))
       (dolist
           (mode-symbol
-           '(server-buffer-clients " ⒮" "$")
-           '(emoji-cheat-sheet-plus-display-mode " ⒠" "")
-           '(interactive-haskell-mode " ⒤" "")
-           '(meghanada-mode "M" "M")
-           (add-to-list 'spacemacs--diminished-minor-modes mode-symbol)))))
+           '('(server-buffer-clients " ⒮" "$")
+            '(emoji-cheat-sheet-plus-display-mode " ⒠" "")
+            '(interactive-haskell-mode " ⒤" "")
+            '(meghanada-mode "M" "M")))
+        (add-to-list 'spacemacs--diminished-minor-modes mode-symbol))))
 
   (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
   (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
