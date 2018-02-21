@@ -858,8 +858,7 @@ you should place your code here."
   ;; ------ `Haskell' ------
   ;; Use pretty symbols and company quickhelp in haskell-mode
   (dolist (mode '('haskell-prettify-enable
-                  'prettify-symbols-mode
-                  'company-quickhelp-mode))
+                  'prettify-symbols-mode))
     (add-hook 'haskell-mode-hook mode))
 
   ;; Nice little popup
