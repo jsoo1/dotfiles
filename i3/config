@@ -23,6 +23,9 @@ client.focused #292b2E #5d4D7A #B2B2B2 #68727C #5D4d7A
 # Swap control and caps... ??
 exec /usr/bin/setxkbmap -layout us -option ctrl:swapcaps
 
+# Caps as escape and control
+exec xcape -e 'Control_L=Escape'
+
 # Setup monitor to left of laptop, laptop display with lower resolution
 exec /usr/bin/xrandr --output HDMI-1-1 --primary --left-of eDP-1-1 --output eDP-1-1 --mode 1360x768
 
