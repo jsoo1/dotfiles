@@ -21,7 +21,7 @@ alias gitpurge 'git branch --merged | grep -v "\*" | grep -v "master" | xargs -n
 abbr lsa "ls -lsa"
 abbr lsah "ls -lsah"
 abbr rmi "rm -i"
-abbr psg "ps aux | grep -i"
+abbr psg "ps aux | rg -i"
 abbr rest "systemctl suspend"
 abbr off "systemctl poweroff"
 abbr logout "gnome-session-quit --logout --no-prompt"
