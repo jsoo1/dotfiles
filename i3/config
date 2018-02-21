@@ -39,10 +39,10 @@ bindsym Mod1+Return exec alacritty
 focus_follows_mouse no
 
 # Rofi
-bindsym Mod1+space exec fish -c "rofi -show combi -modi combi"
+bindsym Mod1+space exec /usr/bin/fish -c "rofi -show combi -modi combi"
 
 # Rofi for alt-tab
-bindsym Mod1+Tab exec fish -c "rofi -show window -modi window"
+bindsym Mod1+Tab exec /usr/bin/fish -c "rofi -show window -modi window"
 
 # split in horizontal orientation
 bindsym Mod1+slash split h
