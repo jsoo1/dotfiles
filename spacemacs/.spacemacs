@@ -35,7 +35,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layers
    '(
      ;; (
-     agda
+     ;; agda
      ;; :variables
      ;; agda-mode-path "~/.local/bin/agda-mode"
      ;; )
