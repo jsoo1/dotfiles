@@ -156,7 +156,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(nameless)
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -749,6 +749,7 @@ you should place your code here."
                                  plain (function buffer-file-name)
                                  "%[~/Desktop/agenda/templates/story.org]")))))
 
+    (add-hook 'org-mode-hook 'emojify-mode)
 
     ;; Org-Babel
     (require 'ob-python)
@@ -775,29 +776,34 @@ you should place your code here."
   (spacemacs/toggle-display-time-off)
 
 
-  ;; ------ `Diminish'
-  ;; Terminal specific
-  (when (not (display-graphic-p))
-    (setq spacemacs--diminished-minor-modes
-          ;; add-to-list not working for these
-          (seq-map
-           (lambda (mode)
-             (pcase (car mode)
-               ('hybrid-mode               '(hybrid-mode "Ⓔ h" " Eh"))
-               ('holy-mode                 '(holy-mode "Ⓔ e" " Eh"))
-               ('which-key-mode            '(which-key-mode "Ⓚ  " " K"))
-               (_               mode)))
-           spacemacs--diminished-minor-modes))
+  ;; ------ `Diminish' ------
+  (if (display-graphic-p)
 
-    (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠ " nil))
-    (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮ " " $"))
-    (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤ " nil))
-    (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode " M" " M")))
+    ;; Graphical
+    (progn
+      (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮" " $"))
+      (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" nil))
+      (add-to-list 'spacemacs--diminished-minor-modes '(idris-simple-indent-mode nil nil))
+      (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
+      (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " 🤔" nil)))
 
-  ;; all others
-  (add-to-list 'spacemacs--diminished-minor-modes '(idris-simple-indent-mode nil nil))
-  (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
-  (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
+    ;; Terminal
+    (progn
+      (setq spacemacs--diminished-minor-modes
+            ;; add-to-list not working for these
+            (seq-map
+             (lambda (mode)
+               (pcase (car mode)
+                 ('hybrid-mode               '(hybrid-mode "Ⓔ h" " Eh"))
+                 ('holy-mode                 '(holy-mode "Ⓔ e" " Eh"))
+                 ('which-key-mode            '(which-key-mode "Ⓚ  " " K"))
+                 (_               mode)))
+             spacemacs--diminished-minor-modes))
+
+      (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠ " nil))
+      (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮ " " $"))
+      (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤ " nil))
+      (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode " M" " M"))))
 
 
   ;; `~~~~~~' `LANGUAGE-SUPPORT' `~~~~~~'

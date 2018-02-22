@@ -35,10 +35,10 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layers
    '(
      ;; (
-      agda
-      ;; :variables
-      ;; agda-mode-path "~/.local/bin/agda-mode"
-      ;; )
+     agda
+     ;; :variables
+     ;; agda-mode-path "~/.local/bin/agda-mode"
+     ;; )
      (auto-completion
       (haskell :variables haskell-completion-backend 'dante))
      c-c++
@@ -70,8 +70,7 @@ This function should only modify configuration layer settings."
               haskell-enable-hindent-style "fundamental")
      html
      (ibuffer
-      :variables
-      ibuffer-group-buffers-by 'projects)
+      :variables ibuffer-group-buffers-by 'projects)
      idris
      ivy
      (java :variables java-backend 'ensime)
@@ -98,9 +97,8 @@ This function should only modify configuration layer settings."
             shell-default-height 30
             shell-default-position 'bottom)
      shell-scripts
-     (spell-checking
-      :variables
-      spell-checking-enable-by-default nil)
+     (spell-checking :variables
+                     spell-checking-enable-by-default nil)
      spotify
      sql
      swift
@@ -137,7 +135,7 @@ This function should only modify configuration layer settings."
      groovy-mode
      ;; ------ `Nand2Tetris' ------
      nand2tetris
-     ;; ------ `Shen' `Elisp' ------
+     ;; ------ `Shen\ Elisp' ------
      (shen-elisp
       :location (recipe
                  :repo "deech/shen-elisp"
@@ -167,7 +165,8 @@ This function should only modify configuration layer settings."
    ;; installs only the used packages but won't delete unused ones. `all'
    ;; installs *all* packages supported by Spacemacs and never uninstalls them.
    ;; (default is `used-only')
-   dotspacemacs-install-packages 'used-only))
+   dotspacemacs-install-packages 'used-only)
+  )
 
 (defun dotspacemacs/init ()
   "Initialization:
@@ -412,7 +411,9 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup t
+   dotspacemacs-fullscreen-at-startup (pcase system-type
+                                        ('darwin t)
+                                        (_ nil))
 
    ;; If non-nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
@@ -551,14 +552,17 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; (setq exec-path (append exec-path "~/.local/bin"))
 
   ;; Apple spaceline is messed up without this for now
-  (when (string-equal "darwin" system-type)
-    (setq powerline-image-apple-rgb t))
+  (pcase system-type
+    ('darwin (setq powerline-image-apple-rgb t)))
 
   ;; ------ Default Shell ------
   ;; Fish outputs a bunch of junk from "call-process"
   ;; and clogs up ivy/counsel buffers :(
   ;; It also messes up the agda-mode loading which is why it's in init:(
-  (setq shell-file-name "/bin/sh"))
+  (setq shell-file-name (pcase system-type
+                          ('darwin "/bin/bash")
+                          (_ "/bin/sh")))
+  )
 
 
 (defun dotspacemacs/user-config ()
@@ -581,6 +585,10 @@ you should place your code here."
   (setq
    ;; df == fd
    evil-escape-unordered-key-sequence t)
+
+
+  ;; ------ `Load\ Path' ------
+  (add-to-list 'exec-path "~/.nix-profile/bin/")
 
 
   ;; ------ `Mouse\ Support' ------
@@ -612,7 +620,7 @@ you should place your code here."
          (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")))
      (all-the-icons-dired-mode)))
 
-  ;; ------ Fish Shell ------
+  ;; ------ `Fish\ Shell' ------
   (add-hook 'term-mode-hook 'toggle-truncate-lines)
 
   ;; ------ `Paradox' ------
@@ -659,7 +667,7 @@ you should place your code here."
   (setq erc-hide-list '("JOIN" "PART" "QUIT"))
 
 
-  ;; ------ XClip ------
+  ;; ------ `XClip' ------
   (use-package xclip-integration
     :defer t
     :load-path "private"
@@ -671,7 +679,8 @@ you should place your code here."
   (with-eval-after-load 'org
 
     ;; Agenda notifications
-    (load-file "~/.emacs.d/private/agenda-notify.el")
+    (pcase system-type
+      ('darwin (load-file "~/.emacs.d/private/agenda-notify.el")))
 
     (setq
      ;; Agenda files
@@ -730,7 +739,7 @@ you should place your code here."
 
                                 ("s" "User Story"
                                  plain (function buffer-file-name)
-                                 "%[~/Desktop/agenda/templates/story.org]"))))))
+                                 "%[~/Desktop/agenda/templates/story.org]")))))
 
     (add-hook 'org-mode-hook 'emojify-mode)
 
@@ -741,16 +750,17 @@ you should place your code here."
     (require 'ob-haskell)
     (require 'ob-js)
     (org-babel-do-load-languages
-      'org-babel-load-languages
-      '((clojure . t)
-        (python . t)
-        (shell . t)
-        (haskell . t)
-        (js . t)))
+     'org-babel-load-languages
+     '((clojure . t)
+       (python . t)
+       (shell . t)
+       (haskell . t)
+       (js . t)))
+
+    ;; Keybindings
+    ;; Month view
+    (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode "m" 'org-agenda-month-view)
     )
-  ;; Keybindings
-  ;; Month view
-  (spacemacs/set-leader-keys-for-major-mode 'org-agenda-mode "m" 'org-agenda-month-view)
 
 
   ;; ------ `Spaceline' ------
@@ -836,15 +846,15 @@ you should place your code here."
   ;; file types
   (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
 
-  ;; Nice little popup
-  (add-hook 'haskell-mode-hook 'company-quickhelp-mode)
-
   ;; ------ `Haskell' ------
   ;; Use pretty symbols and company quickhelp in haskell-mode
   (dolist (mode '('haskell-prettify-enable
                   'prettify-symbols-mode
                   'company-quickhelp-mode))
     (add-hook 'haskell-mode-hook mode))
+
+  ;; Nice little popup
+  (add-hook 'haskell-mode-hook 'company-quickhelp-mode)
 
   ;; Haskell Prettify Symbols
   ;; Thanks to:
@@ -953,6 +963,7 @@ you should place your code here."
   ;; file types
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
   )
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
