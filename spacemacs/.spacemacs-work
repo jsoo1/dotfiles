@@ -218,8 +218,8 @@ It should only modify the values of Spacemacs settings."
                                 ;; Maybe a startup perf gain
                                 ;; (agenda . 7)
                                 ;; (todos . 7)
-                                (projects . 3)
-                                (recents . 3))
+                                (projects . 5)
+                                (recents . 15))
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
@@ -694,11 +694,15 @@ you should place your code here."
 
   ;; ------ `Diminish' ------
   (if (display-graphic-p)
+
     ;; Graphical
     (progn
+      (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮" " $"))
+      (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" nil))
       (add-to-list 'spacemacs--diminished-minor-modes '(idris-simple-indent-mode nil nil))
       (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
-      (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " " nil)))
+      (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " 🤔" nil)))
+
     ;; Terminal
     (progn
       (setq spacemacs--diminished-minor-modes
