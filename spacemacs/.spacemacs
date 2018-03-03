@@ -635,9 +635,6 @@ you should place your code here."
          (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")))
      (all-the-icons-dired-mode)))
 
-  ;; ------ `Fish\ Shell' ------
-  (add-hook 'term-mode-hook 'toggle-truncate-lines)
-
   ;; ------ `Paradox' ------
   ;; key for paradox
   (setq
