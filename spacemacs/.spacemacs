@@ -292,14 +292,14 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-default-font '(
                                (
                                 "Fantasque Sans Mono"
-                                :size 16
+                                :size 17
                                 :weight normal
                                 :width wide
                                 :powerline-scale 1.4
                                 )
                                (
                                 "Source Code Pro for Powerline"
-                                :size 13
+                                :size 14
                                 :weight normal
                                 :width normal
                                 :powerline-scale 1.1
