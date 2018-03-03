@@ -291,8 +291,8 @@ It should only modify the values of Spacemacs settings."
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '(
                                (
-                                "Fantasque Sans Mono"
-                                :size 17
+                                "FantasqueSansMono Nerd Font Mono"
+                                :size 18
                                 :weight normal
                                 :width wide
                                 :powerline-scale 1.4
