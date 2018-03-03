@@ -687,6 +687,10 @@ you should place your code here."
     (evil-leader/set-key "o p" #'paste-from-clipboard))
 
 
+  ;; ------ `Transparency' ------
+  (when (display-graphic-p) (spacemacs/toggle-transparency))
+
+
   ;; ------ `Org-Mode' ------
   (with-eval-after-load 'org
 
