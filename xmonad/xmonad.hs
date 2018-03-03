@@ -4,6 +4,7 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.SetWMName
 import XMonad.Layout.Gaps
 import XMonad.Layout.Spacing
+import qualified XMonad.StackSet as W
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig(additionalKeys)
 import System.IO
@@ -20,22 +21,21 @@ main =
           , borderWidth = 3
           , normalBorderColor = "#292b2e" -- dark grey
           , focusedBorderColor = "#5d4d7a" -- purple
-          -- "#bc6ec5" -- pink -- "#2aa1ae" -- cyan -- "#5d4d7a" -- purple -- "#f4f4f4" -- off-white
+          -- "#2D9574" -- green -- "#bc6ec5" -- pink -- "#2aa1ae" -- cyan -- "#5d4d7a" -- purple -- "#f4f4f4" -- off-white
 
           , layoutHook =
               gaps [(U, 3)] $
-                smartSpacingWithEdge 14 $
+                smartSpacingWithEdge 13 $
                   avoidStrutsOn [U, D] $
                     layoutHook def
 
-          , manageHook =
-              manageDocks <+> manageHook def
+          , manageHook = manageDocks <+> manageHook def
 
           , logHook =
               dynamicLogWithPP
                 xmobarPP
                   { ppOutput = hPutStrLn xmobarPipe
-                  , ppTitle = xmobarColor "green" "" . shorten 50
+                  , ppTitle = xmobarColor "green" "magenta" . shorten 50
                   }
 
           , startupHook =
@@ -49,5 +49,7 @@ main =
 
         `additionalKeys`
           [ ((mod1Mask, xK_space), spawn "fish -c \"rofi -show combi -modi combi\"")
-          , ((mod1Mask .|. shiftMask, xK_X), spawn "sh /home/john/.i3/blurlock.sh")
+          , ((mod1Mask .|. shiftMask, xK_x), spawn "sh /home/john/.i3/blurlock.sh")
+          , ((mod1Mask, xK_p), windows W.focusUp)
+          , ((mod1Mask, xK_n), windows W.focusDown)
           ]

@@ -1,10 +1,10 @@
-Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
+Config { font = "xft:FantasqueSansMono Nerd Font Mono:size=16:normal:antialias=true"
        , additionalFonts = []
-       , borderColor = "black"
+       , borderColor = "#292b2e"
        , border = TopB
-       , bgColor = "black"
+       , bgColor = "#292b2e"
        , fgColor = "grey"
-       , alpha = 255
+       , alpha = 180
        , position = Top
        , textOffset = -1
        , iconOffset = -1
@@ -15,24 +15,52 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
        , iconRoot = "."
        , allDesktops = True
        , overrideRedirect = True
-       , commands = [ Run Weather "EGPF" ["-t","<station>: <tempC>C",
-                                          "-L","18","-H","25",
-                                          "--normal","green",
-                                          "--high","red",
-                                          "--low","lightblue"] 36000
-                    , Run Network "eth0" ["-L","0","-H","32",
-                                          "--normal","green","--high","red"] 10
-                    , Run Network "eth1" ["-L","0","-H","32",
-                                          "--normal","green","--high","red"] 10
-                    , Run Cpu ["-L","3","-H","50",
-                               "--normal","green","--high","red"] 10
-                    , Run Memory ["-t","Mem: <usedratio>%"] 10
-                    , Run Swap [] 10
-                    , Run Com "uname" ["-s","-r"] "" 36000
-                    , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
-                    ]
+       , commands =
+          [ Run Weather
+              "KSNA"
+              [ "-t"
+              , "Santa Ana: <tempF>°F"
+              , "-L"
+              , "65"
+              , "-H"
+              , "85"
+              , "--normal"
+              , "green"
+              , "--high"
+              , "red"
+              , "--low"
+              , "lightblue"
+              ]
+              36000
+          , Run Network
+              "lo"
+              [ "-L", "0", "-H", "32", "--normal", "green", "--high", "red" ]
+              10
+          , Run Network
+              "wlo1"
+              [ "-L", "0", "-H", "32", "--normal", "green", "--high", "red" ]
+              10
+          , Run Cpu
+              [ "-L", "3", "-H", "50", "--normal", "green", "--high", "red" ]
+              10
+          , Run Battery
+              [ "-t"
+              , "<acstatus>: <left>% - <timeleft>"
+              , "--"
+              , "-O"
+              , "AC"
+              , "-o"
+              , "Bat"
+              , "-h"
+              , "green"
+              , "-l"
+              , "red"
+              ] 10
+          , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+          , Run StdinReader
+          ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%cpu% | %memory% * %swap% | %eth0% - %eth1% }\
-                    \{ <fc=#ee9a00>%date%</fc>| %EGPF% | %uname%"
+       , template =
+          " %StdinReader% }{ | <fc=#2D9574>%battery%</fc> | <fc=#4f97d7>%lo% - %wlo1%</fc> | <fc=#2D9574>%date%</fc> | <fc=#ce537a>%KSNA%</fc> "
        }
