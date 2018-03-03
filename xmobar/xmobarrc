@@ -4,7 +4,7 @@ Config { font = "xft:FantasqueSansMono Nerd Font Mono:size=16:normal:antialias=t
        , border = TopB
        , bgColor = "#292b2e"
        , fgColor = "grey"
-       , alpha = 180
+       , alpha = 200
        , position = Top
        , textOffset = -1
        , iconOffset = -1
