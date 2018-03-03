@@ -1,4 +1,3 @@
-# Beloved Source Code Pro
 font pango:Fantasque Sans Mono 16px
 
 # i3-gaps
@@ -21,13 +20,13 @@ bindsym Mod1+Shift+x exec sh /home/john/.i3/blurlock.sh
 client.focused #292b2E #5d4D7A #B2B2B2 #68727C #5D4d7A
 
 # Swap control and caps... ??
-exec /usr/bin/setxkbmap -layout us -option ctrl:swapcaps
+exec /usr/bin/setxkbmap -layout us -option ctrl:nocaps
 
 # Caps as escape and control
 exec xcape -e 'Control_L=Escape'
 
 # Setup monitor to left of laptop, laptop display with lower resolution
-exec /usr/bin/xrandr --output HDMI-1-1 --primary --left-of eDP-1-1 --output eDP-1-1 --mode 1360x768
+exec /usr/bin/xrandr --output HDMI-1-1 --primary --left-of eDP-1-1 --output eDP-1-1 # --mode 1360x768
 
 # Vim keys
 set $up k
@@ -135,10 +134,10 @@ bindsym Mod1+r mode "resize"
 bar {
     output eDP-1-1
     # i3bar_command i3bar -t
-    height 25
+    height 35
     status_command i3status
     tray_output primary
-    font pango:Fantasque Sans Mono 14px
+    font pango:Fantasque Sans Mono 20px
     position top
     workspace_buttons yes
 
