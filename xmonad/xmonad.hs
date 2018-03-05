@@ -41,14 +41,14 @@ main =
                   , ppSep = ""
                   , ppWsSep = ""
                   , ppTitle =
-                      myWsTemplate "#2D9574" "#292b2e" "#15171a" "#15171a"
+                      myWsTemplate "#15171a" "#2D9574" "#15171a" "#15171a"
                       . shorten 30
                   , ppLayout = const ""
                   }
 
           , startupHook =
               setWMName "LG3D"
-              <+> spawn "/usr/binxrandr --output HDMI-1-1 --primary --left-of eDP-1-1 --output eDP-1-1"
+              <+> spawn "/usr/bin/xrandr --output HDMI-1-1 --primary --left-of eDP-1-1 --output eDP-1-1"
               <+> spawn "/usr/bin/compton --config /home/john/.config/compton/compton.conf"
               <+> spawn "/usr/bin/nitrogen --restore"
               <+> spawn "/usr/bin/setxkbmap -layout us -option ctrl:nocaps"
@@ -70,6 +70,6 @@ myWsTemplate :: String -> String -> String -> String -> String -> String
 myWsTemplate fgColor bgColorInner bgColorLeft bgColorRight =
   xmobarColor fgColor bgColorInner
   . (xmobarColor bgColorLeft bgColorInner "\57520" ++)
-  . (xmobarColor fgColor bgColorInner " \57521 " ++)
+  . (xmobarColor fgColor bgColorInner "\57521 " ++)
   . (++ xmobarColor bgColorInner bgColorRight "\57520")
   . (++ xmobarColor bgColorRight bgColorInner " " )
