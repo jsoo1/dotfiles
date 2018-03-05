@@ -56,7 +56,7 @@ main =
               <+> spawn "/usr/bin/compton --config /home/john/.config/compton/compton.conf"
               <+> spawn "/usr/bin/nitrogen --restore"
               <+> spawn "/usr/bin/setxkbmap -layout us -option ctrl:nocaps"
-              <+> spawn "/usr/bin/xcape -e 'Control_L=Escape'"
+              <+> spawn "/usr/bin/xcape -e \'Control_L=Escape\'"
           }
 
         `additionalKeys`
@@ -70,7 +70,7 @@ main =
           ]
 
 
-myWsTemplate :: String -> String -> String -> String -> String -> String
+myWsTemplate :: String -> String -> String -> String -> (String -> String)
 myWsTemplate fgColor bgColorInner bgColorLeft bgColorRight =
   xmobarColor fgColor bgColorInner
   . (xmobarColor bgColorLeft bgColorInner "\57520" ++)

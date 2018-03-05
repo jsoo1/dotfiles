@@ -28,23 +28,24 @@ Config
         , "85"
         , "--normal"
         , "green"
+        , "-b"
+        , "#ce537a"
         , "--high"
         , "red"
         , "--low"
         , "lightblue"
+        , "-b"
+        , "#ce537a"
         ]
         36000
     , Run Network
         "lo"
-        [ "-L", "0", "-H", "32", "--normal", "green", "--high", "red" ]
-        10
+        [ "-L", "0", "-H", "32", "--normal", "green", "--high", "red", "-b", "#ce537a" ]
+        200
     , Run Network
         "wlo1"
-        [ "-L", "0", "-H", "32", "--normal", "green", "--high", "red" ]
-        10
-    , Run Cpu
-        [ "-L", "3", "-H", "50", "--normal", "green", "--high", "red" ]
-        10
+        [ "-L", "0", "-H", "32", "--normal", "green", "--high", "red", "-b", "#ce537a" ]
+        200
     , Run Battery
         [ "-t"
         , "<acstatus>: <left>% - <timeleft>"
@@ -57,12 +58,13 @@ Config
         , "green"
         , "-l"
         , "red"
-        ] 10
-    , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+        ]
+        200
+    , Run Date "%a %b%_d %H:%M:%S" "date" 10
     , Run StdinReader
     ]
   , sepChar = "%"
   , alignSep = "}{"
   , template =
-    "<fc=#15171a,grey> %whoami%@%hostname% </fc><fc=grey,#15171a></fc>%StdinReader%}{<fc=#4f97d7,#15171a></fc> <fc=grey,#4f97d7>%lo% - %wlo1%</fc>  <fc=#2D9574>%battery%</fc>  <fc=#ce537a>%KSNA%</fc>  <fc=#4f97d7>%date%</fc> "
+    "<fc=#15171a,grey> %whoami%@%hostname% </fc><fc=grey,#15171a></fc>%StdinReader%}{<fc=#4f97d7,#15171a></fc><fc=#15171a,#4f97d7> %lo% - %wlo1% </fc><fc=#2D9574,#4f97d7></fc><fc=#15171a,#2D9574> %battery% </fc><fc=#ce537a,#2D9574></fc><fc=#15171a,#ce537a> %KSNA% </fc><fc=#4f97d7,#ce537a></fc><fc=#15171a,#4f97d7> %date% </fc>"
   }
