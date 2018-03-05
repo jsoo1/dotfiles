@@ -33,15 +33,41 @@ Config
         , "--low"
         , "lightblue,#5d4d7a"
         ]
-        36000
-    , Run Network
-        "lo"
-        [ "-L", "0", "-H", "32", "--normal", "green,#4f97d7", "--high", "red,#4f97d7" ]
-        200
-    , Run Network
-        "wlo1"
-        [ "-L", "0", "-H", "32", "--normal", "green,#4f97d7", "--high", "red,#4f97d7" ]
-        200
+        9000
+    -- , Run Network
+    --     "lo"
+    --     [ "-t"
+    --     , "<rx> <tx> k  <dev>"
+    --     ,  "-L"
+    --     , "0"
+    --     , "-H"
+    --     , "32"
+    --     , "--normal"
+    --     , "green,#4f97d7"
+    --     , "--high"
+    --     , "red,#4f97d7"
+    --     ]
+    --     200
+    -- , Run Network
+    --     "wlo1"
+    --     [ "-t"
+    --     , "<rx> <tx> k  <dev>"
+    --     , "-L"
+    --     , "0"
+    --     , "-H"
+    --     , "32"
+    --     , "--normal"
+    --     , "green,#4f97d7"
+    --     , "--high"
+    --     , "red,#4f97d7"
+    --     ]
+    --     200
+    , Run Wireless
+      "wlo1"
+      [ "-t"
+      , "<quality>  <essid>"
+      ]
+      200
     , Run Battery
         [ "-t"
         , "<left>%  <timeleft>  <acstatus>"
