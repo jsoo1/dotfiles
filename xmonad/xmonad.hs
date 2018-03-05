@@ -42,6 +42,8 @@ main =
                       myWsTemplate "grey" "#5d4d7a" "#15171a" "#15171a"
                   , ppHidden =
                       myWsTemplate "grey" "" "#15171a" "#15171a"
+                  , ppUrgent =
+                      myWsTemplate "#ce537a" "#15171a" "#15171a" "#15171a"
                   , ppSep = ""
                   , ppWsSep = ""
                   , ppTitle =
