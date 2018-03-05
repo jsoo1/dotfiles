@@ -4,7 +4,7 @@ Config
   , additionalFonts = []
   , borderColor = "#292b2e"
   , border = TopB
-  , bgColor = "#292b2e"
+  , bgColor = "#15171a" -- "#292b2e"
   , fgColor = "grey"
   , alpha = 255
   , position = Bottom
@@ -64,5 +64,5 @@ Config
   , sepChar = "%"
   , alignSep = "}{"
   , template =
-    "<fc=#292b2e,grey> Workspaces </fc><fc=grey,#15171a></fc><fc=#15171a,#292b2e></fc> %StdinReader% }{<fc=#4f97d7,grey></fc> <fc=grey,#4f97d7>%lo% - %wlo1%</fc>  <fc=#2D9574>%battery%</fc>  <fc=#ce537a>%KSNA%</fc>  <fc=#4f97d7>%date%</fc> "
+    "<fc=#292b2e,grey> Workspaces </fc><fc=grey,#15171a></fc><fc=#15171a,#15171a></fc>%StdinReader% }{<fc=#4f97d7,grey></fc> <fc=grey,#4f97d7>%lo% - %wlo1%</fc>  <fc=#2D9574>%battery%</fc>  <fc=#ce537a>%KSNA%</fc>  <fc=#4f97d7>%date%</fc> "
   }

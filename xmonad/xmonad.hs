@@ -2,17 +2,16 @@ import XMonad
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.SetWMName
-import XMonad.Layout.Gaps
+import XMonad.Layout.NoBorders(smartBorders)
 import XMonad.Layout.Spacing
-import qualified XMonad.StackSet as W
 import XMonad.Util.Run(spawnPipe)
-import XMonad.Util.EZConfig(additionalKeys)
+import XMonad.Util.EZConfig(additionalKeys, removeKeys)
 import System.IO
 
 main :: IO ()
 main =
   do
-    xmobarPipe <- spawnPipe "/home/john/.local/bin/xmobar /home/john/.config/xmobar/xmobarrc"
+    xmobarPipe <- spawnPipe "/home/john/.local/bin/xmobar /home/john/.config/xmobar/xmobar.hs"
     xmonad $
       docks
         def
@@ -24,7 +23,7 @@ main =
           -- "#2D9574" -- green -- "#bc6ec5" -- pink -- "#2aa1ae" -- cyan -- "#5d4d7a" -- purple -- "#f4f4f4" -- off-white
 
           , layoutHook =
-              gaps [(U, 3)] $
+              smartBorders $
                 smartSpacingWithEdge 13 $
                   avoidStrutsOn [U, D] $
                     layoutHook def
@@ -35,7 +34,16 @@ main =
               dynamicLogWithPP
                 xmobarPP
                   { ppOutput = hPutStrLn xmobarPipe
-                  , ppTitle = xmobarColor "green" "magenta" . shorten 50
+                  , ppCurrent =
+                      myWsTemplate "grey" "#5d4d7a" "#15171a" "#15171a"
+                  , ppHidden =
+                      myWsTemplate "grey" "" "#15171a" "#15171a"
+                  , ppSep = ""
+                  , ppWsSep = ""
+                  , ppTitle =
+                      myWsTemplate "#2D9574" "#292b2e" "#15171a" "#15171a"
+                      . shorten 30
+                  , ppLayout = const ""
                   }
 
           , startupHook =
@@ -50,6 +58,18 @@ main =
         `additionalKeys`
           [ ((mod1Mask, xK_space), spawn "fish -c \"rofi -show combi -modi combi\"")
           , ((mod1Mask .|. shiftMask, xK_x), spawn "sh /home/john/.i3/blurlock.sh")
-          , ((mod1Mask, xK_p), windows W.focusUp)
-          , ((mod1Mask, xK_n), windows W.focusDown)
+          -- , ((mod1Mask, xK_p), windows W.focusUp)
+          -- , ((mod1Mask, xK_n), windows W.focusDown)
           ]
+        `removeKeys`
+          [ (mod1Mask, xK_n)
+          , (mod1Mask, xK_p)
+          ]
+
+myWsTemplate :: String -> String -> String -> String -> String -> String
+myWsTemplate fgColor bgColorInner bgColorLeft bgColorRight =
+  xmobarColor fgColor bgColorInner
+  . (xmobarColor bgColorLeft bgColorInner "\57520" ++)
+  . (xmobarColor fgColor bgColorInner " \57521 " ++)
+  . (++ xmobarColor bgColorInner bgColorRight "\57520")
+  . (++ xmobarColor bgColorRight bgColorInner " " )
