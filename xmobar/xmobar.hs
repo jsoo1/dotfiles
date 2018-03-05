@@ -92,6 +92,12 @@ Config
   , sepChar = "%"
   , alignSep = "}{"
   , template =
-    "<fc=#15171a,grey> %whoami%@%hostname% </fc><fc=grey,#15171a></fc>%StdinReader%\
-    \}{< %default%%Master%  <fc=#4f97d7,#15171a></fc><fc=#15171a,#4f97d7> %lo%  %wlo1% </fc><fc=#15171a,#4f97d7></fc><fc=#4f97d7,#15171a></fc><fc=#15171a,#4f97d7>%date% </fc><fc=#15171a,#4f97d7></fc><fc=#2D9574,#15171a></fc><fc=#15171a,#2D9574> %battery% </fc>"
+    "<fc=#15171a,grey> %whoami%@%hostname% </fc>\
+    \<fc=grey,#15171a></fc>%StdinReader%\
+    \}{\
+    \< %default%%Master% \
+    \< %wlo1wi% \
+    \<fc=#4f97d7,#15171a></fc><fc=#15171a,#4f97d7> %lo%  %wlo1% </fc>\
+    \<fc=#15171a,#4f97d7></fc><fc=#2D9574,#15171a></fc><fc=#15171a,#2D9574> %battery% </fc>\
+    \<fc=#15171a,#2D9574></fc><fc=#4f97d7,#15171a></fc><fc=#15171a,#4f97d7>%date% </fc>"
   }
