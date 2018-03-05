@@ -1,12 +1,16 @@
-import XMonad
-import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.SetWMName
-import XMonad.Layout.NoBorders(smartBorders)
-import XMonad.Layout.Spacing
-import XMonad.Util.Run(spawnPipe)
-import XMonad.Util.EZConfig(additionalKeys, removeKeys)
-import System.IO
+module Main where
+
+
+import           System.IO
+import           XMonad
+import           XMonad.Hooks.DynamicLog
+import           XMonad.Hooks.ManageDocks
+import           XMonad.Hooks.SetWMName
+import           XMonad.Layout.NoBorders  (smartBorders)
+import           XMonad.Layout.Spacing
+import           XMonad.Util.EZConfig     (additionalKeys, removeKeys)
+import           XMonad.Util.Run          (spawnPipe)
+
 
 main :: IO ()
 main =
@@ -58,13 +62,13 @@ main =
         `additionalKeys`
           [ ((mod1Mask, xK_space), spawn "fish -c \"rofi -show combi -modi combi\"")
           , ((mod1Mask .|. shiftMask, xK_x), spawn "sh /home/john/.i3/blurlock.sh")
-          -- , ((mod1Mask, xK_p), windows W.focusUp)
-          -- , ((mod1Mask, xK_n), windows W.focusDown)
           ]
+
         `removeKeys`
           [ (mod1Mask, xK_n)
           , (mod1Mask, xK_p)
           ]
+
 
 myWsTemplate :: String -> String -> String -> String -> String -> String
 myWsTemplate fgColor bgColorInner bgColorLeft bgColorRight =
