@@ -525,7 +525,7 @@ It should only modify the values of Spacemacs settings."
    ;; %n - Narrow if appropriate
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
-   dotspacemacs-frame-title-format "%t    %F    %b    %n    %p"
+   dotspacemacs-frame-title-format "%F %t %b"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
