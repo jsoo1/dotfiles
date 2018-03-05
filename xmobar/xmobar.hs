@@ -27,24 +27,20 @@ Config
         , "-H"
         , "85"
         , "--normal"
-        , "green"
-        , "-b"
-        , "#ce537a"
+        , "green,#ce537a"
         , "--high"
-        , "red"
+        , "red,#ce537a"
         , "--low"
-        , "lightblue"
-        , "-b"
-        , "#ce537a"
+        , "lightblue,#ce537a"
         ]
         36000
     , Run Network
         "lo"
-        [ "-L", "0", "-H", "32", "--normal", "green", "--high", "red", "-b", "#ce537a" ]
+        [ "-L", "0", "-H", "32", "--normal", "green,#4f97d7", "--high", "red,#4f97d7" ]
         200
     , Run Network
         "wlo1"
-        [ "-L", "0", "-H", "32", "--normal", "green", "--high", "red", "-b", "#ce537a" ]
+        [ "-L", "0", "-H", "32", "--normal", "green,#4f97d7", "--high", "red,#4f97d7" ]
         200
     , Run Battery
         [ "-t"
