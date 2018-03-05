@@ -55,8 +55,19 @@ Config
         ]
         200
     , Run Volume
-      "default" "Master"
-      []
+      "default"
+      "Master"
+      [ "-t"
+      , " <volume>  <status> Vol"
+      -- , "--on"
+      -- , "on"
+      -- , "--onc"
+      -- , "green,#15171a"
+      -- , "-o"
+      -- , "off"
+      -- , "--offc"
+      -- , "grey,#15171a"
+      ]
       200
     , Run Date "%l:%M %p  %D" "date" 10
     , Run StdinReader
@@ -67,9 +78,8 @@ Config
     "<fc=#15171a,grey> %whoami%@%hostname% </fc>\
     \<fc=grey,#15171a></fc>%StdinReader%\
     \}{\
-    \< %default%%Master% \
-    \< %wlo1wi% \
-    \<fc=#4f97d7,#15171a></fc><fc=#15171a,#4f97d7> %lo%  %wlo1% </fc>\
-    \<fc=#15171a,#4f97d7></fc><fc=#2D9574,#15171a></fc><fc=#15171a,#2D9574> %battery% </fc>\
+    \<fc=#4f97d7>%default:Master% </fc>\
+    \<fc=#2D9574> %wlo1wi% </fc>\
+    \<fc=#2D9574,#15171a></fc><fc=#15171a,#2D9574> %battery% </fc>\
     \<fc=#15171a,#2D9574></fc><fc=#4f97d7,#15171a></fc><fc=#15171a,#4f97d7>%date% </fc>"
   }
