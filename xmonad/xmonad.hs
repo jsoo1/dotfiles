@@ -3,6 +3,7 @@ module Main where
 
 import           System.IO
 import           XMonad
+import           XMonad.Actions.WindowBringer
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.SetWMName
@@ -62,8 +63,17 @@ main =
           }
 
         `additionalKeys`
-          [ ((mod1Mask, xK_space), spawn "fish -c \"rofi -show combi -modi combi\"")
-          , ((mod1Mask .|. shiftMask, xK_x), spawn "sh /home/john/.i3/blurlock.sh")
+          [ ((mod1Mask, xK_space),
+             spawn "fish -c \"rofi -show combi -modi combi\"")
+
+          , ((mod1Mask .|. shiftMask, xK_x),
+             spawn "sh /home/john/.i3/blurlock.sh")
+
+          , ((mod1Mask, xK_g),
+             gotoMenu)
+
+          , ((mod1Mask, xK_b),
+             bringMenu)
           ]
 
         `removeKeys`
