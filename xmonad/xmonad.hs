@@ -23,7 +23,7 @@ main =
         def
           { terminal = "alacritty"
           , focusFollowsMouse = False
-          , borderWidth = 3
+          , borderWidth = 4
           , normalBorderColor = "#292b2e" -- dark grey
           , focusedBorderColor = "#2D9574" -- purple
           -- "#2D9574" -- green -- "#bc6ec5" -- pink -- "#2aa1ae" -- cyan -- "#5d4d7a" -- purple -- "#f4f4f4" -- off-white
@@ -43,7 +43,7 @@ main =
                   , ppCurrent =
                       myWsTemplate "grey" "#5d4d7a" "#15171a" "#15171a"
                   , ppHidden =
-                      myWsTemplate "grey" "" "#15171a" "#15171a"
+                      myWsTemplate "grey" "#292b2e" "#15171a" "#15171a"
                   , ppUrgent =
                       myWsTemplate "#ce537a" "#15171a" "#15171a" "#15171a"
                   , ppSep = ""
