@@ -2,6 +2,7 @@ module Main where
 
 
 import           System.IO
+import           Graphics.X11.ExtraTypes.XF86
 import           XMonad
 import           XMonad.Actions.WindowBringer
 import           XMonad.Hooks.DynamicLog
@@ -24,7 +25,7 @@ main =
           , focusFollowsMouse = False
           , borderWidth = 3
           , normalBorderColor = "#292b2e" -- dark grey
-          , focusedBorderColor = "#5d4d7a" -- purple
+          , focusedBorderColor = "#2D9574" -- purple
           -- "#2D9574" -- green -- "#bc6ec5" -- pink -- "#2aa1ae" -- cyan -- "#5d4d7a" -- purple -- "#f4f4f4" -- off-white
 
           , layoutHook =
@@ -63,17 +64,26 @@ main =
           }
 
         `additionalKeys`
-          [ ((mod1Mask, xK_space),
-             spawn "fish -c \"rofi -show combi -modi combi\"")
+          [ ((mod1Mask, xK_space)
+            , spawn "fish -c \"rofi -show combi -modi combi\"")
 
-          , ((mod1Mask .|. shiftMask, xK_x),
-             spawn "sh /home/john/.i3/blurlock.sh")
+          , ((mod1Mask .|. shiftMask, xK_x)
+            , spawn "sh /home/john/.i3/blurlock.sh")
 
-          , ((mod1Mask, xK_g),
-             gotoMenu)
+          , ((mod1Mask, xK_g)
+            , gotoMenu)
 
-          , ((mod1Mask, xK_b),
-             bringMenu)
+          , ((mod1Mask, xK_b)
+            , bringMenu)
+
+          , ((0, xF86XK_AudioLowerVolume)
+            , spawn "amixer -q -D pulse sset Master 2%-")
+
+          , ((0, xF86XK_AudioRaiseVolume)
+            , spawn "amixer -q -D puls sset Master 2%+")
+
+          , ((0, xF86XK_AudioMute)
+            , spawn "amixer -q -D pulse set Master toggle")
           ]
 
         `removeKeys`
