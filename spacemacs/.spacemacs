@@ -133,6 +133,8 @@ This function should only modify configuration layer settings."
      ;; ------ `Gradle' ------
      gradle-mode
      groovy-mode
+     ;; ------ `Guix' ------
+     emacs-guix
      ;; ------ `Nand2Tetris' ------
      nand2tetris
      ;; ------ `Shen\ Elisp' ------
