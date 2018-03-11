@@ -59,36 +59,36 @@ main = do
 
           dynamicLogWithPP $ xmobarPP
             { ppOutput = hPutStrLn xmobarPipe
-              , ppCurrent =
-                current
-                |> maybe "" titleFormat
-                |> wsArrowRight ltGrey purple dkGrey dkGrey
-              , ppHidden =
-                \wsId ->
-                  titleFor hidden wsId
-                  |> flip (wsArrowRight ltGrey grey dkGrey dkGrey) wsId
-              , ppVisible =
-                \wsId ->
-                  titleFor visible wsId
-                  |> flip (wsArrowRight ltGrey grey dkGrey dkGrey) wsId
-              , ppUrgent =
-                \wsId ->
-                  let
-                    t =
-                      if "" /= titleFor visible wsId
-                      then titleFor visible wsId
-                      else titleFor hidden wsId
-                  in
-                    wsArrowRight pink grey dkGrey dkGrey t wsId
-              , ppSep = ""
-              , ppWsSep = ""
-              , ppTitle =
-                \t ->
-                  if null t
-                  then ""
-                  else titleArrowRight dkGrey green dkGrey dkGrey t
-              , ppOrder = \(ws:_:t:e) -> e ++ [ ws, t ]
-              }
+            , ppCurrent =
+              current
+              |> maybe "       " titleFormat
+              |> wsArrowRight dkGrey blue dkGrey dkGrey
+            , ppHidden =
+              \wsId ->
+                titleFor hidden wsId
+                |> flip (wsArrowRight blue grey dkGrey dkGrey) wsId
+            , ppVisible =
+              \wsId ->
+                titleFor visible wsId
+                |> flip (wsArrowRight blue grey dkGrey dkGrey) wsId
+            , ppUrgent =
+              \wsId ->
+                let
+                  t =
+                    if mempty /= titleFor visible wsId
+                    then titleFor visible wsId
+                    else titleFor hidden wsId
+                in
+                  wsArrowRight pink grey dkGrey dkGrey t wsId
+            , ppSep = mempty
+            , ppWsSep = mempty
+            , ppTitle =
+              \t ->
+                if null t
+                then mempty
+                else titleArrowRight dkGrey green dkGrey dkGrey t
+            , ppOrder = \(ws:_:t:e) -> e ++ [ ws, t ]
+            }
 
       , startupHook =
         -- setWMName "LG3D"
@@ -99,7 +99,7 @@ main = do
         <+> spawn
           "/usr/bin/compton --config /home/john/.config/compton/compton.conf"
         <+> spawn
-          "/usr/bin/nitrogen --restore"
+          "/usr/bin/feh --bg-fill /home/john/Downloads/richter-piz-lunghin.jpg"
         <+> spawn
           "/usr/bin/setxkbmap -layout us -option ctrl:nocaps"
         <+> spawn
