@@ -134,7 +134,7 @@ This function should only modify configuration layer settings."
      gradle-mode
      groovy-mode
      ;; ------ `Guix' ------
-     emacs-guix
+     guix
      ;; ------ `Nand2Tetris' ------
      nand2tetris
      ;; ------ `Shen\ Elisp' ------
