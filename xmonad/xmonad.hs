@@ -99,7 +99,7 @@ main = do
         <+> spawn
           "/usr/bin/compton --config /home/john/.config/compton/compton.conf"
         <+> spawn
-          "/usr/bin/feh --bg-fill /home/john/Downloads/richter-piz-lunghin.jpg"
+          "/usr/bin/feh --bg-fill /home/john/Downloads/richter-lake-lucerne.jpg"
         <+> spawn
           "/usr/bin/setxkbmap -layout us -option ctrl:nocaps"
         <+> spawn
