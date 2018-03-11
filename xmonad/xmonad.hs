@@ -126,7 +126,7 @@ main = do
             , spawn "amixer -q -D pulse sset Master 2%-"
             )
           , ( (0, xF86XK_AudioRaiseVolume)
-            , spawn "amixer -q -D puls sset Master 2%+"
+            , spawn "amixer -q -D pulse sset Master 2%+"
             )
           , ( (0, xF86XK_AudioMute)
               , spawn "amixer -q -D pulse set Master toggle"
