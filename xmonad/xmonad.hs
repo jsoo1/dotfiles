@@ -55,7 +55,7 @@ main = do
       , manageHook = manageDocks <+> manageHook def <+> manageDocks
 
       , logHook = do
-          Titles {current, hidden} <- withWindowSet allTitles
+          Titles {current, hidden, visible} <- withWindowSet allTitles
 
           dynamicLogWithPP $ xmobarPP
             { ppOutput = hPutStrLn xmobarPipe
@@ -65,12 +65,24 @@ main = do
                 |> wsArrowRight ltGrey purple dkGrey dkGrey
               , ppHidden =
                 \wsId ->
-                  wsId
-                  |> wsArrowRight ltGrey grey dkGrey dkGrey (titleFor hidden wsId)
-              , ppUrgent = wsArrowRight pink grey dkGrey dkGrey ""
+                  titleFor hidden wsId
+                  |> flip (wsArrowRight ltGrey grey dkGrey dkGrey) wsId
+              , ppVisible =
+                \wsId ->
+                  titleFor visible wsId
+                  |> flip (wsArrowRight ltGrey grey dkGrey dkGrey) wsId
+              , ppUrgent =
+                \wsId ->
+                  let
+                    t =
+                      if "" /= titleFor visible wsId
+                      then titleFor visible wsId
+                      else titleFor hidden wsId
+                  in
+                    wsArrowRight pink grey dkGrey dkGrey t wsId
               , ppSep = ""
               , ppWsSep = ""
-              , ppTitle = wsArrowRight dkGrey green dkGrey dkGrey ""
+              , ppTitle = titleArrowRight dkGrey green dkGrey dkGrey
               , ppOrder = \(ws:_:t:e) -> [ ws, t ] ++ e
               }
 
@@ -136,8 +148,8 @@ data WorkspaceTitles =
 
 
 titleFor :: (Show a, Ord k) => Map.Map k (Maybe a) -> k -> String
-titleFor hidden wsId =
-  Map.lookup wsId hidden
+titleFor windowNames wsId =
+  Map.lookup wsId windowNames
   |> join
   |> maybe "" titleFormat
 
@@ -196,6 +208,20 @@ wsArrowRight fgColor bgColorInner bgColorLeft bgColorRight wsTitle =
   . (++ xmobarColor bgColorRight bgColorInner " ")
   . (++ xmobarColor fgColor bgColorInner wsTitle)
   . (++ xmobarColor fgColor bgColorInner rightChevron)
+  . (++ xmobarColor bgColorRight bgColorInner " ")
+  . (xmobarColor bgColorRight bgColorInner " " ++)
+
+titleArrowRight ::
+  SpaceColor ->
+  SpaceColor ->
+  SpaceColor ->
+  SpaceColor ->
+  String ->
+  String
+titleArrowRight fgColor bgColorInner bgColorLeft bgColorRight =
+  xmobarColor fgColor bgColorInner
+  . (xmobarColor bgColorLeft bgColorInner solidRightChevron ++)
+  . (++ xmobarColor bgColorInner bgColorRight solidRightChevron)
   . (++ xmobarColor bgColorRight bgColorInner " ")
   . (xmobarColor bgColorRight bgColorInner " " ++)
 

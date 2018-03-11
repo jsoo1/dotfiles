@@ -77,8 +77,7 @@ Config
   , sepChar = "%"
   , alignSep = "}{"
   , template =
-    "<fc=#15171a,grey> %whoami%@%hostname% </fc>\
-    \<fc=grey,#15171a></fc>%StdinReader%\
+    "%StdinReader%\
     \}{\
     \<fc=#292b2e,#15171a></fc><fc=#4f97d7,#292b2e> %wlo1wi% </fc>\
     \<fc=#15171a,#292b2e></fc><fc=#292b2e,#15171a></fc><fc=#2D9574,#292b2e>%default:Master%</fc>\
