@@ -4,8 +4,7 @@ Config
   , additionalFonts = []
   , borderColor = "#15171a"
   , border = TopB
-  , bgColor = "#15171a" -- dkGrey
-    -- "#292b2e" -- grey
+  , bgColor = "#15171a"
   , fgColor = "grey"
   , alpha = 255
   , position = Top
