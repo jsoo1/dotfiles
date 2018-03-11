@@ -103,7 +103,7 @@ main = do
         <+> spawn
           "/usr/bin/setxkbmap -layout us -option ctrl:nocaps"
         <+> spawn
-          "/usr/bin/xcape -e 'Control_L=Escape'"
+          "/usr/bin/xcape -e \'Control_L=Escape\'"
       }
 
         `additionalKeys`
