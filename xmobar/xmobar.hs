@@ -54,7 +54,7 @@ Config
         , "-l"
         , "red"
         ]
-        200
+        20
     , Run Volume
       "default"
       "Master"
@@ -70,7 +70,7 @@ Config
       , "--offc"
       , "grey,#292b2e"
       ]
-      50
+      2
     , Run Date "%l:%M %p  %D" "date" 10
     , Run StdinReader
     ]
