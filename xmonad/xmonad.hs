@@ -1,89 +1,124 @@
+{-# LANGUAGE LambdaCase     #-}
+{-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE TupleSections  #-}
+
+
 module Main where
 
 
-import           System.IO
+import           Control.Monad                (join)
+import qualified Data.Map.Strict              as Map
+import           Data.Maybe                   (listToMaybe)
+
+
 import           Graphics.X11.ExtraTypes.XF86
+import           System.IO
 import           XMonad
 import           XMonad.Actions.WindowBringer
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
-import           XMonad.Hooks.SetWMName
-import           XMonad.Layout.NoBorders  (smartBorders)
+import           XMonad.Layout.NoBorders      (smartBorders)
 import           XMonad.Layout.Spacing
-import           XMonad.Util.EZConfig     (additionalKeys, removeKeys)
-import           XMonad.Util.Run          (spawnPipe)
+import qualified XMonad.StackSet              as W
+import           XMonad.Util.EZConfig         (additionalKeys, removeKeys)
+import           XMonad.Util.NamedWindows
+import           XMonad.Util.Replace
+import           XMonad.Util.Run              (spawnPipe)
+
+
+infixl 1 |>
+(|>) :: a -> (a -> b) -> b
+(|>) = flip ($)
 
 
 main :: IO ()
-main =
-  do
-    xmobarPipe <- spawnPipe "/home/john/.local/bin/xmobar /home/john/.config/xmobar/xmobar.hs"
-    xmonad $
-      docks
-        def
-          { terminal = "alacritty"
-          , focusFollowsMouse = False
-          , borderWidth = 4
-          , normalBorderColor = "#292b2e" -- dark grey
-          , focusedBorderColor = "#2D9574" -- purple
-          -- "#2D9574" -- green -- "#bc6ec5" -- pink -- "#2aa1ae" -- cyan -- "#5d4d7a" -- purple -- "#f4f4f4" -- off-white
+main = do
 
-          , layoutHook =
-              smartBorders $
-                smartSpacingWithEdge 13 $
-                  avoidStrutsOn [U, D] $
-                    layoutHook def
+    replace
 
-          , manageHook = manageDocks <+> manageHook def
+    xmobarPipe <- spawnPipe "/home/john/.local/bin/xmobar\
+                            \ /home/john/.config/xmobar/xmobar.hs"
 
-          , logHook =
-              dynamicLogWithPP
-                xmobarPP
-                  { ppOutput = hPutStrLn xmobarPipe
-                  , ppCurrent =
-                      myWsTemplate "grey" "#5d4d7a" "#15171a" "#15171a"
-                  , ppHidden =
-                      myWsTemplate "grey" "#292b2e" "#15171a" "#15171a"
-                  , ppUrgent =
-                      myWsTemplate "#ce537a" "#15171a" "#15171a" "#15171a"
-                  , ppSep = ""
-                  , ppWsSep = ""
-                  , ppTitle =
-                      myWsTemplate "#15171a" "#2D9574" "#15171a" "#15171a"
-                      . shorten 30
-                  , ppLayout = const ""
-                  }
+    xmonad $ docks def
+      { terminal = "alacritty"
+      , focusFollowsMouse = False
+      , borderWidth = 4
+      , normalBorderColor = dkGrey
+      , focusedBorderColor = green
+      , layoutHook =
 
-          , startupHook =
-              setWMName "LG3D"
-              <+> spawn "/usr/bin/xrandr --output HDMI-1-1 --primary --left-of eDP-1-1 --output eDP-1-1"
-              <+> spawn "/usr/bin/compton --config /home/john/.config/compton/compton.conf"
-              <+> spawn "/usr/bin/nitrogen --restore"
-              <+> spawn "/usr/bin/setxkbmap -layout us -option ctrl:nocaps"
-              <+> spawn "/usr/bin/xcape -e \'Control_L=Escape\'"
-          }
+        layoutHook def
+        |> avoidStrutsOn [ U, D ]
+        |> smartSpacingWithEdge 13
+        |> smartBorders
+
+      , manageHook = manageDocks <+> manageHook def <+> manageDocks
+
+      , logHook = do
+          Titles {current, hidden} <- withWindowSet allTitles
+
+          dynamicLogWithPP $ xmobarPP
+            { ppOutput = hPutStrLn xmobarPipe
+              , ppCurrent =
+                current
+                |> maybe "" titleFormat
+                |> wsArrowRight ltGrey purple dkGrey dkGrey
+              , ppHidden =
+                \wsId ->
+                  wsId
+                  |> wsArrowRight ltGrey grey dkGrey dkGrey (titleFor hidden wsId)
+              , ppUrgent = wsArrowRight pink grey dkGrey dkGrey ""
+              , ppSep = ""
+              , ppWsSep = ""
+              , ppTitle = wsArrowRight dkGrey green dkGrey dkGrey ""
+              , ppOrder = \(ws:_:t:e) -> [ ws, t ] ++ e
+              }
+
+      , startupHook =
+        -- setWMName "LG3D"
+        spawn
+          "/usr/bin/xrandr\
+          \ --output HDMI-1-1 --primary --left-of eDP-1-1\
+          \ --output eDP-1-1"
+        <+> spawn
+          "/usr/bin/compton --config /home/john/.config/compton/compton.conf"
+        <+> spawn
+          "/usr/bin/nitrogen --restore"
+        <+> spawn
+          "/usr/bin/setxkbmap -layout us -option ctrl:nocaps"
+        <+> spawn
+          "/usr/bin/xcape -e 'Control_L=Escape'"
+      }
 
         `additionalKeys`
-          [ ((mod1Mask, xK_space)
-            , spawn "fish -c \"rofi -show combi -modi combi\"")
 
-          , ((mod1Mask .|. shiftMask, xK_x)
-            , spawn "sh /home/john/.i3/blurlock.sh")
-
-          , ((mod1Mask, xK_g)
-            , gotoMenu)
-
-          , ((mod1Mask, xK_b)
-            , bringMenu)
-
-          , ((0, xF86XK_AudioLowerVolume)
-            , spawn "amixer -q -D pulse sset Master 2%-")
-
-          , ((0, xF86XK_AudioRaiseVolume)
-            , spawn "amixer -q -D puls sset Master 2%+")
-
-          , ((0, xF86XK_AudioMute)
-            , spawn "amixer -q -D pulse set Master toggle")
+          [ ( (mod1Mask, xK_space)
+            , spawn "fish -c \"rofi -show combi -modi combi\""
+            )
+          , ( (mod1Mask .|. shiftMask, xK_x)
+              , spawn "sh /home/john/.i3/blurlock.sh"
+            )
+          , ( (mod1Mask, xK_g)
+            , gotoMenuConfig $ def
+              { menuCommand = "/usr/bin/rofi"
+              , menuArgs = [ "-dmenu", "-i" ]
+              }
+            )
+          , ( (mod1Mask, xK_b)
+            , bringMenuConfig $ def
+              { menuCommand = "/usr/bin/rofi"
+              , menuArgs = [ "-dmenu", "-i" ]
+              }
+            )
+          , ( (0, xF86XK_AudioLowerVolume)
+            , spawn "amixer -q -D pulse sset Master 2%-"
+            )
+          , ( (0, xF86XK_AudioRaiseVolume)
+            , spawn "amixer -q -D puls sset Master 2%+"
+            )
+          , ( (0, xF86XK_AudioMute)
+              , spawn "amixer -q -D pulse set Master toggle"
+            )
           ]
 
         `removeKeys`
@@ -92,10 +127,124 @@ main =
           ]
 
 
-myWsTemplate :: String -> String -> String -> String -> (String -> String)
-myWsTemplate fgColor bgColorInner bgColorLeft bgColorRight =
+data WorkspaceTitles =
+  Titles
+  { hidden  :: Map.Map WorkspaceId (Maybe NamedWindow)
+  , current :: Maybe NamedWindow
+  , visible :: Map.Map WorkspaceId (Maybe NamedWindow)
+  }
+
+
+titleFor :: (Show a, Ord k) => Map.Map k (Maybe a) -> k -> String
+titleFor hidden wsId =
+  Map.lookup wsId hidden
+  |> join
+  |> maybe "" titleFormat
+
+
+titleFormat :: Show a => a -> String
+titleFormat =
+  take 7 . (" " ++) . show
+
+
+allTitles :: WindowSet -> X WorkspaceTitles
+allTitles windowSet = do
+  currentTitle <- currentMasterWindow windowSet
+  visibleTitles <- masterWindowsFor (fmap W.workspace . W.visible) windowSet
+  hiddenTitles <- masterWindowsFor W.hidden windowSet
+
+  pure Titles
+    { current = currentTitle
+    , visible = visibleTitles
+    , hidden = hiddenTitles
+    }
+
+
+masterWindow :: W.Workspace i l Window -> X (Maybe NamedWindow)
+masterWindow =
+  traverse getName . listToMaybe . W.integrate' . W.stack
+
+
+masterWindowsFor ::
+  Ord i =>
+  (a -> [W.Workspace i l Window]) ->
+  a ->
+  X (Map.Map i (Maybe NamedWindow))
+masterWindowsFor =
+  (.) (traverse masterWindow . Map.fromList . fmap (\x -> (W.tag x, x)))
+
+
+currentMasterWindow :: WindowSet -> X (Maybe NamedWindow)
+currentMasterWindow =
+  masterWindow
+  . W.workspace
+  . W.current
+
+
+wsArrowRight ::
+  SpaceColor ->
+  SpaceColor ->
+  SpaceColor ->
+  SpaceColor ->
+  String ->
+  String ->
+  String
+wsArrowRight fgColor bgColorInner bgColorLeft bgColorRight wsTitle =
   xmobarColor fgColor bgColorInner
-  . (xmobarColor bgColorLeft bgColorInner "\57520" ++)
-  . (xmobarColor fgColor bgColorInner "\57521 " ++)
-  . (++ xmobarColor bgColorInner bgColorRight "\57520")
-  . (++ xmobarColor bgColorRight bgColorInner " " )
+  . (xmobarColor bgColorLeft bgColorInner solidRightChevron ++)
+  . (++ xmobarColor bgColorInner bgColorRight solidRightChevron)
+  . (++ xmobarColor bgColorRight bgColorInner " ")
+  . (++ xmobarColor fgColor bgColorInner wsTitle)
+  . (++ xmobarColor fgColor bgColorInner rightChevron)
+  . (++ xmobarColor bgColorRight bgColorInner " ")
+  . (xmobarColor bgColorRight bgColorInner " " ++)
+
+
+type Separator = String
+
+
+solidRightChevron :: Separator
+solidRightChevron = "\57520"
+
+
+rightChevron :: Separator
+rightChevron = "\57521"
+
+
+type SpaceColor = String
+
+
+blue :: SpaceColor
+blue = "#4f97d7"
+
+
+green :: SpaceColor
+green = "#2D9574"
+
+
+pink :: SpaceColor
+pink = "#bc6ec5"
+
+
+cyan :: SpaceColor
+cyan = "#2aa1ae"
+
+
+purple :: SpaceColor
+purple = "#5d4d7a"
+
+
+offWhite :: SpaceColor
+offWhite = "#f4f4f4"
+
+
+grey :: SpaceColor
+grey = "#292b2e"
+
+
+dkGrey :: SpaceColor
+dkGrey = "#15171a"
+
+
+ltGrey :: SpaceColor
+ltGrey = "grey"
