@@ -82,7 +82,11 @@ main = do
                     wsArrowRight pink grey dkGrey dkGrey t wsId
               , ppSep = ""
               , ppWsSep = ""
-              , ppTitle = titleArrowRight dkGrey green dkGrey dkGrey
+              , ppTitle =
+                \t ->
+                  if null t
+                  then ""
+                  else titleArrowRight dkGrey green dkGrey dkGrey t
               , ppOrder = \(ws:_:t:e) -> e ++ [ ws, t ]
               }
 
