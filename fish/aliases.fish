@@ -1,7 +1,3 @@
-# Common Hosts
-export PI_AWS="ec2-54-186-253-144.us-west-2.compute.amazonaws.com"
-export PI_SERVER="192.168.1.92"
-
 # Git
 abbr gb 'git branch'
 abbr gst 'git status'
@@ -23,20 +19,17 @@ abbr lsah "ls -lsah"
 abbr rmi "rm -i"
 abbr psg "ps aux | rg -i"
 abbr rest "systemctl suspend"
-abbr off "systemctl poweroff"
 abbr logout "gnome-session-quit --logout --no-prompt"
 abbr upgrade! "sudo apt-get update; sudo apt-get -y upgrade"
 abbr install! "sudo apt-get update; sudo apt-get install"
 
 # Emacs
-abbr emc "emacsclient -c --socket-name=frame &"
 abbr em "emacsclient -t --socket-name=term"
 
 # Systemctl
 abbr ctl "systemctl"
 abbr ctlu "systemctl --user"
 abbr ctllint "systemd-analyze verify"
-abbr ctlulint "systemd-analyze --user verify"
 
 # Email
 abbr mindex "mu index --maildir ~/.mail"
@@ -45,5 +38,3 @@ abbr mindex "mu index --maildir ~/.mail"
 abbr tma "tmux attach -t"
 abbr tml "tmux list-sessions"
 
-# i3
-abbr swapcaps "setxkbmap -layout us -option ctrl:swapcaps"
