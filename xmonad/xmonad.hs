@@ -83,7 +83,7 @@ main = do
               , ppSep = ""
               , ppWsSep = ""
               , ppTitle = titleArrowRight dkGrey green dkGrey dkGrey
-              , ppOrder = \(ws:_:t:e) -> [ ws, t ] ++ e
+              , ppOrder = \(ws:_:t:e) -> e ++ [ ws, t ]
               }
 
       , startupHook =
