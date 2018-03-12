@@ -35,7 +35,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layers
    '(
      ;; (
-     agda
+     ;; agda
      ;; :variables
      ;; agda-mode-path "~/.local/bin/agda-mode"
      ;; )
@@ -133,6 +133,8 @@ This function should only modify configuration layer settings."
      ;; ------ `Gradle' ------
      gradle-mode
      groovy-mode
+     ;; ------ `Guix' ------
+     guix
      ;; ------ `Nand2Tetris' ------
      nand2tetris
      ;; ------ `Shen\ Elisp' ------
@@ -270,10 +272,17 @@ It should only modify the values of Spacemacs settings."
    ;; to create your own spaceline theme. Value can be a symbol or list with\
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(
-                                  spacemacs
-                                  :separator arrow
-                                  :separator-scale 1.5
+   dotspacemacs-mode-line-theme (if (display-graphic-p)
+                                    '(
+                                      spacemacs
+                                      :separator arrow
+                                      :separator-scale 1.5
+                                      )
+                                  '(
+                                    vim-powerline
+                                    :separator arrow
+                                    :separator-scale 1.5
+                                    )
                                   )
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
@@ -284,15 +293,15 @@ It should only modify the values of Spacemacs settings."
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '(
                                (
-                                "Fantasque Sans Mono"
-                                :size 16
+                                "FantasqueSansMono Nerd Font Mono"
+                                :size 18
                                 :weight normal
                                 :width wide
                                 :powerline-scale 1.4
                                 )
                                (
                                 "Source Code Pro for Powerline"
-                                :size 13
+                                :size 14
                                 :weight normal
                                 :width normal
                                 :powerline-scale 1.1
@@ -518,7 +527,7 @@ It should only modify the values of Spacemacs settings."
    ;; %n - Narrow if appropriate
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
-   dotspacemacs-frame-title-format "%t    %F    %b    %n    %p"
+   dotspacemacs-frame-title-format "%F %t %b"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
@@ -628,9 +637,6 @@ you should place your code here."
          (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")))
      (all-the-icons-dired-mode)))
 
-  ;; ------ `Fish\ Shell' ------
-  (add-hook 'term-mode-hook 'toggle-truncate-lines)
-
   ;; ------ `Paradox' ------
   ;; key for paradox
   (setq
@@ -681,6 +687,10 @@ you should place your code here."
     :load-path "private"
     :config (evil-leader/set-key "o y" #'copy-to-clipboard)
     (evil-leader/set-key "o p" #'paste-from-clipboard))
+
+
+  ;; ------ `Transparency' ------
+  (when (display-graphic-p) (spacemacs/toggle-transparency))
 
 
   ;; ------ `Org-Mode' ------
@@ -857,8 +867,7 @@ you should place your code here."
   ;; ------ `Haskell' ------
   ;; Use pretty symbols and company quickhelp in haskell-mode
   (dolist (mode '('haskell-prettify-enable
-                  'prettify-symbols-mode
-                  'company-quickhelp-mode))
+                  'prettify-symbols-mode))
     (add-hook 'haskell-mode-hook mode))
 
   ;; Nice little popup

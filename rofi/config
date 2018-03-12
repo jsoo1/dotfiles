@@ -1,5 +1,5 @@
 ! Default command
-rofi.combi-modi:                     window,ssh,drun,run,combi
+rofi.combi-modi:                     window,windowcd,ssh,drun,run
 
 ! Shell and Terminal
 rofi.run-command:                    fish -c '{cmd}'
@@ -11,7 +11,7 @@ rofi.ssh-command:                    {terminal} -e {ssh-client} {host}
 rofi.kb-cancel:                      Escape,Control+g,Control+c
 
 rofi.kb-remove-to-eol:               Shift+d
-rofi.kb-accept-entry:                Control+m,Return,KP_Enter
+rofi.kb-accept-entry:                Return,KP_Enter
 rofi.kb-remove-char-back:            BackSpace
 
 rofi.kb-row-left:                    Control+h,Control+Page_Up
@@ -24,7 +24,8 @@ rofi.kb-remove-to-sol:               Control+Delete
 rofi.kb-page-prev:                   Control+u
 rofi.kb-page-next:                   Control+d
 
-rofi.font:                           Fantasque Sans Mono 14
+rofi.font:                           Fantasque Sans Mono 24
+rofi.show-icons:                     true
 
 ! Theme
 rofi.color-enabled: true

@@ -1,0 +1,12 @@
+[Unit]
+Description=Emacs: the extensible, self-documenting text editor
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/fish -c "/usr/bin/emacs --fg-daemon=term"
+Restart=always
+User=john
+WorkingDirectory=/home/john
+
+[Install]
+WantedBy=multi-user.target

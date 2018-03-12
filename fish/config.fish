@@ -1,4 +1,4 @@
-set -gx PATH $PATH /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /usr/games /usr/local/games /snap/bin /home/john/.cargo/bin /home/john/.local/bin /home/john/.nix-profile/bin
+set -gx PATH $PATH /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /usr/games /usr/local/games /home/john/.cargo/bin /home/john/.local/bin /home/john/.nix-profile/bin
 
 # GPG stuff
 set -xg GPGKEY 69C2CD1B
