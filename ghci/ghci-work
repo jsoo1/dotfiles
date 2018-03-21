@@ -4,19 +4,11 @@ let abbr cmd arg = return $ ":! " ++ cmd ++ " " ++ arg
 :def! haddocks (\arg -> return $ ":! hoogle --color --info \'" ++ arg ++ "\'")
 :def! hoogle (\arg -> return $ ":! hoogle --color \'" ++ arg ++ "\'")
 
--- vpin
-:def! vpin (abbr "vpin")
-:def! vpout (abbr "vpout")
-:def! vpst (abbr "vpst")
-
--- gradle
-:def! gradlew (abbr "./gradlew")
-
 -- rest
-:def! rest (abbr "vpout && pmset sleepnow")
+:def! rest (abbr "pmset sleepnow")
 
 -- emacsclient
-:def! em (abbr "emacsclient -t")
+:def! em (abbr "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=term")
 
 -- vim
 :def! vim (abbr "vim")
