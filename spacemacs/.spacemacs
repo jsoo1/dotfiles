@@ -49,8 +49,7 @@ This function should only modify configuration layer settings."
      docker
      (elm
       :variables
-      elm-format-command "elm-format-0.17"
-      elm-sort-imports-on-save t)
+      elm-format-command "elm-format")
      (emacs-lisp :variables emacs-lisp-hide-namespace-prefix nil)
      emoji
      (erc :variables
@@ -199,11 +198,11 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the lastest
    ;; version of packages from MELPA. (default nil)
-   dotspacemacs-use-spacelpa t
+   dotspacemacs-use-spacelpa nil
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
    ;; (default nil)
-   dotspacemacs-verify-spacelpa-archives t
+   dotspacemacs-verify-spacelpa-archives nil
 
    ;; If non-nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. Note that checking for
@@ -538,9 +537,7 @@ It should only modify the values of Spacemacs settings."
    ;; `trailing' to delete only the whitespace at end of lines, `changed' to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup (pcase system-type
-                                     ('darwin nil)
-                                     (_ 'changed))
+   dotspacemacs-whitespace-cleanup 'changed
 
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
@@ -566,7 +563,8 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq custom-file "~/.customize.el")
 
   ;; ------ Make sure we get agda-mode ------
-  ;; (setq exec-path (append exec-path "~/.local/bin"))
+  (add-to-list 'exec-path "~/.local/bin")
+  (add-to-list 'exec-path "/usr/local/bin")
 
   ;; Apple spaceline is messed up without this for now
   (pcase system-type
@@ -696,9 +694,9 @@ you should place your code here."
   ;; ------ `Org-Mode' ------
   (with-eval-after-load 'org
 
-    ;; Agenda notifications
-    (pcase system-type
-      ('darwin (load-file "~/.emacs.d/private/agenda-notify.el")))
+    ;; ;; Agenda notifications
+    ;; (pcase system-type
+    ;;   ('darwin (load-file "~/.emacs.d/private/agenda-notify.el")))
 
     (setq
      ;; Agenda files
@@ -710,8 +708,7 @@ you should place your code here."
                            "~/Dropbox/org/topology"
                            "~/Dropbox/org/build-lisp" ))
                         ('darwin
-                         '("~/Desktop/agenda/"
-                           "~/projects/AACom-Release/")))
+                         '("~/Desktop/org/")))
 
      ;; Org HTML presentations with reveal.js
      org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"
@@ -748,16 +745,7 @@ you should place your code here."
                              ('gnu/linux
                               '(("p" "RevealJS Presentation"
                                  plain (function (lambda() (buffer-file-name)))
-                                 "%[~/Dropbox/org/templates/presentation.org]")))
-
-                             ('darwin
-                              '(("m" "AA Meeting"
-                                 entry (file "~/Desktop/agenda/aa/TODOs.org")
-                                 "%[~/Desktop/agenda/templates/meeting.org]")
-
-                                ("s" "User Story"
-                                 plain (function buffer-file-name)
-                                 "%[~/Desktop/agenda/templates/story.org]")))))
+                                 "%[~/Dropbox/org/templates/presentation.org]")))))
 
     (add-hook 'org-mode-hook 'emojify-mode)
 
@@ -878,7 +866,8 @@ you should place your code here."
   ;; https://github.com/cpitclaudel/.emacs.d/blob/master/lisp/prettify-alists/haskell-prettify.el
   ;; No thanks to:
   ;; https://github.com/haskell/haskell-mode/issues/823
-  (use-package haskell-prettify
+  (use-package haskell-prettify-enable
+    :if (file-exists-p "~/.emacs.d/private/haskell-prettify-enable.el")
     :load-path "~/.emacs.d/private/"
     :defer t
     :mode "\\.hs\\'")
