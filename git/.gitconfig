@@ -1,11 +1,11 @@
 [color]
 	ui = auto
 [core]
+	editor = emacsclient -nw --socket-name term
 	autocrlf = input
 	safecrlf = true
-[branch]
-	autoSetupMerge = false
-	autoSetupRebase = never
+[push]
+	default = upstream
 [merge]
 	conflictstyle = diff3
 [user]
