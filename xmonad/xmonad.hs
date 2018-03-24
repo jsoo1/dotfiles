@@ -75,7 +75,7 @@ main = do
               \wsId ->
                 let
                   t =
-                    if mempty /= titleFor visible wsId
+                    if null $ titleFor visible wsId
                     then titleFor visible wsId
                     else titleFor hidden wsId
                 in
@@ -93,17 +93,17 @@ main = do
       , startupHook =
         -- setWMName "LG3D"
         spawn
-          "/usr/bin/xrandr\
+          "xrandr\
           \ --output HDMI-1-1 --primary --left-of eDP-1-1\
           \ --output eDP-1-1"
         <+> spawn
-          "/usr/bin/compton --config /home/john/.config/compton/compton.conf"
+          "compton --config /home/john/.config/compton/compton.conf"
         <+> spawn
-          "/usr/bin/feh --bg-fill /home/john/Downloads/richter-lake-lucerne.jpg"
+          "feh --bg-fill /home/john/Downloads/richter-lake-lucerne.jpg"
         <+> spawn
-          "/usr/bin/setxkbmap -layout us -option ctrl:nocaps"
-        <+> spawn
-          "/usr/bin/xcape -e \'Control_L=Escape\'"
+          "setxkbmap -layout us -option ctrl:nocaps"
+        -- <+> spawn
+        --   "xcape -e \'Control_L=Escape\'"
       }
 
         `additionalKeys`
@@ -191,10 +191,7 @@ masterWindowsFor =
 
 
 currentMasterWindow :: WindowSet -> X (Maybe NamedWindow)
-currentMasterWindow =
-  masterWindow
-  . W.workspace
-  . W.current
+currentMasterWindow = masterWindow . W.workspace . W.current
 
 
 wsArrowRight ::
