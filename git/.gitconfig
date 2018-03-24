@@ -1,10 +1,9 @@
 [color]
 	ui = auto
 [core]
-	editor = /usr/bin/emacsclient -nw --socket-name term
+	editor = emacsclient -nw --socket-name term
 	autocrlf = input
 	safecrlf = true
-	excludesfile = /home/john/.gitignore
 [push]
 	default = upstream
 [merge]

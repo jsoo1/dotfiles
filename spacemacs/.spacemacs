@@ -199,11 +199,11 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the lastest
    ;; version of packages from MELPA. (default nil)
-   dotspacemacs-use-spacelpa t
+   dotspacemacs-use-spacelpa nil
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
    ;; (default nil)
-   dotspacemacs-verify-spacelpa-archives t
+   dotspacemacs-verify-spacelpa-archives nil
 
    ;; If non-nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. Note that checking for
@@ -759,6 +759,7 @@ you should place your code here."
                                  plain (function buffer-file-name)
                                  "%[~/Desktop/agenda/templates/story.org]")))))
 
+    (add-hook 'org-mode-hook 'emojify-mode)
 
     ;; Org-Babel
     (require 'ob-python)
@@ -785,29 +786,34 @@ you should place your code here."
   (spacemacs/toggle-display-time-off)
 
 
-  ;; ------ `Diminish'
-  ;; Terminal specific
-  (when (not (display-graphic-p))
-    (setq spacemacs--diminished-minor-modes
-          ;; add-to-list not working for these
-          (seq-map
-           (lambda (mode)
-             (pcase (car mode)
-               ('hybrid-mode               '(hybrid-mode "Ⓔ h" " Eh"))
-               ('holy-mode                 '(holy-mode "Ⓔ e" " Eh"))
-               ('which-key-mode            '(which-key-mode "Ⓚ  " " K"))
-               (_               mode)))
-           spacemacs--diminished-minor-modes))
+  ;; ------ `Diminish' ------
+  (if (display-graphic-p)
 
-    (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠ " nil))
-    (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮ " " $"))
-    (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤ " nil))
-    (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode " M" " M")))
+    ;; Graphical
+    (progn
+      (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮" " $"))
+      (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" nil))
+      (add-to-list 'spacemacs--diminished-minor-modes '(idris-simple-indent-mode nil nil))
+      (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
+      (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " 🤔" nil)))
 
-  ;; all others
-  (add-to-list 'spacemacs--diminished-minor-modes '(idris-simple-indent-mode nil nil))
-  (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
-  (add-to-list 'spacemacs--diminished-minor-modes '(all-the-icons-dired-mode nil nil))
+    ;; Terminal
+    (progn
+      (setq spacemacs--diminished-minor-modes
+            ;; add-to-list not working for these
+            (seq-map
+             (lambda (mode)
+               (pcase (car mode)
+                 ('hybrid-mode               '(hybrid-mode "Ⓔ h" " Eh"))
+                 ('holy-mode                 '(holy-mode "Ⓔ e" " Eh"))
+                 ('which-key-mode            '(which-key-mode "Ⓚ  " " K"))
+                 (_               mode)))
+             spacemacs--diminished-minor-modes))
+
+      (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠ " nil))
+      (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮ " " $"))
+      (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤ " nil))
+      (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode " M" " M"))))
 
 
   ;; `~~~~~~' `LANGUAGE-SUPPORT' `~~~~~~'
@@ -974,7 +980,6 @@ you should place your code here."
   ;; file types
   (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
   )
-
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
