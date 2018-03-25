@@ -124,6 +124,9 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(
+     ;; ------`All\ the\ icons' ------
+     all-the-icons-dired
+     all-the-icons-ivy
      ;; ------ `Applescript' ------
      applescript-mode
      ;; ------ `Swift' ------
@@ -573,9 +576,11 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; :) no annoying changes at the bottom of .spacemacs
   (setq custom-file "~/.customize.el")
 
-  ;; ------ Make sure we get agda-mode ------
-  (add-to-list 'exec-path "~/.local/bin")
-  (add-to-list 'exec-path "/usr/local/bin")
+ 
+  ;; ------ `Load\ Path' ------
+  (add-to-list 'exec-path "~/.nix-profile/bin/")
+  (add-to-list 'exec-path "~/.guix-profile/bin")
+
 
   ;; Apple spaceline is messed up without this for now
   (if (string-equal 'darwin system-type)
@@ -636,16 +641,6 @@ you should place your code here."
    scroll-conservatively 10000)
 
 
-  ;; ------ `Load\ Path' ------
-  (add-to-list 'exec-path "~/.nix-profile/bin/")
-  (add-to-list 'exec-path "~/.local/bin")
-
-
-  ;; ------ `Theme' ------
-  (setq doom-opera-brighter-comments 't)
-  (setq doom-opera-brighter-modeline 't)
-
-
   ;; ------ `Mouse\ Support' ------
   ;; scrolling in terminal
   (unless window-system
@@ -667,13 +662,7 @@ you should place your code here."
 
   ;; ------ `DirEd' ------
   ;; all-the-icons in dired
-  (add-hook
-   'dired-mode-hook
-   (lambda ()
-     (progn
-       (when (not (fboundp 'all-the-icons-dired-mode))
-         (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")))
-     (all-the-icons-dired-mode)))
+  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
 
   ;; ------ `Paradox' ------
   ;; key for paradox
