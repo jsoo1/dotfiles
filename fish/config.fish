@@ -1,18 +1,11 @@
-set -gx PATH $PATH /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /usr/games /usr/local/games /home/john/.cargo/bin /home/john/.local/bin /home/john/.nix-profile/bin
-
-# GPG stuff
-set -xg GPGKEY 69C2CD1B
-set -xg GPG2KEY 802CD0C2
+set -gx PATH $PATH /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /Users/john/.cargo/bin 
 
 # Emacsclient for EDITOR
-set -xg EDITOR 'emacsclient -t'
+set -xg EDITOR '/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -nw --socket-name term'
 set -xg ALTERNATE_EDITOR 'vim'
 
 # i3 Sensible Terminal
 set -xg TERMINAL 'alacritty'
-
-# printer for lp
-set -xg PRINTER 'HP-ENVY-4500-series'
 
 # Fuzzy Finder
 set -x FZF_DEFAULT_COMMAND 'rg --files --hidden --ignore .git --smartcase --glob "!.git/*"'
@@ -22,6 +15,14 @@ set -x fish_color_cwd magenta
 
 # vi mode
 fish_vi_key_bindings
+
+# no greeting, plz
+set fish_greeting ""
+
+# prompt :)
+if test -e ~/.config/fish/fish_prompt.fish
+    source ~/.config/fish/fish_prompt.fish
+end
 
 # fixes for emacs
 # emacs ansi-term support
@@ -42,8 +43,13 @@ function fish_title
 end
 
 # aliases
-if test -e /home/john/.config/fish/aliases.fish
-  source /home/john/.config/fish/aliases.fish
+if test -e ~/.config/fish/aliases.fish
+  source ~/.config/fish/aliases.fish
+end
+
+# private
+if test -e ~/.config/fish/private.fish
+    source ~/.config/fish/private.fish
 end
 
 # pretty vi mode
