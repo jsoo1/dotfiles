@@ -478,7 +478,7 @@ It should only modify the values of Spacemacs settings."
    ;;   :size-limit-kb 1000)
    ;; (default nil)
    dotspacemacs-line-numbers '(
-                               :relative nil
+                               :relative t
                                :disabled-for-modes dired-mode org-mode text-mode doc-view-mode
                                :size-limit-kb 1500
                                )
@@ -703,12 +703,10 @@ you should place your code here."
      org-agenda-files (pcase system-type
                         ('gnu/linux
                          '("~/Dropbox/org/"
-                           "~/Dropbox/org/pi-slice"
-                           "~/Dropbox/org/haskell-beginner"
-                           "~/Dropbox/org/topology"
-                           "~/Dropbox/org/build-lisp" ))
+                           "~/development"))
                         ('darwin
-                         '("~/Desktop/org/")))
+                         '("~/Desktop/org/"
+                           "~/projects/client-browser")))
 
      ;; Org HTML presentations with reveal.js
      org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/"
@@ -802,6 +800,10 @@ you should place your code here."
       (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮ " " $"))
       (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤ " nil))
       (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode " M" " M"))))
+
+
+  ;; ------ `Yasnippet' ------
+  (setq yas-indent-line 'fixed)
 
 
   ;; `~~~~~~' `LANGUAGE-SUPPORT' `~~~~~~'
