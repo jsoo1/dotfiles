@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: type alias
+# key: type alias
+# --
+type alias $1 =
+$>{ $0
+$>}

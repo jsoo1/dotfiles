@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Input
+# key: Input.view
+# --
+Input.view "$0"
+$>[
+$>]

@@ -1,0 +1,57 @@
+# -*- mode: snippet -*-
+# name: Form
+# key: module Form.
+# --
+
+module Form.$0
+  exposing
+    ( Data
+    , Msg
+    , empty
+    , encoder
+    , decoder
+    , update
+    , view
+    )
+
+
+import Common as Common exposing (toMaybeString, toMaybeFloat, toMaybeInt)
+import Component.Address as Address
+import Component.Input as Input
+import Date as Date exposing (Date)
+import Entity.Address as Address exposing (Address)
+import Html as Html exposing (Html)
+import Html.Attribute exposing (value, type_)
+import Html.Events exposing (onClick, onInput)
+import Html.Events expo
+import Json.Decode as Decode
+import Json.Decode.Extra as Decode exposing ((|:))
+import Json.Encode as Encode
+import Json.Encode.Extra as Encode
+import Maybe.Extra as Maybe
+
+
+type alias Data = {}
+
+
+type Msg = One
+
+
+empty : Data
+empty = {}
+
+
+encoder : Data -> Encode.Value
+encoder data = Encode.null
+
+
+decoder : Decode.Decoder Data
+decoder = Decode.succeed {}
+
+
+update : Msg -> Data -> Data
+update msg data = data
+
+
+view : Data -> Html.Html a
+view data = Html.div [] []
