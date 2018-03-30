@@ -849,10 +849,21 @@ you should place your code here."
   ;; file types
   (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . xml-mode))
 
+  ;; ------ `Elm' ------
+  (spacemacs/set-leader-keys-for-major-mode
+    'elm-mode
+    "i"
+    (lambda ()
+      (interactive)
+      (progn
+        (evil-append 0)
+        (yas-insert-snippet))))
+
 
   ;; ------ `Gradle' ------
   ;; file types
   (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
+
 
   ;; ------ `Haskell' ------
   ;; Use pretty symbols and company quickhelp in haskell-mode
