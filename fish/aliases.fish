@@ -4,6 +4,7 @@ abbr gst 'git status'
 abbr gf 'git fetch'
 abbr ga 'git add'
 abbr gc 'git commit'
+abbr gcb 'git checkout -b'
 abbr glg 'git log'
 abbr grb 'git rebase'
 abbr gl 'git pull'
@@ -18,21 +19,13 @@ abbr lsa "ls -lsa"
 abbr lsah "ls -lsah"
 abbr rmi "rm -i"
 abbr psg "ps aux | rg -i"
-abbr rest "systemctl suspend"
-abbr logout "gnome-session-quit --logout --no-prompt"
-abbr upgrade! "sudo apt-get update; sudo apt-get -y upgrade"
-abbr install! "sudo apt-get update; sudo apt-get install"
+abbr dfh "df -H"
+abbr rest "pmset sleepnow"
 
 # Emacs
-abbr em "emacsclient -t --socket-name=term"
-
-# Systemctl
-abbr ctl "systemctl"
-abbr ctlu "systemctl --user"
-abbr ctllint "systemd-analyze verify"
-
-# Email
-abbr mindex "mu index --maildir ~/.mail"
+abbr em "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=term"
+abbr ed "/Applications/Emacs.app/Contents/MacOS/Emacs --daemon=term"
+abbr e "/Applications/Emacs.app/Contents/MacOS/Emacs"
 
 # Tmux
 abbr tma "tmux attach -t"
