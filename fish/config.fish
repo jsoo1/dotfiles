@@ -1,7 +1,12 @@
 set -gx PATH $PATH /usr/local/anaconda3/bin /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /Users/john/.cargo/bin /Users/john/.local/bin /Users/john/Library/Python/3.6/bin
 
-# Work related binaries
-set -gx PATH $PATH /Users/john/projects/client-browser/.bin /Users/john/.cabal/bin
+if test -e ~/.guix-profile/bin
+    set -gx PATH $PATH ~/.guix-profile/bin
+end
+
+# GPG stuff
+set -xg GPGKEY 69C2CD1B
+set -xg GPG2KEY 802CD0C2
 
 # Emacsclient for EDITOR
 set -xg EDITOR 'env TERM=xterm-24bits /Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=base'
