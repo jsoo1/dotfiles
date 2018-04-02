@@ -1,5 +1,9 @@
 set -gx PATH $PATH /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /usr/games /usr/local/games /home/john/.cargo/bin /home/john/.local/bin /home/john/.nix-profile/bin
 
+if test -e ~/.guix-profile/bin
+    set -gx PATH $PATH ~/.guix-profile/bin
+end
+
 # GPG stuff
 set -xg GPGKEY 69C2CD1B
 set -xg GPG2KEY 802CD0C2
