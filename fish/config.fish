@@ -1,7 +1,10 @@
-set -gx PATH $PATH /usr/local/anaconda3/bin /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /Users/john/.cargo/bin /Users/john/.local/bin /Users/john/Library/Python/3.6/bin
-
+# set -gx PATH $PATH /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /usr/games /usr/local/games /home/john/.cargo/bin /home/john/.local/bin /home/john/.nix-profile/bin
 if test -e ~/.guix-profile/bin
     set -gx PATH $PATH ~/.guix-profile/bin
+end
+
+if test -e ~/.config/fish/fish_prompt.fish
+    source ~/.config/fish/fish_prompt.fish
 end
 
 # GPG stuff
@@ -78,13 +81,13 @@ function fish_mode_prompt --description 'Displays the current mode'
     switch $fish_bind_mode
       case default
         set_color --background BC6EC5 white
-        echo '[N]'
+        echo ''
       case insert
         set_color --bold --background green white
-        echo '[I]'
+        echo ''
       case visual
         set_color --bold --background magenta white
-        echo '[V]'
+        echo ''
     end
     set_color normal
     echo -n ' '

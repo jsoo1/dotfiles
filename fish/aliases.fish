@@ -20,8 +20,10 @@ abbr lsa "ls -lsa"
 abbr lsah "ls -lsah"
 abbr rmi "rm -i"
 abbr psg "ps aux | rg -i"
-abbr dfh "df -H"
-abbr rest "pmset sleepnow"
+abbr rest "loginctl suspend"
+abbr logout "gnome-session-quit --logout --no-prompt"
+abbr upgrade! "sudo apt-get update; sudo apt-get -y upgrade"
+abbr install! "sudo apt-get update; sudo apt-get install"
 
 # Emacs
 function em -d "Start an emacsclient -t" -a file

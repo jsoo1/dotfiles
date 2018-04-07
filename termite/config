@@ -2,5 +2,5 @@
 background = rgba(41, 43, 46, 0.8)
 
 [options]
-font = FantasqueSansMono Nerd Font Mono:style=Regular 16
+font = Fantasque Sans Mono 16
 cursor_blink = off
