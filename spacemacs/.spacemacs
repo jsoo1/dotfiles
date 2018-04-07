@@ -93,6 +93,7 @@ This function should only modify configuration layer settings."
      restclient
      ruby
      rust
+     scheme
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
@@ -200,8 +201,8 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-gc-cons '(100000000 0.1)
 
    ;; If non-nil then Spacelpa repository is the primary source to install
-   ;; a locked version of packages. If nil then Spacemacs will install the lastest
-   ;; version of packages from MELPA. (default nil)
+   ;; a locked version of packages. If nil then Spacemacs will install the
+   ;; latest version of packages from MELPA. (default nil)
    dotspacemacs-use-spacelpa nil
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
@@ -296,7 +297,7 @@ It should only modify the values of Spacemacs settings."
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '(
                                (
-                                "FantasqueSansMono Nerd Font Mono"
+                                "Fantasque Sans Mono"
                                 :size 18
                                 :weight normal
                                 :width wide
@@ -482,7 +483,7 @@ It should only modify the values of Spacemacs settings."
    ;;   :size-limit-kb 1000)
    ;; (default nil)
    dotspacemacs-line-numbers '(
-                               :relative nil
+                               :relative t
                                :disabled-for-modes dired-mode org-mode text-mode doc-view-mode
                                :size-limit-kb 1500
                                )
@@ -504,6 +505,9 @@ It should only modify the values of Spacemacs settings."
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
    dotspacemacs-highlight-delimiters 'all
+
+   ;; If non-nil, start an Emacs server if one is not already running.
+   dotspacemacs-enable-server nil
 
    ;; If non-nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
@@ -586,7 +590,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                           ('darwin "/bin/bash")
                           (_ "/bin/sh")))
   )
-
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.

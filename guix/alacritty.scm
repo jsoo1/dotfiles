@@ -9,21 +9,21 @@
              (gnu packages python)
              )
 (package
-  (name "alacritty")
-  (version "0.1.0")
-  (home-page "https://github.com/jwilm/alacritty")
-  (synopsis "A cross-platform, GPU-accelerated terminal emulator")
-  (description "Alacritty is the fastest terminal emulator in existence. Using the GPU for rendering enables optimizations that simply aren't possible in other emulators.")
-  (license asl2.0)
-  (build-system cargo-build-system)
-  (source (origin
-            (method url-fetch)
-            (uri "https://github.com/jwilm/alacritty/archive/master.tar.gz")
-            (sha256
-             (base32
-              "1l596i4h03d24vm0rpmfll0yjafqrnf9479qnl3pi0vcfhynxam8"))))
-  (inputs `(("xclip" ,xclip)
-            ("cmake" ,cmake)
-            ("fontutils" ,fontconfig)
-            ("freetype" ,freetype)
-            ("python3" ,python))))
+ (name "alacritty")
+ (version "0.1.0")
+ (home-page "https://github.com/jwilm/alacritty")
+ (synopsis "A cross-platform, GPU-accelerated terminal emulator")
+ (description "Alacritty is the fastest terminal emulator in existence. Using the GPU for rendering enables optimizations that simply aren't possible in other emulators.")
+ (license asl2.0)
+ (build-system cargo-build-system)
+ (source (origin
+          (method url-fetch)
+          (uri "https://github.com/jwilm/alacritty/archive/master.tar.gz")
+          (sha256
+           (base32
+            "1l596i4h03d24vm0rpmfll0yjafqrnf9479qnl3pi0vcfhynxam8"))))
+ (native-inputs `(("xclip" ,xclip)
+                  ("cmake" ,cmake)
+                  ("fontutils" ,fontconfig)
+                  ("freetype" ,freetype)
+                  ("python3" ,python))))
