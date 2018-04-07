@@ -36,11 +36,10 @@ main = do
 
     replace
 
-    xmobarPipe <- spawnPipe "/home/john/.local/bin/xmobar\
-                            \ /home/john/.config/xmobar/xmobar.hs"
+    xmobarPipe <- spawnPipe "xmobar ~/.config/xmobar/xmobar.hs"
 
     xmonad $ docks def
-      { terminal = "alacritty"
+      { terminal = "termite"
       , focusFollowsMouse = False
       , borderWidth = 4
       , normalBorderColor = dkGrey
@@ -97,9 +96,9 @@ main = do
           \ --output HDMI-1-1 --primary --left-of eDP-1-1\
           \ --output eDP-1-1"
         <+> spawn
-          "compton --config /home/john/.config/compton/compton.conf"
+          "compton --config ~/.config/compton/compton.conf"
         <+> spawn
-          "feh --bg-fill /home/john/Downloads/richter-lake-lucerne.jpg"
+          "feh --bg-fill ~/Downloads/richter-eisberg.jpg"
         <+> spawn
           "setxkbmap -layout us -option ctrl:nocaps"
         -- <+> spawn
@@ -112,17 +111,17 @@ main = do
             , spawn "fish -c \"rofi -show combi -modi combi\""
             )
           , ( (mod1Mask .|. shiftMask, xK_x)
-              , spawn "sh /home/john/.i3/blurlock.sh"
+              , spawn "sh /home/john/dotfiles/i3/blurlock.sh"
             )
           , ( (mod1Mask, xK_g)
             , gotoMenuConfig $ def
-              { menuCommand = "/usr/bin/rofi"
+              { menuCommand = "rofi"
               , menuArgs = [ "-dmenu", "-i" ]
               }
             )
           , ( (mod1Mask, xK_b)
             , bringMenuConfig $ def
-              { menuCommand = "/usr/bin/rofi"
+              { menuCommand = "rofi"
               , menuArgs = [ "-dmenu", "-i" ]
               }
             )
