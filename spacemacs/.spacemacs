@@ -93,6 +93,7 @@ This function should only modify configuration layer settings."
      racket
      restclient
      rust
+     scheme
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
@@ -220,8 +221,8 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-gc-cons '(100000000 0.1)
 
    ;; If non-nil then Spacelpa repository is the primary source to install
-   ;; a locked version of packages. If nil then Spacemacs will install the lastest
-   ;; version of packages from MELPA. (default nil)
+   ;; a locked version of packages. If nil then Spacemacs will install the
+   ;; latest version of packages from MELPA. (default nil)
    dotspacemacs-use-spacelpa nil
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
@@ -317,8 +318,8 @@ It should only modify the values of Spacemacs settings."
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '(
                                (
-                                "FantasqueSansMono Nerd Font Mono"
-                                :size 14
+                                "Fantasque Sans Mono"
+                                :size 18
                                 :weight normal
                                 :width wide
                                 :powerline-scale 1.4
@@ -497,15 +498,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-highlight-delimiters 'all
 
    ;; If non-nil, start an Emacs server if one is not already running.
-   ;; (default nil)
    dotspacemacs-enable-server nil
-
-   ;; Set the emacs server socket location.
-   ;; If nil, uses whatever the Emacs default is, otherwise a directory path
-   ;; like \"~/.emacs.d/server\". It has no effect if
-   ;; `dotspacemacs-enable-server' is nil.
-   ;; (default nil)
-   dotspacemacs-server-socket-dir nil
 
    ;; If non-nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
@@ -597,13 +590,6 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq shell-file-name (pcase system-type
                           ('darwin "/bin/bash")
                           (_ "/bin/sh")))
-  )
-
-(defun dotspacemacs/user-load ()
-  "Library to load while dumping.
-This function is called only while dumping Spacemacs configuration. You can
-`require' or `load' the libraries of your choice that will be included in the
-dump."
   )
 
 (defun dotspacemacs/user-config ()
