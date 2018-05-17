@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: update
+# key: update
+# --
+update$1 : $1Msg -> $1 -> $1
+update$1 msg ${1:$(downcase yas-text)} =
+$>case msg of
+$>$>$0

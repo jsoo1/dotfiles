@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: encoder
+# key: encoder
+# --
+$1Encoder : ${1:$(capitalize yas-text)} -> Encode.Value
+$1Encoder ${1:name} =
+$>Encode.$0

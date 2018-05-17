@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: tuple list
+# key: tuple-list
+# --
+$>[ ( $1, $0 )]

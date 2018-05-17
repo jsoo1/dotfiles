@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: Radio
+# key: Radio
+# --
+Radio.view
+$>"$1"
+$>"$2"
+$>[ { label = "$3", msg = $4 }
+$>, { label = "$5", msg = $6}
+$>]
+$>$0

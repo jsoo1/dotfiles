@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: view
+# key: view
+# --
+$1View : ${1:$(capitalize yas-text)} -> Html ${1:$(capitalize yas-text)}Msg
+$1View $1 =
+$>$0
