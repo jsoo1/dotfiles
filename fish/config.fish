@@ -1,4 +1,4 @@
-set -gx PATH $PATH /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /Users/john/.cargo/bin 
+set -gx PATH $PATH /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /Users/john/.cargo/bin /Users/john/.local/bin
 
 # Emacsclient for EDITOR
 set -xg EDITOR '/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -nw --socket-name term'
