@@ -103,6 +103,7 @@ This function should only modify configuration layer settings."
      swift
      syntax-checking
      systemd
+     themes-megapack
      tmux
      treemacs
      twitter
@@ -259,9 +260,9 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         doom-spacegrey
                          doom-one
                          spacemacs-dark
-                         spacemacs-light
                          )
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
@@ -501,6 +502,9 @@ It should only modify the values of Spacemacs settings."
    ;; emphasis the current one). (default 'all)
    dotspacemacs-highlight-delimiters 'all
 
+   ;; If non-nil, start an Emacs server if one is not already running.
+   dotspacemacs-enable-server nil
+
    ;; If non-nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
    dotspacemacs-persistent-server t
@@ -596,6 +600,10 @@ you should place your code here."
   (define-key evil-normal-state-map (kbd "SPC h m") 'woman)
   ;; Face description
   (spacemacs/set-leader-keys "hdF" 'describe-face)
+  ;; yas insert in hybrid mode
+  (define-key evil-hybrid-state-map (kbd "C-c C-i") 'yas-insert-snippet)
+  ;; Run a project
+  (spacemacs/set-leader-keys "pu" 'projectile-run-project)
 
   (setq
    ;; df == fd
@@ -771,6 +779,9 @@ you should place your code here."
   ;; no time in mode line by default
   (spacemacs/toggle-display-time-off)
 
+  ;; unbreak powerline symbols in terminal
+  (unless (display-graphic-p)
+    (setq powerline-default-separator 'utf8 ))
 
   ;; ------ `Diminish' ------
   (if (display-graphic-p)
@@ -803,7 +814,8 @@ you should place your code here."
 
 
   ;; ------ `Yasnippet' ------
-  (setq yas-indent-line 'fixed)
+  (setq yas-indent-line 'fixed
+        yas-after-exit-snippet-hook (lambda () (progn (elm-mode-format-buffer) (evil-insert 0))))
 
 
   ;; `~~~~~~' `LANGUAGE-SUPPORT' `~~~~~~'
@@ -850,6 +862,7 @@ you should place your code here."
   (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . xml-mode))
 
   ;; ------ `Elm' ------
+  (setq elm-format-on-save 't)
   (spacemacs/set-leader-keys-for-major-mode
     'elm-mode
     "i"
@@ -866,13 +879,14 @@ you should place your code here."
 
 
   ;; ------ `Haskell' ------
-  ;; Use pretty symbols and company quickhelp in haskell-mode
-  (dolist (mode '('haskell-prettify-enable
-                  'prettify-symbols-mode))
-    (add-hook 'haskell-mode-hook mode))
-
   ;; Nice little popup
-  (add-hook 'haskell-mode-hook 'company-quickhelp-mode)
+  (add-hook 'haskell-mode-hook #'company-quickhelp-mode)
+
+  ;; Pretty symbols
+  (add-hook 'haskell-mode-hook #'prettify-symbols-mode)
+
+  ;; somehow not enabled by default?
+  (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
 
   ;; Haskell Prettify Symbols
   ;; Thanks to:
@@ -943,6 +957,11 @@ you should place your code here."
    ;; No port collision between skewer and tomcat for skewer
    httpd-port 9090)
 
+  ;; json indent 2 spaces per panoramic
+  (add-hook 'json-mode-hook
+            (lambda ()
+              (make-local-variable 'js-indent-level)
+              (setq js-indent-level 2)))
 
   ;; ------ `LaTex' ------
   ;; LaTeX auto load on save
