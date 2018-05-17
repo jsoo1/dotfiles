@@ -2,6 +2,6 @@
 # name: Input
 # key: Input.view
 # --
-Input.view "$0"
-$>[
+Input.view "$1"
+$>[ $0
 $>]
