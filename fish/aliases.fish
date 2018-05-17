@@ -1,5 +1,6 @@
 # Git
 abbr gb 'git branch'
+abbr gbd 'git branch -D'
 abbr gst 'git status'
 abbr gf 'git fetch'
 abbr ga 'git add'
@@ -30,4 +31,4 @@ abbr e "/Applications/Emacs.app/Contents/MacOS/Emacs"
 # Tmux
 abbr tma "tmux attach -t"
 abbr tml "tmux list-sessions"
-
+abbr tmux "tmux new-session -A -n 'emacs' -s (basename (pwd))"
