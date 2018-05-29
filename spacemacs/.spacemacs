@@ -297,18 +297,18 @@ It should only modify the values of Spacemacs settings."
    ;; to create your own spaceline theme. Value can be a symbol or list with\
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme (if (or (display-graphic-p) (string-equal 'frame (daemonp)))
+   dotspacemacs-mode-line-theme ;;(if (display-graphic-p)
                                     '(
                                       all-the-icons
                                       :separator arrow
                                       :separator-scale 1.4
                                       )
-                                  '(
-                                    spacemacs
-                                    :separator utf-8
-                                    :separator-scale 1.5
-                                    )
-                                  )
+   ;;                                '(
+   ;;                                  vim-powerline
+   ;;                                  :separator arrow
+   ;;                                  :separator-scale 1.5
+   ;;                                  )
+   ;;                                )
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -825,6 +825,9 @@ you should place your code here."
   ;; ------ `Spaceline' ------
   ;; no time in mode line by default
   (spacemacs/toggle-display-time-off)
+  ;; Use fonts in terminal client
+  (unless (display-graphic-p)
+    (setq powerline-default-separator 'utf-8))
 
 
   ;; unbreak powerline symbols in terminal
@@ -1016,11 +1019,8 @@ you should place your code here."
   (add-hook 'nand2tetris-mode (lambda () (setq tab-width 4)))
 
 
-  ;; ------ `Python' ------
-  ;; Pipenv support
-  (add-to-list 'auto-mode-alist '("\\Pipfile\\'" . conf-mode))
-  (add-to-list 'auto-mode-alist '("\\Pipfile.lock\\'" . json-mode))
-
+  ;; ------ `Scheme/Guix' ------
+  (add-hook 'scheme-mode 'guix-devel-mode)
 
   ;; ------ `SCSS/SASS' ------
   ;; SCSS indented 4 spaces

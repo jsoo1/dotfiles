@@ -26,13 +26,16 @@ abbr upgrade! "sudo apt-get update; sudo apt-get -y upgrade"
 abbr install! "sudo apt-get update; sudo apt-get install"
 
 # Emacs
-function em -d "Start an emacsclient -t" -a file
-    env TERM=xterm-24bits /Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=base $file
-end
-abbr ed "/Applications/Emacs.app/Contents/MacOS/Emacs --daemon=term"
-abbr eb "/Applications/Emacs.app/Contents/MacOS/Emacs --load ~/dotfiles/emacs/init.el -q --daemon=base"
-abbr ec  "/Applications/Emacs.app/Contents/MacOS/Emacs --daemon=frame"
-abbr e "/Applications/Emacs.app/Contents/MacOS/Emacs"
+abbr ed "emacs --daemon=term"
+abbr em "emacsclient -t --socket-name=term"
+
+# Systemctl
+abbr ctl "systemctl"
+abbr ctlu "systemctl --user"
+abbr ctllint "systemd-analyze verify"
+
+# Email
+abbr mindex "mu index --maildir ~/.mail"
 
 # Tmux
 function tma -d "Select a tmux session with fuzzy search"
@@ -40,44 +43,4 @@ function tma -d "Select a tmux session with fuzzy search"
 end
 abbr ta "env TERM=xterm-24bits tmux attach -t"
 abbr tml "tmux list-sessions"
-abbr tmux "env TERM=xterm-24bits tmux new-session -A -n 'emacs' -s (basename (pwd))"
-
-# Docker
-abbr dockerpurge 'docker rmi (docker images -a --filter=dangling=true -q)'
-
-# VPN
-function vpin -d 'Get on a vpn' -a vpn
-    set -l curr_vpn (launchctl list | rg -o 'pano|vetpro')
-    if test -z $curr_vpn
-        launchctl bootstrap gui/(id -u) /Users/john/Library/LaunchAgents/com.$vpn.de-tunnel.plist
-    else if test $curr_vpn != $vpn
-        launchctl bootout gui/(id -u)/com.$curr_vpn.de-tunnel
-        launchctl bootstrap gui/(id -u) /Users/john/Library/LaunchAgents/com.$vpn.de-tunnel.plist
-    end
-end
-
-complete -c vpin -a 'vetpro' -d 'get on vetpro' --no-files
-complete -c vpin -a 'pano' -d 'get on gateway 2' --no-files
-
-function vpout -d 'Get off the vpn' -a vpn
-    set -l curr_vpn (launchctl list | rg --color=never -o 'pano|vetpro')
-    if test $vpn
-        launchctl bootout gui/(id -u)/com.$vpn.de-tunnel
-    else if test $curr_vpn
-        launchctl bootout gui/(id -u)/com.$curr_vpn.de-tunnel
-    end
-end
-
-complete -c vpout --no-files
-
-function tl -d 'select tldr from fzf'
-    tldr (tldr --list | tr ', ' '\n ' | fzf | tr -d ' ')
-end
-
-complete -c tldr --no-files
-
-function pidof -d 'select a pid via fzf'
-    ps waux | fzf | sed -E 's/[[:space:]]+/ /g' | cut -d ' ' -f 2
-end
-
-complete -c pidof --no-files
+abbr tmux "tmux new-session -A -s (basename (pwd)) -n emacs"

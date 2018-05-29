@@ -59,7 +59,8 @@
                                        "video"
                                        "lp"))
                (home-directory "/home/john")
-               (shell #~(string-append #$fish "/bin/fish")))
+               ;; (shell #~(string-append #$fish "/bin/fish"))
+               )
               %base-user-accounts))
 
  (packages (cons*
@@ -104,8 +105,10 @@
             ;; web browser
             qutebrowser
 
+            ;; fonts
             font-adobe-source-code-pro
             font-fantasque-sans
+
             %base-packages))
 
  (services (cons*
