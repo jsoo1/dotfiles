@@ -1,7 +1,7 @@
 (use-modules (gnu)
              (gnu system nss)
              (guix modules))
-(use-service-modules desktop ssh)
+(use-service-modules base desktop ssh)
 (use-package-modules admin
                      bootloaders
                      certs
@@ -25,97 +25,106 @@
                      xorg)
 
 (operating-system
- (host-name "ecenter")
- (timezone "America/Los_Angeles")
- (locale "en_US.utf8")
+  (host-name "ecenter")
+  (timezone "America/Los_Angeles")
+  (locale "en_US.utf8")
 
- (initrd-modules (append '(;; "ahcpi"
-                           "shpchp")
-                         %base-initrd-modules))
+  (initrd-modules (append '(;; "ahcpi"
+                            "shpchp")
+                          %base-initrd-modules))
 
- (bootloader (bootloader-configuration
-              (bootloader grub-efi-bootloader)
-              (target "/boot/efi")))
+  (bootloader (bootloader-configuration
+               (bootloader grub-efi-bootloader)
+               (target "/boot/efi")))
 
- (file-systems (cons* (file-system
-                       (device "guix-root")
-                       (title 'label)
-                       (mount-point "/")
-                       (type "ext4"))
-                      (file-system
-                       (device (uuid "60E8-6B6F" 'fat))
-                       (title 'uuid)
-                       (mount-point "/boot/efi")
-                       (type "vfat"))
-                      %base-file-systems))
+  (file-systems (cons* (file-system
+                         (device "guix-root")
+                         ;; TODO: Find out why `title` is deprecated
+                         (title 'label)
+                         (mount-point "/")
+                         (type "ext4"))
+                       (file-system
+                         (device (uuid "60E8-6B6F" 'fat))
+                         ;; TODO: Find out why `title` is deprecated
+                         (title 'uuid)
+                         (mount-point "/boot/efi")
+                         (type "vfat"))
+                       %base-file-systems))
 
- (users (cons (user-account
-               (name "john")
-               (comment "idiot man")
-               (group "users")
-               (supplementary-groups '("wheel"
-                                       "netdev"
-                                       "audio"
-                                       "video"
-                                       "lp"))
-               (home-directory "/home/john")
-               ;; (shell #~(string-append #$fish "/bin/fish"))
-               )
-              %base-user-accounts))
+  (users (cons (user-account
+                (name "john")
+                (comment "idiot man")
+                (group "users")
+                (supplementary-groups '("wheel"
+                                        "netdev"
+                                        "audio"
+                                        "video"
+                                        "lp"))
+                (home-directory "/home/john")
+                ;; TODO: Figure out fish environmanet issues.
+                ;; (shell #~(string-append #$fish "/bin/fish"))
+                )
+               %base-user-accounts))
 
- (packages (cons*
-            ;; window manager related
-            xmonad
-            xmobar
-            rofi
-            dmenu
+  (packages (cons*
+             ;; window manager related
+             xmonad
+             xmobar
+             rofi
+             ;; TODO: Figure out XMonad setUid/Profile issues
+             ;; while xmonad still unsorted out
+             dmenu
 
-            ;;for HTTPS access
-            nss-certs
+             ;;for HTTPS access
+             nss-certs
 
-            ;; X related
-            setxkbmap
-            xrandr
-            xfontsel
-            mkfontdir
-            mkfontscale
-            compton
-            xcape
-            xclip
-            feh
+             ;; X related
+             setxkbmap
+             xrandr
+             xfontsel
+             mkfontdir
+             mkfontscale
+             compton
+             xcape
+             xclip
+             feh
 
-            ;; essentials
-            lsof
-            inetutils
-            git
-            fish
-            openssh
-            gnupg
-            htop
-            ncurses
-            tmux
+             ;; essentials
+             lsof
+             inetutils
+             git
+             fish
+             openssh
+             gnupg
+             htop
+             ncurses
+             tmux
 
-            ;; text editors
-            vim
-            emacs
+             ;; text editors
+             vim
+             emacs
 
-            ;; no alacritty yet :(
-            termite
+             ;; TODO: Create alacritty
+             ;; alacritty
+             termite
 
-            ;; web browser
-            qutebrowser
+             ;; web browser
+             qutebrowser
 
-            ;; fonts
-            font-adobe-source-code-pro
-            font-fantasque-sans
+             ;; fonts
+             font-adobe-source-code-pro
+             font-fantasque-sans
 
-            %base-packages))
+             %base-packages))
 
- (services (cons*
-            ;; TODO: buy a libre bluetooth device
-            ;; (bluetooth-service #:auto-enable? #t)
-            (service openssh-service-type)
-            %desktop-services))
+  (services (cons*
+             ;; TODO: buy a libre bluetooth device
+             ;; (bluetooth-service #:auto-enable? #t)
+             (service openssh-service-type)
+             (console-keymap-service "/home/john/dotfiles/minimal/Caps2Ctrl.map")
+             ;; TODO: Build the terminus psf font from powerline
+             ;; (console-fonts "")
+             %desktop-services))
 
- ;; Allow resolution of '.local' host names with mDNS.
- (name-service-switch %mdns-host-lookup-nss))
+  ;; Allow resolution of '.local' host names with mDNS.
+  (name-service-switch %mdns-host-lookup-nss))
