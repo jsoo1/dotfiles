@@ -154,7 +154,7 @@ This function should only modify configuration layer settings."
      ;; https://github.com/cpitclaudel/.emacs.d/blob/master/lisp/prettify-alists/haskell-prettify.el
      ;; No thanks to:
      ;; https://github.com/haskell/haskell-mode/issues/823
-     (haskell-prettify :location "~/.emacs.d/private/")
+     ;; (haskell-prettify :location "~/.emacs.d/private/")
      ;; ------ `Themes' ------
      doom-themes
      )
@@ -922,6 +922,11 @@ you should place your code here."
   ;; file types
   (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
 
+  ;; ------ `Haskell' ------
+  ;; Use pretty symbols and company quickhelp in haskell-mode
+  ;; (dolist (mode '('haskell-prettify-enable
+  ;;                 'prettify-symbols-mode))
+  ;;   (add-hook 'haskell-mode-hook mode))
 
   ;; ------ `Haskell' ------
   ;; Nice little popup
@@ -935,11 +940,10 @@ you should place your code here."
   ;; https://github.com/cpitclaudel/.emacs.d/blob/master/lisp/prettify-alists/haskell-prettify.el
   ;; No thanks to:
   ;; https://github.com/haskell/haskell-mode/issues/823
-  (use-package haskell-prettify-enable
-    :if (file-exists-p "~/.emacs.d/private/haskell-prettify-enable.el")
-    :load-path "~/.emacs.d/private/"
-    :defer t
-    :hook #'haskell-mode)
+  ;; (use-package haskell-prettify
+  ;;   :load-path "~/.emacs.d/private/"
+  ;;   :defer t
+  ;;   :mode "\\.hs\\'")
 
   ;; Keybindings
   ;; Haskell interactive include hoogle
