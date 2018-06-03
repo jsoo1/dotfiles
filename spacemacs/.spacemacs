@@ -57,7 +57,7 @@ This function should only modify configuration layer settings."
                              :port "6697"
                              :ssl t
                              :nick "jsoo"))
-          erc-auto-join-channels-alist '(("#idris" "#coq" "#agda")))
+          erc-auto-join-channels-alist '())
      erlang
      evil-snipe
      fsharp
@@ -65,7 +65,7 @@ This function should only modify configuration layer settings."
      graphviz
      (gtags :variables gtags-enable-by-default t)
      (haskell :variables
-              haskell-process-type 'stack-ghci
+              ;; haskell-process-type 'stack-ghci
               haskell-enable-hindent-style "fundamental")
      html
      (ibuffer
