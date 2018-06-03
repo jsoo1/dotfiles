@@ -1,10 +1,11 @@
-(use-modules (guix download)
-             ((guix licenses) #:prefix license:)
-             (guix packages)
-             (guix build-system)
-             (guix build-system haskell)
-             (gnu packages haskell)
-             (gnu packages haskell-check))
+(define-module (apply-refact)
+  #:use-module (guix download)
+  #:use-module ((guix licenses) #:prefix license:)
+  #:use-module (guix packages)
+  #:use-module (guix build-system)
+  #:use-module (guix build-system haskell)
+  #:use-module (gnu packages haskell)
+  #:use-module (gnu packages haskell-check))
 
 (define ghc-boot-th
   (package
@@ -85,39 +86,40 @@
     "Using the API Annotations available from GHC 7.10.2, this library provides a means to round trip any code that can be compiled by GHC, currently excluding lhs files. . It does this with a phased approach . * Delta - converts GHC API Annotations into relative offsets, indexed by SrcSpan . * Transform - functions to facilitate changes to the AST, adjusting the annotations generated in the Delta phase to suit the changes. . * Print - converts an AST and its annotations to properly formatted source text. . * Pretty - adds annotations to an AST (fragment) so that the output can be parsed back to the same AST. . . Note: requires GHC 7.10.2 or later")
    (license license:bsd-3)))
 
-(package
- (name "ghc-apply-refact")
- (version "0.3.0.1")
- (source
-  (origin
-   (method url-fetch)
-   (uri (string-append
-         "https://hackage.haskell.org/package/apply-refact/apply-refact-"
-         version
-         ".tar.gz"))
-   (sha256
-    (base32
-     "0578ql80fzkbjiw589v4498qd9jd7l2sz626imkdybxr1lqbsm0p"))))
- (build-system haskell-build-system)
- (inputs
-  `(("ghc-refact" ,ghc-refact)
-    ("ghc-exactprint" ,ghc-exactprint)
-    ("ghc-syb" ,ghc-syb)
-    ("ghc-mtl" ,ghc-mtl)
-    ("ghc-temporary" ,ghc-temporary)
-    ("ghc-filemanip" ,ghc-filemanip)
-    ("ghc-unix-compat" ,ghc-unix-compat)
-    ("ghc-optparse-applicative"
-     ,ghc-optparse-applicative)
-    ("ghc-tasty" ,ghc-tasty)
-    ("ghc-tasty-golden" ,ghc-tasty-golden)
-    ("ghc-tasty-expected-failure"
-     ,ghc-tasty-expected-failure)
-    ("ghc-silently" ,ghc-silently)))
- (home-page
-  "http://hackage.haskell.org/package/apply-refact")
- (synopsis
-  "Perform refactorings specified by the refact library.")
- (description
-  "Perform refactorings specified by the refact library. It is primarily used with HLint's --refactor flag.")
- (license license:bsd-3))
+(define-public ghc-apply-refact
+  (package
+   (name "ghc-apply-refact")
+   (version "0.3.0.1")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (string-append
+           "https://hackage.haskell.org/package/apply-refact/apply-refact-"
+           version
+           ".tar.gz"))
+     (sha256
+      (base32
+       "0578ql80fzkbjiw589v4498qd9jd7l2sz626imkdybxr1lqbsm0p"))))
+   (build-system haskell-build-system)
+   (inputs
+    `(("ghc-refact" ,ghc-refact)
+      ("ghc-exactprint" ,ghc-exactprint)
+      ("ghc-syb" ,ghc-syb)
+      ("ghc-mtl" ,ghc-mtl)
+      ("ghc-temporary" ,ghc-temporary)
+      ("ghc-filemanip" ,ghc-filemanip)
+      ("ghc-unix-compat" ,ghc-unix-compat)
+      ("ghc-optparse-applicative"
+       ,ghc-optparse-applicative)
+      ("ghc-tasty" ,ghc-tasty)
+      ("ghc-tasty-golden" ,ghc-tasty-golden)
+      ("ghc-tasty-expected-failure"
+       ,ghc-tasty-expected-failure)
+      ("ghc-silently" ,ghc-silently)))
+   (home-page
+    "http://hackage.haskell.org/package/apply-refact")
+   (synopsis
+    "Perform refactorings specified by the refact library.")
+   (description
+    "Perform refactorings specified by the refact library. It is primarily used with HLint's --refactor flag.")
+   (license license:bsd-3)))
