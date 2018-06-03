@@ -29,6 +29,7 @@
   (timezone "America/Los_Angeles")
   (locale "en_US.utf8")
 
+  ;; TODO: find out if "ahcpi" can be removed
   (initrd-modules (append '(;; "ahcpi"
                             "shpchp")
                           %base-initrd-modules))
@@ -79,15 +80,15 @@
              nss-certs
 
              ;; X related
-             setxkbmap
-             xrandr
-             xfontsel
-             mkfontdir
-             mkfontscale
-             compton
-             xcape
-             xclip
-             feh
+             ;; setxkbmap
+             ;; xrandr
+             ;; xfontsel
+             ;; mkfontdir
+             ;; mkfontscale
+             ;; compton
+             ;; xcape
+             ;; xclip
+             ;; feh
 
              ;; essentials
              lsof
@@ -101,19 +102,19 @@
              tmux
 
              ;; text editors
-             vim
-             emacs
+             ;; vim
+             ;; emacs
 
              ;; TODO: Create alacritty
              ;; alacritty
-             termite
+             ;; termite
 
              ;; web browser
-             qutebrowser
+             ;; qutebrowser
 
              ;; fonts
-             font-adobe-source-code-pro
-             font-fantasque-sans
+             ;; font-adobe-source-code-pro
+             ;; font-fantasque-sans
 
              %base-packages))
 
