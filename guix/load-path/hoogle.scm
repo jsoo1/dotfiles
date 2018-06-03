@@ -1,11 +1,10 @@
-(define-module (gnu packages hoogle)
-  #:use-module (guix packages)
-  #:use-module (guix download)
-  #:use-module (guix licenses)
-  #:use-module (guix build-system haskell)
-  #:use-module (gnu packages haskell)
-  #:use-module (gnu packages haskell-check)
-  #:use-module (gnu packages haskell-web))
+(use-modules (guix packages)
+             (guix download)
+             ((guix licenses) #:prefix license:)
+             (guix build-system haskell)
+             (gnu packages haskell)
+             (gnu packages haskell-check)
+             (gnu packages haskell-web))
 
 (define ghc-js-jquery
   (package
@@ -28,7 +27,7 @@
    (synopsis "Obtain minified jQuery code")
    (description
     "This package bundles the minified <http://jquery.com/ jQuery> code into a Haskell package, so it can be depended upon by Cabal packages. The first three components of the version number match the upstream jQuery version. The package is designed to meet the redistribution requirements of downstream users (e.g. Debian).")
-   (license expat)))
+   (license license:expat)))
 
 (define ghc-js-flot
   (package
@@ -51,7 +50,7 @@
    (synopsis "Obtain minified flot code")
    (description
     "This package bundles the minified <http://www.flotcharts.org/ Flot> code (a jQuery plotting library) into a Haskell package, so it can be depended upon by Cabal packages. The first three components of the version number match the upstream flot version. The package is designed to meet the redistribution requirements of downstream users (e.g. Debian).")
-   (license expat)))
+   (license license:expat)))
 
 (define ghc-process-extras
   (package
@@ -80,7 +79,7 @@
    (synopsis "Process extras")
    (description
     "Extends <http://hackage.haskell.org/package/process>. Read process input and output as ByteStrings or Text, or write your own ProcessOutput instance. Lazy process input and output.  ProcessMaker class for more flexibility in the process creation API.")
-   (license expat)))
+   (license license:expat)))
 
 (define ghc-storable-tuple
   (package
@@ -107,7 +106,7 @@
     "Storable instance for pairs and triples")
    (description
     "Provides a Storable instance for pair and triple which should be binary compatible with C99 and C++. The only purpose of this package is to provide a standard location for this instance so that other packages needing this instance can play nicely together.")
-   (license bsd-3)))
+   (license license:bsd-3)))
 
 (define ghc-listlike
   (package
@@ -140,7 +139,7 @@
     "Generic support for list-like structures")
    (description
     "Generic support for list-like structures in Haskell. . The ListLike module provides a common interface to the various Haskell types that are list-like.  Predefined interfaces include standard Haskell lists, Arrays, ByteStrings, and lazy ByteStrings.  Custom types can easily be made ListLike instances as well. . ListLike also provides for String-like types, such as String and ByteString, for types that support input and output, and for types that can handle infinite lists.")
-   (license bsd-3)))
+   (license license:bsd-3)))
 
 (define ghc-fmlist
   (package
@@ -162,7 +161,7 @@
    (synopsis "FoldMap lists")
    (description
     "FoldMap lists are lists represented by their foldMap function. FoldMap lists have O(1) cons, snoc and append, just like DLists, but other operations might have favorable performance characteristics as well. These wild claims are still completely unverified though.")
-   (license bsd-3)))
+   (license license:bsd-3)))
 
 (define-public hoogle
   (package
@@ -213,4 +212,4 @@
    (synopsis "Haskell API Search")
    (description
     "Hoogle is a Haskell API search engine, which allows you to search many standard Haskell libraries by either function name, or by approximate type signature.")
-   (license bsd-3)))
+   (license license:bsd-3)))
