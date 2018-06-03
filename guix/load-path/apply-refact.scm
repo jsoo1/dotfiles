@@ -87,7 +87,7 @@
 
 (package
  (name "ghc-apply-refact")
- (version "0.5.0.0")
+ (version "0.3.0.1")
  (source
   (origin
    (method url-fetch)
@@ -97,7 +97,7 @@
          ".tar.gz"))
    (sha256
     (base32
-     "1bvlbchpma3vlxfvjbyd01rmzqc9h5q3my9n7v3wal2p7ysvjpqz"))))
+     "0578ql80fzkbjiw589v4498qd9jd7l2sz626imkdybxr1lqbsm0p"))))
  (build-system haskell-build-system)
  (inputs
   `(("ghc-refact" ,ghc-refact)
