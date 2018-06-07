@@ -521,6 +521,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-highlight-delimiters 'all
 
    ;; If non-nil, start an Emacs server if one is not already running.
+   ;; (default nil)
    dotspacemacs-enable-server nil
 
    ;; If non-nil, advise quit functions to keep server open when quitting.
@@ -601,6 +602,12 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
                           (_ "/bin/sh")))
   )
 
+(defun dotspacemacs/user-load ()
+  "Library to load while dumping.
+This function is called while dumping Spacemacs configuration. You can
+`require' or `load' the libraries of your choice that will be included
+in the dump."
+  )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -680,6 +687,16 @@ you should place your code here."
   (setq
    ;; Speed it up
    projectile-enable-caching t)
+
+
+  ;; ------ `Compilation'
+  (defun open-compilation-window ()
+    "Open the window containing the '*compilation*' buffer."
+    (interactive)
+    (when compilation-last-buffer
+      (let ((curwin (selected-window)))
+	      (pop-to-buffer compilation-last-buffer)
+	      (select-window curwin))))
 
 
   ;; ------ `Shell' -----
@@ -836,6 +853,7 @@ you should place your code here."
 
       (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠ " nil))
       (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮ " " $"))
+      (add-to-list 'spacemacs--diminished-minor-modes '(elm-indent-mode nil nil))
       (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤ " nil))
       (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode " M" " M"))))
 
@@ -922,7 +940,7 @@ you should place your code here."
     :if (file-exists-p "~/.emacs.d/private/haskell-prettify-enable.el")
     :load-path "~/.emacs.d/private/"
     :defer t
-    :mode "\\.hs\\'")
+    :hook #'haskell-mode)
 
   ;; Keybindings
   ;; Haskell interactive include hoogle
