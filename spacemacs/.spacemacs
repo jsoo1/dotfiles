@@ -481,7 +481,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil smooth scrolling (native-scrolling) is enabled. Smooth
    ;; scrolling overrides the default behavior of Emacs which recenters point
    ;; when it reaches the top or bottom of the screen. (default t)
-   dotspacemacs-smooth-scrolling t
+   dotspacemacs-smooth-scrolling nil
 
    ;; Control line numbers activation.
    ;; If set to `t' or `relative' line numbers are turned on in all `prog-mode' and
@@ -622,15 +622,24 @@ you should place your code here."
   (define-key evil-hybrid-state-map (kbd "C-c C-i") 'yas-insert-snippet)
   ;; Run a project
   (spacemacs/set-leader-keys "pu" 'projectile-run-project)
+  ;; Open the compilation buffer
+  (define-key evil-normal-state-map (kbd "SPC b c") #'open-compilation-window)
+  (define-key evil-normal-state-map (kbd "SPC c b") #'open-compilation-window)
+
+  ;; Pixel scroll is sick
+  (pixel-scroll-mode 1)
 
   (setq
    ;; df == fd
-   evil-escape-unordered-key-sequence t)
+   evil-escape-unordered-key-sequence t
+   ;; pixel scrolling
+   scroll-step 1
+   scroll-conservatively 10000)
 
 
   ;; ------ `Load\ Path' ------
   (add-to-list 'exec-path "~/.nix-profile/bin/")
-
+  (add-to-list 'exec-path "~/.local/bin")
 
   ;; ------ `Mouse\ Support' ------
   ;; scrolling in terminal
@@ -879,6 +888,7 @@ you should place your code here."
   ;; file types
   (add-to-list 'auto-mode-alist '("\\.fsproj\\'" . xml-mode))
 
+
   ;; ------ `Elm' ------
   (setq elm-format-on-save 't)
   (spacemacs/set-leader-keys-for-major-mode
@@ -902,9 +912,6 @@ you should place your code here."
 
   ;; Pretty symbols
   (add-hook 'haskell-mode-hook #'prettify-symbols-mode)
-
-  ;; somehow not enabled by default?
-  (add-to-list 'auto-mode-alist '("\\.hs\\'" . haskell-mode))
 
   ;; Haskell Prettify Symbols
   ;; Thanks to:
