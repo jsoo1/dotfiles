@@ -103,7 +103,6 @@ This function should only modify configuration layer settings."
      swift
      syntax-checking
      systemd
-     themes-megapack
      tmux
      treemacs
      twitter
@@ -280,8 +279,8 @@ It should only modify the values of Spacemacs settings."
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
                          doom-spacegrey
-                         doom-one
                          spacemacs-dark
+                         doom-one
                          )
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
@@ -291,15 +290,15 @@ It should only modify the values of Spacemacs settings."
    ;; to create your own spaceline theme. Value can be a symbol or list with\
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme (if (display-graphic-p)
+   dotspacemacs-mode-line-theme (if (or (display-graphic-p) (string-equal 'frame (daemonp)))
                                     '(
                                       spacemacs
                                       :separator arrow
                                       :separator-scale 1.5
                                       )
                                   '(
-                                    vim-powerline
-                                    :separator arrow
+                                    spacemacs
+                                    :separator utf-8
                                     :separator-scale 1.5
                                     )
                                   )
@@ -313,7 +312,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-default-font '(
                                (
                                 "FantasqueSansMono Nerd Font Mono"
-                                :size 18
+                                :size 16
                                 :weight normal
                                 :width wide
                                 :powerline-scale 1.4
