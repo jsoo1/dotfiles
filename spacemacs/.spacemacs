@@ -827,6 +827,21 @@ you should place your code here."
   (unless (display-graphic-p)
     (setq powerline-default-separator 'utf8 ))
 
+  (when (or (not (display-graphic-p)) (string-equal "term" (daemonp)))
+    (progn
+      ;; Fix mode line in tui daemon
+      (spacemacs/toggle-mode-line-minor-modes-off)
+      (set-face-attribute 'spacemacs-normal-face nil :foreground "#262626")
+      (set-face-attribute 'spacemacs-hybrid-face nil :foreground "#262626")
+      (set-face-attribute 'spacemacs-emacs-face nil :foreground "#262626")
+      (set-face-attribute 'spacemacs-evilified-face nil :foreground "#262626")
+      (set-face-attribute 'spacemacs-visual-face nil :foreground "#262626")
+      (set-face-attribute 'spacemacs-replace-face nil :foreground "#262626")
+      (set-face-attribute 'spacemacs-iedit-face nil :foreground "#262626")
+      (set-face-attribute 'spacemacs-lisp-face nil :foreground "#262626")
+      (set-face-attribute 'mode-line nil :background "brightblack" :foreground "white")
+      (set-face-attribute 'mode-line-inactive nil :foreground "#65737E")))
+
   ;; ------ `Diminish' ------
   (if (display-graphic-p)
 
@@ -840,17 +855,6 @@ you should place your code here."
 
     ;; Terminal
     (progn
-      (setq spacemacs--diminished-minor-modes
-            ;; add-to-list not working for these
-            (seq-map
-             (lambda (mode)
-               (pcase (car mode)
-                 ('hybrid-mode               '(hybrid-mode "Ⓔ h" " Eh"))
-                 ('holy-mode                 '(holy-mode "Ⓔ e" " Eh"))
-                 ('which-key-mode            '(which-key-mode "Ⓚ  " " K"))
-                 (_               mode)))
-             spacemacs--diminished-minor-modes))
-
       (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠ " nil))
       (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮ " " $"))
       (add-to-list 'spacemacs--diminished-minor-modes '(elm-indent-mode nil nil))
