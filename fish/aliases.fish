@@ -26,6 +26,7 @@ abbr rest "pmset sleepnow"
 # Emacs
 abbr em "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=term"
 abbr ed "/Applications/Emacs.app/Contents/MacOS/Emacs --daemon=term"
+abbr ec  "/Applications/Emacs.app/Contents/MacOS/Emacs --daemon=frame"
 abbr e "/Applications/Emacs.app/Contents/MacOS/Emacs"
 
 # Tmux

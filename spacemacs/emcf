@@ -1,3 +1,7 @@
 #! /usr/bin/env bash
 
-exec emacsclient -c --socket-name frame
+if [[ "Darwin" = "$(uname)" ]]; then
+    exec /Applications/Emacs.app/Contents/MacOS/bin/emacsclient -c --socket-name=frame
+else
+    exec emacsclient -c --socket-name frame
+fi
