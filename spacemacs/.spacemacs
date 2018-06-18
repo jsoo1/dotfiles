@@ -827,10 +827,9 @@ you should place your code here."
     (setq powerline-default-separator 'utf8 ))
 
   (defun my-fix-faces ()
+    "Fix the spaceline faces for the spacemacs spaceline faces."
     (when (or (not (display-graphic-p)) (string-equal "term" (daemonp)))
       (progn
-        ;; Fix mode line in tui daemon
-        (spacemacs/toggle-mode-line-minor-modes-off)
         (set-face-attribute 'spacemacs-normal-face nil :foreground "#262626")
         (set-face-attribute 'spacemacs-hybrid-face nil :foreground "#262626")
         (set-face-attribute 'spacemacs-emacs-face nil :foreground "#262626")
@@ -866,10 +865,10 @@ you should place your code here."
 
     ;; Terminal
     (progn
-      (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠ " nil))
-      (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮ " " $"))
+      (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " ⒠" nil))
+      (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮" " $"))
       (add-to-list 'spacemacs--diminished-minor-modes '(elm-indent-mode nil nil))
-      (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤ " nil))
+      (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" nil))
       (add-to-list 'spacemacs--diminished-minor-modes '(meghanada-mode " M" " M"))))
 
 
