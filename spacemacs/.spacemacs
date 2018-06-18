@@ -590,8 +590,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (add-to-list 'exec-path "/usr/local/bin")
 
   ;; Apple spaceline is messed up without this for now
-  (pcase system-type
-    ('darwin (setq powerline-image-apple-rgb t)))
+  (if (string-equal 'darwin system-type) (setq powerline-image-apple-rgb t))
 
   ;; ------ Default Shell ------
   ;; Fish outputs a bunch of junk from "call-process"
@@ -824,34 +823,36 @@ you should place your code here."
   (spacemacs/toggle-display-time-off)
 
   ;; unbreak powerline symbols in terminal
-  (unless (display-graphic-p)
+  (unless (or (string-equal "frame" (daemonp)) (display-graphic-p))
     (setq powerline-default-separator 'utf8 ))
 
-  (when (or (not (display-graphic-p)) (string-equal "term" (daemonp)))
-    (progn
-      ;; Fix mode line in tui daemon
-      (spacemacs/toggle-mode-line-minor-modes-off)
-      (set-face-attribute 'spacemacs-normal-face nil :foreground "#262626")
-      (set-face-attribute 'spacemacs-hybrid-face nil :foreground "#262626")
-      (set-face-attribute 'spacemacs-emacs-face nil :foreground "#262626")
-      (set-face-attribute 'spacemacs-evilified-face nil :foreground "#262626")
-      (set-face-attribute 'spacemacs-visual-face nil :foreground "#262626")
-      (set-face-attribute 'spacemacs-replace-face nil :foreground "#262626")
-      (set-face-attribute 'spacemacs-iedit-face nil :foreground "#262626")
-      (set-face-attribute 'spacemacs-lisp-face nil :foreground "#262626")
-      (set-face-attribute 'mode-line nil :background "brightblack" :foreground "white")
-      (set-face-attribute 'mode-line-inactive nil :foreground "#65737E")))
+  (defun my-fix-faces ()
+    (when (or (not (display-graphic-p)) (string-equal "term" (daemonp)))
+      (progn
+        ;; Fix mode line in tui daemon
+        (spacemacs/toggle-mode-line-minor-modes-off)
+        (set-face-attribute 'spacemacs-normal-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-hybrid-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-emacs-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-evilified-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-visual-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-replace-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-iedit-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-lisp-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-evilified-face nil :foreground "#262626")
+        (set-face-attribute 'mode-line nil :background "black" :foreground "white")
+        (set-face-attribute 'mode-line-inactive nil :foreground "#65737E"))) )
 
   ;; ------ `Diminish' ------
   (if (display-graphic-p)
 
-    ;; Graphical
-    (progn
-      (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮" " $"))
-      (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" nil))
-      (add-to-list 'spacemacs--diminished-minor-modes '(idris-simple-indent-mode nil nil))
-      (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
-      (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " 🤔" nil)))
+      ;; Graphical
+      (progn
+        (add-to-list 'spacemacs--diminished-minor-modes '(server-buffer-clients " ⒮" " $"))
+        (add-to-list 'spacemacs--diminished-minor-modes '(interactive-haskell-mode " ⒤" nil))
+        (add-to-list 'spacemacs--diminished-minor-modes '(idris-simple-indent-mode nil nil))
+        (add-to-list 'spacemacs--diminished-minor-modes '(dired-omit-mode nil nil))
+        (add-to-list 'spacemacs--diminished-minor-modes '(emoji-cheat-sheet-plus-display-mode " 🤔" nil)))
 
     ;; Terminal
     (progn
