@@ -694,8 +694,8 @@ you should place your code here."
     (interactive)
     (when compilation-last-buffer
       (let ((curwin (selected-window)))
-	      (pop-to-buffer compilation-last-buffer)
-	      (select-window curwin))))
+        (pop-to-buffer compilation-last-buffer)
+        (select-window curwin))))
 
 
   ;; ------ `Shell' -----
