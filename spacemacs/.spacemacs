@@ -590,7 +590,12 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (add-to-list 'exec-path "/usr/local/bin")
 
   ;; Apple spaceline is messed up without this for now
-  (if (string-equal 'darwin system-type) (setq powerline-image-apple-rgb t))
+  (if (string-equal 'darwin system-type)
+      (if (string-equal "frame" (daemonp))
+          (add-hook 'before-make-frame-hook
+                    #'(lambda ()
+                        (setq powerline-image-apple-rgb t)))
+          (setq powerline-image-apple-rgb t)))
 
   ;; ------ Default Shell ------
   ;; Fish outputs a bunch of junk from "call-process"
@@ -741,6 +746,12 @@ you should place your code here."
   ;; ------ `Transparency' ------
   (when (display-graphic-p) (spacemacs/toggle-transparency))
 
+
+  ;; ------ `Fullscreen\ client\ frames'
+  (add-to-list
+   'after-make-frame-functions #'(lambda (frame)
+                                   (if (string-equal "frame" (daemonp))
+                                       (spacemacs/toggle-fullscreen-frame-on))))
 
   ;; ------ `Org-Mode' ------
   (with-eval-after-load 'org
