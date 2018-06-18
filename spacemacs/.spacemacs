@@ -843,6 +843,16 @@ you should place your code here."
         (set-face-attribute 'mode-line nil :background "black" :foreground "white")
         (set-face-attribute 'mode-line-inactive nil :foreground "#65737E"))) )
 
+  ;; Fix space line faces when theme changes (particularly for doom themes).
+  ;; https://www.reddit.com/r/emacs/comments/4v7tcj/does_emacs_have_a_hook_for_when_the_theme_changes/
+  (defvar after-load-theme-hook nil
+    "Hook run after a color theme is loaded using `load-theme'.")
+  (defadvice load-theme (after run-after-load-theme-hook activate)
+    "Run `after-load-theme-hook'."
+    (run-hooks 'after-load-theme-hook))
+  (add-hook 'after-load-theme-hook #'my-fix-faces)
+  (my-fix-faces)
+
   ;; ------ `Diminish' ------
   (if (display-graphic-p)
 
