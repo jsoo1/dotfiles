@@ -12,15 +12,14 @@
            (puthash
             (projectile-project-root)
             "elm-make App.elm --output app.js" projectile-compilation-cmd-map)
-           (puthash
-            (projectile-project-root)
-            "node main.js" projectile-project-run-cmd))
+           (setq projectile-project-run-cmd "node main.js"))
      (eval progn
            (require
             (quote projectile))
            (puthash
             (projectile-project-root)
-            "npm run watch" projectile-compilation-cmd-map))
+            "npm run watch" projectile-compilation-cmd-map)
+           (setq projectile-project-run-cmd "npm start"))
      (javascript-backend . tern)
      (javascript-backend . lsp)))))
 (custom-set-faces
@@ -28,4 +27,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:background nil)))))
+ )
