@@ -294,7 +294,7 @@ It should only modify the values of Spacemacs settings."
                                     '(
                                       spacemacs
                                       :separator arrow
-                                      :separator-scale 1.5
+                                      :separator-scale 1.3
                                       )
                                   '(
                                     spacemacs
@@ -312,7 +312,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-default-font '(
                                (
                                 "FantasqueSansMono Nerd Font Mono"
-                                :size 16
+                                :size 14
                                 :weight normal
                                 :width wide
                                 :powerline-scale 1.4
