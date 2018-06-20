@@ -126,13 +126,13 @@ main = do
               , menuArgs = [ "-dmenu", "-i" ]
               }
             )
-          , ( (0, xF86XK_AudioLowerVolume)
+          , ( (mod1Mask, xF86XK_AudioLowerVolume)
             , spawn "amixer -q -D pulse sset Master 2%-"
             )
-          , ( (0, xF86XK_AudioRaiseVolume)
+          , ( (mod1Mask, xF86XK_AudioRaiseVolume)
             , spawn "amixer -q -D pulse sset Master 2%+"
             )
-          , ( (0, xF86XK_AudioMute)
+          , ( (mod1Mask, xF86XK_AudioMute)
               , spawn "amixer -q -D pulse set Master toggle"
             )
           ]
