@@ -812,7 +812,7 @@ you should place your code here."
 
   ;; unbreak powerline symbols in terminal
   (unless (or (string-equal "frame" (daemonp)) (display-graphic-p))
-    (setq powerline-default-separator 'utf8 ))
+    (setq powerline-default-separator 'utf-8))
 
   (defun my-fix-faces ()
     "Fix the spaceline faces for the spacemacs spaceline faces."
@@ -841,7 +841,7 @@ you should place your code here."
   (my-fix-faces)
 
   ;; ------ `Diminish' ------
-  (if (display-graphic-p)
+  (if (or (string-equal "frame" (daemonp)) (display-graphic-p))
 
       ;; Graphical
       (progn
