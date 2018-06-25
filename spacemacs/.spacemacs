@@ -292,7 +292,7 @@ It should only modify the values of Spacemacs settings."
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
    dotspacemacs-mode-line-theme (if (or (display-graphic-p) (string-equal 'frame (daemonp)))
                                     '(
-                                      spacemacs
+                                      all-the-icons
                                       :separator arrow
                                       :separator-scale 1.3
                                       )
@@ -572,7 +572,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
           (add-hook 'before-make-frame-hook
                     #'(lambda ()
                         (setq powerline-image-apple-rgb t)))
-          (setq powerline-image-apple-rgb t)))
+        (setq powerline-image-apple-rgb t)))
 
   ;; ------ Default Shell ------
   ;; Fish outputs a bunch of junk from "call-process"
