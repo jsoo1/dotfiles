@@ -57,7 +57,7 @@ This function should only modify configuration layer settings."
                              :port "6697"
                              :ssl t
                              :nick "jsoo"))
-          erc-auto-join-channels-alist '())
+          erc-auto-join-channels-alist '(("#idris" "#coq" "#agda")))
      erlang
      evil-snipe
      fsharp
@@ -301,10 +301,10 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
-                         doom-nova
-                         doom-opera
                          doom-spacegrey
+                         spacemacs-dark
                          doom-one
+                         spacemacs-light
                          )
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
@@ -314,18 +314,18 @@ It should only modify the values of Spacemacs settings."
    ;; to create your own spaceline theme. Value can be a symbol or list with\
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme ;;(if (display-graphic-p)
+   dotspacemacs-mode-line-theme (if (or (string-equal "frame" (daemonp)) (display-graphic-p))
                                     '(
                                       all-the-icons
                                       :separator arrow
                                       :separator-scale 1.4
                                       )
-   ;;                                '(
-   ;;                                  vim-powerline
-   ;;                                  :separator arrow
-   ;;                                  :separator-scale 1.5
-   ;;                                  )
-   ;;                                )
+                                  '(
+                                    spacemacs
+                                    :separator utf-8
+                                    :separator-scale 1.5
+                                    )
+                                  )
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -857,10 +857,20 @@ you should place your code here."
   ;; ------ `Spaceline' ------
   ;; no time in mode line by default
   (spacemacs/toggle-display-time-off)
-  ;; Use fonts in terminal client
-  (unless (display-graphic-p)
-    (setq powerline-default-separator 'utf-8))
 
+  (when (or (not (display-graphic-p)) ((string-equal "term" (daemonp))))
+    (spacemacs/toggle-mode-line-minor-modes-off)
+    (setq powerline-default-separator 'utf-8)
+    (set-face-attribute 'spacemacs-normal-face nil :foreground "black")
+    (set-face-attribute 'spacemacs-emacs-face nil :foreground "black")
+    (set-face-attribute 'spacemacs-hybrid-face nil :foreground "black")
+    (set-face-attribute 'spacemacs-insert-face nil :foreground "black")
+    (set-face-attribute 'spacemacs-visual-face nil :foreground "black")
+    (set-face-attribute 'spacemacs-replace-face nil :foreground "black")
+    (set-face-attribute 'spacemacs-lisp-face nil :foreground "black")
+    (set-face-attribute 'spacemacs-evilified-face nil :foreground "black")
+    (set-face-attribute 'mode-line nil :foreground "white" :background "brightblack")
+    (set-face-attribute 'mode-line-inactive nil :foreground "#65737E"))
 
   ;; unbreak powerline symbols in terminal
   (unless (or (string-equal "frame" (daemonp)) (display-graphic-p))
@@ -954,8 +964,8 @@ you should place your code here."
   ;; file types
   (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
 
-  ;; ------ `Haskell' ------
-  ;; Use pretty symbols and company quickhelp in haskell-mode
+  ;; ;; ------ `Haskell' ------
+  ;; ;; Use pretty symbols and company quickhelp in haskell-mode
   ;; (dolist (mode '('haskell-prettify-enable
   ;;                 'prettify-symbols-mode))
   ;;   (add-hook 'haskell-mode-hook mode))
