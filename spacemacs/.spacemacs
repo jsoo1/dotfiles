@@ -125,9 +125,6 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(
-     ;; ------`All\ the\ icons' ------
-     all-the-icons-dired
-     all-the-icons-ivy
      ;; ------ `Applescript' ------
      applescript-mode
      ;; ------ `Swift' ------
@@ -304,7 +301,6 @@ It should only modify the values of Spacemacs settings."
                          doom-spacegrey
                          spacemacs-dark
                          doom-one
-                         spacemacs-light
                          )
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
@@ -314,7 +310,7 @@ It should only modify the values of Spacemacs settings."
    ;; to create your own spaceline theme. Value can be a symbol or list with\
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme (if (or (string-equal "frame" (daemonp)) (display-graphic-p))
+   dotspacemacs-mode-line-theme (if (or (display-graphic-p) (string-equal 'frame (daemonp)))
                                     '(
                                       all-the-icons
                                       :separator arrow
@@ -335,8 +331,8 @@ It should only modify the values of Spacemacs settings."
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '(
                                (
-                                "Fantasque Sans Mono"
-                                :size 18
+                                "FantasqueSansMono Nerd Font Mono"
+                                :size 14
                                 :weight normal
                                 :width wide
                                 :powerline-scale 1.4
@@ -409,9 +405,9 @@ It should only modify the values of Spacemacs settings."
    ;; Maximum number of rollback slots to keep in the cache. (default 5)
    dotspacemacs-max-rollback-slots 5
 
-   ;; If non-nil, the paste transient-state is enabled. While enabled, after you
-   ;; paste something, pressing `C-j' and `C-k' several times cycles through the
-   ;; elements in the `kill-ring'. (default nil)
+   ;; If non-nil, the paste transient-state is enabled. While enabled, pressing
+   ;; `p' several times cycles through the elements in the `kill-ring'.
+   ;; (default nil)
    dotspacemacs-enable-paste-transient-state t
 
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
@@ -594,11 +590,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; :) no annoying changes at the bottom of .spacemacs
   (setq custom-file "~/.customize.el")
 
- 
-  ;; ------ `Load\ Path' ------
-  (add-to-list 'exec-path "~/.nix-profile/bin/")
-  (add-to-list 'exec-path "~/.guix-profile/bin")
-
+  ;; ------ Make sure we get agda-mode ------
+  (add-to-list 'exec-path "~/.local/bin")
+  (add-to-list 'exec-path "/usr/local/bin")
 
   ;; Apple spaceline is messed up without this for now
   (if (string-equal 'darwin system-type)
@@ -645,8 +639,8 @@ you should place your code here."
   ;; Run a project
   (spacemacs/set-leader-keys "pu" 'projectile-run-project)
   ;; Open the compilation buffer
-  (define-key evil-normal-state-map (kbd "SPC b c") #'(lambda () (interactive) (display-buffer "*compilation*")))
-  (define-key evil-normal-state-map (kbd "SPC c b") #'(lambda () (interactive) (display-buffer "*compilation*")))
+  (define-key evil-normal-state-map (kbd "SPC b c") #'open-compilation-window)
+  (define-key evil-normal-state-map (kbd "SPC c b") #'open-compilation-window)
 
   ;; Pixel scroll is sick
   (pixel-scroll-mode 1)
@@ -658,6 +652,11 @@ you should place your code here."
    scroll-step 1
    scroll-conservatively 10000)
 
+
+  ;; ------ `Load\ Path' ------
+  (add-to-list 'exec-path "~/.nix-profile/bin/")
+  (add-to-list 'exec-path "~/.local/bin")
+  (add-to-list 'exec-path "~/.guix-profile/bin")
 
   ;; ------ `Mouse\ Support' ------
   ;; scrolling in terminal
@@ -680,7 +679,13 @@ you should place your code here."
 
   ;; ------ `DirEd' ------
   ;; all-the-icons in dired
-  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+  (add-hook
+   'dired-mode-hook
+   (lambda ()
+     (progn
+       (when (not (fboundp 'all-the-icons-dired-mode))
+         (load-file "~/.emacs.d/private/all-the-icons-dired/all-the-icons-dired.el")))
+     (all-the-icons-dired-mode)))
 
   ;; ------ `Paradox' ------
   ;; key for paradox
@@ -829,7 +834,7 @@ you should place your code here."
      org-capture-templates (pcase system-type
                              ('gnu/linux
                               '(("p" "RevealJS Presentation"
-                                 plain #'(lambda () (buffer-file-name))
+                                 plain (function (lambda() (buffer-file-name)))
                                  "%[~/Dropbox/org/templates/presentation.org]")))))
 
     (add-hook 'org-mode-hook 'emojify-mode)
@@ -858,19 +863,35 @@ you should place your code here."
   ;; no time in mode line by default
   (spacemacs/toggle-display-time-off)
 
-  (when (or (not (display-graphic-p)) ((string-equal "term" (daemonp))))
-    (spacemacs/toggle-mode-line-minor-modes-off)
-    (setq powerline-default-separator 'utf-8)
-    (set-face-attribute 'spacemacs-normal-face nil :foreground "black")
-    (set-face-attribute 'spacemacs-emacs-face nil :foreground "black")
-    (set-face-attribute 'spacemacs-hybrid-face nil :foreground "black")
-    (set-face-attribute 'spacemacs-insert-face nil :foreground "black")
-    (set-face-attribute 'spacemacs-visual-face nil :foreground "black")
-    (set-face-attribute 'spacemacs-replace-face nil :foreground "black")
-    (set-face-attribute 'spacemacs-lisp-face nil :foreground "black")
-    (set-face-attribute 'spacemacs-evilified-face nil :foreground "black")
-    (set-face-attribute 'mode-line nil :foreground "white" :background "brightblack")
-    (set-face-attribute 'mode-line-inactive nil :foreground "#65737E"))
+  ;; unbreak powerline symbols in terminal
+  (unless (or (string-equal "frame" (daemonp)) (display-graphic-p))
+    (setq powerline-default-separator 'utf8 ))
+
+  (defun my-fix-faces ()
+    "Fix the spaceline faces for the spacemacs spaceline faces."
+    (when (or (not (display-graphic-p)) (string-equal "term" (daemonp)))
+      (progn
+        (set-face-attribute 'spacemacs-normal-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-hybrid-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-emacs-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-evilified-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-visual-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-replace-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-iedit-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-lisp-face nil :foreground "#262626")
+        (set-face-attribute 'spacemacs-evilified-face nil :foreground "#262626")
+        (set-face-attribute 'mode-line nil :background "black" :foreground "white")
+        (set-face-attribute 'mode-line-inactive nil :foreground "#65737E"))) )
+
+  ;; Fix space line faces when theme changes (particularly for doom themes).
+  ;; https://www.reddit.com/r/emacs/comments/4v7tcj/does_emacs_have_a_hook_for_when_the_theme_changes/
+  (defvar after-load-theme-hook nil
+    "Hook run after a color theme is loaded using `load-theme'.")
+  (defadvice load-theme (after run-after-load-theme-hook activate)
+    "Run `after-load-theme-hook'."
+    (run-hooks 'after-load-theme-hook))
+  (add-hook 'after-load-theme-hook #'my-fix-faces)
+  (my-fix-faces)
 
   ;; unbreak powerline symbols in terminal
   (unless (or (string-equal "frame" (daemonp)) (display-graphic-p))
@@ -964,11 +985,6 @@ you should place your code here."
   ;; file types
   (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
 
-  ;; ;; ------ `Haskell' ------
-  ;; ;; Use pretty symbols and company quickhelp in haskell-mode
-  ;; (dolist (mode '('haskell-prettify-enable
-  ;;                 'prettify-symbols-mode))
-  ;;   (add-hook 'haskell-mode-hook mode))
 
   ;; ------ `Haskell' ------
   ;; Nice little popup
@@ -982,10 +998,11 @@ you should place your code here."
   ;; https://github.com/cpitclaudel/.emacs.d/blob/master/lisp/prettify-alists/haskell-prettify.el
   ;; No thanks to:
   ;; https://github.com/haskell/haskell-mode/issues/823
-  ;; (use-package haskell-prettify
-  ;;   :load-path "~/.emacs.d/private/"
-  ;;   :defer t
-  ;;   :mode "\\.hs\\'")
+  (use-package haskell-prettify-enable
+    :if (file-exists-p "~/.emacs.d/private/haskell-prettify-enable.el")
+    :load-path "~/.emacs.d/private/"
+    :defer t
+    :hook #'haskell-mode)
 
   ;; Keybindings
   ;; Haskell interactive include hoogle
