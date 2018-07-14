@@ -296,7 +296,7 @@ It should only modify the values of Spacemacs settings."
                                     '(
                                       all-the-icons
                                       :separator arrow
-                                      :separator-scale 1.3
+                                      :separator-scale 1.4
                                       )
                                   '(
                                     spacemacs
@@ -820,6 +820,8 @@ you should place your code here."
     "Fix the spaceline faces for the spacemacs spaceline faces."
     (when (or (not (display-graphic-p)) (string-equal "term" (daemonp)))
       (progn
+        ;; Fix spaceline bug in daemon term
+        (spacemacs/toggle-mode-line-minor-modes-off)
         (set-face-attribute 'spacemacs-normal-face nil :foreground "#262626")
         (set-face-attribute 'spacemacs-hybrid-face nil :foreground "#262626")
         (set-face-attribute 'spacemacs-emacs-face nil :foreground "#262626")
