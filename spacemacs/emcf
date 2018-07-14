@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#! /run/current-system/profile/bin/bash
 
 if [[ "Darwin" = "$(uname)" ]]; then
     # if pgrep Emacs | xargs ps | grep 'bg-daemon.*=.*term' > /dev/null; then
