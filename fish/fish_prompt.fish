@@ -1,6 +1,7 @@
 # name: taktoa
 # by taktoa (Remy Goldschmidt) <taktoa@gmail.com>
 # License: public domain
+# Modified heavily :)
 
 function _git_branch_name
   echo (command git symbolic-ref HEAD ^/dev/null | sed -e 's|^refs/heads/||')
@@ -26,29 +27,6 @@ function _remote_hostname
   end
 end
 
-function _get_tmux_window
-  tmux lsw | grep active | sed 's/\*.*$//g;s/: / /1' | awk '{ print $2 "-" $1 }' -
-end
-
-function _get_screen_window
-  set initial (screen -Q windows; screen -Q echo "")
-  set middle (echo $initial | sed 's/  /\n/g' | grep '\*' | sed 's/\*\$ / /g')
-  echo $middle | awk '{ print $2 "-" $1 }' -
-end
-
-function _is_multiplexed
-  set multiplexer ""
-  if test -z $TMUX
-  else
-    set multiplexer "tmux"
-  end
-  if test -z $WINDOW
-  else
-    set multiplexer "screen"
-  end
-  echo $multiplexer
-end
-
 # Updated prompt colors
 function fish_prompt
   set -l green (set_color green)
@@ -63,20 +41,13 @@ function fish_prompt
     set git_status " $git_status"
   end
 
-  set multiplexer (_is_multiplexed)
-
-  switch $multiplexer
-    case screen
-      set pane (_get_screen_window)
-    case tmux
-      set pane (_get_tmux_window)
-   end
-
-  if test -z $pane
-    set window ""
+  if test -n "$VIRTUAL_ENV"
+      set venv (basename "$VIRTUAL_ENV")
+      set virtualenv " ($venv)"
   else
-    set window " ($pane)"
+      set virtualenv ""
   end
 
-  echo -n -s (_remote_hostname) ' ' $cwd $green $window $blue $git_status $normal ' ' $arrow ' '
+
+  echo -n -s (_remote_hostname) ' ' $cwd $green $virtualenv $blue $git_status $normal ' ' $arrow ' '
 end

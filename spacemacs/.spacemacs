@@ -87,7 +87,9 @@ This function should only modify configuration layer settings."
           org-enable-github-support t
           org-projectile-file "TODOs.org")
      osx
-     python
+     (python :variables
+             python-backend 'lsp
+             python-enable-yapf-format-on-save t)
      react
      restclient
      ruby
@@ -1019,6 +1021,12 @@ you should place your code here."
 
   ;; Indent with 4 spaces
   (add-hook 'nand2tetris-mode (lambda () (setq tab-width 4)))
+
+
+  ;; ------ `Python' ------
+  ;; Pipenv support
+  (add-to-list 'auto-mode-alist '("\\Pipfile\\'" . conf-mode))
+  (add-to-list 'auto-mode-alist '("\\Pipfile.lock\\'" . json-mode))
 
 
   ;; ------ `SCSS/SASS' ------

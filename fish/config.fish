@@ -1,4 +1,4 @@
-set -gx PATH $PATH /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /Users/john/.cargo/bin /Users/john/.local/bin
+set -gx PATH $PATH /usr/local/anaconda3/bin /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /Users/john/.cargo/bin /Users/john/.local/bin /Users/john/Library/Python/3.6/bin
 
 # Emacsclient for EDITOR
 set -xg EDITOR '/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -nw --socket-name term'
@@ -71,4 +71,9 @@ function fish_mode_prompt --description 'Displays the current mode'
     set_color normal
     echo -n ' '
   end
+end
+
+# python direnv package
+if test "Darwin" = (uname)
+    eval (direnv hook fish)
 end
