@@ -2,5 +2,5 @@
 background = rgba(41, 43, 46, 0.8)
 
 [options]
-font = Fantasque Sans Mono 16
+font = Fantasque Sans Mono 14
 cursor_blink = off
