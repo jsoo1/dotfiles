@@ -3,9 +3,12 @@
              (guix modules)
              (guix packages)
              (guix download)
+             (guix build-system)
              (guix build-system haskell)
              ((guix licenses) #:prefix license:))
-(use-service-modules base desktop ssh)
+(use-service-modules base
+                     desktop
+                     ssh)
 (use-package-modules admin
                      bootloaders
                      certs
@@ -13,10 +16,9 @@
                      compton
                      emacs
                      fonts
+                     gnupg
                      haskell
                      haskell-check
-                     haskell-web
-                     gnupg
                      image-viewers
                      lsof
                      ncurses
@@ -27,10 +29,10 @@
                      tmux
                      version-control
                      vim
-                     web-browsers
                      wm
                      xdisorg
                      xorg)
+
 
 (operating-system
  (host-name "ecenter")
@@ -111,7 +113,7 @@
                                   (let* ((xsessions (string-append %output "/share/xsessions")))
                                     (mkdir-p xsessions)
                                     (call-with-output-file
-                                        (string-append xsessions "/my-xmonad.desktop")
+                                        (string-append xsessions "/xmonad.desktop")
                                       (lambda (port)
                                         (format port "~
                     [Desktop Entry]~@
@@ -125,46 +127,6 @@
              (license license:bsd-3))
             ;; TODO: Use when supports alsa
             ;; xmobar
-            (package
-             (name "my-xmobar")
-             (version "0.26")
-             (source (origin
-                      (method url-fetch)
-                      (uri (string-append "mirror://hackage/package/xmobar/"
-                                          "xmobar-" version ".tar.gz"))
-                      (sha256
-                       (base32
-                        "19g40vqj3cs94i27f66194k7d5cazrv1lx54bz9kc0qy2npxjzgz"))))
-             (build-system haskell-build-system)
-             (native-inputs
-              `(("ghc-hspec" ,ghc-hspec)
-                ("hspec-discover" ,hspec-discover)))
-             (inputs
-              `(("ghc-hinotify" ,ghc-hinotify)
-                ("ghc-http" ,ghc-http)
-                ("ghc-iwlib" ,ghc-iwlib)
-                ("ghc-parsec" ,ghc-parsec)
-                ("ghc-regex-compat" ,ghc-regex-compat)
-                ("ghc-stm" ,ghc-stm)
-                ("ghc-x11-xft" ,ghc-x11-xft)
-                ("libxpm" ,libxpm)))
-             (arguments
-              `(#:configure-flags
-                (list (string-append "--flags="
-                                     (string-join (list "with_alsa"
-                                                        "with_inotify"
-                                                        "with_iwlib"
-                                                        "with_threaded"
-                                                        "with_utf8"
-                                                        "with_weather"
-                                                        "with_xft"
-                                                        "with_xpm")
-                                                  " ")))))
-             (home-page "http://xmobar.org")
-             (synopsis "Minimalistic text based status bar")
-             (description
-              "My version of xmobar with alsa")
-             (license license:bsd-3))
             rofi
 
             ;;for HTTPS access
