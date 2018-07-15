@@ -127,6 +127,9 @@ main = do
           ]
 
 
+-- ============== Titles ==============
+
+
 data WorkspaceTitles =
   Titles
     { hidden  :: Map.Map WorkspaceId (Maybe NamedWindow)
@@ -232,8 +235,8 @@ currentWSSegmentScheme =
   SegmentScheme
     { fgColor = dkGrey
     , bgColorInner = blue
-    , bgColorLeft = dkGrey
-    , bgColorRight = dkGrey
+    , bgColorLeft = eisbergGrey
+    , bgColorRight = eisbergGrey
     }
 
 
@@ -242,8 +245,8 @@ hiddenWSSegmentScheme =
   SegmentScheme
     { fgColor = blue
     , bgColorInner =  grey
-    , bgColorLeft = dkGrey
-    , bgColorRight = dkGrey
+    , bgColorLeft = eisbergGrey
+    , bgColorRight = eisbergGrey
     }
 
 
@@ -252,8 +255,8 @@ titleSegmentScheme =
   SegmentScheme
     { fgColor = dkGrey
     , bgColorInner = green
-    , bgColorLeft = dkGrey
-    , bgColorRight = dkGrey
+    , bgColorLeft = eisbergGrey
+    , bgColorRight = eisbergGrey
     }
 
 
@@ -262,8 +265,8 @@ urgentWSSegmentScheme =
   SegmentScheme
     { fgColor = pink
     , bgColorInner = grey
-    , bgColorLeft = dkGrey
-    , bgColorRight = dkGrey
+    , bgColorLeft = eisbergGrey
+    , bgColorRight = eisbergGrey
     }
 
 
@@ -320,3 +323,7 @@ dkGrey = SpaceColor "#15171a"
 
 ltGrey :: SpaceColor
 ltGrey = SpaceColor "grey"
+
+
+eisbergGrey :: SpaceColor
+eisbergGrey = SpaceColor "#778784"
