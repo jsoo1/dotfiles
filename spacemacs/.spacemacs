@@ -298,6 +298,7 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         doom-opera
                          doom-spacegrey
                          spacemacs-dark
                          doom-one
@@ -658,6 +659,11 @@ you should place your code here."
   (add-to-list 'exec-path "~/.local/bin")
   (add-to-list 'exec-path "~/.guix-profile/bin")
 
+
+  ;; ------ `Themes' ------
+  (setq doom-opera-brighter-comments 't
+        doom-opera-brighter-modeline 't)
+
   ;; ------ `Mouse\ Support' ------
   ;; scrolling in terminal
   (unless window-system
@@ -865,7 +871,7 @@ you should place your code here."
 
   ;; unbreak powerline symbols in terminal
   (unless (or (string-equal "frame" (daemonp)) (display-graphic-p))
-    (setq powerline-default-separator 'utf8 ))
+    (setq powerline-default-separator 'utf-8 ))
 
   (defun my-fix-faces ()
     "Fix the spaceline faces for the spacemacs spaceline faces."
