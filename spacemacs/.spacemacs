@@ -78,7 +78,7 @@ This function should only modify configuration layer settings."
             latex-build-command "LaTeX"
             latex-enable-auto-fill t
             latex-enable-folding t)
-     lua
+     lsp
      (markdown :variables markdown-live-preview-engine 'vmd)
      nginx
      nixos
@@ -90,9 +90,7 @@ This function should only modify configuration layer settings."
      (python :variables
              python-backend 'lsp
              python-enable-yapf-format-on-save t)
-     react
      restclient
-     ruby
      rust
      (shell :variables
             shell-default-height 30
@@ -280,6 +278,7 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         doom-opera
                          doom-spacegrey
                          spacemacs-dark
                          doom-one
@@ -538,6 +537,7 @@ It should only modify the values of Spacemacs settings."
    ;; to aggressively delete empty line and long sequences of whitespace,
    ;; `trailing' to delete only the whitespace at end of lines, `changed' to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
+
    ;; (default nil)
    dotspacemacs-whitespace-cleanup 'changed
 
@@ -631,6 +631,12 @@ you should place your code here."
   (add-to-list 'exec-path "~/.nix-profile/bin/")
   (add-to-list 'exec-path "~/.local/bin")
 
+
+  ;; ------ `Theme' ------
+  (setq doom-opera-brighter-comments 't)
+  (setq doom-opera-brighter-modeline 't)
+
+
   ;; ------ `Mouse\ Support' ------
   ;; scrolling in terminal
   (unless window-system
@@ -720,6 +726,30 @@ you should place your code here."
     :load-path "private"
     :config (evil-leader/set-key "o y" #'copy-to-clipboard)
     (evil-leader/set-key "o p" #'paste-from-clipboard))
+
+  ;; Workaround for https://github.com/syl20bnr/spacemacs/issues/10896
+  (when (equalp system-type 'darwin)
+    (defun aj/copy-from-osx ()
+      (shell-command-to-string "pbpaste"))
+
+    (defun aj/paste-to-osx (text &optional push)
+      (let ((process-connection-type nil))
+        (let ((proc (start-process "pbcopy" nil "pbcopy")))
+          (process-send-string proc text)
+          (process-send-eof proc))))
+
+    (defun aj/select-text (text)
+      (if (display-graphic-p)
+          (gui-select-text text)
+        (aj/paste-to-osx text)))
+
+    (defun aj/selection-value ()
+      (if (display-graphic-p)
+          (gui-selection-value)
+        (aj/copy-from-osx)))
+
+    (setq interprogram-cut-function 'aj/select-text
+          interprogram-paste-function 'aj/selection-value))
 
 
   ;; ------ `Transparency' ------
@@ -957,6 +987,7 @@ you should place your code here."
   ;; Haskell mode restart GHCI
   (spacemacs/set-leader-keys-for-major-mode 'haskell-interactive-mode "s x" 'haskell-process-restart)
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s x" 'haskell-process-restart)
+  (spacemacs/set-leader-keys-for-major-mode 'haskell-mode "s k" 'haskell-interactive-mode-clear)
 
 
   ;; ------ `Idris' ------

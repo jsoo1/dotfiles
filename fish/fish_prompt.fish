@@ -43,11 +43,13 @@ function fish_prompt
 
   if test -n "$VIRTUAL_ENV"
       set venv (basename "$VIRTUAL_ENV")
-      set virtualenv " ($venv)"
+      set virtualenv "($venv)"
+  else if test -n "$CONDA_DEFAULT_ENV"
+      set virtualenv "($CONDA_DEFAULT_ENV)"
   else
       set virtualenv ""
   end
 
 
-  echo -n -s (_remote_hostname) ' ' $cwd $green $virtualenv $blue $git_status $normal ' ' $arrow ' '
+  echo -n -s (_remote_hostname) ' ' $green $virtualenv ' ' $cwd $blue $git_status $normal ' ' $arrow ' '
 end
