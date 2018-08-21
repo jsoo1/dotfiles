@@ -62,6 +62,8 @@
                        (type "vfat"))
                       %base-file-systems))
 
+ (swap-devices '("/dev/sda7"))
+
  (users (cons (user-account
                (name "john")
                (comment "idiot man")
