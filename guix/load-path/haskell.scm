@@ -522,3 +522,24 @@
    (description
     "SafeHaskell introduced the notion of safe and unsafe modules. In order to make as many as possible modules \\\"safe\\\", the well-known unsafe functions were moved to distinguished modules. This makes it hard to write packages that work with both old and new versions of GHC. This package provides a single module @System.Unsafe@ that exports the unsafe functions from the base package. It provides them in a style ready for qualification, that is, you should import them by . > import qualified System.Unsafe as Unsafe . The package also contains a script called @rename-unsafe.sh@. It replaces all occurrences of the original identifiers with the qualified identifiers from this package. You still have to adapt the import commands. It uses the @darcs-replace-rec@ script from the @darcs-scripts@ package.")
    (license license:bsd-3)))
+
+(define-public ghc-data-fix
+  (package
+   (name "ghc-data-fix")
+   (version "0.2.0")
+   (source
+    (origin
+     (method url-fetch)
+     (uri (string-append
+           "https://hackage.haskell.org/package/data-fix/data-fix-"
+           version
+           ".tar.gz"))
+     (sha256
+      (base32
+       "14hk6hq5hdb3l5bhmzhw086jpzlvp9qbw9dzw30wlz5jbh2ihmvy"))))
+   (build-system haskell-build-system)
+   (home-page "https://github.com/anton-k/data-fix")
+   (synopsis "Fixpoint data types")
+   (description
+    "Fixpoint types and recursion schemes. If you define your AST as fixpoint type, you get fold and unfold operations for free. . Thanks for contribution to: Matej Kollar, Herbert Valerio Riedel")
+   (license license:bsd-3)))
