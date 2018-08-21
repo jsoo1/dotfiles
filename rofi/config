@@ -24,7 +24,7 @@ rofi.kb-remove-to-sol:               Control+Delete
 rofi.kb-page-prev:                   Control+u
 rofi.kb-page-next:                   Control+d
 
-rofi.font:                           Fantasque Sans Mono 24
+rofi.font:                           Fantasque Sans Mono 12
 rofi.show-icons:                     true
 
 ! Theme
