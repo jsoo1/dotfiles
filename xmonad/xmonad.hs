@@ -103,21 +103,28 @@ main = do
           [ ( ( mod1Mask, xK_space )
             , spawn "fish -c \"rofi -show combi -modi combi\""
             )
+          , ( ( mod1Mask .|. shiftMask, xK_x )
+            , spawn "xlock -mode blank"
+            )
+          , ( ( mod1Mask .|. shiftMask, xK_s )
+            , spawn "loginctl suspend"
+            )
           , ( ( mod1Mask, xK_Tab )
             , gotoMenuConfig $ def
               { menuCommand = "rofi"
               , menuArgs = [ "-dmenu", "-i" ]
               }
             )
-          , ( ( 0, xF86XK_AudioLowerVolume )
-            , spawn "amixer -q -D pulse sset Master 2%-"
-            )
-          , ( ( 0, xF86XK_AudioRaiseVolume )
-            , spawn "amixer -q -D pulse sset Master 2%+"
-            )
-          , ( ( 0, xF86XK_AudioMute )
-            , spawn "amixer -q -D pulse set Master toggle"
-            )
+          -- TODO: Make alsa work.
+          -- , ( ( 0, xF86XK_AudioLowerVolume )
+          --   , spawn "amixer -q -D pulse sset Master 2%-"
+          --   )
+          -- , ( ( 0, xF86XK_AudioRaiseVolume )
+          --   , spawn "amixer -q -D pulse sset Master 2%+"
+          --   )
+          -- , ( ( 0, xF86XK_AudioMute )
+          --   , spawn "amixer -q -D pulse set Master toggle"
+          --   )
           , ( ( mod1Mask, xK_n )
             , moveTo Next NonEmptyWS
             )
