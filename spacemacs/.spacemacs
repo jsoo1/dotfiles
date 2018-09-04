@@ -90,6 +90,7 @@ This function should only modify configuration layer settings."
      (python :variables
              python-backend 'lsp
              python-enable-yapf-format-on-save t)
+     racket
      restclient
      rust
      (shell :variables
@@ -278,9 +279,9 @@ It should only modify the values of Spacemacs settings."
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         doom-nova
                          doom-opera
                          doom-spacegrey
-                         spacemacs-dark
                          doom-one
                          )
 
@@ -386,9 +387,9 @@ It should only modify the values of Spacemacs settings."
    ;; Maximum number of rollback slots to keep in the cache. (default 5)
    dotspacemacs-max-rollback-slots 5
 
-   ;; If non-nil, the paste transient-state is enabled. While enabled, pressing
-   ;; `p' several times cycles through the elements in the `kill-ring'.
-   ;; (default nil)
+   ;; If non-nil, the paste transient-state is enabled. While enabled, after you
+   ;; paste something, pressing `C-j' and `C-k' several times cycles through the
+   ;; elements in the `kill-ring'. (default nil)
    dotspacemacs-enable-paste-transient-state t
 
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
@@ -527,6 +528,7 @@ It should only modify the values of Spacemacs settings."
    ;; %n - Narrow if appropriate
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
+   ;; (default "%I@%S")
    dotspacemacs-frame-title-format "%F %t %b"
 
    ;; Format specification for setting the icon title format
@@ -537,7 +539,6 @@ It should only modify the values of Spacemacs settings."
    ;; to aggressively delete empty line and long sequences of whitespace,
    ;; `trailing' to delete only the whitespace at end of lines, `changed' to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
-
    ;; (default nil)
    dotspacemacs-whitespace-cleanup 'changed
 
@@ -550,6 +551,14 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil)
    dotspacemacs-pretty-docs t
    ))
+
+(defun dotspacemacs/user-env ()
+  "Environment variables setup.
+This function defines the environment variables for your Emacs session. By
+default it calls `spacemacs/load-spacemacs-env' which loads the environment
+variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
+See the header of this file for more information."
+  (spacemacs/load-spacemacs-env))
 
 (defun dotspacemacs/user-init ()
   "Initialization for user code:
@@ -587,9 +596,9 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
-This function is called while dumping Spacemacs configuration. You can
-`require' or `load' the libraries of your choice that will be included
-in the dump."
+This function is called only while dumping Spacemacs configuration. You can
+`require' or `load' the libraries of your choice that will be included in the
+dump."
   )
 
 (defun dotspacemacs/user-config ()
@@ -613,8 +622,8 @@ you should place your code here."
   ;; Run a project
   (spacemacs/set-leader-keys "pu" 'projectile-run-project)
   ;; Open the compilation buffer
-  (define-key evil-normal-state-map (kbd "SPC b c") #'open-compilation-window)
-  (define-key evil-normal-state-map (kbd "SPC c b") #'open-compilation-window)
+  (define-key evil-normal-state-map (kbd "SPC b c") #'(lambda () (interactive) (display-buffer "*compilation*")))
+  (define-key evil-normal-state-map (kbd "SPC c b") #'(lambda () (interactive) (display-buffer "*compilation*")))
 
   ;; Pixel scroll is sick
   (pixel-scroll-mode 1)
@@ -813,7 +822,7 @@ you should place your code here."
      org-capture-templates (pcase system-type
                              ('gnu/linux
                               '(("p" "RevealJS Presentation"
-                                 plain (function (lambda() (buffer-file-name)))
+                                 plain #'(lambda () (buffer-file-name))
                                  "%[~/Dropbox/org/templates/presentation.org]")))))
 
     (add-hook 'org-mode-hook 'emojify-mode)
@@ -842,37 +851,13 @@ you should place your code here."
   ;; no time in mode line by default
   (spacemacs/toggle-display-time-off)
 
+
   ;; unbreak powerline symbols in terminal
   (unless (or (string-equal "frame" (daemonp)) (display-graphic-p))
-    (setq powerline-default-separator 'utf-8))
+    (progn
+      (setq powerline-default-separator 'utf-8)
+      (spacemacs/toggle-mode-line-minor-modes-off)))
 
-  (defun my-fix-faces ()
-    "Fix the spaceline faces for the spacemacs spaceline faces."
-    (when (or (not (display-graphic-p)) (string-equal "term" (daemonp)))
-      (progn
-        ;; Fix spaceline bug in daemon term
-        (spacemacs/toggle-mode-line-minor-modes-off)
-        (set-face-attribute 'spacemacs-normal-face nil :foreground "#262626")
-        (set-face-attribute 'spacemacs-hybrid-face nil :foreground "#262626")
-        (set-face-attribute 'spacemacs-emacs-face nil :foreground "#262626")
-        (set-face-attribute 'spacemacs-evilified-face nil :foreground "#262626")
-        (set-face-attribute 'spacemacs-visual-face nil :foreground "#262626")
-        (set-face-attribute 'spacemacs-replace-face nil :foreground "#262626")
-        (set-face-attribute 'spacemacs-iedit-face nil :foreground "#262626")
-        (set-face-attribute 'spacemacs-lisp-face nil :foreground "#262626")
-        (set-face-attribute 'spacemacs-evilified-face nil :foreground "#262626")
-        (set-face-attribute 'mode-line nil :background "black" :foreground "white")
-        (set-face-attribute 'mode-line-inactive nil :foreground "#65737E"))) )
-
-  ;; Fix space line faces when theme changes (particularly for doom themes).
-  ;; https://www.reddit.com/r/emacs/comments/4v7tcj/does_emacs_have_a_hook_for_when_the_theme_changes/
-  (defvar after-load-theme-hook nil
-    "Hook run after a color theme is loaded using `load-theme'.")
-  (defadvice load-theme (after run-after-load-theme-hook activate)
-    "Run `after-load-theme-hook'."
-    (run-hooks 'after-load-theme-hook))
-  (add-hook 'after-load-theme-hook #'my-fix-faces)
-  (my-fix-faces)
 
   ;; ------ `Diminish' ------
   (if (or (string-equal "frame" (daemonp)) (display-graphic-p))
