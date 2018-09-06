@@ -1,5 +1,4 @@
 (use-modules (gnu)
-             (gnu system nss)
              (guix modules)
              (guix packages)
              (guix download)
@@ -39,10 +38,7 @@
  (timezone "America/Los_Angeles")
  (locale "en_US.utf8")
 
- ;; TODO: find out if "ahcpi" can be removed
- (initrd-modules (append '(;; "ahcpi"
-                           "shpchp")
-                         %base-initrd-modules))
+ (initrd-modules (append (list "shpchp") %base-initrd-modules))
 
  (bootloader (bootloader-configuration
               (bootloader grub-efi-bootloader)
