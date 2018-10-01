@@ -94,9 +94,9 @@
     "A general sequence representation with arbitrary annotations, for use as a base for implementations of various collection types, with examples, as described in section 4 of . * Ralf Hinze and Ross Paterson, \\\"Finger trees: a simple general-purpose data structure\\\", /Journal of Functional Programming/ 16:2 (2006) pp 197-217. <http://staff.city.ac.uk/~ross/papers/FingerTree.html> . For a tuned sequence type, see @Data.Sequence@ in the @containers@ package, which is a specialization of this structure.")
    (license license:bsd-3)))
 
-(define-public idris-latest
+(define-public idris-1.3.0
   (package
-   (name "idris-latest")
+   (name "idris-1.3.0")
    (version "1.3.0")
    (source
     (origin
