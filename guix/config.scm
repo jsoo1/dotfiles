@@ -38,7 +38,7 @@
  (timezone "America/Los_Angeles")
  (locale "en_US.utf8")
 
- (initrd-modules (append (list "shpchp") %base-initrd-modules))
+ (initrd-modules %base-initrd-modules)
 
  (bootloader (bootloader-configuration
               (bootloader grub-efi-bootloader)
@@ -153,7 +153,7 @@
             tmux
 
             ;; text editors
-            ;; vim
+            vim
             ;; emacs
 
             ;; TODO: Create alacritty
