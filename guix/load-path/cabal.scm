@@ -57,7 +57,7 @@
     "The @base@ library exposes the @hGetEcho@ and @hSetEcho@ functions for querying and setting echo status, but unfortunately, neither function works with MinTTY consoles on Windows. This is a serious issue, since @hGetEcho@ and @hSetEcho@ are often used to disable input echoing when a program prompts for a password, so many programs will reveal your password as you type it on MinTTY! . This library provides an alternative interface which works with both MinTTY and other consoles. An example is included which demonstrates how one might prompt for a password using this library. To build it, make sure to configure with the @-fexample@ flag.")
    (license license:bsd-3)))
 
-(define-public ghc-bytestring
+(define ghc-bytestring
   (package
    (name "ghc-bytestring")
    (version "0.10.8.2")
@@ -87,7 +87,20 @@
     "An efficient compact, immutable byte string type (both strict and lazy) suitable for binary or 8-bit character data. . The 'ByteString' type represents sequences of bytes or 8-bit characters. It is suitable for high performance use, both in terms of large data quantities, or high speed requirements. The 'ByteString' functions follow the same style as Haskell\\'s ordinary lists, so it is easy to convert code from using 'String' to 'ByteString'. . Two 'ByteString' variants are provided: . * Strict 'ByteString's keep the string as a single large array. This makes them convenient for passing data between C and Haskell. . * Lazy 'ByteString's use a lazy list of strict chunks which makes it suitable for I\\/O streaming tasks. . The @Char8@ modules provide a character-based view of the same underlying 'ByteString' types. This makes it convenient to handle mixed binary and 8-bit character content (which is common in many file formats and network protocols). . The 'Builder' module provides an efficient way to build up 'ByteString's in an ad-hoc way by repeated concatenation. This is ideal for fast serialisation or pretty printing. . There is also a 'ShortByteString' type which has a lower memory overhead and can can be converted to or from a 'ByteString', but supports very few other operations. It is suitable for keeping many short strings in memory. . 'ByteString's are not designed for Unicode. For Unicode strings you should use the 'Text' type from the @text@ package. . These modules are intended to be imported qualified, to avoid name clashes with \"Prelude\" functions, e.g. . > import qualified Data.ByteString as BS")
    (license license:bsd-3)))
 
-(define-public ghc-prim-0.5.2.0
+(define ghc-rts
+  (package
+   (name "ghc-rts")
+   (version "8.4.3")
+   (source
+    (origin
+     (method (git-reference
+              (url "http://git.haskell.org/ghc.git")
+              (commit "ghc-8.4.3-release")))
+     (sha256
+      (base32
+       "0k64mx8s7857hrpkbq51x6li8k55kmyahbjwg7v4nqk8mq93lja8"))))))
+
+(define ghc-prim-0.5.2.0
   (package
    (name "ghc-prim-0.5.2.0")
    (version "0.5.2.0")
@@ -125,8 +138,8 @@
       (base32
        "0v8msqvgzimhs7p5ri25hrb1ni2wvisl5rmdxy89fc59py79b9fq"))))
    (build-system haskell-build-system)
+   (inputs `(("ghc-prim" ,ghc-prim-0.5.2.0)))
    (arguments `(#:tests? #f))
-   (inputs `(("ghc-prim" ,ghc-prim)))
    (home-page
     "http://thoughtpolice.github.com/hs-ed25519")
    (synopsis "Ed25519 cryptographic signatures")
