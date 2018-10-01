@@ -34,11 +34,7 @@ This function should only modify configuration layer settings."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
-     ;; (
-     ;; agda
-     ;; :variables
-     ;; agda-mode-path "~/.local/bin/agda-mode"
-     ;; )
+     agda
      (auto-completion
       (haskell :variables haskell-completion-backend 'dante))
      c-c++
@@ -53,10 +49,6 @@ This function should only modify configuration layer settings."
      (emacs-lisp :variables emacs-lisp-hide-namespace-prefix nil)
      emoji
      (erc :variables
-          erc-server-list '(("irc.freenode.net"
-                             :port "6697"
-                             :ssl t
-                             :nick "jsoo"))
           erc-auto-join-channels-alist '(("#idris" "#coq" "#agda")))
      erlang
      evil-snipe
@@ -87,10 +79,9 @@ This function should only modify configuration layer settings."
           org-enable-github-support t
           org-projectile-file "TODOs.org")
      osx
-     (python :variables
-             python-backend 'lsp
-             python-enable-yapf-format-on-save t)
+     python
      racket
+     react
      restclient
      rust
      scheme
