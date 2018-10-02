@@ -12,6 +12,12 @@
 		    (seq-partition xs 2)
 		    nil)))
 
+(defmacro ->> (&rest body)
+  "Thrush combinator for `BODY'."
+    (let ((result (pop body)))
+    (dolist (form body result)
+	(setq result (append form (list result))))))
+
 ;; Built in GUI elements
 (toggle-frame-fullscreen)
 (menu-bar-mode -1)
@@ -43,6 +49,7 @@
 (add-to-list 'load-path "~/.emacs.d/private/evil-tmux-navigator")
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
+(package-refresh-contents)
 
 ;; Path
 (setq exec-path '("/Users/john/.fzf/bin"
@@ -240,6 +247,19 @@
   "s" magit-status
   "l" magit-log-buffer-file)
 
+(defun switch-project-workspace ()
+  "Switch to a known projectile project in a new workspace."
+  (interactive)
+  (let ((eyebrowse-new-workspace
+	 #'(lambda ()
+	     (->> (projectile-project-name)
+		  (eyebrowse-rename-window-config (eyebrowse--get 'current-slot)))))
+	(projectile-switch-project-action
+	 #'(lambda ()
+	     (eyebrowse-create-window-config)
+	     (projectile-find-file))))
+    (projectile-switch-project)))
+
 (define-prefix-keymap my-projectile-map
   "my projectile keybindings"
   "b" counsel-projectile-switch-to-buffer
@@ -247,7 +267,8 @@
   "d" counsel-projectile-find-dir
   "D" (lambda () (interactive) (dired (projectile-project-root)))
   "f" counsel-projectile-find-file
-  "o" (lambda () (interactive) ())
+  "l" switch-project-workspace
+  "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
   "p" counsel-projectile-switch-project
   "r" projectile-run-project
   "t" projectile-test-project
@@ -270,10 +291,12 @@
 
 (define-prefix-keymap my-window-map
   "my window keybindings"
+  (kbd "<tab>") eyebrowse-last-window-config
   "/" split-window-horizontally
   "-" split-window-vertically
   "d" delete-window
   "m" delete-other-windows
+  "w" eyebrowse-switch-to-window-config
   "=" balance-windows-area)
 
 (define-prefix-keymap my-yank-map
@@ -333,7 +356,7 @@
 (setq powerline-image-apple-rgb t)
 (spaceline-toggle-minor-modes-off)
 (spaceline-toggle-projectile-root-on)
-
+(setq powerline-text-scale-factor 1.1)
 
 ;; Theme
 (package-install 'solarized-theme)
@@ -364,6 +387,10 @@
 (setq powerline-image-apple-rgb t)
 (spaceline-toggle-minor-modes-off)
 (spaceline-toggle-projectile-root-on)
+
+;; Eyebrowse
+(package-install 'eyebrowse)
+(eyebrowse-mode 1)
 
 ;; Flycheck
 (package-install 'flycheck)
@@ -424,4 +451,4 @@
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 
-;;; idris-testing-setup.el ends here
+;;; init.el ends here

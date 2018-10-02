@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+exec /Applications/Emacs.app/Contents/MacOS/Emacs -q -l /Users/john/.emacs.d/private/idris-testing-setup.el
