@@ -45,15 +45,11 @@
               (target "/boot/efi")))
 
  (file-systems (cons* (file-system
-                       (device "guix-root")
-                       ;; TODO: Find out why `title` is deprecated
-                       (title 'label)
+                       (device (uuid "462563db-3f82-44d2-829c-eb2bce9fd0e0" 'ext4))
                        (mount-point "/")
                        (type "ext4"))
                       (file-system
                        (device (uuid "60E8-6B6F" 'fat))
-                       ;; TODO: Find out why `title` is deprecated
-                       (title 'uuid)
                        (mount-point "/boot/efi")
                        (type "vfat"))
                       %base-file-systems))
@@ -154,7 +150,7 @@
 
             ;; text editors
             vim
-            ;; emacs
+            emacs
 
             ;; TODO: Create alacritty
             ;; alacritty
@@ -170,12 +166,11 @@
             %base-packages))
 
  (services (cons*
-            ;; TODO: buy a libre bluetooth device
-            ;; (bluetooth-service #:auto-enable? #t)
-            (service openssh-service-type)
-            (console-keymap-service "/home/john/dotfiles/minimal/Caps2Ctrl.map")
             ;; TODO: Build the terminus psf font from powerline
             ;; (console-fonts "")
+            (console-keymap-service "/home/john/dotfiles/minimal/Caps2Ctrl.map")
+            (bluetooth-service #:auto-enable? #t)
+            (service openssh-service-type)
             %desktop-services))
 
  ;; Allow resolution of '.local' host names with mDNS.
