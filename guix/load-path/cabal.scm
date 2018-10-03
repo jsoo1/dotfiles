@@ -6,6 +6,7 @@
   #:use-module (gnu packages python)
   #:use-module (guix build-system gnu)
   #:use-module (guix build-system haskell)
+  #:use-module (guix build-system trivial)
   #:use-module (guix download)
   #:use-module ((guix licenses) #:prefix license:)
   #:use-module (guix packages))
@@ -87,18 +88,6 @@
     "An efficient compact, immutable byte string type (both strict and lazy) suitable for binary or 8-bit character data. . The 'ByteString' type represents sequences of bytes or 8-bit characters. It is suitable for high performance use, both in terms of large data quantities, or high speed requirements. The 'ByteString' functions follow the same style as Haskell\\'s ordinary lists, so it is easy to convert code from using 'String' to 'ByteString'. . Two 'ByteString' variants are provided: . * Strict 'ByteString's keep the string as a single large array. This makes them convenient for passing data between C and Haskell. . * Lazy 'ByteString's use a lazy list of strict chunks which makes it suitable for I\\/O streaming tasks. . The @Char8@ modules provide a character-based view of the same underlying 'ByteString' types. This makes it convenient to handle mixed binary and 8-bit character content (which is common in many file formats and network protocols). . The 'Builder' module provides an efficient way to build up 'ByteString's in an ad-hoc way by repeated concatenation. This is ideal for fast serialisation or pretty printing. . There is also a 'ShortByteString' type which has a lower memory overhead and can can be converted to or from a 'ByteString', but supports very few other operations. It is suitable for keeping many short strings in memory. . 'ByteString's are not designed for Unicode. For Unicode strings you should use the 'Text' type from the @text@ package. . These modules are intended to be imported qualified, to avoid name clashes with \"Prelude\" functions, e.g. . > import qualified Data.ByteString as BS")
    (license license:bsd-3)))
 
-(define ghc-rts
-  (package
-   (name "ghc-rts")
-   (version "8.4.3")
-   (source
-    (origin
-     (method (git-reference
-              (url "http://git.haskell.org/ghc.git")
-              (commit "ghc-8.4.3-release")))
-     (sha256
-      (base32
-       "0k64mx8s7857hrpkbq51x6li8k55kmyahbjwg7v4nqk8mq93lja8"))))))
 
 (define ghc-prim-0.5.2.0
   (package
@@ -106,16 +95,14 @@
    (version "0.5.2.0")
    (source
     (origin
-     (method url-fetch)
-     (uri (string-append
-           "https://hackage.haskell.org/package/ghc-prim/ghc-prim-"
-           version
-           ".tar.gz"))
+     (method (git-reference
+              (url "http://git.haskell.org/ghc.git")
+              (commit "ghc-8.4.3-release")))
      (sha256
       (base32
-       "1ccvzkw3v4xlj7g126wwlc5rvd480hbv1pcq2rfb85k77rzi6bjr"))))
-   (build-system haskell-build-system)
-   (arguments `(#:haskell ,ghc-8))
+       "0k64mx8s7857hrpkbq51x6li8k55kmyahbjwg7v4nqk8mq93lja8"))))
+   (build-system trivial-build-system
+                 #:builder)
    (home-page
     "http://hackage.haskell.org/package/ghc-prim")
    (synopsis "GHC primitives")
