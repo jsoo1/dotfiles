@@ -35,7 +35,7 @@ Config
         ]
         9000
     , Run Wireless
-      "wlo1"
+      "wlp9s0"
       [ "-t"
       , "<quality>%  <essid>"
       ]
@@ -81,7 +81,7 @@ Config
   , template =
     "%StdinReader%\
     \}{\
-    \<fc=#292b2e,#778784></fc><fc=#4f97d7,#292b2e> %wlo1wi% </fc>\
+    \<fc=#292b2e,#778784></fc><fc=#4f97d7,#292b2e> %wlp9s0wi% </fc>\
     \<fc=#778784,#292b2e></fc><fc=#2D9574,#778784></fc><fc=#15171a,#2D9574> %battery% </fc>\
     \<fc=#778784,#2D9574></fc><fc=#4f97d7,#778784></fc><fc=#15171a,#4f97d7>%date% </fc>"
   }
