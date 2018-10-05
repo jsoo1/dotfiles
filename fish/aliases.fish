@@ -24,12 +24,13 @@ abbr dfh "df -H"
 abbr rest "pmset sleepnow"
 
 # Emacs
-abbr em "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=term"
+abbr em "env TERM=xterm-24bits /Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=base"
 abbr ed "/Applications/Emacs.app/Contents/MacOS/Emacs --daemon=term"
+abbr eb "/Applications/Emacs.app/Contents/MacOS/Emacs --load ~/dotfiles/emacs/init.el -q --daemon=base"
 abbr ec  "/Applications/Emacs.app/Contents/MacOS/Emacs --daemon=frame"
 abbr e "/Applications/Emacs.app/Contents/MacOS/Emacs"
 
 # Tmux
-abbr tma "tmux attach -t"
+abbr tma "env TERM=xterm-24bits tmux attach -t"
 abbr tml "tmux list-sessions"
-abbr tmux "tmux new-session -A -n 'emacs' -s (basename (pwd))"
+abbr tmux "env TERM=xterm-24bits tmux new-session -A -n 'emacs' -s (basename (pwd))"

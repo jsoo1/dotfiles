@@ -19,6 +19,11 @@ fish_vi_key_bindings
 # no greeting, plz
 set fish_greeting ""
 
+# solarized
+if test -e ~/.config/fish/colors.fish
+    source -e ~/.config/fish/colors.fish
+end
+
 # prompt :)
 if test -e ~/.config/fish/fish_prompt.fish
     source ~/.config/fish/fish_prompt.fish
