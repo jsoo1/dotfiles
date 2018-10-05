@@ -349,14 +349,8 @@
 
 ;; All the icons
 (package-install 'all-the-icons)
-(defun true (&rest _) 't)
-(defun no-confirm (fun &rest args)
-  "Apply FUN to ARGS, skipping user confirmations."
-    (cl-letf (((symbol-function 'y-or-n-p) #'true)
-	      ((symbol-function 'yes-or-no-p) #'true))
-      (apply fun args)))
 (require 'all-the-icons)
-(no-confirm #'all-the-icons-install-fonts)
+(let ((window-system 'mac)) (all-the-icons-install-fonts 't))
 
 ;; Spaceline
 (package-install 'spaceline)
