@@ -14,9 +14,9 @@
 
 (defmacro ->> (&rest body)
   "Thrush combinator for `BODY'."
-    (let ((result (pop body)))
+  (let ((result (pop body)))
     (dolist (form body result)
-	(setq result (append form (list result))))))
+      (setq result (append form (list result))))))
 
 ;; Built in GUI elements
 (toggle-frame-fullscreen)
@@ -88,7 +88,7 @@
 		  "/sbin"
 		  "/bin"
 		  "/Users/john/.cargo/bin"
-	"Iosevka 14"	  "/Users/john/.local/bin"
+		  "/Users/john/.local/bin"
 		  "/Users/john/Library/Python/3.6/bin"))
 
 (package-install 'exec-path-from-shell)
@@ -148,10 +148,10 @@
 (projectile-mode +1)
 (setq projectile-completion-system 'ivy)
 (add-hook 'ibuffer-hook
-    (lambda ()
-      (ibuffer-projectile-set-filter-groups)
-      (unless (eq ibuffer-sorting-mode 'alphabetic)
-        (ibuffer-do-sort-by-alphabetic))))
+	  (lambda ()
+	    (ibuffer-projectile-set-filter-groups)
+	    (unless (eq ibuffer-sorting-mode 'alphabetic)
+              (ibuffer-do-sort-by-alphabetic))))
 
 ;; Ivy
 (package-install 'ivy)
@@ -174,17 +174,17 @@
 
 ;; Keybindings
 (defmacro define-prefix-keymap (name &optional docstring &rest bindings)
-    "Define a keymap named `NAME' and docstring `DOCSTRING' with many `BINDINGS' at once using `define-key'."
-    (cons #'progn
-	  (cons (if docstring
-		    `(defvar ,name ,docstring (make-sparse-keymap))
-		  `(defvar ,name (make-sparse-keymap)))
-		(cons `(define-prefix-command (quote ,name))
-		      (seq-reduce (lambda (bindings key-fn)
-				   (cons `(define-key (quote ,name) ,(car key-fn) (function ,(cadr key-fn)))
-					 bindings))
-				 (seq-partition bindings 2)
-				 `(,name))))))
+  "Define a keymap named `NAME' and docstring `DOCSTRING' with many `BINDINGS' at once using `define-key'."
+  (cons #'progn
+	(cons (if docstring
+		  `(defvar ,name ,docstring (make-sparse-keymap))
+		`(defvar ,name (make-sparse-keymap)))
+	      (cons `(define-prefix-command (quote ,name))
+		    (seq-reduce (lambda (bindings key-fn)
+				  (cons `(define-key (quote ,name) ,(car key-fn) (function ,(cadr key-fn)))
+					bindings))
+				(seq-partition bindings 2)
+				`(,name))))))
 
 (evil-leader/set-leader "<SPC>")
 
@@ -401,6 +401,25 @@
 (package-install 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 
+;; Indentation
+;; Per http://emacsredux.com/blog/2013/03/27/indent-region-or-buffer/
+(defun indent-buffer ()
+  "Indent the currently visited buffer."
+  (interactive)
+  (indent-region (point-min) (point-max)))
+
+(defun indent-region-or-buffer ()
+  "Indent a region if selected, otherwise the whole buffer."
+  (interactive)
+  (save-excursion
+    (if (region-active-p)
+        (progn
+          (indent-region (region-beginning) (region-end))
+          (message "Indented selected region."))
+      (progn
+        (indent-buffer)
+        (message "Indented buffer.")))))
+
 ;; Idris mode
 (add-to-listq load-path "~/.emacs.d/layers/+lang/idris/local/idris-mode")
 
@@ -420,7 +439,7 @@
 (require 'elm-mode)
 (setq elm-format-on-save 't)
 (eval-after-load 'flycheck
-    '(add-hook 'flycheck-mode-hook #'flycheck-elm-setup))
+  '(add-hook 'flycheck-mode-hook #'flycheck-elm-setup))
 (with-eval-after-load 'company-mode (add-to-list 'company-backends 'company-elm))
 
 ;; JavaScript
