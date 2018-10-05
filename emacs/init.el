@@ -372,22 +372,6 @@
 (setq x-underline-at-descent-line t)
 (load-theme 'solarized-light)
 
-;; All the icons
-(package-install 'all-the-icons)
-(require 'all-the-icons)
-(all-the-icons-install-fonts)
-
-;; Spaceline
-(package-install 'spaceline)
-(package-install 'spaceline-all-the-icons)
-(require 'spaceline-all-the-icons)
-(require 'spaceline-config)
-
-(spaceline-all-the-icons-theme)
-(setq powerline-image-apple-rgb t)
-(spaceline-toggle-minor-modes-off)
-(spaceline-toggle-projectile-root-on)
-
 ;; Eyebrowse
 (package-install 'eyebrowse)
 (eyebrowse-mode 1)
