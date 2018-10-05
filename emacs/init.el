@@ -198,6 +198,7 @@
   "f" 'my-file-map
   "g" 'my-git-map
   "h" 'my-describe-map
+  "j" 'my-jump-map
   "p" 'my-projectile-map
   "q" 'my-quit-map
   "s" 'my-search-map
@@ -246,6 +247,10 @@
   "b" magit-blame
   "s" magit-status
   "l" magit-log-buffer-file)
+
+(define-prefix-keymap my-jump-map
+  "my jump keybindings"
+  "=" indent-region-or-buffer)
 
 (defun switch-project-workspace ()
   "Switch to a known projectile project in a new workspace."
