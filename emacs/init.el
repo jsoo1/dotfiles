@@ -286,6 +286,7 @@
   "my toggles"
   "d" toggle-debug-on-error
   "D" toggle-degub-on-quit
+  "f" toggle-frame-fullscreen
   "l" toggle-truncate-lines
   "t" counsel-load-theme)
 
