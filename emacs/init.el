@@ -351,13 +351,25 @@
     (progn (load-theme 'solarized-dark))
   (load-theme 'solarized-light))
 
-;; Transparency
+;; Transparency in terminal
+(defun on-frame-open (frame)
+  "Make `FRAME' transparent'."
+  (if (not (display-graphic-p frame))
+    (set-face-background 'default "unspecified-bg" frame)))
+
+(on-frame-open (selected-frame))
+
+(add-hook 'after-make-frame-functions 'on-frame-open)
+
 (defun on-after-init ()
-  "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal#"
-  (unless (display-graphic-p (selected-frame))
+  "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
+  (unless (or (display-graphic-p (selected-frame))
+	      (not (string= 'term (daemonp))))
     (set-face-background 'default "unspecified-bg" (selected-frame))))
 
-(add-hook 'window-setup-hook 'on-after-init)
+(add-hook 'window-setup-hook #'on-after-init)
+
+(set-face-background 'default "unspecified-bg" (selected-frame))
 
 ;; Eyebrowse
 (package-install 'eyebrowse)
