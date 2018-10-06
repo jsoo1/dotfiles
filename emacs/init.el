@@ -8,9 +8,9 @@
 (defmacro add-to-listq (&rest xs)
   "Add `XS' to `LIST'."
   (cons #'progn
-	(seq-reduce (lambda (expr list-val-pair) (cons `(add-to-list (quote ,(car list-val-pair)) ,(cadr list-val-pair)) expr))
-		    (seq-partition xs 2)
-		    nil)))
+        (seq-reduce (lambda (expr list-val-pair) (cons `(add-to-list (quote ,(car list-val-pair)) ,(cadr list-val-pair)) expr))
+                    (seq-partition xs 2)
+                    nil)))
 
 (defmacro ->> (&rest body)
   "Thrush combinator for `BODY'."
@@ -35,7 +35,6 @@
 (scroll-bar-mode -1)
 (horizontal-scroll-bar-mode -1)
 
-
 ;; Cursor
 (setq cursor-type 'box)
 (blink-cursor-mode 0)
@@ -51,7 +50,7 @@
 
 ;; Custom
 (setq custom-file "/dev/null"
-      initial-buffer-choice "~/.emacs.d/private/idris-testing-setup.el")
+      initial-buffer-choice "~/dotfiles/emacs/init.el")
 
 ;; Package
 (require 'package)
@@ -61,44 +60,13 @@
 (package-refresh-contents)
 
 ;; Path
-(setq exec-path '("/Users/john/.fzf/bin"
-		  "/usr/local/bin"
-		  "/usr/bin"
-		  "/bin"
-		  "/usr/sbin"
-		  "/sbin"
-		  "/usr/local/anaconda3/bin"
-		  "/usr/local/sbin"
-		  "/Users/john/.cargo/bin"
-		  "/Users/john/.local/bin"
-		  "/Users/john/Library/Python/3.6/bin"
-		  "/usr/local/bin"
-		  "/usr/bin"
-		  "/bin"
-		  "/usr/sbin"
-		  "/sbin"
-		  "/usr/local/anaconda3/bin"
-		  "/usr/local/sbin"
-		  "/Users/john/.cargo/bin"
-		  "/Users/john/.local/bin"
-		  "/Users/john/Library/Python/3.6/bin"
-		  "/usr/local/bin"
-		  "/usr/bin"
-		  "/bin"
-		  "/usr/sbin"
-		  "/sbin"
-		  "/opt/X11/bin"
-		  "/Library/TeX/texbin"
-		  "/usr/local/anaconda3/bin"
-		  "/usr/local/sbin"
-		  "/usr/local/bin"
-		  "/usr/sbin"
-		  "/usr/bin"
-		  "/sbin"
-		  "/bin"
-		  "/Users/john/.cargo/bin"
-		  "/Users/john/.local/bin"
-		  "/Users/john/Library/Python/3.6/bin"))
+(setq exec-path '("~/.local/.bin"
+		  "/run/setuid-programs"
+		  "~/.config/guix/current/bin"
+		  "~/.guix-profile/bin"
+		  "~/.guix-profile/sbin"
+		  "/run/current-system/profile/bin"
+		  "/run/current-system/profile/sbin"))
 
 (package-install 'exec-path-from-shell)
 (require 'exec-path-from-shell)
@@ -106,13 +74,9 @@
 
 ;; Shell
 (package-install 'multi-term)
-(setq shell-file-name "/bin/bash")
+(setq shell-file-name "bash")
 
-;; Package
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(package-initialize)
-
+;; Byte compile
 (require 'bytecomp)
 (setq byte-compile-warnings t)
 (setq byte-compile-error-on-warn nil)
@@ -157,9 +121,9 @@
 (projectile-mode +1)
 (setq projectile-completion-system 'ivy)
 (add-hook 'ibuffer-hook
-	  (lambda ()
-	    (ibuffer-projectile-set-filter-groups)
-	    (unless (eq ibuffer-sorting-mode 'alphabetic)
+          (lambda ()
+            (ibuffer-projectile-set-filter-groups)
+            (unless (eq ibuffer-sorting-mode 'alphabetic)
               (ibuffer-do-sort-by-alphabetic))))
 
 ;; Ivy
@@ -190,15 +154,14 @@
 (defmacro define-prefix-keymap (name &optional docstring &rest bindings)
   "Define a keymap named `NAME' and docstring `DOCSTRING' with many `BINDINGS' at once using `define-key'."
   (cons #'progn
-	(cons (if docstring
-		  `(defvar ,name ,docstring (make-sparse-keymap))
-		`(defvar ,name (make-sparse-keymap)))
-	      (cons `(define-prefix-command (quote ,name))
-		    (seq-reduce (lambda (bindings key-fn)
-				  (cons `(define-key (quote ,name) ,(car key-fn) (function ,(cadr key-fn)))
-					bindings))
-				(seq-partition bindings 2)
-				`(,name))))))
+        (cons (if docstring `(defvar ,name ,docstring (make-sparse-keymap))
+                `(defvar ,name (make-sparse-keymap)))
+              (cons `(define-prefix-command (quote ,name))
+                    (seq-reduce (lambda (bindings key-fn)
+                                  (cons `(define-key (quote ,name) ,(car key-fn) (function ,(cadr key-fn)))
+                                        bindings))
+                                (seq-partition bindings 2)
+                                `(,name))))))
 
 (evil-leader/set-leader "<SPC>")
 
@@ -270,13 +233,13 @@
   "Switch to a known projectile project in a new workspace."
   (interactive)
   (let ((eyebrowse-new-workspace
-	 #'(lambda ()
-	     (->> (projectile-project-name)
-		  (eyebrowse-rename-window-config (eyebrowse--get 'current-slot)))))
-	(projectile-switch-project-action
-	 #'(lambda ()
-	     (eyebrowse-create-window-config)
-	     (projectile-find-file))))
+         #'(lambda ()
+             (->> (projectile-project-name)
+                  (eyebrowse-rename-window-config (eyebrowse--get 'current-slot)))))
+        (projectile-switch-project-action
+         #'(lambda ()
+             (eyebrowse-create-window-config)
+             (projectile-find-file))))
     (projectile-switch-project)))
 
 (define-prefix-keymap my-projectile-map
@@ -436,6 +399,10 @@
 (package-install 'flycheck-elm)
 (require 'flycheck-elm)
 (add-to-list 'load-path "~/.emacs.d/layers/+lang/elm/local/elm-mode")
+(package-install 'f)
+(package-install 'dash)
+(package-install 's)
+(package-install 'let-alist)
 (require 'elm-mode)
 (setq elm-format-on-save 't)
 (eval-after-load 'flycheck
