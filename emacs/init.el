@@ -351,6 +351,14 @@
     (progn (load-theme 'solarized-dark))
   (load-theme 'solarized-light))
 
+;; Transparency
+(defun on-after-init ()
+  "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal#"
+  (unless (display-graphic-p (selected-frame))
+    (set-face-background 'default "unspecified-bg" (selected-frame))))
+
+(add-hook 'window-setup-hook 'on-after-init)
+
 ;; Eyebrowse
 (package-install 'eyebrowse)
 (eyebrowse-mode 1)
