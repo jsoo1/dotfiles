@@ -19,9 +19,9 @@ setw -g window-status-activity-attr "none"
 setw -g window-status-activity-fg "colour2"
 setw -g window-status-separator ""
 setw -g window-status-bg "colour0"
-set -g status-left "#[fg=colour8,bg=colour2] #S #[fg=colour2,bg=colour0,nobold,nounderscore,noitalics]"
-set -g status-right "#[fg=colour11,bg=colour0,nobold,nounderscore,noitalics]#[fg=colour8,bg=colour11] %Y-%m-%d  %-l:%M %p #[fg=colour0,bg=colour11,nobold,nounderscore,noitalics]#[fg=colour11,bg=colour0] #( ~/vpn/status )  #(pmset -g ps | grep -i batter | cut -f 2 | cut -f 1 -d ' ' | tr -d ';') #[fg=colour11,bg=colour0]#[fg=colour8,bg=colour11] #h "
+set -g status-left "#[fg=colour8,bg=colour11] #S #[fg=colour11,bg=colour0,nobold,nounderscore,noitalics]"
+set -g status-right "#[fg=colour11,bg=colour0,nobold,nounderscore,noitalics]#[fg=colour8,bg=colour11] %Y-%m-%d  %-l:%M %p #[fg=colour0,bg=colour11,nobold,nounderscore,noitalics]#[fg=colour11,bg=colour0] #(bat) #[fg=colour11,bg=colour0]#[fg=colour8,bg=colour11] #h "
 setw -g window-status-format "#[fg=colour10,bg=colour0] #I #[fg=colour10,bg=colour0] #W "
-setw -g window-status-current-format "#[fg=colour0,bg=colour11,nobold,nounderscore,noitalics]#[fg=colour8,bg=colour11] #I #[fg=colour8,bg=colour11] #W #[fg=colour11,bg=colour0,nobold,nounderscore,noitalics]"
+setw -g window-status-current-format "#[fg=colour0,bg=colour2,nobold,nounderscore,noitalics]#[fg=colour8,bg=colour2] #I #[fg=colour8,bg=colour2] #W #[fg=colour2,bg=colour0,nobold,nounderscore,noitalics]"
 
 
