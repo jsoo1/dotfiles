@@ -21,7 +21,7 @@ set fish_greeting ""
 
 # solarized
 if test -e ~/.config/fish/colors.fish
-    source -e ~/.config/fish/colors.fish
+    source ~/.config/fish/colors.fish
 end
 
 # prompt :)

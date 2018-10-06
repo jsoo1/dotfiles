@@ -19,23 +19,32 @@
       (setq result (append form (list result))))))
 
 ;; Built in GUI elements
+(setq ring-bell-function 'ignore
+      truncate-lines 't
+      initial-scratch-message ""
+      vc-follow-symlinks 't)
+(add-to-listq
+ default-frame-alist '(ns-transparent-titlebar . t)
+ default-frame-alist '(font . "FantasqueSansMono Nerd Font Mono 16"))
+
+(defalias 'yes-or-no-p 'y-or-n-p)
+
 (toggle-frame-fullscreen)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (horizontal-scroll-bar-mode -1)
-(setq ring-bell-function 'ignore)
-(setq truncate-lines 't)
-(setq initial-scratch-message "")
-(add-to-listq
- default-frame-alist '(ns-transparent-titlebar . t)
- default-frame-alist '(font . "FantasqueSansMono Nerd Font Mono 16"))
-(setq vc-follow-symlinks 't)
-(defalias 'yes-or-no-p 'y-or-n-p)
+
 
 ;; Cursor
 (setq cursor-type 'box)
 (blink-cursor-mode 0)
+
+;; Mouse
+(xterm-mouse-mode 1)
+(unless window-system
+  (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
+  (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
 
 ;; Font
 (set-face-attribute 'default t :font "FantasqueSansMono Nerd Font Mono 16")
@@ -173,6 +182,10 @@
 (which-key-mode)
 (setq which-key-idle-delay 0.1)
 
+;; OSX Clipboard
+(package-install 'osx-clipboard)
+(osx-clipboard-mode +1)
+
 ;; Keybindings
 (defmacro define-prefix-keymap (name &optional docstring &rest bindings)
   "Define a keymap named `NAME' and docstring `DOCSTRING' with many `BINDINGS' at once using `define-key'."
@@ -191,7 +204,7 @@
 
 (evil-leader/set-key
   "<SPC>" 'counsel-M-x
-  "<tab>" 'evil-switch-to-windows-last-buffer
+  (kbd "TAB" )'evil-switch-to-windows-last-buffer
   "b" 'my-buffer-map
   "c" 'my-compile-map
   "d" 'dired
@@ -298,10 +311,14 @@
 
 (define-prefix-keymap my-window-map
   "my window keybindings"
-  (kbd "<tab>") eyebrowse-last-window-config
+  (kbd "TAB") eyebrowse-last-window-config
   "/" split-window-horizontally
   "-" split-window-vertically
   "d" delete-window
+  "h" (lambda nil () (interactive) (tmux-navigate "left"))
+  "j" (lambda nil () (interactive) (tmux-navigate "down"))
+  "k" (lambda nil () (interactive) (tmux-navigate "up"))
+  "l" (lambda nil () (interactive) (tmux-navigate "right"))
   "m" delete-other-windows
   "w" eyebrowse-switch-to-window-config
   "=" balance-windows-area)
