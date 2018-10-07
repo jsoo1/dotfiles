@@ -35,6 +35,9 @@
 (scroll-bar-mode -1)
 (horizontal-scroll-bar-mode -1)
 
+;; No tabs
+(setq-default indent-tabs-mode nil)
+
 ;; Cursor
 (setq cursor-type 'box)
 (blink-cursor-mode 0)
@@ -61,12 +64,12 @@
 
 ;; Path
 (setq exec-path '("~/.local/.bin"
-		  "/run/setuid-programs"
-		  "~/.config/guix/current/bin"
-		  "~/.guix-profile/bin"
-		  "~/.guix-profile/sbin"
-		  "/run/current-system/profile/bin"
-		  "/run/current-system/profile/sbin"))
+                  "/run/setuid-programs"
+                  "~/.config/guix/current/bin"
+                  "~/.guix-profile/bin"
+                  "~/.guix-profile/sbin"
+                  "/run/current-system/profile/bin"
+                  "/run/current-system/profile/sbin"))
 
 (package-install 'exec-path-from-shell)
 (require 'exec-path-from-shell)
@@ -167,7 +170,7 @@
 
 (evil-leader/set-key
   "<SPC>" 'counsel-M-x
-  (kbd "TAB" )'evil-switch-to-windows-last-buffer
+  "TAB"'evil-switch-to-windows-last-buffer
   "b" 'my-buffer-map
   "c" 'my-compile-map
   "d" 'dired
@@ -270,7 +273,8 @@
   "D" toggle-degub-on-quit
   "f" toggle-frame-fullscreen
   "l" toggle-truncate-lines
-  "t" counsel-load-theme)
+  "t" counsel-load-theme
+  "w" whitespace-mode)
 
 (define-prefix-keymap my-window-map
   "my window keybindings"
@@ -324,12 +328,12 @@
 (package-install 'spaceline-all-the-icons)
 (require 'spaceline-all-the-icons)
 (require 'spaceline-config)
-
-(if (daemonp)
-    (progn
-      (setq powerline-default-separator 'utf-8)
-      (spaceline-spacemacs-theme))
-  (spaceline-all-the-icons-theme))
+(if (or (string= 'term (daemonp))
+        (not (display-graphic-p (selected-frame))))
+    (progn (setq powerline-default-separator 'utf-8)
+           (spaceline-spacemacs-theme))
+  (progn (setq powerline-default-separator 'arrow)
+         (spaceline-all-the-icons-theme)))
 
 (setq powerline-image-apple-rgb t)
 (spaceline-toggle-minor-modes-off)
@@ -348,28 +352,27 @@
 (setq solarized-high-contrast-mode-line t)
 (setq x-underline-at-descent-line t)
 (if (daemonp)
-    (progn (load-theme 'solarized-dark))
+    (load-theme 'solarized-dark)
   (load-theme 'solarized-light))
 
 ;; Transparency in terminal
 (defun on-frame-open (frame)
   "Make `FRAME' transparent'."
   (if (not (display-graphic-p frame))
-    (set-face-background 'default "unspecified-bg" frame)))
-
+      (progn (set-face-background 'default "unspecified-bg" frame)
+             (set-face-background 'line-number "unspecified-bg" frame))))
 (on-frame-open (selected-frame))
-
 (add-hook 'after-make-frame-functions 'on-frame-open)
-
 (defun on-after-init ()
   "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
   (unless (or (display-graphic-p (selected-frame))
-	      (not (string= 'term (daemonp))))
-    (set-face-background 'default "unspecified-bg" (selected-frame))))
-
+              (not (string= 'term (daemonp))))
+    (progn (set-face-background 'default "unspecified-bg" (selected-frame))
+           (set-face-background 'line-number "unspecified-bg" (selected-frame)))))
 (add-hook 'window-setup-hook #'on-after-init)
-
-(set-face-background 'default "unspecified-bg" (selected-frame))
+(if (or (string= 'term (daemonp))
+        (not (display-graphic-p (selected-frame))))
+    (set-face-background 'default "unspecified-bg" (selected-frame)))
 
 ;; Eyebrowse
 (package-install 'eyebrowse)
@@ -459,5 +462,6 @@
 (package-install 'yaml-mode)
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+
 
 ;;; init.el ends here
