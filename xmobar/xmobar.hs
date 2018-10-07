@@ -2,10 +2,10 @@ Config
   { font =
     "xft:FantasqueSansMono Nerd Font Mono:size=12:normal:antialias=true"
   , additionalFonts = []
-  , borderColor = "#778784"
+  , borderColor = "#002b36"
   , border = TopB
-  , bgColor =  "#778784"
-  , fgColor = "grey"
+  , bgColor = "#002b36"
+  , fgColor = "#839496"
   , alpha = 255
   , position = Top
   , textOffset = -1
@@ -27,11 +27,11 @@ Config
         , "-H"
         , "85"
         , "--normal"
-        , "green,#5d4d7a"
+        , "green,#859900"
         , "--high"
-        , "red,#ce537a"
+        , "red,#cb4b16"
         , "--low"
-        , "lightblue,#5d4d7a"
+        , "lightblue,#2aa198"
         ]
         9000
     , Run Wireless
@@ -80,8 +80,8 @@ Config
   , alignSep = "}{"
   , template =
     "%StdinReader%\
-    \}{\
-    \<fc=#292b2e,#778784></fc><fc=#4f97d7,#292b2e> %wlp9s0wi% </fc>\
-    \<fc=#778784,#292b2e></fc><fc=#2D9574,#778784></fc><fc=#15171a,#2D9574> %battery% </fc>\
-    \<fc=#778784,#2D9574></fc><fc=#4f97d7,#778784></fc><fc=#15171a,#4f97d7>%date% </fc>"
+      \}{\
+      \<fc=#839496,#002b36></fc><fc=#002b36,#839496> %wlp9s0wi% </fc><fc=#002b36,#839496></fc>\
+      \<fc=#839496,#002b36></fc><fc=#002b36,#839496> %battery% </fc><fc=#002b36,#839496></fc>\
+      \<fc=#839496,#002b36></fc><fc=#002b36,#839496> %date% </fc>"
   }
