@@ -95,20 +95,20 @@
    (version "0.5.2.0")
    (source
     (origin
-     (method (git-reference
-              (url "http://git.haskell.org/ghc.git")
-              (commit "ghc-8.4.3-release")))
-     (sha256
-      (base32
-       "0k64mx8s7857hrpkbq51x6li8k55kmyahbjwg7v4nqk8mq93lja8"))))
-   (build-system trivial-build-system
-                 #:builder)
-   (home-page
-    "http://hackage.haskell.org/package/ghc-prim")
-   (synopsis "GHC primitives")
-   (description
-    "This package contains the primitive types and operations supplied by GHC.")
-   (license #f)))
+     (method 'git-fetch)
+     (uri (git-reference
+           (url "http://git.haskell.org/ghc.git")
+           (commit "ghc-8.4.3-release"))
+          (sha256
+           (base32
+            "0k64mx8s7857hrpkbq51x6li8k55kmyahbjwg7v4nqk8mq93lja8"))))
+    (build-system trivial-build-system)
+    (home-page
+     "http://hackage.haskell.org/package/ghc-prim")
+    (synopsis "GHC primitives")
+    (description
+     "This package contains the primitive types and operations supplied by GHC.")
+    (license #f))))
 
 (define ghc-ed25519
   (package

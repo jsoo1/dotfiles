@@ -1,4 +1,4 @@
-(define-module (gnu packages idris)
+(define-module (idris)
   #:use-module (gnu packages haskell)
   #:use-module (gnu packages haskell-check)
   #:use-module (gnu packages haskell-web)
