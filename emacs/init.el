@@ -85,7 +85,8 @@
 (setq byte-compile-error-on-warn nil)
 
 ;; Backups
-(setq backup-directory-alist `(("~/.emacs.d/private/backups")))
+(setq backup-directory-alist         `((",*" . "~/.emacs.d/private/backups"))
+      auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves" t)))
 
 ;; Evil
 (setq evil-want-C-u-scroll t) ; somehow needs to happen before any mention of evil mode
@@ -360,7 +361,7 @@
   "Make `FRAME' transparent'."
   (if (not (display-graphic-p frame))
       (progn (set-face-background 'default "unspecified-bg" frame)
-             (set-face-background 'line-number "unspecified-bg" frame))))
+             (set-face-background 'line-number "#073642" frame))))
 (on-frame-open (selected-frame))
 (add-hook 'after-make-frame-functions 'on-frame-open)
 (defun on-after-init ()
@@ -368,11 +369,12 @@
   (unless (or (display-graphic-p (selected-frame))
               (not (string= 'term (daemonp))))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-           (set-face-background 'line-number "unspecified-bg" (selected-frame)))))
+           (set-face-background 'line-number "#073642" (selected-frame)))))
 (add-hook 'window-setup-hook #'on-after-init)
 (if (or (string= 'term (daemonp))
         (not (display-graphic-p (selected-frame))))
-    (set-face-background 'default "unspecified-bg" (selected-frame)))
+    (progn (set-face-background 'default "unspecified-bg" (selected-frame))
+           (set-face-background 'line-number "#-73642" (selected-frame))))
 
 ;; Eyebrowse
 (package-install 'eyebrowse)
@@ -443,8 +445,24 @@
 
 ;; Haskell mode
 (package-install 'haskell-mode)
-(package-install 'intero)
-(intero-global-mode 1)
+(require 'haskell-interactive-mode)
+;; See https://github.com/haskell/haskell-mode/issues/1553#issuecomment-358373643
+(setq haskell-process-args-ghci
+      '("-ferror-spans" "-fshow-loaded-modules"))
+(setq haskell-process-args-cabal-repl
+      '("--ghc-options=-ferror-spans -fshow-loaded-modules"))
+(setq haskell-process-args-stack-ghci
+      '("--ghci-options=-ferror-spans -fshow-loaded-modules"
+        "--no-build" "--no-load"))
+(setq haskell-process-args-cabal-new-repl
+      '("--ghc-options=-ferror-spans --ghc-options=-fshow-loaded-modules"))
+(require 'haskell-process)
+(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+(setq haskell-process-type 'auto)
+(package-install 'dante)
+(add-hook 'haskell-mode-hook #'flycheck-mode)
+(add-hook 'dante-mode-hook
+          #'(lambda () (flycheck-add-next-checker 'haskell-dante) '(warning . haskell-hlint)))
 
 ;; Agda mode
 (load-library (let ((coding-system-for-read 'utf-8))
@@ -463,5 +481,7 @@
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 
+;; Shellcheck
+(add-hook 'sh-mode-hook #'flycheck-mode)
 
 ;;; init.el ends here
