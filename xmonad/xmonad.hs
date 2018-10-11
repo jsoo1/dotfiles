@@ -17,6 +17,7 @@ import           XMonad.Actions.CycleWS       (WSType (..), moveTo)
 import           XMonad.Actions.WindowBringer
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
+import           XMonad.Hooks.ManageHelpers
 import           XMonad.Layout.NoBorders      (smartBorders)
 import           XMonad.Layout.Spacing
 import qualified XMonad.StackSet              as W
@@ -44,13 +45,14 @@ main = do
       , borderWidth = 2
       , normalBorderColor = hashCode dkGrey
       , focusedBorderColor = hashCode green
+      , handleEventHook = handleEventHook def <+> docksEventHook
+      , manageHook = manageDocks <+> manageHook def 
       , layoutHook =
           layoutHook def
-            |> avoidStrutsOn [ U, D ]
+            |> spacingRaw True (Border 0 0 0 0) False (Border 0 0 0 0) False
             |> smartSpacingWithEdge 11
             |> smartBorders
-
-      , manageHook = manageDocks <+> manageHook def <+> manageDocks
+            |> avoidStruts
 
       , logHook = do
           Titles {current, hidden, visible} <- withWindowSet allTitles
@@ -240,50 +242,50 @@ newtype SpaceColor = SpaceColor String
 currentWSSegmentScheme :: SegmentScheme
 currentWSSegmentScheme =
   SegmentScheme
-    { fgColor = dkGrey
-    , bgColorInner = blue
-    , bgColorLeft = eisbergGrey
-    , bgColorRight = eisbergGrey
+    { fgColor = base03
+    , bgColorInner = base01
+    , bgColorLeft = base03
+    , bgColorRight = base03
     }
 
 
 hiddenWSSegmentScheme :: SegmentScheme
 hiddenWSSegmentScheme =
   SegmentScheme
-    { fgColor = blue
-    , bgColorInner =  grey
-    , bgColorLeft = eisbergGrey
-    , bgColorRight = eisbergGrey
+    { fgColor = base01
+    , bgColorInner =  base03
+    , bgColorLeft = base03
+    , bgColorRight = base03
     }
 
 
 titleSegmentScheme :: SegmentScheme
 titleSegmentScheme =
   SegmentScheme
-    { fgColor = dkGrey
-    , bgColorInner = green
-    , bgColorLeft = eisbergGrey
-    , bgColorRight = eisbergGrey
+    { fgColor = base01
+    , bgColorInner = base03
+    , bgColorLeft = base03
+    , bgColorRight = base03
     }
 
 
 urgentWSSegmentScheme :: SegmentScheme
 urgentWSSegmentScheme =
   SegmentScheme
-    { fgColor = pink
+    { fgColor = base03
     , bgColorInner = grey
-    , bgColorLeft = eisbergGrey
-    , bgColorRight = eisbergGrey
+    , bgColorLeft = base03
+    , bgColorRight = base03
     }
 
 
 visibleWSSegmentScheme :: SegmentScheme
 visibleWSSegmentScheme =
   SegmentScheme
-    { fgColor = blue
-    , bgColorInner = grey
-    , bgColorLeft = dkGrey
-    , bgColorRight = dkGrey
+    { fgColor = base03
+    , bgColorInner = base01
+    , bgColorLeft = base03
+    , bgColorRight = base03
     }
 
 
@@ -297,23 +299,23 @@ xmobarSpaceColor =
 
 
 blue :: SpaceColor
-blue = SpaceColor "#4f97d7"
+blue = SpaceColor "#268bd2"
 
 
 green :: SpaceColor
-green = SpaceColor "#2D9574"
+green = SpaceColor "#859900"
 
 
 pink :: SpaceColor
-pink = SpaceColor "#bc6ec5"
+pink = SpaceColor "#d33682"
 
 
 cyan :: SpaceColor
-cyan = SpaceColor "#2aa1ae"
+cyan = SpaceColor "#2aa198"
 
 
 purple :: SpaceColor
-purple = SpaceColor "#5d4d7a"
+purple = SpaceColor "#6c71c4"
 
 
 offWhite :: SpaceColor
@@ -334,3 +336,17 @@ ltGrey = SpaceColor "grey"
 
 eisbergGrey :: SpaceColor
 eisbergGrey = SpaceColor "#778784"
+
+-- Solarized
+
+base0 :: SpaceColor
+base0 = SpaceColor "#839496"
+
+base3 :: SpaceColor
+base3 = SpaceColor "#fdf6e3"
+
+base01 :: SpaceColor
+base01 = SpaceColor "#586e75"
+
+base03 :: SpaceColor
+base03 = SpaceColor "#002b36"

@@ -37,12 +37,13 @@ Config
     , Run Wireless
       "wlp9s0"
       [ "-t"
-      , "<quality>%  <essid>"
+      , "<essid> <quality>%"
       ]
       200
+    , Run Com "hostname" [] "hostname" 0
     , Run Battery
         [ "-t"
-        , "<left>%  <timeleft>  <acstatus>"
+        , "<left>%"
         , "--"
         , "-O"
         , "AC"
@@ -73,15 +74,16 @@ Config
     --   200
     --     \<fc=#15171a,#292b2e></fc><fc=#292b2e,#15171a></fc><fc=#2D9574,#292b2e>%default:Master%</fc>\
 
-    , Run Date "%l:%M %p  %D" "date" 600
+    , Run Date "%Y-%m-%d  %l:%M %p" "date" 600
     , Run StdinReader
     ]
   , sepChar = "%"
   , alignSep = "}{"
   , template =
-    "%StdinReader%\
+    "<fc=#002b36,#859900> workspaces </fc><fc=#859900,#002b36></fc>%StdinReader%\
       \}{\
-      \<fc=#839496,#002b36></fc><fc=#002b36,#839496> %wlp9s0wi% </fc><fc=#002b36,#839496></fc>\
-      \<fc=#839496,#002b36></fc><fc=#002b36,#839496> %battery% </fc><fc=#002b36,#839496></fc>\
-      \<fc=#839496,#002b36></fc><fc=#002b36,#839496> %date% </fc>"
+      \<fc=#586e75,#002b36></fc><fc=#002b36,#586e75> %date% </fc><fc=#002b36,#586e75></fc>\
+      \<fc=#002b36,#002b36></fc><fc=#586e75,#002b36>%wlp9s0wi% </fc>\
+      \<fc=#586e75,#002b36> bat %battery%</fc><fc=#002b36,#002b36></fc>\
+      \<fc=#586e75,#002b36></fc><fc=#002b36,#586e75> %hostname% </fc>"
   }
