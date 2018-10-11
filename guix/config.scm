@@ -74,25 +74,13 @@
 
  (packages (cons*
             ;; window manager related
-            ;; xmonad
-            my-xmonad
             ;; TODO: Use when supports alsa
-            ;; xmobar
+            my-xmonad
+            my-ghc-xmonad-contrib
             rofi
 
             ;;for HTTPS access
             nss-certs
-
-            ;; X related
-            ;; setxkbmap
-            ;; xrandr
-            ;; xfontsel
-            ;; mkfontdir
-            ;; mkfontscale
-            ;; compton
-            ;; xcape
-            ;; xclip
-            ;; feh
 
             ;; essentials
             lsof
@@ -108,17 +96,6 @@
             ;; text editors
             vim
             emacs
-
-            ;; TODO: Create alacritty
-            ;; alacritty
-            ;; termite
-
-            ;; web browser
-            ;; qutebrowser
-
-            ;; fonts
-            ;; font-adobe-source-code-pro
-            ;; font-fantasque-sans
 
             %base-packages))
 
