@@ -1,4 +1,5 @@
 (define-module (stylish-haskell)
+  #:use-module (ghc-mtl)
   #:use-module (guix packages)
   #:use-module (guix download)
   #:use-module ((guix licenses) #:prefix license:)
@@ -66,3 +67,5 @@
    (description
     "Use Template Haskell to read a file or all the files in a directory, and turn them into (path, bytestring) pairs embedded in your Haskell code.")
    (license license:bsd-3)))
+
+
