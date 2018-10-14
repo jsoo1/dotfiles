@@ -1,7 +1,6 @@
 [color]
 	ui = auto
 [core]
-	editor = emacsclient -nw --socket-name term
 	autocrlf = input
 	safecrlf = true
 [push]
