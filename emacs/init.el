@@ -150,9 +150,12 @@
 (which-key-mode)
 (setq which-key-idle-delay 0.1)
 
-;; OSX Clipboard
-(package-install 'osx-clipboard)
-(osx-clipboard-mode +1)
+;; Clipboard
+(pcase system-type
+  ('gnu/linux (progn (package-install 'xclip)
+                     (xclip-mode 1)))
+  ('darwin (progn (package-install 'osx-clipboard)
+                  (osx-clipboard-mode +1))))
 
 ;; Keybindings
 (defmacro define-prefix-keymap (name &optional docstring &rest bindings)
@@ -168,6 +171,8 @@
                                 `(,name))))))
 
 (evil-leader/set-leader "<SPC>")
+(define-key evil-normal-state-map "-" #'(lambda () (interactive) (dired ".")))
+(define-key dired-mode-map "-" #'dired-up-directory)
 
 (evil-leader/set-key
   "<SPC>" 'counsel-M-x
