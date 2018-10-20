@@ -193,7 +193,7 @@
   "y" 'my-yank-map
   "z" 'my-zoom-map
   "'" 'multi-term
-  "/" 'counsel-projectile-rg)
+  "/" 'counsel-projectile-grep)
 
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
