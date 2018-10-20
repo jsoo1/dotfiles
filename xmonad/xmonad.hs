@@ -105,6 +105,9 @@ main = do
           [ ( ( mod1Mask, xK_space )
             , spawn "fish -c \"rofi -show combi -modi combi\""
             )
+          , ( ( mod1Mask .|. controlMask, xK_f)
+            , sendMessage ToggleStruts
+            )
           , ( ( mod1Mask .|. shiftMask, xK_x )
             , spawn "xlock -mode blank"
             )
