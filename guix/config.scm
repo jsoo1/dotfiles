@@ -1,4 +1,3 @@
-(add-to-load-path "load-path")
 (use-modules (gnu)
              (guix modules)
              (guix packages)
@@ -67,7 +66,7 @@
                                        "video"
                                        "lp"))
                (home-directory "/home/john")
-               ;; TODO: Figure out fish environmanet issues.
+               ;; TODO: Figure out fish environmnet issues.
                ;; (shell #~(string-append #$fish "/bin/fish"))
                )
               %base-user-accounts))
