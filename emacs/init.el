@@ -8,7 +8,8 @@
 (defmacro add-to-listq (&rest xs)
   "Add `XS' to `LIST'."
   (cons #'progn
-        (seq-reduce (lambda (expr list-val-pair) (cons `(add-to-list (quote ,(car list-val-pair)) ,(cadr list-val-pair)) expr))
+        (seq-reduce (lambda (expr list-val-pair)
+                      (cons `(add-to-list (quote ,(car list-val-pair)) ,(cadr list-val-pair)) expr))
                     (seq-partition xs 2)
                     nil)))
 
@@ -18,6 +19,17 @@
     (dolist (form body result)
       (setq result (append form (list result))))))
 
+(defmacro define-prefix-keymap (name &optional docstring &rest bindings)
+  "Define a keymap named `NAME' and docstring `DOCSTRING' with many `BINDINGS' at once using `define-key'."
+  (cons #'progn
+        (cons (if docstring `(defvar ,name ,docstring (make-sparse-keymap))
+                `(defvar ,name (make-sparse-keymap)))
+              (cons `(define-prefix-command (quote ,name))
+                    (seq-reduce (lambda (bindings key-fn)
+                                  (cons `(define-key (quote ,name) ,(car key-fn) (function ,(cadr key-fn)))
+                                        bindings))
+                                (seq-partition bindings 2)
+                                `(,name))))))
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
       truncate-lines 't
@@ -89,7 +101,8 @@
       auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves" t)))
 
 ;; Evil
-(setq evil-want-C-u-scroll t) ; somehow needs to happen before any mention of evil mode
+(setq evil-want-C-u-scroll t
+      evil-disable-insert-state-bindings t) ; somehow needs to happen before any mention of evil mode
 (package-install 'evil)
 (require 'evil)
 (package-install 'evil-surround)
@@ -157,22 +170,19 @@
   ('darwin (progn (package-install 'osx-clipboard)
                   (osx-clipboard-mode +1))))
 
-;; Keybindings
-(defmacro define-prefix-keymap (name &optional docstring &rest bindings)
-  "Define a keymap named `NAME' and docstring `DOCSTRING' with many `BINDINGS' at once using `define-key'."
-  (cons #'progn
-        (cons (if docstring `(defvar ,name ,docstring (make-sparse-keymap))
-                `(defvar ,name (make-sparse-keymap)))
-              (cons `(define-prefix-command (quote ,name))
-                    (seq-reduce (lambda (bindings key-fn)
-                                  (cons `(define-key (quote ,name) ,(car key-fn) (function ,(cadr key-fn)))
-                                        bindings))
-                                (seq-partition bindings 2)
-                                `(,name))))))
+;; Avy
+(package-install 'avy)
 
-(evil-leader/set-leader "<SPC>")
+;; OSX Clipboard
+(package-install 'osx-clipboard)
+(osx-clipboard-mode +1)
+
+;; Keybindings
+(define-key comint-mode-map "C-c C-k" #'comint-clear-buffer)
 (define-key evil-normal-state-map "-" #'(lambda () (interactive) (dired ".")))
 (define-key dired-mode-map "-" #'dired-up-directory)
+
+(evil-leader/set-leader "<SPC>")
 
 (evil-leader/set-key
   "<SPC>" 'counsel-M-x
@@ -180,7 +190,7 @@
   "b" 'my-buffer-map
   "c" 'my-compile-map
   "d" 'dired
-  "e" 'my-flycheck-map
+  "e" 'my-error-map
   "f" 'my-file-map
   "g" 'my-git-map
   "h" 'my-describe-map
@@ -190,6 +200,7 @@
   "s" 'my-search-map
   "t" 'my-toggle-map
   "w" 'my-window-map
+  "x" 'my-text-map
   "y" 'my-yank-map
   "z" 'my-zoom-map
   "'" 'multi-term
@@ -216,7 +227,7 @@
   "m" describe-mode
   "v" describe-variable)
 
-(define-prefix-keymap my-flycheck-map
+(define-prefix-keymap my-error-map
   "my flycheck keybindings"
   "n" flycheck-next-error
   "l" flycheck-list-errors
@@ -236,6 +247,8 @@
 
 (define-prefix-keymap my-jump-map
   "my jump keybindings"
+  "j" avy-goto-char
+  "l" avy-goto-line
   "=" indent-region-or-buffer)
 
 (defun switch-project-workspace ()
@@ -273,6 +286,10 @@
   "my searching keybindings"
   "s" swiper)
 
+(define-prefix-keymap my-text-map
+  "my text keybindings"
+  "d" delete-trailing-whitespace)
+
 (define-prefix-keymap my-toggle-map
   "my toggles"
   "d" toggle-debug-on-error
@@ -293,6 +310,7 @@
   "k" (lambda nil () (interactive) (tmux-navigate "up"))
   "l" (lambda nil () (interactive) (tmux-navigate "right"))
   "m" delete-other-windows
+  "r" eyebrowse-rename-window-config
   "w" eyebrowse-switch-to-window-config
   "=" balance-windows-area)
 
@@ -341,10 +359,44 @@
   (progn (setq powerline-default-separator 'arrow)
          (spaceline-all-the-icons-theme)))
 
-(setq powerline-image-apple-rgb t)
+(dolist (s '((solarized-evil-normal "#859900" "Evil normal state face.")
+             (solarized-evil-insert "#b58900" "Evil insert state face.")
+             (solarized-evil-emacs "#2aa198" "Evil emacs state face.")
+             (solarized-evil-replace "#dc322f" "Evil replace state face.")
+             (solarized-evil-visual "#268bd2" "Evil visual state face.")
+             (solarized-evil-motion "#586e75" "Evil motion state face.")
+             (solarized-unmodified "#586e75" "Unmodified buffer face.")
+             (solarized-modified "#2aa198" "Modified buffer face.")
+             (solarized-read-only "#586e75" "Read-only buffer face.")))
+  (eval `(defface ,(nth 0 s) `((t (:background ,(nth 1 s) :foreground "#002b36" :inherit 'mode-line))) ,(nth 2 s) :group 'spaceline)))
+
+(defvar solarized-evil-state-faces
+  '((normal . solarized-evil-normal)
+    (insert . solarized-evil-insert)
+    (emacs . solarized-evil-emacs)
+    (replace . solarized-evil-replace)
+    (visual . solarized-evil-visual)
+    (motion . solarized-evil-motion))
+  "Association list mapping evil states to their corresponding highlight faces.
+Is used by `solarized-highlight-face-func'.")
+
+(defun solarized-highlight-face ()
+  "Set the highlight face depending on the evil state.
+Set `spaceline-highlight-face-func' to
+`solarized-highlight-face' to use this."
+  (if (bound-and-true-p evil-local-mode)
+      (let* ((state (if (eq 'operator evil-state) evil-previous-state evil-state))
+             (face (assq state solarized-evil-state-faces)))
+        (if face (cdr face) (spaceline-highlight-face-default)))
+
+    (spaceline-highlight-face-default)))
+
+(setq powerline-image-apple-rgb t
+      powerline-text-scale-factor 1.1
+      spaceline-highlight-face-func #'solarized-highlight-face)
+
 (spaceline-toggle-minor-modes-off)
 (spaceline-toggle-projectile-root-on)
-(setq powerline-text-scale-factor 1.1)
 
 ;; Theme
 (package-install 'solarized-theme)
@@ -364,7 +416,9 @@
 ;; Transparency in terminal
 (defun on-frame-open (frame)
   "Make `FRAME' transparent'."
-  (if (not (display-graphic-p frame))
+  (if (or (not (display-graphic-p frame))
+	  (string= 'base (daemonp))
+          (string= 'term (daemonp)))
       (progn (set-face-background 'default "unspecified-bg" frame)
              (set-face-background 'line-number "#073642" frame))))
 (on-frame-open (selected-frame))
@@ -372,17 +426,21 @@
 (defun on-after-init ()
   "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
   (unless (or (display-graphic-p (selected-frame))
+              (not (string= 'base (daemonp)))
               (not (string= 'term (daemonp))))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
            (set-face-background 'line-number "#073642" (selected-frame)))))
 (add-hook 'window-setup-hook #'on-after-init)
-(if (or (string= 'term (daemonp))
+(if (or (string= 'base (daemonp))
+        (string= 'term (daemonp))
         (not (display-graphic-p (selected-frame))))
+
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
            (set-face-background 'line-number "#-73642" (selected-frame))))
 
 ;; Eyebrowse
 (package-install 'eyebrowse)
+(setq eyebrowse-keymap-prefix "")
 (eyebrowse-mode 1)
 
 ;; Flycheck
@@ -424,6 +482,19 @@
 (require 'inferior-idris)
 (require 'idris-ipkg-mode)
 (setq idris-interpreter-path "/usr/local/bin/idris")
+
+(dolist (f '((idris-active-term-face        "#657b83")
+             (idris-semantic-type-face      "#b58900")
+             (idris-semantic-data-face      "#dc322f")
+             (idris-semantic-function-face  "#859900")
+             (idris-semantic-bound-face     "#6c71c4")))
+  (set-face-foreground (car f) (cadr f)))
+
+(define-key idris-repl-mode-map (kbd "C-c C-k" ) #'idris-repl-clear-buffer)
+(define-key idris-mode-map (kbd "C-c C-k") #'idris-repl-clear-buffer)
+
+;; Emacs Lisp Mode
+(with-eval-after-load 'company #'(lambda () (add-hook 'emacs-lisp-mode-hook #'company-mode 't)))
 
 ;; Elm mode
 (package-install 'flycheck-elm)
