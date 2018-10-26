@@ -109,7 +109,7 @@ main = do
             , sendMessage ToggleStruts
             )
           , ( ( mod1Mask .|. shiftMask, xK_x )
-            , spawn "xlock -mode blank"
+            , spawn "xlock"
             )
           , ( ( mod1Mask .|. shiftMask, xK_s )
             , spawn "loginctl suspend"
