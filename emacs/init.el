@@ -96,9 +96,10 @@
 (setq byte-compile-warnings t)
 (setq byte-compile-error-on-warn nil)
 
-;; Backups
-(setq backup-directory-alist         `((",*" . "~/.emacs.d/private/backups"))
-      auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves" t)))
+;; Backups, Lockfiles, etc.
+(setq backup-directory-alist         `((".*" . "~/.emacs.d/private/backups"))
+      auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves" 't))
+      create-lockfiles               nil)
 
 ;; Evil
 (setq evil-want-C-u-scroll t
