@@ -1,7 +1,7 @@
 set -gx PATH $PATH /usr/local/anaconda3/bin /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /Users/john/.cargo/bin /Users/john/.local/bin /Users/john/Library/Python/3.6/bin
 
 # Emacsclient for EDITOR
-set -xg EDITOR '/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -nw --socket-name term'
+set -xg EDITOR 'env TERM=xterm-24bits /Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=base'
 set -xg ALTERNATE_EDITOR 'vim'
 
 # i3 Sensible Terminal
