@@ -100,8 +100,16 @@
 (setq byte-compile-warnings t)
 (setq byte-compile-error-on-warn nil)
 
-;; Backups
-(setq backup-directory-alist `(("~/.emacs.d/private/backups")))
+;; Backups, lockfiles, auto-saves
+(setq
+   backup-by-copying t
+   backup-directory-alist `((".*" . "~/.emacs.d/private/backups/"))
+   delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
+   version-control t
+   create-lockfiles nil
+   auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t)))
 
 ;; Evil
 (setq evil-want-C-u-scroll t
@@ -460,6 +468,10 @@ Set `spaceline-highlight-face-func' to
 ;; Company
 (package-install 'company)
 (add-hook 'after-init-hook 'global-company-mode)
+(define-key company-active-map (kbd "C-n") 'company-select-next)
+(define-key company-active-map (kbd "C-p") 'company-select-previous)
+(define-key company-search-map (kbd "C-n") 'company-select-next)
+(define-key company-search-map (kbd "C-p") 'company-select-previous)
 
 ;; Indentation
 ;; Per http://emacsredux.com/blog/2013/03/27/indent-region-or-buffer/
