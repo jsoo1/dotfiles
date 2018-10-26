@@ -81,7 +81,8 @@
                   "~/.guix-profile/bin"
                   "~/.guix-profile/sbin"
                   "/run/current-system/profile/bin"
-                  "/run/current-system/profile/sbin"))
+                  "/run/current-system/profile/sbin"
+                  "~/dotfiles/emacs/"))
 
 (package-install 'exec-path-from-shell)
 (require 'exec-path-from-shell)
@@ -90,6 +91,9 @@
 ;; Shell
 (package-install 'multi-term)
 (setq shell-file-name "bash")
+
+;; Dired
+(add-hook 'dired-mode-hook #'auto-revert-mode)
 
 ;; Byte compile
 (require 'bytecomp)
@@ -101,7 +105,8 @@
 
 ;; Evil
 (setq evil-want-C-u-scroll t
-      evil-disable-insert-state-bindings t) ; somehow needs to happen before any mention of evil mode
+      evil-disable-insert-state-bindings t
+      evil-want-abbrev-expand-on-insert-exit nil) ; somehow needs to happen before any mention of evil mode
 (package-install 'evil)
 (require 'evil)
 (package-install 'evil-surround)
@@ -171,8 +176,22 @@
 
 ;; Keybindings
 (define-key comint-mode-map "C-c C-k" #'comint-clear-buffer)
+
+;; Vinegar
 (define-key evil-normal-state-map "-" #'(lambda () (interactive) (dired ".")))
 (define-key dired-mode-map "-" #'dired-up-directory)
+
+;; Swiper
+(define-key evil-normal-state-map (kbd "C-s") #'swiper)
+(global-set-key (kbd "C-s") 'swiper)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "M-y") 'counsel-yank-pop)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 
 (evil-leader/set-leader "<SPC>")
 
@@ -217,6 +236,7 @@
   "f" describe-function
   "k" describe-key
   "m" describe-mode
+  "w" woman
   "v" describe-variable)
 
 (define-prefix-keymap my-error-map
@@ -229,7 +249,8 @@
   "my file keybindings"
   "f" counsel-find-file
   "r" counsel-recentf
-  "s" save-buffer)
+  "s" save-buffer
+  "y" (lambda () (interactive) (kill-new (buffer-file-name (current-buffer)))))
 
 (define-prefix-keymap my-git-map
   "my git keybindings"
@@ -429,6 +450,7 @@ Set `spaceline-highlight-face-func' to
 (package-install 'eyebrowse)
 (setq eyebrowse-keymap-prefix "")
 (eyebrowse-mode 1)
+(eyebrowse-rename-window-config (eyebrowse--get 'current-slot) "dotfiles")
 
 ;; Flycheck
 (package-install 'flycheck)
@@ -480,9 +502,6 @@ Set `spaceline-highlight-face-func' to
 (define-key idris-repl-mode-map (kbd "C-c C-k" ) #'idris-repl-clear-buffer)
 (define-key idris-mode-map (kbd "C-c C-k") #'idris-repl-clear-buffer)
 
-;; Emacs Lisp Mode
-(with-eval-after-load 'company #'(lambda () (add-hook 'emacs-lisp-mode-hook #'company-mode 't)))
-
 ;; Elm mode
 (package-install 'flycheck-elm)
 (require 'flycheck-elm)
@@ -506,14 +525,42 @@ Set `spaceline-highlight-face-func' to
 ;; Proof General
 (package-install 'proof-general)
 
+;; Coq
+(package-install 'company-coq)
+(add-hook 'coq-mode-hook #'company-coq-mode)
+(setq proof-three-window-mode-policy 'hybrid
+      proof-script-fly-past-comments t
+      proof-splash-seen t
+      company-coq-disabled-features '(hello))
+
 ;; Haskell mode
 (package-install 'haskell-mode)
 (package-install 'intero)
 (intero-global-mode 1)
+(require 'haskell-process)
+(add-hook 'haskell-mode-hook #'interactive-haskell-mode)
+(setq haskell-process-type 'stack-ghci
+      haskell-process-args-stack-ghci
+        '("--with-ghc=ghci"
+          "--ghci-options=-ferror-spans"
+          "--no-build" "--no-load" "--test" "--bench"))
 
 ;; Agda mode
 (load-library (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
+;; Ocaml
+(package-install 'tuareg)
+(package-install 'merlin)
+(let ((opam-share (ignore-errors (car (process-lines "opam" "config" "var" "share")))))
+  (when (and opam-share (file-directory-p opam-share))
+    ;; Register Merlin
+    (add-to-list 'load-path (expand-file-name "emacs/site-lisp" opam-share))
+    (autoload 'merlin-mode "merlin" nil t nil)
+    ;; Automatically start it in OCaml buffers
+    (add-hook 'tuareg-mode-hook 'merlin-mode t)
+    (add-hook 'caml-mode-hook 'merlin-mode t)
+    ;; Use opam switch to lookup ocamlmerlin binary
+    (setq merlin-command 'opam)))
 
 ;; SQL
 (package-install 'sql)
@@ -527,6 +574,19 @@ Set `spaceline-highlight-face-func' to
 (package-install 'yaml-mode)
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+
+;; Plist
+(add-to-list 'auto-mode-alist '("\\.plist\\'" . xml-mode))
+
+;; Markdown
+(package-install 'markdown-mode)
+(autoload 'markdown-mode "markdown-mode"
+   "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(autoload 'gfm-mode "markdown-mode"
+   "Major mode for editing GitHub Flavored Markdown files" t)
+(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
 
 ;;; init.el ends here
