@@ -473,6 +473,10 @@
 (load-library (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
 
+;; Guix
+(package-install 'geiser)
+(add-hook 'scheme-mode-hook #'geiser-mode)
+
 ;; SQL
 (package-install 'sql)
 (setq sql-postgres-login-params
