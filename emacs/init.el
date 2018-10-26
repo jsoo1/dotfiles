@@ -175,6 +175,13 @@
 (which-key-mode)
 (setq which-key-idle-delay 0.1)
 
+;; Clipboard
+(pcase system-type
+  ('gnu/linux (progn (package-install 'xclip)
+                     (xclip-mode 1)))
+  ('darwin (progn (package-install 'osx-clipboard)
+                  (osx-clipboard-mode +1))))
+
 ;; Avy
 (package-install 'avy)
 
@@ -438,21 +445,26 @@ Set `spaceline-highlight-face-func' to
 (defun on-frame-open (frame)
   "Make `FRAME' transparent'."
   (if (or (not (display-graphic-p frame))
-	  (string= 'base (daemonp)))
+	  (string= 'base (daemonp))
+          (string= 'term (daemonp)))
       (progn (set-face-background 'default "unspecified-bg" frame)
-             (set-face-background 'line-number "unspecified-bg" frame))))
+             (set-face-background 'line-number "#073642" frame))))
 (on-frame-open (selected-frame))
 (add-hook 'after-make-frame-functions 'on-frame-open)
 (defun on-after-init ()
   "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
   (unless (or (display-graphic-p (selected-frame))
-              (not (string= 'base (daemonp))))
+              (not (string= 'base (daemonp)))
+              (not (string= 'term (daemonp))))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-           (set-face-background 'line-number "unspecified-bg" (selected-frame)))))
+           (set-face-background 'line-number "#073642" (selected-frame)))))
 (add-hook 'window-setup-hook #'on-after-init)
 (if (or (string= 'base (daemonp))
+        (string= 'term (daemonp))
         (not (display-graphic-p (selected-frame))))
-    (set-face-background 'default "unspecified-bg" (selected-frame)))
+
+    (progn (set-face-background 'default "unspecified-bg" (selected-frame))
+           (set-face-background 'line-number "#073642" (selected-frame))))
 
 ;; Eyebrowse
 (package-install 'eyebrowse)
@@ -574,6 +586,10 @@ Set `spaceline-highlight-face-func' to
     ;; Use opam switch to lookup ocamlmerlin binary
     (setq merlin-command 'opam)))
 
+;; Guix
+(package-install 'geiser)
+(add-hook 'scheme-mode-hook #'geiser-mode)
+
 ;; SQL
 (package-install 'sql)
 (setq sql-postgres-login-params
@@ -600,5 +616,7 @@ Set `spaceline-highlight-face-func' to
    "Major mode for editing GitHub Flavored Markdown files" t)
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
+;; Shellcheck
+(add-hook 'sh-mode-hook #'flycheck-mode)
 
 ;;; init.el ends here
