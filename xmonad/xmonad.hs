@@ -33,8 +33,9 @@ infixl 1 |>
 
 
 main :: IO ()
-main = do
-
+main =
+  let myModMask = mod4Mask in
+  do
     replace
 
     xmobarPipe <- spawnPipe "xmobar ~/.config/xmobar/xmobar.hs"
@@ -43,6 +44,7 @@ main = do
       { terminal = "termite"
       , focusFollowsMouse = False
       , borderWidth = 2
+      , modMask = myModMask
       , normalBorderColor = hashCode dkGrey
       , focusedBorderColor = hashCode green
       , handleEventHook = handleEventHook def <+> docksEventHook
@@ -67,6 +69,7 @@ main = do
                 \wsId ->
                   titleFor hidden wsId
                     |> flip (wsArrowRight hiddenWSSegmentScheme) wsId
+                    |> xmobarActionSegment ("xdotool key super+" ++ wsId)
             , ppVisible =
                 \wsId ->
                   titleFor visible wsId
@@ -80,13 +83,10 @@ main = do
                       else titleFor hidden wsId
                   in
                     wsArrowRight urgentWSSegmentScheme t wsId
+                      |> xmobarActionSegment ("xdotool key super+" ++ wsId)
             , ppSep = mempty
             , ppWsSep = mempty
-            , ppTitle =
-                \t ->
-                  if null t
-                  then mempty
-                  else titleArrowRight titleSegmentScheme t
+            , ppTitle = const ""
             , ppOrder = \(ws:_:t:e) -> e ++ [ ws, t ]
             }
 
@@ -102,19 +102,19 @@ main = do
 
         `additionalKeys`
 
-          [ ( ( mod1Mask, xK_space )
+          [ ( ( myModMask, xK_space )
             , spawn "fish -c \"rofi -show combi -modi combi\""
             )
-          , ( ( mod1Mask .|. controlMask, xK_f)
+          , ( ( myModMask .|. controlMask, xK_f)
             , sendMessage ToggleStruts
             )
-          , ( ( mod1Mask .|. shiftMask, xK_x )
+          , ( ( myModMask .|. shiftMask, xK_x )
             , spawn "xlock"
             )
-          , ( ( mod1Mask .|. shiftMask, xK_s )
+          , ( ( myModMask .|. shiftMask, xK_s )
             , spawn "loginctl suspend"
             )
-          , ( ( mod1Mask, xK_Tab )
+          , ( ( myModMask, xK_Tab )
             , gotoMenuConfig $ def
               { menuCommand = "rofi"
               , menuArgs = [ "-dmenu", "-i" ]
@@ -130,10 +130,10 @@ main = do
           -- , ( ( 0, xF86XK_AudioMute )
           --   , spawn "amixer -q -D pulse set Master toggle"
           --   )
-          , ( ( mod1Mask, xK_n )
+          , ( ( myModMask, xK_n )
             , moveTo Next NonEmptyWS
             )
-          , ( ( mod1Mask, xK_p )
+          , ( ( myModMask, xK_p )
             , moveTo Prev NonEmptyWS
             )
           ]
@@ -299,6 +299,11 @@ hashCode (SpaceColor hash) = hash
 xmobarSpaceColor :: SpaceColor -> SpaceColor -> String -> String
 xmobarSpaceColor =
   xmobarColor `on` hashCode
+
+
+xmobarActionSegment :: String -> String -> String
+xmobarActionSegment a c =
+  "<action=`"++ a ++ "`>" ++ c ++ "</action>"
 
 
 blue :: SpaceColor
