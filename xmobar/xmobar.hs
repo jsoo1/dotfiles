@@ -50,30 +50,27 @@ Config
         , "-o"
         , "Bat"
         , "-h"
-        , "green"
+        , "#859900"
         , "-l"
-        , "red"
+        , "#dc322f"
         ]
         200
-    -- Fix the alsa-mixer stuff
-    -- , Run Volume
-    --   "default"
-    --   "Master"
-    --   [ "-t"
-    --   , " <volume>%  <status>  Vol "
-    --   , "--"
-    --   , "--on"
-    --   , "on"
-    --   , "--onc"
-    --   , "#2D9574,#292b2e"
-    --   , "-o"
-    --   , "off"
-    --   , "--offc"
-    --   , "grey,#292b2e"
-    --   ]
-    --   200
-    --     \<fc=#15171a,#292b2e></fc><fc=#292b2e,#15171a></fc><fc=#2D9574,#292b2e>%default:Master%</fc>\
-
+    , Run Volume
+      "default"
+      "Master"
+      [ "-t"
+      , " <volume>%  <status>  vol "
+      , "--"
+      , "--on"
+      , "on"
+      , "--onc"
+      , "#586e75,#002b36"
+      , "-o"
+      , "off"
+      , "--offc"
+      , "#dc322f,#002b36"
+      ]
+      200
     , Run Date "%Y-%m-%d  %l:%M %p" "date" 600
     , Run StdinReader
     ]
@@ -82,6 +79,7 @@ Config
   , template =
     "<fc=#002b36,#859900> workspaces </fc><fc=#859900,#002b36></fc>%StdinReader%\
       \}{\
+      \<action=`amixer -q set Master toggle`><fc=#002b36,#002b36></fc><fc=#586e75,#002b36>%default:Master%</fc></action>\
       \<fc=#586e75,#002b36></fc><fc=#002b36,#586e75> %date% </fc><fc=#002b36,#586e75></fc>\
       \<fc=#002b36,#002b36></fc><fc=#586e75,#002b36>%wlp9s0wi% </fc>\
       \<fc=#586e75,#002b36> bat %battery%</fc><fc=#002b36,#002b36></fc>\
