@@ -2,4 +2,5 @@
 
 xcape -e 'Control_L=Escape'
 xsetroot -cursor_name left_ptr
+pulseaudio --daemonize
 xmonad
