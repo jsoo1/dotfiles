@@ -122,13 +122,13 @@ main =
             )
           -- TODO: Make alsa work.
           -- , ( ( 0, xF86XK_AudioLowerVolume )
-          --   , spawn "amixer -q -D pulse sset Master 2%-"
+          --   , spawn "amixer -q set Master 2%-"
           --   )
           -- , ( ( 0, xF86XK_AudioRaiseVolume )
-          --   , spawn "amixer -q -D pulse sset Master 2%+"
+          --   , spawn "amixer -q set Master 2%+"
           --   )
           -- , ( ( 0, xF86XK_AudioMute )
-          --   , spawn "amixer -q -D pulse set Master toggle"
+          --   , spawn "amixer -q set Master toggle"
           --   )
           , ( ( myModMask, xK_n )
             , moveTo Next NonEmptyWS

@@ -171,6 +171,10 @@
   ('darwin (progn (package-install 'osx-clipboard)
                   (osx-clipboard-mode +1))))
 
+;; Fill column indicator
+(package-install 'fill-column-indicator)
+(add-hook 'prog-mode-hook #'fci-mode)
+
 ;; Avy
 (package-install 'avy)
 
@@ -293,6 +297,7 @@
 
 (define-prefix-keymap my-toggle-map
   "my toggles"
+  "c" (lambda nil () (interactive) (fci-mode (if (bound-and-true-p fci-mode) -1 1)))
   "d" toggle-debug-on-error
   "D" toggle-degub-on-quit
   "f" toggle-frame-fullscreen
@@ -452,6 +457,7 @@ Set `spaceline-highlight-face-func' to
 ;; Company
 (package-install 'company)
 (add-hook 'after-init-hook 'global-company-mode)
+(with-eval-after-load 'company (add-hook 'prog-mode-hook #'company-mode))
 
 ;; Indentation
 ;; Per http://emacsredux.com/blog/2013/03/27/indent-region-or-buffer/
@@ -546,6 +552,7 @@ Set `spaceline-highlight-face-func' to
                 (shell-command-to-string "agda-mode locate")))
 
 ;; Guix
+(add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
 (package-install 'geiser)
 (add-hook 'scheme-mode-hook #'geiser-mode)
 
