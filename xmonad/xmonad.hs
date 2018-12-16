@@ -120,6 +120,11 @@ main =
               , menuArgs = [ "-dmenu", "-i" ]
               }
             )
+          , ( ( myModMask,  xK_o )
+            -- TODO: Fix TERM for tmux (should be: TERM=xterm-24bits tmux attach-session -t ...)
+            , spawn "tmux_session=\"$(tmux list-sessions | rofi -dmenu | cut -d : -f 1)\" &&\
+                    \ termite -t \"$x\" -e \"tmux attach-session -t $tmux_session\""
+            )
           -- TODO: Make alsa work.
           -- , ( ( 0, xF86XK_AudioLowerVolume )
           --   , spawn "amixer -q set Master 2%-"
