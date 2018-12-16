@@ -1,28 +1,37 @@
 (use-modules (gnu)
-             (guix modules)
-             (xmobar)
-             (xmonad))
-(use-service-modules base
-                     desktop
-                     ssh)
-(use-package-modules admin
-                     bootloaders
-                     certs
-                     commencement
-                     emacs
-                     fonts
-                     gnupg
-                     lsof
-                     ncurses
-                     shells
-                     ssh
-                     suckless
-                     terminals
-                     tmux
-                     version-control
-                     vim
-                     wm
-                     xdisorg)
+             ((gnu packages admin) #:select (htop inetutils))
+             ((gnu packages base) #:select (glibc-utf8-locales))
+             ((gnu packages certs) #:select (nss-certs))
+             ((gnu packages emacs) #:select (emacs))
+             ((gnu packages fonts) #:select (font-tamzen))
+             ((gnu packages gnupg) #:select (gnupg))
+             ((gnu packages lsof) #:select (lsof))
+             ((gnu packages ncurses) #:select (ncurses))
+             ((gnu packages shells) #:select (fish))
+             ((gnu packages ssh) #:select (openssh))
+             ((gnu packages terminals) #:select (termite))
+             ((gnu packages tmux) #:select (tmux))
+             ((gnu packages version-control) #:select (git))
+             ((gnu packages vim) #:select (vim))
+             ((gnu packages xdisorg) #:select (rofi))
+             ((gnu services desktop) #:select (bluetooth-service %desktop-services))
+             ((gnu services pm) #:select (thermald-configuration
+                                          thermald-service-type
+                                          tlp-configuration
+                                          tlp-service-type))
+             ((gnu services ssh) #:select (openssh-service-type))
+             ((xmobar) #:select (xmobar-plus))
+             ((xmonad) #:select (my-ghc-xmonad-contrib my-xmonad)))
+
+(define cst-trackball
+  "Section \"InputClass\"
+    Identifier \"CST Trackball\"
+    Driver \"libinput\"
+    MatchVendor \"CST\"
+    MatchProduct \"CST USB UNITRAC\"
+    MatchIsPointer \"on\"
+    Option \"AccelerationNumerator\" \"2.0\"
+EndSection")
 
 (operating-system
  (host-name "ecenter")
@@ -76,25 +85,43 @@
             htop
             ncurses
             tmux
+            glibc-utf8-locales
             ;; text editors
             vim
             emacs
             %base-packages))
  (services (cons*
-            ;; TODO: Add service for modprobe.d modules
-            (console-keymap-service "/home/john/dotfiles/minimal/Caps2Ctrl.map")
+            ;; TODO: Add service for modprobe.d modules?
             (bluetooth-service #:auto-enable? #t)
+            (console-keymap-service "/home/john/dotfiles/minimal/Caps2Ctrl.map")
+            (service kmscon-service-type
+                     (kmscon-configuration (virtual-terminal "tty8")))
             (service openssh-service-type)
-            ;; (kmscon-service-type (kmscon-configuration (virtual-terminal "tty3")))
+            (service thermald-service-type (thermald-configuration))
+            (service tlp-service-type
+                     (tlp-configuration
+                      (tlp-default-mode "BAT")
+                      (usb-autosuspend? #f)))
             (modify-services
              %desktop-services
-             ('console-fonts s => '(("tty1" . "LatGrkCyr-8x16")
-                                    ("tty2" . "TamzenForPowerline8x16")
-                                    ;; ("tty3" . "LatGrkCyr-8x16")
-                                    ("tty4" . "LatGrkCyr-8x16")
-                                    ("tty5" . "LatGrkCyr-8x16")
-                                    ("tty6" . "LatGrkCyr-8x16")))
-             ('kmscon c => (kmscon-configuration (virtual-terminal "tty3"))))))
+             ('console-font-service-type
+              s =>
+              (list
+               '("tty1" "LatGrkCyr-8x16")
+               '("tty2" "TamzenForPowerline8x16")
+               '("tty3" "LatGrkCyr-8x16")
+               '("tty4" "LatGrkCyr-8x16")
+               '("tty5" "LatGrkCyr-8x16")
+               '("tty6" "LatGrkCyr-8x16")))
+             ('slim-service-type
+              c =>
+              (slim-configuration
+               (inherit c)
+               (startx (xorg-start-command
+                        #:configuration-file
+                        (xorg-configuration-file
+                         #:extra-config
+                         (list cst-trackball)))))))))
  ;; Allow resolution of '.local' host names with mDNS.
  (name-service-switch %mdns-host-lookup-nss))
 
