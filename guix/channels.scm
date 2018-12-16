@@ -1,6 +1,9 @@
-(cons
+(list
  (channel
   (name 'private)
-  (url "file:///home/john/guix-channel/.git")
+  (url "file:///home/john/projects/guix-channel/.git")
   (branch "master"))
- %default-channels)
+ (channel
+  (name 'guix)
+  (url "file:///home/john/projects/guix/.git")
+  (branch "master")))
