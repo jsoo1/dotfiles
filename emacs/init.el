@@ -555,6 +555,14 @@ Set `spaceline-highlight-face-func' to
 (add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
 (package-install 'geiser)
 (add-hook 'scheme-mode-hook #'geiser-mode)
+(with-eval-after-load 'geiser-guile
+  (add-to-list 'geiser-guile-load-path "~/projects/guix"))
+(with-eval-after-load 'yasnippet
+  (add-to-list 'yas-snippet-dirs "~/projects/guix/etc/snippets"))
+
+;; Common Lisp
+(package-install 'slime)
+(package-install 'slime-company)
 
 ;; SQL
 (package-install 'sql)
