@@ -13,7 +13,7 @@ import           Data.Maybe                   (listToMaybe)
 import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
 import           XMonad
-import           XMonad.Actions.CycleWS       (WSType (..), moveTo)
+import           XMonad.Actions.CycleWS       (WSType(..), moveTo, shiftTo)
 import           XMonad.Actions.WindowBringer
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
@@ -140,6 +140,12 @@ main =
             )
           , ( ( myModMask, xK_p )
             , moveTo Prev NonEmptyWS
+            )
+          , ( ( myModMask .|. shiftMask, xK_n )
+              , shiftTo Next EmptyWS
+            )
+          , ( ( myModMask .|. shiftMask, xK_p )
+              , shiftTo Prev EmptyWS
             )
           ]
 
