@@ -82,3 +82,5 @@ end
 if test "Darwin" = (uname)
     eval (direnv hook fish)
 end
+
+eval (opam env)
