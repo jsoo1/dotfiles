@@ -32,9 +32,9 @@
                                 `(,name))))))
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
-      truncate-lines 't
       initial-scratch-message ""
       vc-follow-symlinks 't)
+(setq-default truncate-lines 't)
 (add-to-listq
  default-frame-alist '(ns-transparent-titlebar . t)
  default-frame-alist '(font . "FantasqueSansMono Nerd Font Mono 16"))
@@ -95,6 +95,9 @@
 ;; Dired
 (add-hook 'dired-mode-hook #'auto-revert-mode)
 
+;; Truncate lines
+(setq-default truncate-lines nil)
+
 ;; Byte compile
 (require 'bytecomp)
 (setq byte-compile-warnings t)
@@ -102,14 +105,10 @@
 
 ;; Backups, lockfiles, auto-saves
 (setq
-   backup-by-copying t
-   backup-directory-alist `((".*" . "~/.emacs.d/private/backups/"))
-   delete-old-versions t
-   kept-new-versions 6
-   kept-old-versions 2
-   version-control t
-   create-lockfiles nil
-   auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t)))
+ backup-directory-alist `((".*" . "~/.emacs.d/private/backups/"))
+ delete-old-versions nil
+ create-lockfiles nil
+ auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t)))
 
 ;; Evil
 (setq evil-want-C-u-scroll t
@@ -256,6 +255,7 @@
 
 (define-prefix-keymap my-error-map
   "my flycheck keybindings"
+  "b" flycheck-buffer
   "n" flycheck-next-error
   "l" flycheck-list-errors
   "p" flycheck-previous-error)
@@ -321,7 +321,7 @@
 (define-prefix-keymap my-toggle-map
   "my toggles"
   "d" toggle-debug-on-error
-  "D" toggle-degub-on-quit
+  "D" toggle-debug-on-quit
   "f" toggle-frame-fullscreen
   "l" toggle-truncate-lines
   "t" counsel-load-theme
@@ -330,9 +330,9 @@
 (define-prefix-keymap my-window-map
   "my window keybindings"
   (kbd "TAB") eyebrowse-last-window-config
-  "/" split-window-horizontally
-  "-" split-window-vertically
-  "d" delete-window
+  "/" (lambda nil () (interactive) (progn (split-window-horizontally) (balance-windows-area)))
+  "-" (lambda nil () (interactive) (progn (split-window-vertically) (balance-windows-area)))
+  "d" (lambda nil () (interactive) (progn (delete-window) (balance-windows-area)))
   "h" (lambda nil () (interactive) (tmux-navigate "left"))
   "j" (lambda nil () (interactive) (tmux-navigate "down"))
   "k" (lambda nil () (interactive) (tmux-navigate "up"))
@@ -480,10 +480,13 @@ Set `spaceline-highlight-face-func' to
 ;; Company
 (package-install 'company)
 (add-hook 'after-init-hook 'global-company-mode)
-(define-key company-active-map (kbd "C-n") 'company-select-next)
-(define-key company-active-map (kbd "C-p") 'company-select-previous)
-(define-key company-search-map (kbd "C-n") 'company-select-next)
-(define-key company-search-map (kbd "C-p") 'company-select-previous)
+(with-eval-after-load 'company
+  #'(lambda _
+      (progn
+        (define-key company-active-map (kbd "C-n") 'company-select-next)
+        (define-key company-active-map (kbd "C-p") 'company-select-previous)
+        (define-key company-search-map (kbd "C-n") 'company-select-next)
+        (define-key company-search-map (kbd "C-p") 'company-select-previous))))
 
 ;; Indentation
 ;; Per http://emacsredux.com/blog/2013/03/27/indent-region-or-buffer/
@@ -544,7 +547,7 @@ Set `spaceline-highlight-face-func' to
 (package-install 'fish-mode)
 
 ;; JavaScript
-(setq js-indent-level 2)
+(setq js-indent-level 4)
 
 ;; Proof General
 (package-install 'proof-general)
@@ -565,9 +568,9 @@ Set `spaceline-highlight-face-func' to
 (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
 (setq haskell-process-type 'stack-ghci
       haskell-process-args-stack-ghci
-        '("--with-ghc=ghci"
-          "--ghci-options=-ferror-spans"
-          "--no-build" "--no-load" "--test" "--bench"))
+      '("--with-ghc=ghci"
+        "--ghci-options=-ferror-spans"
+        "--no-build" "--no-load" "--test" "--bench"))
 
 ;; Agda mode
 (load-library (let ((coding-system-for-read 'utf-8))
@@ -609,11 +612,11 @@ Set `spaceline-highlight-face-func' to
 ;; Markdown
 (package-install 'markdown-mode)
 (autoload 'markdown-mode "markdown-mode"
-   "Major mode for editing Markdown files" t)
+  "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (autoload 'gfm-mode "markdown-mode"
-   "Major mode for editing GitHub Flavored Markdown files" t)
+  "Major mode for editing GitHub Flavored Markdown files" t)
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
 ;; Shellcheck
