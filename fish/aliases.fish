@@ -34,3 +34,28 @@ abbr e "/Applications/Emacs.app/Contents/MacOS/Emacs"
 abbr tma "env TERM=xterm-24bits tmux attach -t"
 abbr tml "tmux list-sessions"
 abbr tmux "env TERM=xterm-24bits tmux new-session -A -n 'emacs' -s (basename (pwd))"
+
+# VPN
+function vpin -d 'Get on a vpn' -a vpn
+    set -l curr_vpn (launchctl list | rg -o 'pano|vetpro')
+    if test -z $curr_vpn
+        launchctl bootstrap gui/(id -u) /Users/john/Library/LaunchAgents/com.$vpn.de-tunnel.plist
+    else if test $curr_vpn != $vpn
+        launchctl bootout gui/(id -u)/com.$curr_vpn.de-tunnel
+        launchctl bootstrap gui/(id -u) /Users/john/Library/LaunchAgents/com.$vpn.de-tunnel.plist
+    end
+end
+
+complete -c vpin -a 'vetpro pano' --no-files
+
+function vpout -d 'Get off the vpn' -a vpn
+    set -l curr_vpn (launchctl list | rg --color=never -o 'pano|vetpro')
+    if test $vpn
+        launchctl bootout gui/(id -u)/com.$vpn.de-tunnel
+    else if test $curr_vpn
+        launchctl bootout gui/(id -u)/com.$curr_vpn.de-tunnel
+    end
+end
+
+complete -c vpout --no-files
+
