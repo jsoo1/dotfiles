@@ -53,3 +53,8 @@ function fish_prompt
 
   echo -n -s (_remote_hostname) ' ' $green $virtualenv ' ' $cwd $blue $git_status $normal ' ' $arrow ' '
 end
+
+function fish_right_prompt -d "Show the time as the right prompt"
+    set_color black
+    date "+%a %I:%M:%S %p"
+end
