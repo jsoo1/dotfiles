@@ -2,8 +2,10 @@
              ((gnu packages admin) #:select (htop inetutils))
              ((gnu packages base) #:select (glibc-utf8-locales))
              ((gnu packages certs) #:select (nss-certs))
+             ((gnu packages curl) #:select (curl))
              ((gnu packages emacs) #:select (emacs))
-             ((gnu packages fonts) #:select (font-fantasque-sans
+             ((gnu packages fonts) #:select (font-adobe-source-code-pro
+                                             font-fantasque-sans
                                              font-iosevka
                                              font-tamzen))
              ((gnu packages fontutils) #:select (fontconfig))
@@ -17,14 +19,17 @@
              ((gnu packages version-control) #:select (git))
              ((gnu packages vim) #:select (vim))
              ((gnu packages xdisorg) #:select (rofi xcape))
-             ((gnu services base) #:select (user-processes))
-             ((gnu services desktop) #:select (bluetooth-service %desktop-services))
+             ((gnu services desktop) #:select (bluetooth-service
+                                               %desktop-services))
              ((gnu services pm) #:select (thermald-configuration
                                           thermald-service-type
                                           tlp-configuration
                                           tlp-service-type))
-             ((gnu services xorg) #:select (xorg-server))
+             ((gnu services shepherd) #:select (shepherd-service
+                                                shepherd-service-type))
              ((gnu services ssh) #:select (openssh-service-type))
+             ((gnu services xdisorg) #:select (xcape-service-type))
+             (guix gexp)
              ((xmobar) #:select (xmobar-plus))
              ((xmonad) #:select (my-ghc-xmonad-contrib my-xmonad)))
 
@@ -40,23 +45,12 @@ EndSection")
 
 (define caps2control
   "Section \"InputClass\"
-    Identifier \"Caps2Control\"
+    Identifier \"caps-to-control\"
+    MatchProduct \"AT Translated Set 2 keyboard\"
     MatchIsKeyboard \"on\"
     Option \"XkbLayout\" \"us\"
     Option \"XkbOptions\" \"ctrl:nocaps\"
 EndSection")
-
-(define (xcape-service rule)
-  (shepherd-service
-   (provision (list (symbol-append 'xcape- (string->symbol rule))))
-   (requirements '(xorg-server user-processes))
-   (respawn? #t)
-   (documentation (string-append "Keep xcape alive for rule: " rule "."))
-   (modules `((gnu packages xdisorg)))
-   (start #~(make-forkexec-constructor
-             (list #$(file-append xcape "/bin/xcape") rule)
-             #:log-file "/var/log/xcape.log"))
-   (stop #~(make-kill-destructor))))
 
 (operating-system
   (host-name "ecenter")
@@ -66,15 +60,15 @@ EndSection")
   (bootloader (bootloader-configuration
                (bootloader grub-efi-bootloader)
                (target "/boot/efi")
-               (menu-entries '((menu-entry
-                                (label "ubuntu")
-                                (linux "/boot/vmlinuz-4.15.0-43-generic")
-                                (linux-arguments '("root=UUID=45658f04-8790-437f-9590-13025ffb7264"
-                                                   "ro"
-                                                   "quiet"
-                                                   "splash"
-                                                   "vt.handoff=1"))
-                                (initrd))))))
+               (menu-entries `(,(menu-entry
+                                 (label "ubuntu")
+                                 (linux "/boot/vmlinuz-4.15.0-43-generic")
+                                 (linux-arguments '("root=UUID=45658f04-8790-437f-9590-13025ffb7264"
+                                                    "ro"
+                                                    "quiet"
+                                                    "splash"
+                                                    "vt.handoff=1"))
+                                 (initrd "/boot/initrd.img-4.15.0-43-generic"))))))
   (file-systems (cons* (file-system
                          (device (uuid "462563db-3f82-44d2-829c-eb2bce9fd0e0" 'ext4))
                          (mount-point "/")
@@ -95,15 +89,14 @@ EndSection")
                                         "video"
                                         "lp"))
                 (home-directory "/home/john")
-                ;; TODO: Figure out fish environmnet issues.
-                ;; (shell #~(string-append #$fish "/bin/fish"))
-                )
+                (shell #~(string-append #$fish "/bin/fish")))
                %base-user-accounts))
   (packages (cons*
              ;; nice tty font
              font-tamzen
              ;; kmscon fonts
              fontconfig
+             font-adobe-source-code-pro
              font-fantasque-sans
              font-iosevka
              ;; window manager related
@@ -112,6 +105,7 @@ EndSection")
              xmobar-plus
              rofi
              ;;for HTTPS access
+             curl
              nss-certs
              ;; essentials
              lsof
@@ -132,7 +126,7 @@ EndSection")
              ;; TODO: Add service for modprobe.d modules?
              (bluetooth-service #:auto-enable? #t)
              (console-keymap-service "/home/john/dotfiles/minimal/Caps2Ctrl.map")
-             (xcape-service "Control_L=Escape")
+             (service xcape-service-type '(("Control_L" . "Escape")))
              (service kmscon-service-type
                       (kmscon-configuration
                        (virtual-terminal "tty8")

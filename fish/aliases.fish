@@ -18,16 +18,13 @@ alias gitpurge 'git branch --merged | grep -v "\*" | grep -v "master" | xargs -n
 # System Utils
 abbr lsa "ls -lsa"
 abbr lsah "ls -lsah"
-abbr rmi "rm -i"
-abbr psg "ps aux | rg -i"
+abbr psg 'ps -eF | grep -i'
 abbr rest "loginctl suspend"
-abbr logout "gnome-session-quit --logout --no-prompt"
-abbr upgrade! "sudo apt-get update; sudo apt-get -y upgrade"
-abbr install! "sudo apt-get update; sudo apt-get install"
+abbr bat "upower -I (upower -e | grep BAT)"
 
 # Emacs
-abbr ed "emacs --daemon=term"
-abbr em "emacsclient -t --socket-name=term"
+abbr ed "emacs -q -l ~/dotfiles/emacs/init.el --bg-daemon=term"
+abbr em "env TERM=xterm-24bits emacsclient -nw --socket-name term"
 
 # Systemctl
 abbr ctl "systemctl"
@@ -43,4 +40,10 @@ function tma -d "Select a tmux session with fuzzy search"
 end
 abbr ta "env TERM=xterm-24bits tmux attach -t"
 abbr tml "tmux list-sessions"
-abbr tmux "tmux new-session -A -s (basename (pwd)) -n emacs"
+abbr tmux "env TERM=xterm-24bits tmux new-session -A -s (basename (pwd)) -n emacs"
+
+# Lynx
+abbr lynx = lynx -cfg=~/.config/lynx/lynx.cfg
+function google
+    lynx -cfg=~/.config/lynx/lynx.cfg www.google.com/search?q='"'argv[1]'"'
+end

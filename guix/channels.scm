@@ -6,4 +6,4 @@
  (channel
   (name 'guix)
   (url "file:///home/john/projects/guix/.git")
-  (branch "master")))
+  (branch "kmscon-updates")))
