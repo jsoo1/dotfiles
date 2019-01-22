@@ -1,22 +1,8 @@
-# set -gx PATH $PATH /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /usr/games /usr/local/games /home/john/.cargo/bin /home/john/.local/bin /home/john/.nix-profile/bin
-if test -e ~/.guix-profile/bin
-    set -gx PATH $PATH ~/.guix-profile/bin
-end
-
-if test -e ~/.config/fish/fish_prompt.fish
-    source ~/.config/fish/fish_prompt.fish
-end
-
-# GPG stuff
-set -xg GPGKEY 69C2CD1B
-set -xg GPG2KEY 802CD0C2
+set -gx PATH $PATH /home/john/.cargo/bin /home/john/.local/bin 
 
 # Emacsclient for EDITOR
-set -xg EDITOR 'env TERM=xterm-24bits /Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=base'
+set -xg EDITOR 'env TERM=xterm-24bits emacsclient -t --socket-name=base'
 set -xg ALTERNATE_EDITOR 'vim'
-
-# i3 Sensible Terminal
-set -xg TERMINAL 'alacritty'
 
 # Fuzzy Finder
 set -x FZF_DEFAULT_OPTS '
@@ -27,7 +13,7 @@ set -x FZF_DEFAULT_OPTS '
 set -x FZF_DEFAULT_COMMAND 'rg --files --hidden --ignore .git --smartcase --glob "!.git/*"'
 
 # fish cwd color
-set -x fish_color_cwd magenta
+set -x fish_color_cwd yellow
 
 # vi mode
 fish_vi_key_bindings
@@ -59,9 +45,9 @@ if test "$TERM" = "dumb"
 end
 
 # this function may be required
-function fish_title
-  true
-end
+# function fish_title
+#   true
+# end
 
 # aliases
 if test -e ~/.config/fish/aliases.fish
@@ -75,28 +61,15 @@ end
 
 # pretty vi mode
 function fish_mode_prompt; end
-function fish_mode_prompt --description 'Displays the current mode'
-  # Do nothing if not in vi mode
-  if set -q __fish_vi_mode
-    switch $fish_bind_mode
-      case default
-        set_color --background BC6EC5 white
-        echo ''
-      case insert
-        set_color --bold --background green white
-        echo ''
-      case visual
-        set_color --bold --background magenta white
-        echo ''
-    end
-    set_color normal
-    echo -n ' '
-  end
-end
+
+set fish_cursor_default     block
+set fish_cursor_insert      block
+set fish_cursor_replace_one underscore
+set fish_cursor_visual      block
 
 # python direnv package
 if test "Darwin" = (uname)
     eval (direnv hook fish)
 end
 
-eval (opam env)
+# eval (opam env)

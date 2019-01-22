@@ -1,6 +1,6 @@
 Config
   { font =
-    "xft:FantasqueSansMono Nerd Font Mono:size=12:normal:antialias=true"
+    "xft:FantasqueSansMono Nerd Font Mono:size=14:normal:antialias=true"
   , additionalFonts = []
   , borderColor = "#002b36"
   , border = TopB

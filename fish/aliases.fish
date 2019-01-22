@@ -25,22 +25,15 @@ abbr bat "upower -I (upower -e | grep BAT)"
 # Emacs
 abbr ed "emacs -q -l ~/dotfiles/emacs/init.el --bg-daemon=term"
 abbr em "env TERM=xterm-24bits emacsclient -nw --socket-name term"
-
-# Systemctl
-abbr ctl "systemctl"
-abbr ctlu "systemctl --user"
-abbr ctllint "systemd-analyze verify"
-
-# Email
-abbr mindex "mu index --maildir ~/.mail"
+# TODO Figure out fish issues
+abbr e "env TERM=xterm-24bits emacsclient -nw --socket-name term"
 
 # Tmux
-function tma -d "Select a tmux session with fuzzy search"
-    env TERM=xterm-24bits tmux attach -t (tmux list-sessions | fzf --height=15% | cut -f 1 -d :)
-end
+abbr tma "env TERM=xterm-24bits tmux attach -t"
 abbr ta "env TERM=xterm-24bits tmux attach -t"
 abbr tml "tmux list-sessions"
 abbr tmux "env TERM=xterm-24bits tmux new-session -A -s (basename (pwd)) -n emacs"
+abbr tm "env TERM=xterm-24bits tmux new-session -A -s (basename (pwd)) -n emacs"
 
 # Lynx
 abbr lynx = lynx -cfg=~/.config/lynx/lynx.cfg
