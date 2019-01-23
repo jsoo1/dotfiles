@@ -6,11 +6,16 @@ let abbr cmd arg = return $ ":! " ++ cmd ++ " " ++ arg
 :def! haddocks (\arg -> return $ ":! hoogle --color --info \'" ++ arg ++ "\'")
 :def! hoogle (\arg -> return $ ":! hoogle --color \'" ++ arg ++ "\'")
 
+-- vpin
+:def! vpin (abbr "vpin")
+:def! vpout (abbr "vpout")
+:def! vpst (abbr "vpst")
+
 -- rest
-:def! rest (abbr "pmset sleepnow")
+:def! rest (abbr "loginctl suspend")
 
 -- emacsclient
-:def! em (abbr "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=term")
+:def! em (abbr "TERM=xterm-24bits emacsclient -nw --socket-name term")
 
 -- vim
 :def! vim (abbr "vim")
