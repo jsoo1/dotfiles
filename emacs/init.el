@@ -95,9 +95,6 @@
 ;; Dired
 (add-hook 'dired-mode-hook #'auto-revert-mode)
 
-;; Truncate lines
-(setq-default truncate-lines nil)
-
 ;; Byte compile
 (require 'bytecomp)
 (setq byte-compile-warnings t)
@@ -153,6 +150,14 @@
             (ibuffer-projectile-set-filter-groups)
             (unless (eq ibuffer-sorting-mode 'alphabetic)
               (ibuffer-do-sort-by-alphabetic))))
+
+;; Anzu
+(package-install 'anzu)
+(setq anzu-cons-mode-line-p nil)
+(global-anzu-mode)
+(set-face-foreground 'anzu-mode-line "#002b36" nil)
+(package-install 'evil-anzu)
+(with-eval-after-load 'evil (require 'evil-anzu))
 
 ;; Ivy
 (package-install 'ivy)
