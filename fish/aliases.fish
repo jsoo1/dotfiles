@@ -35,6 +35,9 @@ abbr tma "env TERM=xterm-24bits tmux attach -t"
 abbr tml "tmux list-sessions"
 abbr tmux "env TERM=xterm-24bits tmux new-session -A -n 'emacs' -s (basename (pwd))"
 
+# Docker
+abbr dockerpurge 'docker rmi (docker images -a --filter=dangling=true -q)'
+
 # VPN
 function vpin -d 'Get on a vpn' -a vpn
     set -l curr_vpn (launchctl list | rg -o 'pano|vetpro')
@@ -46,7 +49,8 @@ function vpin -d 'Get on a vpn' -a vpn
     end
 end
 
-complete -c vpin -a 'vetpro pano' --no-files
+complete -c vpin -a 'vetpro' -d 'get on vetpro' --no-files
+complete -c vpin -a 'pano' -d 'get on gateway 2' --no-files
 
 function vpout -d 'Get off the vpn' -a vpn
     set -l curr_vpn (launchctl list | rg --color=never -o 'pano|vetpro')
@@ -58,4 +62,3 @@ function vpout -d 'Get off the vpn' -a vpn
 end
 
 complete -c vpout --no-files
-
