@@ -32,9 +32,9 @@
                                 `(,name))))))
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
-      truncate-lines 't
       initial-scratch-message ""
       vc-follow-symlinks 't)
+(setq-default truncate-lines 't)
 (add-to-listq
  default-frame-alist '(ns-transparent-titlebar . t)
  default-frame-alist '(font . "FantasqueSansMono Nerd Font Mono 16"))
@@ -81,7 +81,8 @@
                   "~/.guix-profile/bin"
                   "~/.guix-profile/sbin"
                   "/run/current-system/profile/bin"
-                  "/run/current-system/profile/sbin"))
+                  "/run/current-system/profile/sbin"
+                  "~/dotfiles/emacs/"))
 
 (package-install 'exec-path-from-shell)
 (require 'exec-path-from-shell)
@@ -91,19 +92,25 @@
 (package-install 'multi-term)
 (setq shell-file-name "bash")
 
+;; Dired
+(add-hook 'dired-mode-hook #'auto-revert-mode)
+
 ;; Byte compile
 (require 'bytecomp)
 (setq byte-compile-warnings t)
 (setq byte-compile-error-on-warn nil)
 
-;; Backups, Lockfiles, etc.
-(setq backup-directory-alist         `((".*" . "~/.emacs.d/private/backups"))
-      auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves" 't))
-      create-lockfiles               nil)
+;; Backups, lockfiles, auto-saves
+(setq
+ backup-directory-alist `((".*" . "~/.emacs.d/private/backups/"))
+ delete-old-versions nil
+ create-lockfiles nil
+ auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t)))
 
 ;; Evil
 (setq evil-want-C-u-scroll t
-      evil-disable-insert-state-bindings t) ; somehow needs to happen before any mention of evil mode
+      evil-disable-insert-state-bindings t
+      evil-want-abbrev-expand-on-insert-exit nil) ; somehow needs to happen before any mention of evil mode
 (package-install 'evil)
 (require 'evil)
 (package-install 'evil-surround)
@@ -144,6 +151,14 @@
             (unless (eq ibuffer-sorting-mode 'alphabetic)
               (ibuffer-do-sort-by-alphabetic))))
 
+;; Anzu
+(package-install 'anzu)
+(setq anzu-cons-mode-line-p nil)
+(global-anzu-mode)
+(set-face-foreground 'anzu-mode-line "#002b36" nil)
+(package-install 'evil-anzu)
+(with-eval-after-load 'evil (require 'evil-anzu))
+
 ;; Ivy
 (package-install 'ivy)
 (package-install 'counsel)
@@ -171,10 +186,6 @@
   ('darwin (progn (package-install 'osx-clipboard)
                   (osx-clipboard-mode +1))))
 
-;; Fill column indicator
-(package-install 'fill-column-indicator)
-(add-hook 'prog-mode-hook #'fci-mode)
-
 ;; Avy
 (package-install 'avy)
 
@@ -184,8 +195,22 @@
 
 ;; Keybindings
 (define-key comint-mode-map "C-c C-k" #'comint-clear-buffer)
+
+;; Vinegar
 (define-key evil-normal-state-map "-" #'(lambda () (interactive) (dired ".")))
 (define-key dired-mode-map "-" #'dired-up-directory)
+
+;; Swiper
+(define-key evil-normal-state-map (kbd "C-s") #'swiper)
+(global-set-key (kbd "C-s") 'swiper)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "M-y") 'counsel-yank-pop)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 
 (evil-leader/set-leader "<SPC>")
 
@@ -230,10 +255,12 @@
   "f" describe-function
   "k" describe-key
   "m" describe-mode
+  "w" woman
   "v" describe-variable)
 
 (define-prefix-keymap my-error-map
   "my flycheck keybindings"
+  "b" flycheck-buffer
   "n" flycheck-next-error
   "l" flycheck-list-errors
   "p" flycheck-previous-error)
@@ -242,7 +269,8 @@
   "my file keybindings"
   "f" counsel-find-file
   "r" counsel-recentf
-  "s" save-buffer)
+  "s" save-buffer
+  "y" (lambda () (interactive) (kill-new (buffer-file-name (current-buffer)))))
 
 (define-prefix-keymap my-git-map
   "my git keybindings"
@@ -299,7 +327,7 @@
   "my toggles"
   "c" (lambda nil () (interactive) (fci-mode (if (bound-and-true-p fci-mode) -1 1)))
   "d" toggle-debug-on-error
-  "D" toggle-degub-on-quit
+  "D" toggle-debug-on-quit
   "f" toggle-frame-fullscreen
   "l" toggle-truncate-lines
   "t" counsel-load-theme
@@ -308,9 +336,9 @@
 (define-prefix-keymap my-window-map
   "my window keybindings"
   (kbd "TAB") eyebrowse-last-window-config
-  "/" split-window-horizontally
-  "-" split-window-vertically
-  "d" delete-window
+  "/" (lambda nil () (interactive) (progn (split-window-horizontally) (balance-windows-area)))
+  "-" (lambda nil () (interactive) (progn (split-window-vertically) (balance-windows-area)))
+  "d" (lambda nil () (interactive) (progn (delete-window) (balance-windows-area)))
   "h" (lambda nil () (interactive) (tmux-navigate "left"))
   "j" (lambda nil () (interactive) (tmux-navigate "down"))
   "k" (lambda nil () (interactive) (tmux-navigate "up"))
@@ -442,12 +470,13 @@ Set `spaceline-highlight-face-func' to
         (not (display-graphic-p (selected-frame))))
 
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-           (set-face-background 'line-number "#-73642" (selected-frame))))
+           (set-face-background 'line-number "#073642" (selected-frame))))
 
 ;; Eyebrowse
 (package-install 'eyebrowse)
 (setq eyebrowse-keymap-prefix "")
 (eyebrowse-mode 1)
+(eyebrowse-rename-window-config (eyebrowse--get 'current-slot) "dotfiles")
 
 ;; Flycheck
 (package-install 'flycheck)
@@ -457,7 +486,13 @@ Set `spaceline-highlight-face-func' to
 ;; Company
 (package-install 'company)
 (add-hook 'after-init-hook 'global-company-mode)
-(with-eval-after-load 'company (add-hook 'prog-mode-hook #'company-mode))
+(with-eval-after-load 'company
+  #'(lambda _
+      (progn
+        (define-key company-active-map (kbd "C-n") 'company-select-next)
+        (define-key company-active-map (kbd "C-p") 'company-select-previous)
+        (define-key company-search-map (kbd "C-n") 'company-select-next)
+        (define-key company-search-map (kbd "C-p") 'company-select-previous))))
 
 ;; Indentation
 ;; Per http://emacsredux.com/blog/2013/03/27/indent-region-or-buffer/
@@ -521,7 +556,7 @@ Set `spaceline-highlight-face-func' to
 (package-install 'fish-mode)
 
 ;; JavaScript
-(setq js-indent-level 2)
+(setq js-indent-level 4)
 
 ;; Proof General
 (package-install 'proof-general)
@@ -576,6 +611,19 @@ Set `spaceline-highlight-face-func' to
 (package-install 'yaml-mode)
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+
+;; Plist
+(add-to-list 'auto-mode-alist '("\\.plist\\'" . xml-mode))
+
+;; Markdown
+(package-install 'markdown-mode)
+(autoload 'markdown-mode "markdown-mode"
+  "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(autoload 'gfm-mode "markdown-mode"
+  "Major mode for editing GitHub Flavored Markdown files" t)
+(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
 ;; Shellcheck
 (add-hook 'sh-mode-hook #'flycheck-mode)
