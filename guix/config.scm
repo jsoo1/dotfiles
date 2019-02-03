@@ -28,7 +28,8 @@
              ((gnu services shepherd) #:select (shepherd-service
                                                 shepherd-service-type))
              ((gnu services ssh) #:select (openssh-service-type))
-             ((gnu services xdisorg) #:select (xcape-service-type))
+             ((gnu services xdisorg) #:select (xcape-configuration
+                                               xcape-service-type))
              (guix gexp)
              ((xmobar) #:select (xmobar-plus))
              ((xmonad) #:select (my-ghc-xmonad-contrib my-xmonad)))
@@ -74,7 +75,8 @@ EndSection")
          (initrd "/boot/initrd.img-4.15.0-43-generic"))))))
   (file-systems
    (cons* (file-system
-            (device (uuid "462563db-3f82-44d2-829c-eb2bce9fd0e0" 'ext4))
+            (device
+             (uuid "462563db-3f82-44d2-829c-eb2bce9fd0e0" 'ext4))
             (mount-point "/")
             (type "ext4"))
           (file-system
@@ -89,11 +91,7 @@ EndSection")
           (comment "idiot man")
           (group "users")
           (supplementary-groups
-           '("wheel"
-             "netdev"
-             "audio"
-             "video"
-             "lp"))
+           '("wheel" "netdev" "audio" "video" "lp"))
           (home-directory "/home/john")
           (shell #~(string-append #$fish "/bin/fish")))
          %base-user-accounts))
@@ -134,7 +132,9 @@ EndSection")
     ;; TODO: Add service for modprobe.d modules?
     (bluetooth-service #:auto-enable? #t)
     (console-keymap-service "/home/john/dotfiles/minimal/Caps2Ctrl.map")
-    (service xcape-service-type '(("Control_L" . "Escape")))
+    (service xcape-service-type (xcape-configuration
+                                 "john"
+                                 '(("Control_L" . "Escape"))))
     (service kmscon-service-type
              (kmscon-configuration
               (virtual-terminal "tty8")
