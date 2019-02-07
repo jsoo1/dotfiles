@@ -151,6 +151,19 @@
             (unless (eq ibuffer-sorting-mode 'alphabetic)
               (ibuffer-do-sort-by-alphabetic))))
 
+;; Imenu Anywhere
+(package-install 'imenu-anywhere)
+
+(defun projectile-imenu ()
+  "Imenu across projectile buffers defined by `PROJECTILE-PROJECT-BUFFERS', filtering out magit buffers."
+  (interactive)
+  (let ((imenu-anywhere-buffer-list-function #'projectile-project-buffers)
+        (imenu-anywhere-buffer-filter-functions
+         (cons (lambda (_ other)
+                 (if (numberp (string-match-p "magit" (buffer-name other))) nil 't))
+               imenu-anywhere-buffer-filter-functions)))
+    (ivy-imenu-anywhere)))
+
 ;; Anzu
 (package-install 'anzu)
 (setq anzu-cons-mode-line-p nil)
@@ -280,6 +293,7 @@
 
 (define-prefix-keymap my-jump-map
   "my jump keybindings"
+  "i" counsel-imenu
   "j" avy-goto-char
   "l" avy-goto-line
   "=" indent-region-or-buffer)
@@ -304,6 +318,7 @@
   "d" counsel-projectile-find-dir
   "D" (lambda () (interactive) (dired (projectile-project-root)))
   "f" counsel-projectile-find-file
+  "i" projectile-imenu
   "l" switch-project-workspace
   "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
   "p" counsel-projectile-switch-project
