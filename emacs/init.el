@@ -134,6 +134,8 @@
 (global-evil-leader-mode)
 (smartparens-global-mode 1)
 
+(evil-set-initial-state 'compilation-mode 'normal)
+
 ;; Magit
 (package-install 'magit)
 (package-install 'evil-magit)
@@ -180,6 +182,7 @@
 (package-install 'wgrep)
 (ivy-mode 1)
 (setq ivy-use-virtual-buffers t)
+(setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
 
 ;; Line numbers
 (global-display-line-numbers-mode 1)
