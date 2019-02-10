@@ -15,9 +15,6 @@ set -x FZF_DEFAULT_COMMAND 'rg --files --hidden --ignore .git --smartcase --glob
 # fish cwd color
 set -x fish_color_cwd yellow
 
-# vi mode
-fish_vi_key_bindings
-
 # no greeting, plz
 set fish_greeting ""
 
@@ -29,6 +26,11 @@ end
 # prompt :)
 if test -e ~/.config/fish/fish_prompt.fish
     source ~/.config/fish/fish_prompt.fish
+end
+
+# keybindings
+if test -e ~/.config/fish/keybindings.fish
+    source ~/.config/fish/keybindings.fish
 end
 
 # fixes for emacs
