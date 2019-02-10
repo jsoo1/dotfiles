@@ -280,6 +280,7 @@
 
 (define-prefix-keymap my-jump-map
   "my jump keybindings"
+  "i" counsel-imenu
   "j" avy-goto-char
   "l" avy-goto-line
   "=" indent-region-or-buffer)
@@ -455,8 +456,10 @@ Set `spaceline-highlight-face-func' to
           (string= 'term (daemonp)))
       (progn (set-face-background 'default "unspecified-bg" frame)
              (set-face-background 'line-number "#073642" frame))))
+
 (on-frame-open (selected-frame))
 (add-hook 'after-make-frame-functions 'on-frame-open)
+
 (defun on-after-init ()
   "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
   (unless (or (display-graphic-p (selected-frame))
@@ -464,7 +467,9 @@ Set `spaceline-highlight-face-func' to
               (not (string= 'term (daemonp))))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
            (set-face-background 'line-number "#073642" (selected-frame)))))
+
 (add-hook 'window-setup-hook #'on-after-init)
+
 (if (or (string= 'base (daemonp))
         (string= 'term (daemonp))
         (not (display-graphic-p (selected-frame))))
@@ -586,6 +591,22 @@ Set `spaceline-highlight-face-func' to
 (load-library (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
 
+;; Purescript
+(add-to-list 'load-path "~/.emacs.d/private/purescript-mode")
+(require 'purescript-mode-autoloads)
+(add-to-list 'Info-default-directory-list "~/.emacs.d/private/purescript-mode/")
+(add-to-list 'auto-mode-alist '("\\.purs\\'" . purescript-mode))
+
+(package-install 'psc-ide)
+(require 'psc-ide)
+
+(add-hook 'purescript-mode-hook
+  (lambda ()
+    (psc-ide-mode)
+    (company-mode)
+    (flycheck-mode)
+    (turn-on-purescript-indentation)))
+
 ;; Guix
 (add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
 (package-install 'geiser)
@@ -614,6 +635,10 @@ Set `spaceline-highlight-face-func' to
 
 ;; Plist
 (add-to-list 'auto-mode-alist '("\\.plist\\'" . xml-mode))
+
+;; Dhall
+(package-install 'dhall-mode)
+(add-to-list 'auto-mode-alist '("\\.dhall\\'" . dhall-mode))
 
 ;; Markdown
 (package-install 'markdown-mode)
