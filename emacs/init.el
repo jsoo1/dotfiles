@@ -1,5 +1,5 @@
 ;;; package --- Summary
-;;; My minimal-ish init.el
+;;; My not minimal-ish anymore init.el
 ;;; Commentary:
 ;;; use like any ol init.el
 ;;; Code:
@@ -53,6 +53,9 @@
 ;; Cursor
 (setq cursor-type 'box)
 (blink-cursor-mode 0)
+
+;; Large files
+(setq large-file-warning-threshold (* 1024 1024))
 
 ;; Mouse
 (xterm-mouse-mode 1)
@@ -183,6 +186,7 @@
 (ivy-mode 1)
 (setq ivy-use-virtual-buffers t)
 (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+(setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
 
 ;; Line numbers
 (global-display-line-numbers-mode 1)
@@ -284,6 +288,7 @@
 (define-prefix-keymap my-file-map
   "my file keybindings"
   "f" counsel-find-file
+  "l" find-file-literally
   "r" counsel-recentf
   "s" save-buffer
   "y" (lambda () (interactive) (kill-new (buffer-file-name (current-buffer)))))
@@ -624,6 +629,9 @@ Set `spaceline-highlight-face-func' to
         (server :default "localhost")
         (port :default 5432)))
 
+(sql-set-product-feature
+ 'postgres :prompt-regexp "^.* λ ")
+
 ;; YAML
 (package-install 'yaml-mode)
 (require 'yaml-mode)
@@ -644,5 +652,10 @@ Set `spaceline-highlight-face-func' to
 
 ;; Shellcheck
 (add-hook 'sh-mode-hook #'flycheck-mode)
+
+;; Vimrc
+(package-install 'vimrc-mode)
+(require 'vimrc-mode)
+(add-to-list 'auto-mode-alist '("\\.vim\\(rc\\)?\\'" . vimrc-mode))
 
 ;;; init.el ends here
