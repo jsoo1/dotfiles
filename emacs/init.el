@@ -1,5 +1,5 @@
 ;;; package --- Summary
-;;; My minimal-ish init.el
+;;; My not minimal-ish anymore init.el
 ;;; Commentary:
 ;;; use like any ol init.el
 ;;; Code:
@@ -53,6 +53,9 @@
 ;; Cursor
 (setq cursor-type 'box)
 (blink-cursor-mode 0)
+
+;; Large files
+(setq large-file-warning-threshold (* 1024 1024))
 
 ;; Mouse
 (xterm-mouse-mode 1)
@@ -134,6 +137,8 @@
 (global-evil-leader-mode)
 (smartparens-global-mode 1)
 
+(evil-set-initial-state 'compilation-mode 'normal)
+
 ;; Magit
 (package-install 'magit)
 (package-install 'evil-magit)
@@ -151,6 +156,19 @@
             (unless (eq ibuffer-sorting-mode 'alphabetic)
               (ibuffer-do-sort-by-alphabetic))))
 
+;; Imenu Anywhere
+(package-install 'imenu-anywhere)
+
+(defun projectile-imenu ()
+  "Imenu across projectile buffers defined by `PROJECTILE-PROJECT-BUFFERS', filtering out magit buffers."
+  (interactive)
+  (let ((imenu-anywhere-buffer-list-function #'projectile-project-buffers)
+        (imenu-anywhere-buffer-filter-functions
+         (cons (lambda (_ other)
+                 (if (numberp (string-match-p "magit" (buffer-name other))) nil 't))
+               imenu-anywhere-buffer-filter-functions)))
+    (ivy-imenu-anywhere)))
+
 ;; Anzu
 (package-install 'anzu)
 (setq anzu-cons-mode-line-p nil)
@@ -167,6 +185,8 @@
 (package-install 'wgrep)
 (ivy-mode 1)
 (setq ivy-use-virtual-buffers t)
+(setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+(setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
 
 ;; Line numbers
 (global-display-line-numbers-mode 1)
@@ -268,6 +288,7 @@
 (define-prefix-keymap my-file-map
   "my file keybindings"
   "f" counsel-find-file
+  "l" find-file-literally
   "r" counsel-recentf
   "s" save-buffer
   "y" (lambda () (interactive) (kill-new (buffer-file-name (current-buffer)))))
@@ -305,6 +326,7 @@
   "d" counsel-projectile-find-dir
   "D" (lambda () (interactive) (dired (projectile-project-root)))
   "f" counsel-projectile-find-file
+  "i" projectile-imenu
   "l" switch-project-workspace
   "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
   "p" counsel-projectile-switch-project
@@ -456,10 +478,8 @@ Set `spaceline-highlight-face-func' to
           (string= 'term (daemonp)))
       (progn (set-face-background 'default "unspecified-bg" frame)
              (set-face-background 'line-number "#073642" frame))))
-
 (on-frame-open (selected-frame))
 (add-hook 'after-make-frame-functions 'on-frame-open)
-
 (defun on-after-init ()
   "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
   (unless (or (display-graphic-p (selected-frame))
@@ -467,9 +487,7 @@ Set `spaceline-highlight-face-func' to
               (not (string= 'term (daemonp))))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
            (set-face-background 'line-number "#073642" (selected-frame)))))
-
 (add-hook 'window-setup-hook #'on-after-init)
-
 (if (or (string= 'base (daemonp))
         (string= 'term (daemonp))
         (not (display-graphic-p (selected-frame))))
@@ -492,13 +510,12 @@ Set `spaceline-highlight-face-func' to
 (package-install 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 (with-eval-after-load 'company
-  (lambda _
-    (progn
-      (global-company-mode)
-      (define-key company-active-map (kbd "C-n") 'company-select-next)
-      (define-key company-active-map (kbd "C-p") 'company-select-previous)
-      (define-key company-search-map (kbd "C-n") 'company-select-next)
-      (define-key company-search-map (kbd "C-p") 'company-select-previous))))
+  (progn
+    (global-company-mode)
+    (define-key company-active-map (kbd "C-n") 'company-select-next)
+    (define-key company-active-map (kbd "C-p") 'company-select-previous)
+    (define-key company-search-map (kbd "C-n") 'company-select-next)
+    (define-key company-search-map (kbd "C-p") 'company-select-previous)))
 
 ;; Indentation
 ;; Per http://emacsredux.com/blog/2013/03/27/indent-region-or-buffer/
@@ -542,7 +559,7 @@ Set `spaceline-highlight-face-func' to
 (define-key idris-mode-map (kbd "C-c C-k") #'idris-repl-clear-buffer)
 
 ;; Emacs Lisp Mode
-(with-eval-after-load 'company #'(lambda () (add-hook 'emacs-lisp-mode-hook #'company-mode 't)))
+(with-eval-after-load 'company (add-hook 'emacs-lisp-mode-hook #'company-mode 't))
 
 ;; Elm mode
 (package-install 'flycheck-elm)
@@ -566,6 +583,14 @@ Set `spaceline-highlight-face-func' to
 
 ;; Proof General
 (package-install 'proof-general)
+
+;; Coq
+(package-install 'company-coq)
+(add-hook 'coq-mode-hook #'company-coq-mode)
+(setq proof-three-window-mode-policy 'hybrid
+      proof-script-fly-past-comments t
+      proof-splash-seen t
+      company-coq-disabled-features '(hello))
 
 ;; Haskell mode
 (package-install 'haskell-mode)
@@ -629,6 +654,9 @@ Set `spaceline-highlight-face-func' to
         (server :default "localhost")
         (port :default 5432)))
 
+(sql-set-product-feature
+ 'postgres :prompt-regexp "^.* λ ")
+
 ;; YAML
 (package-install 'yaml-mode)
 (require 'yaml-mode)
@@ -653,5 +681,10 @@ Set `spaceline-highlight-face-func' to
 
 ;; Shellcheck
 (add-hook 'sh-mode-hook #'flycheck-mode)
+
+;; Vimrc
+(package-install 'vimrc-mode)
+(require 'vimrc-mode)
+(add-to-list 'auto-mode-alist '("\\.vim\\(rc\\)?\\'" . vimrc-mode))
 
 ;;; init.el ends here
