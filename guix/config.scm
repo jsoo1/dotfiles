@@ -10,6 +10,7 @@
                                              font-tamzen))
              ((gnu packages fontutils) #:select (fontconfig))
              ((gnu packages gnupg) #:select (gnupg))
+             ((gnu packages linux) #:select (bluez))
              ((gnu packages lsof) #:select (lsof))
              ((gnu packages ncurses) #:select (ncurses))
              ((gnu packages shells) #:select (fish))
@@ -46,7 +47,7 @@ EndSection")
 
 (define caps2control
   "Section \"InputClass\"
-    Identifier \"caps-to-control\"
+    Identifier \"system-keyboard\"
     MatchProduct \"AT Translated Set 2 keyboard\"
     MatchIsKeyboard \"on\"
     Option \"XkbLayout\" \"us\"
@@ -101,7 +102,6 @@ EndSection")
     font-tamzen
     ;; kmscon fonts
     fontconfig
-    font-adobe-source-code-pro
     font-fantasque-sans
     font-iosevka
     ;; window manager related
@@ -126,6 +126,8 @@ EndSection")
     ;; text editors
     vim
     emacs
+    ;; for keyboards
+    bluez
     %base-packages))
   (services
    (cons*

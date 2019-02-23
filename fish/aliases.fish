@@ -37,6 +37,10 @@ abbr tm "env TERM=xterm-24bits tmux new-session -A -s (basename (pwd)) -n emacs"
 
 # Lynx
 abbr lynx = lynx -cfg=~/.config/lynx/lynx.cfg
-function google
-    lynx -cfg=~/.config/lynx/lynx.cfg www.google.com/search?q='"'argv[1]'"'
+function google -a query
+    lynx -cfg=~/.config/lynx/lynx.cfg "www.google.com/search?q='"$query"'"
+end
+
+function pursuit -a query
+    lynx -cfg=~/.config/lynx/lynx.cfg "pursuit.purescript.org/search?q="$query
 end

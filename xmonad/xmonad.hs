@@ -108,7 +108,7 @@ main =
             , sendMessage ToggleStruts
             )
           , ( ( myModMask .|. shiftMask, xK_x )
-            , spawn "xlock"
+            , spawn "xlock -mode rain"
             )
           , ( ( myModMask .|. shiftMask, xK_s )
             , spawn "loginctl suspend"

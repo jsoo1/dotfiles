@@ -492,12 +492,13 @@ Set `spaceline-highlight-face-func' to
 (package-install 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 (with-eval-after-load 'company
-  #'(lambda _
-      (progn
-        (define-key company-active-map (kbd "C-n") 'company-select-next)
-        (define-key company-active-map (kbd "C-p") 'company-select-previous)
-        (define-key company-search-map (kbd "C-n") 'company-select-next)
-        (define-key company-search-map (kbd "C-p") 'company-select-previous))))
+  (lambda _
+    (progn
+      (global-company-mode)
+      (define-key company-active-map (kbd "C-n") 'company-select-next)
+      (define-key company-active-map (kbd "C-p") 'company-select-previous)
+      (define-key company-search-map (kbd "C-n") 'company-select-next)
+      (define-key company-search-map (kbd "C-p") 'company-select-previous))))
 
 ;; Indentation
 ;; Per http://emacsredux.com/blog/2013/03/27/indent-region-or-buffer/
@@ -601,11 +602,11 @@ Set `spaceline-highlight-face-func' to
 (require 'psc-ide)
 
 (add-hook 'purescript-mode-hook
-  (lambda ()
-    (psc-ide-mode)
-    (company-mode)
-    (flycheck-mode)
-    (turn-on-purescript-indentation)))
+          (lambda ()
+            (psc-ide-mode)
+            (company-mode)
+            (flycheck-mode)
+            (turn-on-purescript-indentation)))
 
 ;; Guix
 (add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
