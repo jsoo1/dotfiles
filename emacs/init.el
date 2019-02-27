@@ -413,8 +413,8 @@
         (not (display-graphic-p (selected-frame))))
     (progn (setq powerline-default-separator 'utf-8)
            (spaceline-spacemacs-theme))
-  (progn (setq powerline-default-separator 'arrow)
-         (spaceline-all-the-icons-theme)))
+  (progn (setq powerline-default-separator nil)
+         (spaceline-spacemacs-theme)))
 
 (dolist (s '((solarized-evil-normal "#859900" "Evil normal state face.")
              (solarized-evil-insert "#b58900" "Evil insert state face.")
@@ -546,7 +546,7 @@ Set `spaceline-highlight-face-func' to
 (require 'idris-mode)
 (require 'inferior-idris)
 (require 'idris-ipkg-mode)
-(setq idris-interpreter-path "/usr/local/bin/idris")
+(setq idris-interpreter-path "/home/john/.guix-profile/bin/idris")
 
 (dolist (f '((idris-active-term-face        "#657b83")
              (idris-semantic-type-face      "#b58900")
@@ -654,8 +654,9 @@ Set `spaceline-highlight-face-func' to
         (server :default "localhost")
         (port :default 5432)))
 
-(sql-set-product-feature
- 'postgres :prompt-regexp "^.* λ ")
+(with-eval-after-load 'sql
+  (sql-set-product-feature
+   'postgres :prompt-regexp "^.* λ "))
 
 ;; YAML
 (package-install 'yaml-mode)
