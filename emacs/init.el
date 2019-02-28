@@ -138,6 +138,10 @@
 (smartparens-global-mode 1)
 
 (evil-set-initial-state 'compilation-mode 'normal)
+(evil-set-initial-state 'ibuffer-mode 'normal)
+(evil-set-initial-state 'debugger-mode 'normal)
+(evil-set-initial-state 'proced 'normal)
+(evil-set-initial-state 'ert-results-mode 'normal)
 
 ;; Magit
 (package-install 'magit)
@@ -173,7 +177,9 @@
 (package-install 'anzu)
 (setq anzu-cons-mode-line-p nil)
 (global-anzu-mode)
-(set-face-foreground 'anzu-mode-line "#002b36" nil)
+(if (or (string= 'term (daemonp)) (not (display-graphic-p (selected-frame)))
+        (set-face-foreground 'anzu-mode-line "#002b36" nil))
+    (set-face-foreground 'anzu-mode-line "#dc322f" nil))
 (package-install 'evil-anzu)
 (with-eval-after-load 'evil (require 'evil-anzu))
 
@@ -214,7 +220,8 @@
 (osx-clipboard-mode +1)
 
 ;; Keybindings
-(define-key comint-mode-map "C-c C-k" #'comint-clear-buffer)
+(define-key comint-mode-map (kbd "C-c C-k" ) #'comint-clear-buffer)
+(define-key comint-mode-map (kbd "C-d") nil)
 
 ;; Vinegar
 (define-key evil-normal-state-map "-" #'(lambda () (interactive) (dired ".")))
@@ -237,6 +244,7 @@
 (evil-leader/set-key
   "<SPC>" 'counsel-M-x
   "TAB"'evil-switch-to-windows-last-buffer
+  "a" 'my-process-map
   "b" 'my-buffer-map
   "c" 'my-compile-map
   "d" 'dired
@@ -255,6 +263,11 @@
   "z" 'my-zoom-map
   "'" 'multi-term
   "/" 'counsel-projectile-rg)
+
+(define-prefix-keymap my-process-map
+  "my process keybindings"
+  "l" list-processes
+  "p" proced)
 
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
@@ -348,6 +361,7 @@
 
 (define-prefix-keymap my-toggle-map
   "my toggles"
+  "c" (lambda nil () (interactive) (fci-mode (if (bound-and-true-p fci-mode) -1 1)))
   "d" toggle-debug-on-error
   "D" toggle-debug-on-quit
   "f" toggle-frame-fullscreen
@@ -365,6 +379,10 @@
   "j" (lambda nil () (interactive) (tmux-navigate "down"))
   "k" (lambda nil () (interactive) (tmux-navigate "up"))
   "l" (lambda nil () (interactive) (tmux-navigate "right"))
+  "H" evil-window-move-far-left
+  "J" evil-window-move-very-bottom
+  "K" evil-window-move-very-top
+  "L" evil-window-move-far-right
   "m" delete-other-windows
   "r" eyebrowse-rename-window-config
   "w" eyebrowse-switch-to-window-config
@@ -406,14 +424,14 @@
 ;; Spaceline
 (package-install 'spaceline)
 (package-install 'spaceline-all-the-icons)
-(require 'spaceline-all-the-icons)
+;; (require 'spaceline-all-the-icons)
 (require 'spaceline-config)
 (if (or (string= 'term (daemonp))
         (not (display-graphic-p (selected-frame))))
     (progn (setq powerline-default-separator 'utf-8)
            (spaceline-spacemacs-theme))
   (progn (setq powerline-default-separator 'arrow)
-         (spaceline-all-the-icons-theme)))
+         (spaceline-spacemacs-theme)))
 
 (dolist (s '((solarized-evil-normal "#859900" "Evil normal state face.")
              (solarized-evil-insert "#b58900" "Evil insert state face.")
@@ -477,8 +495,10 @@ Set `spaceline-highlight-face-func' to
           (string= 'term (daemonp)))
       (progn (set-face-background 'default "unspecified-bg" frame)
              (set-face-background 'line-number "#073642" frame))))
+
 (on-frame-open (selected-frame))
 (add-hook 'after-make-frame-functions 'on-frame-open)
+
 (defun on-after-init ()
   "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
   (unless (or (display-graphic-p (selected-frame))
@@ -486,7 +506,9 @@ Set `spaceline-highlight-face-func' to
               (not (string= 'term (daemonp))))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
            (set-face-background 'line-number "#073642" (selected-frame)))))
+
 (add-hook 'window-setup-hook #'on-after-init)
+
 (if (or (string= 'base (daemonp))
         (string= 'term (daemonp))
         (not (display-graphic-p (selected-frame))))
@@ -509,12 +531,11 @@ Set `spaceline-highlight-face-func' to
 (package-install 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 (with-eval-after-load 'company
-  #'(lambda _
-      (progn
-        (define-key company-active-map (kbd "C-n") 'company-select-next)
-        (define-key company-active-map (kbd "C-p") 'company-select-previous)
-        (define-key company-search-map (kbd "C-n") 'company-select-next)
-        (define-key company-search-map (kbd "C-p") 'company-select-previous))))
+  (progn
+    (define-key company-active-map (kbd "C-n") 'company-select-next)
+    (define-key company-active-map (kbd "C-p") 'company-select-previous)
+    (define-key company-search-map (kbd "C-n") 'company-select-next)
+    (define-key company-search-map (kbd "C-p") 'company-select-previous)))
 
 ;; Indentation
 ;; Per http://emacsredux.com/blog/2013/03/27/indent-region-or-buffer/
@@ -557,6 +578,9 @@ Set `spaceline-highlight-face-func' to
 (define-key idris-repl-mode-map (kbd "C-c C-k" ) #'idris-repl-clear-buffer)
 (define-key idris-mode-map (kbd "C-c C-k") #'idris-repl-clear-buffer)
 
+;; Emacs Lisp Mode
+(add-hook 'emacs-lisp-mode-hook 'company-mode 't)
+
 ;; Elm mode
 (package-install 'flycheck-elm)
 (require 'flycheck-elm)
@@ -591,18 +615,18 @@ Set `spaceline-highlight-face-func' to
 ;; Haskell mode
 (package-install 'haskell-mode)
 (package-install 'intero)
-(intero-global-mode 1)
 (require 'haskell-process)
 (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
-(setq haskell-process-type 'stack-ghci
+(setq haskell-process-type 'auto
       haskell-process-args-stack-ghci
       '("--with-ghc=ghci"
         "--ghci-options=-ferror-spans"
         "--no-build" "--no-load" "--test" "--bench"))
 
 ;; Agda mode
-(load-library (let ((coding-system-for-read 'utf-8))
-                (shell-command-to-string "agda-mode locate")))
+;; (load-library (let ((coding-system-for-read 'utf-8))
+;;                 (shell-command-to-string "agda-mode locate")))
+
 ;; Ocaml
 (package-install 'tuareg)
 (package-install 'merlin)
@@ -617,6 +641,29 @@ Set `spaceline-highlight-face-func' to
     ;; Use opam switch to lookup ocamlmerlin binary
     (setq merlin-command 'opam)))
 
+;; Purescript
+;; (add-to-list 'load-path "~/.emacs.d/private/purescript-mode")
+;; (require 'purescript-mode-autoloads)
+;; (add-to-list 'Info-default-directory-list "~/.emacs.d/private/purescript-mode/")
+;; (add-hook 'purescript-mode-hook
+;;           (lambda ()
+;;             (psc-ide-mode)
+;;             (company-mode)
+;;             (flycheck-mode)
+;;             (turn-on-purescript-indentation)))
+(add-to-list 'load-path "~/.emacs.d/private/new-purescript-mode")
+(require 'purescript-mode)
+(add-to-list 'auto-mode-alist '("\\.purs\\'" . purescript-mode))
+(package-install 'psc-ide)
+(require 'psc-ide)
+(add-hook 'purescript-mode-hook
+          (lambda ()
+            (psc-ide-mode)
+            (company-mode)
+            (flycheck-mode)))
+(define-key purescript-mode-map (kbd "C-c C-s") 'psc-ide-server-start)
+(define-key purescript-mode-map (kbd "C-c C-q") 'psc-ide-server-quit)
+
 ;; Guix
 (package-install 'geiser)
 (add-hook 'scheme-mode-hook #'geiser-mode)
@@ -629,8 +676,9 @@ Set `spaceline-highlight-face-func' to
         (server :default "localhost")
         (port :default 5432)))
 
-(sql-set-product-feature
- 'postgres :prompt-regexp "^.* λ ")
+(with-eval-after-load 'sql
+  (sql-set-product-feature
+   'postgres :prompt-regexp "^.* λ "))
 
 ;; YAML
 (package-install 'yaml-mode)
@@ -639,6 +687,10 @@ Set `spaceline-highlight-face-func' to
 
 ;; Plist
 (add-to-list 'auto-mode-alist '("\\.plist\\'" . xml-mode))
+
+;; Dhall
+(package-install 'dhall-mode)
+(add-to-list 'auto-mode-alist '("\\.dhall\\'" . dhall-mode))
 
 ;; Markdown
 (package-install 'markdown-mode)
