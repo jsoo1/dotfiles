@@ -30,6 +30,7 @@
                                         bindings))
                                 (seq-partition bindings 2)
                                 `(,name))))))
+
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
       initial-scratch-message ""
@@ -138,6 +139,8 @@
 (smartparens-global-mode 1)
 
 (evil-set-initial-state 'compilation-mode 'normal)
+(evil-set-initial-state 'ibuffer-mode 'normal)
+(evil-set-initial-state 'package-menu-mode 'normal)
 
 ;; Magit
 (package-install 'magit)
@@ -149,7 +152,8 @@
 (package-install 'projectile)
 (package-install 'ibuffer-projectile)
 (projectile-mode +1)
-(setq projectile-completion-system 'ivy)
+(setq projectile-completion-system 'ivy
+      projectile-indexing-method 'hybrid)
 (add-hook 'ibuffer-hook
           (lambda ()
             (ibuffer-projectile-set-filter-groups)
@@ -536,6 +540,13 @@ Set `spaceline-highlight-face-func' to
         (indent-buffer)
         (message "Indented buffer.")))))
 
+;; Debbugs
+(package-install 'debbugs)
+(setq debbugs-gnu-all-packages '("emacs" "guix" "guix-patches"))
+(setq debbugs-gnu-default-packages '("guix" "guix-patches"))
+;; Slightly broken, but hey
+(define-key debbugs-gnu-mode-map (kbd "C-c") debbugs-gnu-mode-map)
+
 ;; Idris mode
 (add-to-listq load-path "~/.emacs.d/layers/+lang/idris/local/idris-mode")
 
@@ -611,7 +622,9 @@ Set `spaceline-highlight-face-func' to
 (package-install 'dante)
 (add-hook 'haskell-mode-hook #'flycheck-mode)
 (add-hook 'dante-mode-hook
-          #'(lambda () (flycheck-add-next-checker 'haskell-dante) '(warning . haskell-hlint)))
+          #'(lambda ()
+              (flycheck-add-next-checker 'haskell-dante)
+              '(warning . haskell-hlint)))
 
 ;; Agda mode
 (load-library (let ((coding-system-for-read 'utf-8))
