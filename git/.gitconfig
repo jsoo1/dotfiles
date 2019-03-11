@@ -3,8 +3,9 @@
 [core]
 	autocrlf = input
 	safecrlf = true
-[push]
-	default = upstream
+[branch]
+	autoSetupMerge = false
+	autoSetupRebase = never
 [merge]
 	conflictstyle = diff3
 [user]
@@ -12,7 +13,5 @@
 	name = John Soo
 [alias]
 	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
-	type = cat-file -t
-	dump = cat-file -p
 [credential]
 	helper = cache
