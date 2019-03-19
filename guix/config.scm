@@ -1,5 +1,5 @@
 (use-modules (gnu)
-             ((gnu packages admin) #:select (htop inetutils))
+             ((gnu packages admin) #:select (htop inetutils tree))
              ((gnu packages base) #:select (glibc-utf8-locales))
              ((gnu packages certs) #:select (nss-certs))
              ((gnu packages curl) #:select (curl))
@@ -14,26 +14,33 @@
              ((gnu packages lsof) #:select (lsof))
              ((gnu packages ncurses) #:select (ncurses))
              ((gnu packages shells) #:select (fish))
+             ((gnu packages shellutils) #:select (fzy))
              ((gnu packages ssh) #:select (openssh))
              ((gnu packages terminals) #:select (termite))
              ((gnu packages tmux) #:select (tmux))
              ((gnu packages version-control) #:select (git))
              ((gnu packages vim) #:select (vim))
+             ((gnu packages web-browsers) #:select (lynx))
              ((gnu packages xdisorg) #:select (rofi xcape))
              ((gnu services desktop) #:select (bluetooth-service
                                                %desktop-services))
+             ((gnu services dns) #:select (dnsmasq-service-type
+                                           dnsmasq-configuration))
+             ((gnu services networking) #:select (network-manager-service-type
+                                                  network-manager-configuration))
              ((gnu services pm) #:select (thermald-configuration
                                           thermald-service-type
                                           tlp-configuration
                                           tlp-service-type))
              ((gnu services shepherd) #:select (shepherd-service
                                                 shepherd-service-type))
-             ((gnu services ssh) #:select (openssh-service-type))
+             ((gnu services ssh) #:select (openssh-service-type openssh-configuration))
              ((gnu services xdisorg) #:select (xcape-configuration
                                                xcape-service-type))
              (guix gexp)
              ((xmobar) #:select (xmobar-plus))
-             ((xmonad) #:select (my-ghc-xmonad-contrib my-xmonad)))
+             ((xmonad) #:select (my-ghc-xmonad-contrib my-xmonad))
+             ((yaft) #:select (yaft)))
 
 (define cst-trackball
   "Section \"InputClass\"
@@ -122,6 +129,10 @@ EndSection")
     htop
     ncurses
     tmux
+    fzy
+    lynx
+    tree
+    yaft
     glibc-utf8-locales
     ;; text editors
     vim
@@ -134,9 +145,13 @@ EndSection")
     ;; TODO: Add service for modprobe.d modules?
     (bluetooth-service #:auto-enable? #t)
     (console-keymap-service "/home/john/dotfiles/minimal/Caps2Ctrl.map")
-    (service xcape-service-type (xcape-configuration
-                                 "john"
-                                 '(("Control_L" . "Escape"))))
+    (service dnsmasq-service-type
+             (dnsmasq-configuration
+              (servers '("1.1.1.1"))))
+    (service xcape-service-type
+             (xcape-configuration
+              "john"
+              '(("Control_L" . "Escape"))))
     (service kmscon-service-type
              (kmscon-configuration
               (virtual-terminal "tty8")
@@ -146,8 +161,12 @@ EndSection")
               (xkb-layout "us")
               (xkb-variant "")
               (xkb-options "ctrl:nocaps")))
-    (service openssh-service-type)
-    (service thermald-service-type (thermald-configuration))
+    (service openssh-service-type
+             (openssh-configuration
+              (challenge-response-authentication? #f)
+              (password-authentication? #f)))
+    (service thermald-service-type
+             (thermald-configuration))
     (service tlp-service-type
              (tlp-configuration
               (tlp-default-mode "BAT")
@@ -155,23 +174,27 @@ EndSection")
     (modify-services %desktop-services
       ('console-font-service-type
        s =>
-       (list
-        '("tty1" "LatGrkCyr-8x16")
-        '("tty2" "TamzenForPowerline8x16")
-        '("tty3" "LatGrkCyr-8x16")
-        '("tty4" "LatGrkCyr-8x16")
-        '("tty5" "LatGrkCyr-8x16")
-        '("tty6" "LatGrkCyr-8x16")))
+       `(("tty1" "LatGrkCyr-8x16")
+         ("tty2" "TamzenForPowerline8x16")
+         ("tty3" "LatGrkCyr-8x16")
+         ("tty4" "LatGrkCyr-8x16")
+         ("tty5" "LatGrkCyr-8x16")
+         ("tty6" "LatGrkCyr-8x16")))
+      ('network-manager-service-type
+       c =>
+       (network-manager-configuration
+        (inherit c)
+        (dns "none")))
       ('slim-service-type
        c =>
        (slim-configuration
         (inherit c)
         (startx
          (xorg-start-command
-          #:configuration-file (xorg-configuration-file
-                                #:extra-config (list
-                                                cst-trackball
-                                                caps2control)))))))))
+          #:configuration-file
+          (xorg-configuration-file
+           #:extra-config `(,cst-trackball
+                            ,caps2control)))))))))
   ;; Allow resolution of '.local' host names with mDNS.
   (name-service-switch %mdns-host-lookup-nss))
 
