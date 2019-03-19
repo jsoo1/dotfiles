@@ -37,7 +37,8 @@
 (setq-default truncate-lines 't)
 (add-to-listq
  default-frame-alist '(ns-transparent-titlebar . t)
- default-frame-alist '(font . "FantasqueSansMono Nerd Font Mono 16"))
+ default-frame-alist '(font . "Fantasque Sans Mono 16"))
+(set-fontset-font "fontset-default" 'unicode "DejaVu Sans")
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -432,7 +433,7 @@
         (not (display-graphic-p (selected-frame))))
     (progn (setq powerline-default-separator 'utf-8)
            (spaceline-spacemacs-theme))
-  (progn (setq powerline-default-separator 'arrow)
+  (progn (setq powerline-default-separator nil)
          (spaceline-spacemacs-theme)))
 
 (dolist (s '((solarized-evil-normal "#859900" "Evil normal state face.")
@@ -564,6 +565,7 @@ Set `spaceline-highlight-face-func' to
 (setq debbugs-gnu-all-packages '("emacs" "guix" "guix-patches"))
 (setq debbugs-gnu-default-packages '("guix" "guix-patches"))
 ;; Slightly broken, but hey
+(setq debbugs-gnu-mode-map (make-sparse-keymap))
 (define-key debbugs-gnu-mode-map (kbd "C-c") debbugs-gnu-mode-map)
 
 ;; Idris mode
@@ -648,6 +650,7 @@ Set `spaceline-highlight-face-func' to
 ;; Agda mode
 (load-library (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
+
 ;; Ocaml
 (package-install 'tuareg)
 (package-install 'merlin)
@@ -730,5 +733,9 @@ Set `spaceline-highlight-face-func' to
 (package-install 'vimrc-mode)
 (require 'vimrc-mode)
 (add-to-list 'auto-mode-alist '("\\.vim\\(rc\\)?\\'" . vimrc-mode))
+
+;; CMake
+(package-install 'cmake-mode)
+(require 'cmake-mode)
 
 ;;; init.el ends here
