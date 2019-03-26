@@ -67,3 +67,15 @@ function vpout -d 'Get off the vpn' -a vpn
 end
 
 complete -c vpout --no-files
+
+function tl -d 'select tldr from fzf'
+    tldr (tldr --list | tr ', ' '\n ' | fzf | tr -d ' ')
+end
+
+complete -c tldr --no-files
+
+function pidof -d 'select a pid via fzf'
+    ps waux | fzf | sed -E 's/[[:space:]]+/ /g' | cut -d ' ' -f 2
+end
+
+complete -c pidof --no-files
