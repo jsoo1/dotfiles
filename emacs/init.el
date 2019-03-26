@@ -37,7 +37,8 @@
 (setq-default truncate-lines 't)
 (add-to-listq
  default-frame-alist '(ns-transparent-titlebar . t)
- default-frame-alist '(font . "FantasqueSansMono Nerd Font Mono 16"))
+ default-frame-alist '(font . "Fantasque Sans Mono 16"))
+(set-fontset-font "fontset-default" 'unicode "DejaVu Sans")
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -139,6 +140,7 @@
 
 (evil-set-initial-state 'compilation-mode 'normal)
 (evil-set-initial-state 'ibuffer-mode 'normal)
+(evil-set-initial-state 'package-menu-mode 'normal)
 (evil-set-initial-state 'debugger-mode 'normal)
 (evil-set-initial-state 'proced 'normal)
 (evil-set-initial-state 'ert-results-mode 'normal)
@@ -566,6 +568,7 @@ Set `spaceline-highlight-face-func' to
 (add-hook 'after-init-hook 'global-company-mode)
 (with-eval-after-load 'company
   (progn
+    (global-company-mode)
     (define-key company-active-map (kbd "C-n") 'company-select-next)
     (define-key company-active-map (kbd "C-p") 'company-select-previous)
     (define-key company-search-map (kbd "C-n") 'company-select-next)
@@ -590,6 +593,14 @@ Set `spaceline-highlight-face-func' to
         (indent-buffer)
         (message "Indented buffer.")))))
 
+;; Debbugs
+(package-install 'debbugs)
+(setq debbugs-gnu-all-packages '("emacs" "guix" "guix-patches"))
+(setq debbugs-gnu-default-packages '("guix" "guix-patches"))
+;; Slightly broken, but hey
+(setq debbugs-gnu-mode-map (make-sparse-keymap))
+(define-key debbugs-gnu-mode-map (kbd "C-c") debbugs-gnu-mode-map)
+
 ;; Idris mode
 (add-to-listq load-path "~/.emacs.d/layers/+lang/idris/local/idris-mode")
 
@@ -613,7 +624,7 @@ Set `spaceline-highlight-face-func' to
 (define-key idris-mode-map (kbd "C-c C-k") #'idris-repl-clear-buffer)
 
 ;; Emacs Lisp Mode
-(add-hook 'emacs-lisp-mode-hook 'company-mode 't)
+(with-eval-after-load 'company (add-hook 'emacs-lisp-mode-hook #'company-mode 't))
 
 ;; Elm mode
 (package-install 'flycheck-elm)
@@ -727,8 +738,17 @@ Set `spaceline-highlight-face-func' to
 (define-key purescript-mode-map (kbd "C-c C-q") 'psc-ide-server-quit)
 
 ;; Guix
+(add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
 (package-install 'geiser)
 (add-hook 'scheme-mode-hook #'geiser-mode)
+(with-eval-after-load 'geiser-guile
+  (add-to-list 'geiser-guile-load-path "~/projects/guix"))
+(with-eval-after-load 'yasnippet
+  (add-to-list 'yas-snippet-dirs "~/projects/guix/etc/snippets"))
+
+;; Common Lisp
+(package-install 'slime)
+(package-install 'slime-company)
 
 ;; SQL
 (package-install 'sql)
@@ -792,5 +812,9 @@ Set `spaceline-highlight-face-func' to
 ;; CSV
 (package-install 'csv-mode)
 (require 'csv-mode)
+
+;; CMake
+(package-install 'cmake-mode)
+(require 'cmake-mode)
 
 ;;; init.el ends here
