@@ -715,15 +715,6 @@ Set `spaceline-highlight-face-func' to
     (setq merlin-command 'opam)))
 
 ;; Purescript
-;; (add-to-list 'load-path "~/.emacs.d/private/purescript-mode")
-;; (require 'purescript-mode-autoloads)
-;; (add-to-list 'Info-default-directory-list "~/.emacs.d/private/purescript-mode/")
-;; (add-hook 'purescript-mode-hook
-;;           (lambda ()
-;;             (psc-ide-mode)
-;;             (company-mode)
-;;             (flycheck-mode)
-;;             (turn-on-purescript-indentation)))
 (add-to-list 'load-path "~/.emacs.d/private/new-purescript-mode")
 (require 'purescript-mode)
 (add-to-list 'auto-mode-alist '("\\.purs\\'" . purescript-mode))
