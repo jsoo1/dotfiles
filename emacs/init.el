@@ -142,6 +142,7 @@
 (evil-set-initial-state 'debugger-mode 'normal)
 (evil-set-initial-state 'proced 'normal)
 (evil-set-initial-state 'ert-results-mode 'normal)
+(evil-set-initial-state 'comint-mode 'normal)
 
 ;; Magit
 (package-install 'magit)
@@ -153,12 +154,36 @@
 (package-install 'projectile)
 (package-install 'ibuffer-projectile)
 (projectile-mode +1)
-(setq projectile-completion-system 'ivy)
+(setq projectile-completion-system 'ivy
+      projectile-indexing-method 'hybrid
+      projectile-enable-caching 't)
 (add-hook 'ibuffer-hook
           (lambda ()
             (ibuffer-projectile-set-filter-groups)
             (unless (eq ibuffer-sorting-mode 'alphabetic)
               (ibuffer-do-sort-by-alphabetic))))
+
+(defun my-projectile-compile-buffer-name (project kind)
+  "Get the name for `PROJECT's command `KIND' (`RUN' | `TEST' | `COMPILE')."
+  (concat "*" project "-" kind "*"))
+
+(defun my-projectile-command (kind)
+  "Do command `KIND' (`RUN' | `TEST' | `COMPILE') the projectile project in a compilation buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'*."
+  (interactive)
+  (let* ((old-compile-buffer (get-buffer "*compilation*"))
+        (buffer-name (my-projectile-compile-buffer-name (projectile-project-name) kind))
+        (old-cmd-buffer (get-buffer buffer-name)))
+    (when old-compile-buffer (kill-buffer old-compile-buffer))
+    (funcall (intern (concat "projectile-" kind "-project")) nil)
+    (with-current-buffer (get-buffer "*compilation*")
+      (when old-cmd-buffer (kill-buffer old-cmd-buffer))
+      (rename-buffer buffer-name))))
+
+(describe-function (intern "projectile-run-project"))
+
+(defun my-switch-to-compile-buffer (kind)
+  "Switch to compile buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'."
+  (switch-to-buffer (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
 
 ;; Imenu Anywhere
 (package-install 'imenu-anywhere)
@@ -212,6 +237,8 @@
   ('darwin (progn (package-install 'osx-clipboard)
                   (osx-clipboard-mode +1))))
 
+;; Compilation
+(define-key compilation-mode-map (kbd "C-c C-l") #'recompile)
 ;; Avy
 (package-install 'avy)
 
@@ -272,11 +299,13 @@
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
   "b" ivy-switch-buffer
-  "c" (lambda () (interactive) (pop-to-buffer (get-buffer-create "*compilation*")))
+  "c" (lambda () (interactive) (my-switch-to-compile-buffer "compile"))
   "d" (lambda () (interactive) (kill-buffer (current-buffer)))
   "i" ibuffer
   "m" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Messages*")))
-  "s" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Scratch*"))))
+  "r" (lambda () (interactive) (my-switch-to-compile-buffer "run"))
+  "s" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Scratch*")))
+  "t" (lambda () (interactive) (my-switch-to-compile-buffer "test")))
 
 (define-prefix-keymap my-compile-map
   "my keybindings for compiling"
@@ -335,7 +364,7 @@
 (define-prefix-keymap my-projectile-map
   "my projectile keybindings"
   "b" counsel-projectile-switch-to-buffer
-  "c" projectile-compile-project
+  "c" (lambda () (interactive) (my-projectile-command "compile"))
   "d" counsel-projectile-find-dir
   "D" (lambda () (interactive) (dired (projectile-project-root)))
   "f" counsel-projectile-find-file
@@ -343,9 +372,10 @@
   "l" switch-project-workspace
   "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
   "p" counsel-projectile-switch-project
-  "r" projectile-run-project
-  "t" projectile-test-project
-  "'" (lambda () (interactive) (projectile-with-default-dir (projectile-project-root) (multi-term))))
+  "r" (lambda () (interactive) (my-projectile-command "run"))
+  "t" (lambda () (interactive) (my-projectile-command "test"))
+  "'" (lambda () (interactive) (projectile-with-default-dir (projectile-project-root) (multi-term)))
+  "]" projectile-find-tag)
 
 (define-prefix-keymap my-quit-map
   "my quit keybindings"
@@ -527,6 +557,10 @@ Set `spaceline-highlight-face-func' to
 (require 'flycheck)
 (global-flycheck-mode)
 
+;; ispell
+(setq ispell-program-name "aspell"
+      ispell-list-command "--list")
+
 ;; Company
 (package-install 'company)
 (add-hook 'after-init-hook 'global-company-mode)
@@ -590,15 +624,43 @@ Set `spaceline-highlight-face-func' to
 (package-install 's)
 (package-install 'let-alist)
 (require 'elm-mode)
-(setq elm-format-on-save 't)
+(setq elm-format-on-save 't
+      elm-format-elm-version "0.18"
+      elm-package-catalog-root "http://package.elm-lang.org/")
 (eval-after-load 'flycheck
   '(add-hook 'flycheck-mode-hook #'flycheck-elm-setup))
 (with-eval-after-load 'company-mode (add-to-list 'company-backends 'company-elm))
+;; Can't get only elm 18 packages without this hack
+(defun elm-package-refresh-contents ()
+  "Refresh the package list."
+  (interactive)
+  (elm--assert-dependency-file)
+  (let* ((all-packages (elm-package--build-uri "all-packages?elm-package-version=0.18")))
+    (with-current-buffer (url-retrieve-synchronously all-packages)
+      (goto-char (point-min))
+      (re-search-forward "^ *$")
+      (setq elm-package--marked-contents nil)
+      (setq elm-package--contents (append (json-read) nil)))))
+
+
 
 ;; Fish mode
 (package-install 'fish-mode)
 
 ;; JavaScript
+(package-install 'nodejs-repl)
+(require 'nodejs-repl)
+(add-hook
+ 'js-mode-hook
+ (lambda nil
+   (progn
+     (define-key js-mode-map (kbd "C-c C-s") 'nodejs-repl)
+     (define-key js-mode-map (kbd "C-c C-c") 'nodejs-repl-send-last-expression)
+     (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
+     (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
+     (define-key js-mode-map (kbd "C-c C-l") 'nodejs-repl-load-file)
+     (define-key js-mode-map (kbd "C-c C-k") (lambda () (interactive) (with-current-buffer "*nodejs*" (comint-clear-buffer))))
+     (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl))))
 (setq js-indent-level 4)
 
 ;; Proof General
@@ -670,15 +732,27 @@ Set `spaceline-highlight-face-func' to
 
 ;; SQL
 (package-install 'sql)
-(setq sql-postgres-login-params
-      '((user :default "postgres")
-        (database :default "vetpro")
-        (server :default "localhost")
-        (port :default 5432)))
+(setq
+ sql-product 'postgres
+ sql-connection-alist
+ '((vetpro (sql-product 'postgres)
+           (sql-port 5432)
+           (sql-server "localhost")
+           (sql-user "postgres")
+           (sql-database "vetpro")))
+ sql-postgres-login-params
+ '((user :default "postgres")
+   (database :default "vetpro")
+   (server :default "localhost")
+   (port :default 5432)))
 
 (with-eval-after-load 'sql
-  (sql-set-product-feature
-   'postgres :prompt-regexp "^.* λ "))
+  (progn
+    (sql-set-product-feature
+     'postgres :prompt-regexp "^.* λ ")
+    (define-key sql-mode-map (kbd "C-c C-i") #'(lambda () (interactive) (sql-connect 'vetpro)))
+    (define-key sql-mode-map (kbd "C-c C-k") #'(lambda () (interactive)
+                                                 (with-current-buffer (get-buffer "*SQL: <vetpro>*") (comint-clear-buffer))))))
 
 ;; YAML
 (package-install 'yaml-mode)
@@ -702,6 +776,11 @@ Set `spaceline-highlight-face-func' to
   "Major mode for editing GitHub Flavored Markdown files" t)
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
+;; Dockerfile
+(package-install 'dockerfile-mode)
+(require 'dockerfile-mode)
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+
 ;; Shellcheck
 (add-hook 'sh-mode-hook #'flycheck-mode)
 
@@ -709,5 +788,9 @@ Set `spaceline-highlight-face-func' to
 (package-install 'vimrc-mode)
 (require 'vimrc-mode)
 (add-to-list 'auto-mode-alist '("\\.vim\\(rc\\)?\\'" . vimrc-mode))
+
+;; CSV
+(package-install 'csv-mode)
+(require 'csv-mode)
 
 ;;; init.el ends here
