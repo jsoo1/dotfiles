@@ -181,8 +181,6 @@
       (when old-cmd-buffer (kill-buffer old-cmd-buffer))
       (rename-buffer buffer-name))))
 
-(describe-function (intern "projectile-run-project"))
-
 (defun my-switch-to-compile-buffer (kind)
   "Switch to compile buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'."
   (switch-to-buffer (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
