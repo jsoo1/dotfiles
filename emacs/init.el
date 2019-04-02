@@ -565,7 +565,6 @@ Set `spaceline-highlight-face-func' to
 (package-install 'eyebrowse)
 (setq eyebrowse-keymap-prefix "")
 (eyebrowse-mode 1)
-(eyebrowse-rename-window-config (eyebrowse--get 'current-slot) "dotfiles")
 
 ;; Flycheck
 (package-install 'flycheck)
