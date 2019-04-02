@@ -30,6 +30,7 @@
                                         bindings))
                                 (seq-partition bindings 2)
                                 `(,name))))))
+
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
       initial-scratch-message ""
@@ -37,7 +38,7 @@
 (setq-default truncate-lines 't)
 (add-to-listq
  default-frame-alist '(ns-transparent-titlebar . t)
- default-frame-alist '(font . "Fantasque Sans Mono 16"))
+ default-frame-alist '(font . "FantasqueSansMono Nerd Font Mono 16"))
 (set-fontset-font "fontset-default" 'unicode "DejaVu Sans")
 
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -111,6 +112,10 @@
  create-lockfiles nil
  auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t)))
 
+;; Fill column indicator
+(package-install 'fill-column-indicator)
+(require 'fill-column-indicator)
+
 ;; Evil
 (setq evil-want-C-u-scroll t
       evil-disable-insert-state-bindings t
@@ -173,8 +178,8 @@
   "Do command `KIND' (`RUN' | `TEST' | `COMPILE') the projectile project in a compilation buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'*."
   (interactive)
   (let* ((old-compile-buffer (get-buffer "*compilation*"))
-        (buffer-name (my-projectile-compile-buffer-name (projectile-project-name) kind))
-        (old-cmd-buffer (get-buffer buffer-name)))
+         (buffer-name (my-projectile-compile-buffer-name (projectile-project-name) kind))
+         (old-cmd-buffer (get-buffer buffer-name)))
     (when old-compile-buffer (kill-buffer old-compile-buffer))
     (funcall (intern (concat "projectile-" kind "-project")) nil)
     (with-current-buffer (get-buffer "*compilation*")
@@ -223,6 +228,13 @@
 (global-display-line-numbers-mode 1)
 (setq-default display-line-numbers-type 'relative)
 (global-hl-line-mode +1)
+
+(defun next-line-number (curr)
+  "Get the next line number after `CURR'."
+  (pcase curr
+    ('absolute 'relative)
+    ('relative 'nil)
+    (_ 'absolute)))
 
 ;; Which key
 (package-install 'which-key)
@@ -396,6 +408,7 @@
   "D" toggle-debug-on-quit
   "f" toggle-frame-fullscreen
   "l" toggle-truncate-lines
+  "r" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
   "t" counsel-load-theme
   "w" whitespace-mode)
 
@@ -404,7 +417,9 @@
   (kbd "TAB") eyebrowse-last-window-config
   "/" (lambda nil () (interactive) (progn (split-window-horizontally) (balance-windows-area)))
   "-" (lambda nil () (interactive) (progn (split-window-vertically) (balance-windows-area)))
+  "c" make-frame
   "d" (lambda nil () (interactive) (progn (delete-window) (balance-windows-area)))
+  "D" delete-frame
   "h" (lambda nil () (interactive) (tmux-navigate "left"))
   "j" (lambda nil () (interactive) (tmux-navigate "down"))
   "k" (lambda nil () (interactive) (tmux-navigate "up"))
@@ -518,7 +533,7 @@ Set `spaceline-highlight-face-func' to
   (load-theme 'solarized-light))
 
 ;; Transparency in terminal
-(defun on-frame-open (frame)
+(defun my-make-frame-transparent (frame)
   "Make `FRAME' transparent'."
   (if (or (not (display-graphic-p frame))
 	  (string= 'base (daemonp))
@@ -526,8 +541,8 @@ Set `spaceline-highlight-face-func' to
       (progn (set-face-background 'default "unspecified-bg" frame)
              (set-face-background 'line-number "#073642" frame))))
 
-(on-frame-open (selected-frame))
-(add-hook 'after-make-frame-functions 'on-frame-open)
+(my-make-frame-transparent (selected-frame))
+(add-hook 'after-make-frame-functions #'my-make-frame-transparent)
 
 (defun on-after-init ()
   "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
@@ -651,8 +666,6 @@ Set `spaceline-highlight-face-func' to
       (setq elm-package--marked-contents nil)
       (setq elm-package--contents (append (json-read) nil)))))
 
-
-
 ;; Fish mode
 (package-install 'fish-mode)
 
@@ -695,8 +708,8 @@ Set `spaceline-highlight-face-func' to
         "--no-build" "--no-load" "--test" "--bench"))
 
 ;; Agda mode
-;; (load-library (let ((coding-system-for-read 'utf-8))
-;;                 (shell-command-to-string "agda-mode locate")))
+(load-library (let ((coding-system-for-read 'utf-8))
+                (shell-command-to-string "agda-mode locate")))
 
 ;; Ocaml
 (package-install 'tuareg)
