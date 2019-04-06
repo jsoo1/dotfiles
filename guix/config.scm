@@ -65,115 +65,57 @@
     Option \"AccelerationNumerator\" \"2.0\"
 EndSection")
 
-(define caps2control
-  "Section \"InputClass\"
-    Identifier \"system-keyboard\"
-    MatchProduct \"AT Translated Set 2 keyboard\"
-    MatchIsKeyboard \"on\"
-    Option \"XkbLayout\" \"us\"
-    Option \"XkbOptions\" \"ctrl:nocaps\"
-EndSection")
+(define ctrl-nocaps (keyboard-layout "us" #:options '("ctrl:nocaps")))
 
 (operating-system
-  (host-name "ecenter")
-  (timezone "America/Los_Angeles")
-  (locale "en_US.utf8")
-  (initrd-modules %base-initrd-modules)
-  (bootloader
-   (bootloader-configuration
-    (bootloader grub-efi-bootloader)
-    (target "/boot/efi")
-    (menu-entries
-     `(,(menu-entry
-         (label "ubuntu")
-         (linux "/boot/vmlinuz-4.15.0-43-generic")
-         (linux-arguments
-          '("root=UUID=45658f04-8790-437f-9590-13025ffb7264"
-            "ro"
-            "quiet"
-            "splash"
-            "vt.handoff=1"))
-         (initrd "/boot/initrd.img-4.15.0-43-generic"))))))
-  (file-systems
-   (cons* (file-system
-            (device
-             (uuid "462563db-3f82-44d2-829c-eb2bce9fd0e0" 'ext4))
-            (mount-point "/")
-            (type "ext4"))
-          (file-system
-            (device (uuid "60E8-6B6F" 'fat))
-            (mount-point "/boot/efi")
-            (type "vfat"))
-          %base-file-systems))
-  (swap-devices '("/dev/sda7"))
-  (users
-   (cons (user-account
-          (name "john")
-          (comment "idiot man")
-          (group "users")
-          (supplementary-groups
-           '("wheel" "netdev" "audio" "video" "lp"))
-          (home-directory "/home/john")
-          (shell #~(string-append #$fish "/bin/fish")))
-         %base-user-accounts))
-  (services
-   (cons*
-    ;; TODO: Add service for modprobe.d modules?
-    (bluetooth-service #:auto-enable? #t)
-    (console-keymap-service "/home/john/dotfiles/minimal/Caps2Ctrl.map")
-    (service dnsmasq-service-type
-             (dnsmasq-configuration
-              (servers '("1.1.1.1"))))
-    (service xcape-service-type
-             (xcape-configuration
-              "john"
-              '(("Control_L" . "Escape"))))
-    (service kmscon-service-type
-             (kmscon-configuration
-              (virtual-terminal "tty8")
-              (scrollback "100000")
-              (font-name "'Fantasque Sans Mono'")
-              (font-size "15")
-              (xkb-layout "us")
-              (xkb-variant "")
-              (xkb-options "ctrl:nocaps")))
-    (service openssh-service-type
-             (openssh-configuration
-              (challenge-response-authentication? #f)
-              (password-authentication? #f)))
-    (service thermald-service-type
-             (thermald-configuration))
-    (service tlp-service-type
-             (tlp-configuration
-              (tlp-default-mode "BAT")
-              (usb-autosuspend? #f)))
-    (modify-services %desktop-services
-      ('console-font-service-type
-       s =>
-       `(("tty1" "LatGrkCyr-8x16")
-         ("tty2" "TamzenForPowerline8x16")
-         ("tty3" "LatGrkCyr-8x16")
-         ("tty4" "LatGrkCyr-8x16")
-         ("tty5" "LatGrkCyr-8x16")
-         ("tty6" "LatGrkCyr-8x16")))
-      ('network-manager-service-type
-       c =>
-       (network-manager-configuration
-        (inherit c)
-        (dns "none")))
-      ('slim-service-type
-       c =>
-       (slim-configuration
-        (inherit c)
-        (startx
-         (xorg-start-command
-          #:configuration-file
-          (xorg-configuration-file
-           #:extra-config `(,cst-trackball
-                            ,caps2control)))))))))
-  ;; Allow resolution of '.local' host names with mDNS.
-  (name-service-switch %mdns-host-lookup-nss))
-
+ (host-name "ecenter")
+ (timezone "America/Los_Angeles")
+ (locale "en_US.utf8")
+ (keyboard-layout ctrl-nocaps)
+ (initrd-modules %base-initrd-modules)
+ (bootloader
+  (bootloader-configuration
+   (bootloader grub-efi-bootloader)
+   (target "/boot/efi")
+   (keyboard-layout ctrl-nocaps)
+   (menu-entries
+    `(,(menu-entry
+        (label "ubuntu")
+        (linux "/boot/vmlinuz-4.15.0-43-generic")
+        (linux-arguments
+         '("root=UUID=45658f04-8790-437f-9590-13025ffb7264"
+           "ro"
+           "quiet"
+           "splash"
+           "vt.handoff=1"))
+        (initrd "/boot/initrd.img-4.15.0-43-generic"))))))
+ (file-systems
+  (cons* (file-system
+          (device
+           (uuid "462563db-3f82-44d2-829c-eb2bce9fd0e0" 'ext4))
+          (mount-point "/")
+          (type "ext4"))
+         (file-system
+          (device (uuid "60E8-6B6F" 'fat))
+          (mount-point "/boot/efi")
+          (type "vfat"))
+         (file-system
+          (device
+           (uuid "f9a82763-0828-4f4a-b668-9bf6008bf482" 'ext4))
+          (mount-point "/mnt/sdcard")
+          (type "ext4"))
+         %base-file-systems))
+ (swap-devices '("/dev/sda7"))
+ (users
+  (cons (user-account
+         (name "john")
+         (comment "idiot man")
+         (group "users")
+         (supplementary-groups
+          '("wheel" "netdev" "audio" "video" "lp"))
+         (home-directory "/home/john")
+         (shell #~(string-append #$fish "/bin/fish")))
+        %base-user-accounts))
  (packages
   (cons*
    ;; nice tty font
@@ -192,3 +134,60 @@ EndSection")
    ;; for keyboards
    bluez
    %base-packages))
+ (services
+  (cons*
+   ;; TODO: Add service for modprobe.d modules?
+   (bluetooth-service #:auto-enable? #t)
+   (service dnsmasq-service-type
+            (dnsmasq-configuration
+             (servers '("1.1.1.1"))))
+   ;; (service xcape-service-type
+   ;;          (xcape-configuration
+   ;;           "john"
+   ;;           '(("Control_L" . "Escape"))))
+   (service kmscon-service-type
+            (kmscon-configuration
+             (virtual-terminal "tty8")
+             (scrollback "100000")
+             (font-name "'Fantasque Sans Mono'")
+             (font-size "15")
+             (xkb-layout "us")
+             (xkb-variant "")
+             (xkb-options "ctrl:nocaps")))
+   (service openssh-service-type
+            (openssh-configuration
+             (challenge-response-authentication? #f)
+             (password-authentication? #f)))
+   (service thermald-service-type
+            (thermald-configuration))
+   (service tlp-service-type
+            (tlp-configuration
+             (tlp-default-mode "BAT")
+             (usb-autosuspend? #f)))
+   (modify-services
+    %desktop-services
+    ('console-font-service-type
+     s =>
+     `(("tty1" "LatGrkCyr-8x16")
+       ("tty2" "TamzenForPowerline8x16b")
+       ("tty3" "LatGrkCyr-8x16")
+       ("tty4" "LatGrkCyr-8x16")
+       ("tty5" "LatGrkCyr-8x16")
+       ("tty6" "LatGrkCyr-8x16")))
+    ('network-manager-service-type
+     c =>
+     (network-manager-configuration
+      (inherit c)
+      (dns "none")))
+    ('gdm-service-type
+     c =>
+     (gdm-configuration
+      (inherit c)
+      (auto-login? #t)
+      (default-user "john")
+      (xorg-configuration
+       (xorg-configuration
+        (keyboard-layout ctrl-nocaps)
+        (extra-config `(,cst-trackball)))))))))
+ ;; Allow resolution of '.local' host names with mDNS.
+ (name-service-switch %mdns-host-lookup-nss))
