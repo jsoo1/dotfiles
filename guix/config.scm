@@ -4,10 +4,11 @@
              ((gnu packages certs) #:select (nss-certs))
              ((gnu packages curl) #:select (curl))
              ((gnu packages emacs) #:select (emacs))
-             ((gnu packages fonts) #:select (font-adobe-source-code-pro
-                                             font-fantasque-sans
-                                             font-iosevka
-                                             font-tamzen))
+             ((gnu packages fonts)
+              #:select (font-adobe-source-code-pro
+                        font-fantasque-sans
+                        font-iosevka
+                        font-tamzen))
              ((gnu packages fontutils) #:select (fontconfig))
              ((gnu packages gnupg) #:select (gnupg))
              ((gnu packages linux) #:select (bluez))
@@ -22,21 +23,33 @@
              ((gnu packages vim) #:select (vim))
              ((gnu packages web-browsers) #:select (lynx))
              ((gnu packages xdisorg) #:select (rofi xcape))
-             ((gnu services desktop) #:select (bluetooth-service
-                                               %desktop-services))
-             ((gnu services dns) #:select (dnsmasq-service-type
-                                           dnsmasq-configuration))
-             ((gnu services networking) #:select (network-manager-service-type
-                                                  network-manager-configuration))
-             ((gnu services pm) #:select (thermald-configuration
-                                          thermald-service-type
-                                          tlp-configuration
-                                          tlp-service-type))
-             ((gnu services shepherd) #:select (shepherd-service
-                                                shepherd-service-type))
-             ((gnu services ssh) #:select (openssh-service-type openssh-configuration))
-             ((gnu services xdisorg) #:select (xcape-configuration
-                                               xcape-service-type))
+             ((gnu services desktop)
+              #:select (bluetooth-service
+                        %desktop-services))
+             ((gnu services dns)
+              #:select (dnsmasq-service-type
+                        dnsmasq-configuration))
+             ((gnu services networking)
+              #:select (network-manager-service-type
+                        network-manager-configuration))
+             ((gnu services pm)
+              #:select (thermald-configuration
+                        thermald-service-type
+                        tlp-configuration
+                        tlp-service-type))
+             ((gnu services shepherd)
+              #:select (shepherd-service
+                        shepherd-service-type))
+             ((gnu services ssh)
+              #:select (openssh-service-type
+                        openssh-configuration))
+             ((gnu services xdisorg)
+              #:select (xcape-configuration
+                        xcape-service-type))
+             ((gnu services xorg)
+              #:select (gdm-service-type
+                        gdm-configuration
+                        xorg-configuration))
              (guix gexp)
              ((xmobar) #:select (xmobar-plus))
              ((xmonad) #:select (my-ghc-xmonad-contrib my-xmonad))
@@ -103,43 +116,6 @@ EndSection")
           (home-directory "/home/john")
           (shell #~(string-append #$fish "/bin/fish")))
          %base-user-accounts))
-  (packages
-   (cons*
-    ;; nice tty font
-    font-tamzen
-    ;; kmscon fonts
-    fontconfig
-    font-fantasque-sans
-    font-iosevka
-    ;; window manager related
-    my-xmonad
-    my-ghc-xmonad-contrib
-    xmobar-plus
-    rofi
-    ;;for HTTPS access
-    curl
-    nss-certs
-    ;; essentials
-    lsof
-    inetutils
-    git
-    fish
-    openssh
-    gnupg
-    htop
-    ncurses
-    tmux
-    fzy
-    lynx
-    tree
-    yaft
-    glibc-utf8-locales
-    ;; text editors
-    vim
-    emacs
-    ;; for keyboards
-    bluez
-    %base-packages))
   (services
    (cons*
     ;; TODO: Add service for modprobe.d modules?
@@ -198,3 +174,21 @@ EndSection")
   ;; Allow resolution of '.local' host names with mDNS.
   (name-service-switch %mdns-host-lookup-nss))
 
+ (packages
+  (cons*
+   ;; nice tty font
+   font-tamzen
+   ;; kmscon fonts
+   fontconfig font-fantasque-sans font-iosevka
+   ;; window manager related
+   my-xmonad my-ghc-xmonad-contrib xmobar-plus rofi
+   ;;for HTTPS access
+   curl nss-certs
+   ;; essentials
+   lsof inetutils git fish openssh gnupg htop ncurses tmux fzy lynx
+   tree yaft glibc-utf8-locales
+   ;; text editors
+   vim emacs
+   ;; for keyboards
+   bluez
+   %base-packages))
