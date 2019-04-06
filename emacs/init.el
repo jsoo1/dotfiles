@@ -144,6 +144,7 @@
 (evil-set-initial-state 'debugger-mode 'normal)
 (evil-set-initial-state 'proced 'normal)
 (evil-set-initial-state 'ert-results-mode 'normal)
+(evil-set-initial-state 'Info-mode 'normal)
 
 ;; Magit
 (package-install 'magit)
