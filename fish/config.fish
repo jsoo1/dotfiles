@@ -4,6 +4,12 @@ set -gx PATH $PATH /home/john/.cargo/bin /home/john/.local/bin
 set -xg EDITOR 'env TERM=xterm-24bits emacsclient -t --socket-name=term'
 set -xg ALTERNATE_EDITOR 'vim'
 
+# Something weird happens without this
+set -xg GIT_EXEC_PATH /run/current-system/profile/libexec/git-core
+
+# Or this
+set -xg GUILE_LOAD_PATH $GUILE_LOAD_PATH /home/john/.guix-profile/share/guile/site/2.2
+
 # Fuzzy Finder
 set -x FZF_DEFAULT_OPTS '
   --color=bg+:#073642,spinner:#719e07,hl:#586e75
