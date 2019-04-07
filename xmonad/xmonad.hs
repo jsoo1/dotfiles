@@ -106,6 +106,14 @@ main =
             )
           , ( ( myModMask .|. controlMask, xK_f)
             , sendMessage ToggleStruts
+              <+> spawn "dbus-send \
+                        \--session \
+                        \--dest=org.Xmobar.Control \
+                        \--type=method_call \
+                        \--print-reply \
+                        \'/org/Xmobar/Control' \
+                        \org.Xmobar.Control.SendSignal \
+                        \\"string:Toggle 0\""
             )
           , ( ( myModMask .|. shiftMask, xK_x )
             , spawn "xlock -mode rain"

@@ -88,7 +88,17 @@ EndSection")
            "quiet"
            "splash"
            "vt.handoff=1"))
-        (initrd "/boot/initrd.img-4.15.0-43-generic"))))))
+        (initrd "/boot/initrd.img-4.15.0-43-generic"))
+      ,(menu-entry
+        (label "void")
+        (linux "(hd1,2)/boot/vmlinuz-4.19.33_1")
+        (linux-arguments
+         '("root=UUID=42533fd0-59d6-448c-9a7d-cf10d13647ff"
+           "ro"
+           "loglevel=4"
+           "slub_debug=P"
+           "page_poison=1"))
+        (initrd "(hd1,2)/boot/initramfs-4.19.33_1.img"))))))
  (file-systems
   (cons* (file-system
           (device
@@ -101,9 +111,9 @@ EndSection")
           (type "vfat"))
          (file-system
           (device
-           (uuid "f9a82763-0828-4f4a-b668-9bf6008bf482" 'ext4))
+           (uuid "42533fd0-59d6-448c-9a7d-cf10d13647ff" 'btrfs))
           (mount-point "/mnt/sdcard")
-          (type "ext4"))
+          (type "btrfs"))
          %base-file-systems))
  (swap-devices '("/dev/sda7"))
  (users
