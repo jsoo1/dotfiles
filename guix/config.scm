@@ -176,25 +176,20 @@ EndSection")
              (usb-autosuspend? #f)))
    (modify-services
     %desktop-services
-    ('console-font-service-type
+    (console-font-service-type
      s =>
-     `(("tty1" "LatGrkCyr-8x16")
-       ("tty2" "TamzenForPowerline8x16b")
-       ("tty3" "LatGrkCyr-8x16")
-       ("tty4" "LatGrkCyr-8x16")
-       ("tty5" "LatGrkCyr-8x16")
-       ("tty6" "LatGrkCyr-8x16")))
-    ('network-manager-service-type
-     c =>
-     (network-manager-configuration
-      (inherit c)
-      (dns "none")))
-    ('gdm-service-type
+     '(("tty1" . "LatGrkCyr-8x16")
+       ("tty2" . "LatGrkCyr-8x16")
+       ("tty3" . "LatGrkCyr-8x16")
+       ("tty4" . "LatGrkCyr-8x16")
+       ("tty5" . "LatGrkCyr-8x16")
+       ("tty6" . "LatGrkCyr-8x16")))
+    (gdm-service-type
      c =>
      (gdm-configuration
       (inherit c)
-      (auto-login? #t)
-      (default-user "john")
+      ;; (auto-login? #t)
+      ;; (default-user "john")
       (xorg-configuration
        (xorg-configuration
         (keyboard-layout ctrl-nocaps)
