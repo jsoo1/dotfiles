@@ -17,7 +17,6 @@ import           XMonad.Actions.CycleWS       (WSType(..), moveTo, shiftTo)
 import           XMonad.Actions.WindowBringer
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
-import           XMonad.Hooks.ManageHelpers
 import           XMonad.Layout.NoBorders      (smartBorders)
 import           XMonad.Layout.Spacing
 import qualified XMonad.StackSet              as W
@@ -132,16 +131,15 @@ main =
             , spawn "tmux_session=\"$(tmux list-sessions | rofi -dmenu | cut -d : -f 1)\" &&\
                     \ termite -t \"$x\" -e \"tmux attach-session -t $tmux_session\""
             )
-          -- TODO: Make alsa work.
-          -- , ( ( 0, xF86XK_AudioLowerVolume )
-          --   , spawn "amixer -q set Master 2%-"
-          --   )
-          -- , ( ( 0, xF86XK_AudioRaiseVolume )
-          --   , spawn "amixer -q set Master 2%+"
-          --   )
-          -- , ( ( 0, xF86XK_AudioMute )
-          --   , spawn "amixer -q set Master toggle"
-          --   )
+          , ( ( 0, xF86XK_AudioLowerVolume )
+            , spawn "amixer -q set Master 2%-"
+            )
+          , ( ( 0, xF86XK_AudioRaiseVolume )
+            , spawn "amixer -q set Master 2%+"
+            )
+          , ( ( 0, xF86XK_AudioMute )
+            , spawn "amixer -q set Master toggle"
+            )
           , ( ( myModMask, xK_n )
             , moveTo Next NonEmptyWS
             )
