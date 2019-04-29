@@ -190,6 +190,12 @@
   "Switch to compile buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'."
   (switch-to-buffer (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
 
+;; Org
+(org-babel-do-load-languages 'org-babel-load-languages
+ '((js . t)
+   (haskell . t)
+   (emacs-lisp . nil)))
+
 ;; Imenu Anywhere
 (package-install 'imenu-anywhere)
 
@@ -305,6 +311,7 @@
 
 (define-prefix-keymap my-process-map
   "my process keybindings"
+  "d" docker
   "l" list-processes
   "p" proced)
 
@@ -613,6 +620,10 @@ Set `spaceline-highlight-face-func' to
 (setq debbugs-gnu-mode-map (make-sparse-keymap))
 (define-key debbugs-gnu-mode-map (kbd "C-c") debbugs-gnu-mode-map)
 
+;; Restclient
+(package-install 'restclient)
+(add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
+
 ;; Idris mode
 (add-to-listq load-path "~/.emacs.d/layers/+lang/idris/local/idris-mode")
 
@@ -704,7 +715,10 @@ Set `spaceline-highlight-face-func' to
       haskell-process-args-stack-ghci
       '("--with-ghc=ghci"
         "--ghci-options=-ferror-spans"
-        "--no-build" "--no-load" "--test" "--bench"))
+        "--no-build" "--no-load" "--test" "--bench")
+      haskell-interactive-popup-errors 'nil)
+
+(define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
 
 ;; Agda mode
 (load-library (let ((coding-system-for-read 'utf-8))
@@ -750,6 +764,11 @@ Set `spaceline-highlight-face-func' to
 ;; Common Lisp
 (package-install 'slime)
 (package-install 'slime-company)
+
+;; Rust
+(add-to-list 'load-path "~/.emacs.d/private/rust-mode/")
+(autoload 'rust-mode "rust-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 
 ;; SQL
 (package-install 'sql)
@@ -797,10 +816,14 @@ Set `spaceline-highlight-face-func' to
   "Major mode for editing GitHub Flavored Markdown files" t)
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
-;; Dockerfile
+;; Docker
+;; dockerfile
 (package-install 'dockerfile-mode)
 (require 'dockerfile-mode)
 (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+
+;; docker management
+(package-install 'docker)
 
 ;; Shellcheck
 (add-hook 'sh-mode-hook #'flycheck-mode)
@@ -817,5 +840,25 @@ Set `spaceline-highlight-face-func' to
 ;; CMake
 (package-install 'cmake-mode)
 (require 'cmake-mode)
+
+;; Web mode
+(package-install 'web-mode)
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
+
+;; Emmet
+(package-install 'emmet-mode)
+(require 'emmet-mode)
+(setq emmet-move-cursor-between-quotes t)
+(add-hook 'css-mode-hook  'emmet-mode)
+(add-hook 'web-mode-hook 'emmet-mode)
 
 ;;; init.el ends here
