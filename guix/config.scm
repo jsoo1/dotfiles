@@ -23,6 +23,9 @@
              ((gnu packages vim) #:select (vim))
              ((gnu packages web-browsers) #:select (lynx))
              ((gnu packages xdisorg) #:select (rofi xcape))
+             ((gnu services base)
+              #:select (gpm-service-type
+                        gpm-configuration))
              ((gnu services desktop)
               #:select (bluetooth-service
                         %desktop-services))
@@ -58,11 +61,9 @@
 (define cst-trackball
   "Section \"InputClass\"
     Identifier \"CST Trackball\"
+    MatchProduct \"UNITRAC\"
     Driver \"libinput\"
-    MatchVendor \"CST\"
-    MatchProduct \"CST USB UNITRAC\"
-    MatchIsPointer \"on\"
-    Option \"AccelerationNumerator\" \"2.0\"
+    Option \"AccelSpeed\" \"2.0\"
 EndSection")
 
 (define ctrl-nocaps (keyboard-layout "us" #:options '("ctrl:nocaps")))
@@ -174,6 +175,7 @@ EndSection")
             (tlp-configuration
              (tlp-default-mode "BAT")
              (usb-autosuspend? #f)))
+   (service gpm-service-type (gpm-configuration))
    (modify-services
     %desktop-services
     (console-font-service-type
