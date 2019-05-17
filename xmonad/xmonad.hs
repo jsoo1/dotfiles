@@ -50,9 +50,8 @@ main =
       , manageHook = manageDocks <+> manageHook def 
       , layoutHook =
           layoutHook def
-            |> spacingRaw True (Border 0 0 0 0) False (Border 0 0 0 0) False
-            |> smartSpacingWithEdge 11
             |> smartBorders
+            |> spacingRaw True (Border 5 5 5 5) True (Border 5 5 5 5) True
             |> avoidStruts
 
       , logHook = do
@@ -94,7 +93,7 @@ main =
             "xrandr\
             \ --output HDMI-1-1 --primary --left-of eDP-1-1\
             \ --output eDP-1-1"
-          <+> spawn "compton --config ~/.config/compton/compton.conf"
+          -- <+> spawn "compton --config ~/.config/compton/compton.conf"
           <+> spawn "feh --bg-fill ~/Downloads/richter-eisberg.jpg"
       }
 
@@ -104,7 +103,7 @@ main =
             , spawn "fish -c \"rofi -show combi -modi combi\""
             )
           , ( ( myModMask .|. controlMask, xK_f)
-            , sendMessage ToggleStruts
+            , broadcastMessage ToggleStruts
               <+> spawn "dbus-send \
                         \--session \
                         \--dest=org.Xmobar.Control \
@@ -113,6 +112,7 @@ main =
                         \'/org/Xmobar/Control' \
                         \org.Xmobar.Control.SendSignal \
                         \\"string:Toggle 0\""
+              <+> refresh
             )
           , ( ( myModMask .|. shiftMask, xK_x )
             , spawn "xlock -mode rain"
@@ -139,6 +139,13 @@ main =
             )
           , ( ( 0, xF86XK_AudioMute )
             , spawn "amixer -q set Master toggle"
+            )
+          -- TODO: Figure out how to work around superuser
+          , ( ( 0, xF86XK_MonBrightnessUp )
+            , spawn "sudo light -A 5"
+            )
+          , ( ( 0, xF86XK_MonBrightnessDown )
+            , spawn "sudo light -U 5"
             )
           , ( ( myModMask, xK_n )
             , moveTo Next NonEmptyWS
