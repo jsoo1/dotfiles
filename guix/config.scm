@@ -61,10 +61,18 @@
 (define cst-trackball
   "Section \"InputClass\"
     Identifier \"CST Trackball\"
-    MatchProduct \"UNITRAC\"
+    MatchProduct \"CST CST USB UNITRAC\"
     Driver \"libinput\"
     Option \"AccelSpeed\" \"2.0\"
-EndSection")
+EndSection\n")
+
+(define touchscreen-disable
+  "Section \"InputClass\"
+    Identifier \"Touchscreen Disable\"
+    MatchIsTouchscreen \"on\"
+    MatchProduct \"ELAN Touchscreen\"
+    Option \"ignore\" \"on\"
+EndSection\n")
 
 (define ctrl-nocaps (keyboard-layout "us" #:options '("ctrl:nocaps")))
 
@@ -195,6 +203,6 @@ EndSection")
       (xorg-configuration
        (xorg-configuration
         (keyboard-layout ctrl-nocaps)
-        (extra-config `(,cst-trackball)))))))))
+        (extra-config `(,cst-trackball ,touchscreen-disable)))))))))
  ;; Allow resolution of '.local' host names with mDNS.
  (name-service-switch %mdns-host-lookup-nss))
