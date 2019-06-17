@@ -739,4 +739,8 @@ Set `spaceline-highlight-face-func' to
 (package-install 'cmake-mode)
 (require 'cmake-mode)
 
+;; ELF
+(package-install 'elf-mode)
+(add-to-list 'auto-mode-alist '("\\.\\(?:a\\|so\\)\\'" . elf-mode))
+
 ;;; init.el ends here
