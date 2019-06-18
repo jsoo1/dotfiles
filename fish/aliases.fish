@@ -25,10 +25,9 @@ abbr rest "pmset sleepnow"
 
 # Emacs
 function em -d "Start an emacsclient -t" -a file
-    env TERM=xterm-24bits /Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=base $file
+    env TERM=xterm-24bits /Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=term $file
 end
 abbr ed "/Applications/Emacs.app/Contents/MacOS/Emacs --daemon=term"
-abbr eb "/Applications/Emacs.app/Contents/MacOS/Emacs --load ~/dotfiles/emacs/init.el -q --daemon=base"
 abbr ec  "/Applications/Emacs.app/Contents/MacOS/Emacs --daemon=frame"
 abbr e "/Applications/Emacs.app/Contents/MacOS/Emacs"
 
