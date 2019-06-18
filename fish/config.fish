@@ -2,6 +2,7 @@ set -gx PATH $PATH /usr/local/anaconda3/bin /usr/local/sbin /usr/local/bin /usr/
 
 # Work related binaries
 set -gx PATH $PATH /Users/john/projects/client-browser/.bin /Users/john/.cabal/bin
+set -gx PKG_CONFIG_PATH $PKG_CONFIG_PATH '/usr/local/Cellar/libffi/3.2.1/lib/pkgconfig/'
 
 # Emacsclient for EDITOR
 set -xg EDITOR 'env TERM=xterm-24bits /Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=base'
