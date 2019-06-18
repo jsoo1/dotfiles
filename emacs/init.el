@@ -74,7 +74,7 @@
 (set-face-attribute 'default t :font "Iosevka 18")
 
 ;; Custom
-(setq custom-file "~/.emacs.d/custom.el"
+(setq custom-file "/dev/null"
       initial-buffer-choice "~/dotfiles/emacs/init.el")
 
 ;; Package
