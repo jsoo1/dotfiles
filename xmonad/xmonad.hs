@@ -23,7 +23,7 @@ import qualified XMonad.StackSet              as W
 import           XMonad.Util.EZConfig         (additionalKeys)
 import           XMonad.Util.NamedWindows
 import           XMonad.Util.Replace
-import           XMonad.Util.Run              (spawnPipe)
+import           XMonad.Util.Run              (spawnPipe, runProcessWithInput, runInTerm)
 
 
 infixl 1 |>
@@ -128,8 +128,9 @@ main =
             )
           , ( ( myModMask,  xK_o )
             -- TODO: Fix TERM for tmux (should be: TERM=xterm-24bits tmux attach-session -t ...)
-            , spawn "tmux_session=\"$(tmux list-sessions | rofi -dmenu | cut -d : -f 1)\" &&\
-                    \ termite -t \"$x\" -e \"tmux attach-session -t $tmux_session\""
+            , do
+                selection <- runProcessWithInput "bash" ["-c", "tmux list-sessions | rofi -dmenu -i | cut -d : -f 1"] ""
+                runInTerm "" ("env TERM=xterm-24bits tmux attach-session -t " <> selection)
             )
           , ( ( 0, xF86XK_AudioLowerVolume )
             , spawn "amixer -q set Master 2%-"
@@ -158,6 +159,13 @@ main =
             )
           , ( ( myModMask .|. shiftMask, xK_p )
               , shiftTo Prev EmptyWS
+            )
+          -- TODO: Fix
+          , ( ( myModMask .|. shiftMask, xK_4 )
+            , spawn "scrot --select '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/screenshots/'"
+            )
+          , ( ( myModMask, xK_4 )
+            , spawn "scrot '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/screenshots/'"
             )
           ]
 

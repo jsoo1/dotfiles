@@ -24,7 +24,10 @@ abbr --add -U -- bat "upower -I (upower -e | grep BAT)"
 abbr --add -U -- ed "emacs -q -l ~/dotfiles/emacs/init.el --bg-daemon=term"
 abbr --add -U -- em "env TERM=xterm-24bits emacsclient -nw --socket-name term"
 # TODO Figure out fish issues
-abbr --add -U -- e "env TERM=xterm-24bits emacsclient -nw --socket-name term"
+# abbr --add -U -- e "env TERM=xterm-24bits emacsclient -nw --socket-name term"
+function em
+    env TERM=xterm-24bits emacsclient -nw --socket-name term
+end
 
 # Tmux
 abbr --add -U -- tma "env TERM=xterm-24bits tmux attach -t"
