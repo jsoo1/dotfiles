@@ -31,6 +31,11 @@
                                 (seq-partition bindings 2)
                                 `(,name))))))
 
+(defun my-package-install (package)
+  "Install `PACKAGE' unless already installed."
+  (unless (package-installed-p package)
+    (my-package-install package)))
+
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
       initial-scratch-message ""
@@ -77,7 +82,6 @@
 (add-to-list 'load-path "~/.emacs.d/private/evil-tmux-navigator")
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
-(package-refresh-contents)
 
 ;; Path
 (setq exec-path '("~/.local/.bin"
@@ -89,12 +93,12 @@
                   "/run/current-system/profile/sbin"
                   "~/dotfiles/emacs/"))
 
-(package-install 'exec-path-from-shell)
+(my-package-install 'exec-path-from-shell)
 (require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
 
 ;; Shell
-(package-install 'multi-term)
+(my-package-install 'multi-term)
 (setq shell-file-name "bash")
 
 ;; Dired
@@ -113,24 +117,24 @@
  auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t)))
 
 ;; Fill column indicator
-(package-install 'fill-column-indicator)
+(my-package-install 'fill-column-indicator)
 (require 'fill-column-indicator)
 
 ;; Evil
 (setq evil-want-C-u-scroll t
       evil-disable-insert-state-bindings t
       evil-want-abbrev-expand-on-insert-exit nil) ; somehow needs to happen before any mention of evil mode
-(package-install 'evil)
+(my-package-install 'evil)
 (require 'evil)
-(package-install 'evil-surround)
+(my-package-install 'evil-surround)
 (require 'evil-surround)
-(package-install 'evil-commentary)
+(my-package-install 'evil-commentary)
 (require 'evil-commentary)
-(package-install 'evil-leader)
+(my-package-install 'evil-leader)
 (require 'evil-leader)
-(package-install 'evil-escape)
+(my-package-install 'evil-escape)
 (require 'evil-escape)
-(package-install 'smartparens)
+(my-package-install 'smartparens)
 (require 'smartparens-config)
 (require 'navigate)
 
@@ -152,16 +156,15 @@
 (evil-set-initial-state 'Info-mode 'normal)
 (evil-set-initial-state 'comint-mode 'normal)
 
-
 ;; Magit
-(package-install 'magit)
-(package-install 'evil-magit)
+(my-package-install 'magit)
+(my-package-install 'evil-magit)
 (require 'evil-magit)
 (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
 
 ;; Projectile
-(package-install 'projectile)
-(package-install 'ibuffer-projectile)
+(my-package-install 'projectile)
+(my-package-install 'ibuffer-projectile)
 (projectile-mode +1)
 (setq projectile-completion-system 'ivy
       projectile-indexing-method 'hybrid
@@ -194,12 +197,12 @@
 
 ;; Org
 (org-babel-do-load-languages 'org-babel-load-languages
- '((js . t)
-   (haskell . t)
-   (emacs-lisp . nil)))
+                             '((js . t)
+                               (haskell . t)
+                               (emacs-lisp . nil)))
 
 ;; Imenu Anywhere
-(package-install 'imenu-anywhere)
+(my-package-install 'imenu-anywhere)
 
 (defun projectile-imenu ()
   "Imenu across projectile buffers defined by `PROJECTILE-PROJECT-BUFFERS', filtering out magit buffers."
@@ -212,21 +215,21 @@
     (ivy-imenu-anywhere)))
 
 ;; Anzu
-(package-install 'anzu)
+(my-package-install 'anzu)
 (setq anzu-cons-mode-line-p nil)
 (global-anzu-mode)
 (if (or (string= 'term (daemonp)) (not (display-graphic-p (selected-frame)))
         (set-face-foreground 'anzu-mode-line "#002b36" nil))
     (set-face-foreground 'anzu-mode-line "#dc322f" nil))
-(package-install 'evil-anzu)
+(my-package-install 'evil-anzu)
 (with-eval-after-load 'evil (require 'evil-anzu))
 
 ;; Ivy
-(package-install 'ivy)
-(package-install 'counsel)
-(package-install 'swiper)
-(package-install 'counsel-projectile)
-(package-install 'wgrep)
+(my-package-install 'ivy)
+(my-package-install 'counsel)
+(my-package-install 'swiper)
+(my-package-install 'counsel-projectile)
+(my-package-install 'wgrep)
 (ivy-mode 1)
 (setq ivy-use-virtual-buffers t)
 (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
@@ -245,25 +248,25 @@
     (_ 'absolute)))
 
 ;; Which key
-(package-install 'which-key)
+(my-package-install 'which-key)
 (require 'which-key)
 (which-key-mode)
 (setq which-key-idle-delay 0.1)
 
 ;; Clipboard
 (pcase system-type
-  ('gnu/linux (progn (package-install 'xclip)
+  ('gnu/linux (progn (my-package-install 'xclip)
                      (xclip-mode 1)))
-  ('darwin (progn (package-install 'osx-clipboard)
+  ('darwin (progn (my-package-install 'osx-clipboard)
                   (osx-clipboard-mode +1))))
 
 ;; Compilation
 (define-key compilation-mode-map (kbd "C-c C-l") #'recompile)
 ;; Avy
-(package-install 'avy)
+(my-package-install 'avy)
 
 ;; OSX Clipboard
-(package-install 'osx-clipboard)
+(my-package-install 'osx-clipboard)
 (osx-clipboard-mode +1)
 
 ;; Keybindings
@@ -336,8 +339,10 @@
   "my describe keybindings"
   "b" describe-bindings
   "f" describe-function
+  "F" counsel-describe-face
   "k" describe-key
   "m" describe-mode
+  "t" describe-theme
   "w" woman
   "v" describe-variable)
 
@@ -388,8 +393,10 @@
   "c" (lambda () (interactive) (my-projectile-command "compile"))
   "d" counsel-projectile-find-dir
   "D" (lambda () (interactive) (dired (projectile-project-root)))
+  "e" projectile-edit-dir-locals
   "f" counsel-projectile-find-file
   "i" projectile-imenu
+  "I" projectile-invalidate-cache
   "l" switch-project-workspace
   "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
   "p" counsel-projectile-switch-project
@@ -452,7 +459,7 @@
   "-" text-scale-decrease)
 
 ;; Compilation and shell ansi colors
-(package-install 'xterm-color)
+(my-package-install 'xterm-color)
 (require 'xterm-color)
 (setq compilation-environment '("TERM=xterm-256color"))
 (add-hook 'compilation-start-hook
@@ -471,7 +478,7 @@
 
 
 ;; Spaceline
-(package-install 'spaceline)
+(my-package-install 'spaceline)
 (require 'spaceline-config)
 (if (or (string= 'term (daemonp))
         (not (display-graphic-p (selected-frame))))
@@ -520,12 +527,13 @@ Set `spaceline-highlight-face-func' to
 (spaceline-toggle-projectile-root-on)
 
 ;; Theme
-(package-install 'solarized-theme)
+(my-package-install 'solarized-theme)
 (require 'solarized-theme)
 
 (setq
  custom-safe-themes
- '("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879"
+ '("0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f"
+   "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879"
    "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4"
    default))
 (setq solarized-high-contrast-mode-line t)
@@ -541,8 +549,8 @@ Set `spaceline-highlight-face-func' to
       (progn (set-face-background 'default "unspecified-bg" frame)
              (set-face-background 'line-number "#073642" frame))))
 
-(on-frame-open (selected-frame))
-(add-hook 'after-make-frame-functions 'on-frame-open)
+(my-make-frame-transparent (selected-frame))
+(add-hook 'after-make-frame-functions #'my-make-frame-transparent)
 
 (defun on-after-init ()
   "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
@@ -562,12 +570,12 @@ Set `spaceline-highlight-face-func' to
            (set-face-background 'line-number "#073642" (selected-frame))))
 
 ;; Eyebrowse
-(package-install 'eyebrowse)
+(my-package-install 'eyebrowse)
 (setq eyebrowse-keymap-prefix "")
 (eyebrowse-mode 1)
 
 ;; Flycheck
-(package-install 'flycheck)
+(my-package-install 'flycheck)
 (require 'flycheck)
 (global-flycheck-mode)
 
@@ -576,7 +584,7 @@ Set `spaceline-highlight-face-func' to
       ispell-list-command "--list")
 
 ;; Company
-(package-install 'company)
+(my-package-install 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 (with-eval-after-load 'company
   (progn
@@ -606,7 +614,7 @@ Set `spaceline-highlight-face-func' to
         (message "Indented buffer.")))))
 
 ;; Debbugs
-(package-install 'debbugs)
+(my-package-install 'debbugs)
 (setq debbugs-gnu-all-packages '("emacs" "guix" "guix-patches"))
 (setq debbugs-gnu-default-packages '("guix" "guix-patches"))
 ;; Slightly broken, but hey
@@ -614,7 +622,7 @@ Set `spaceline-highlight-face-func' to
 (define-key debbugs-gnu-mode-map (kbd "C-c") debbugs-gnu-mode-map)
 
 ;; Restclient
-(package-install 'restclient)
+(my-package-install 'restclient)
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
 ;; Idris mode
@@ -643,13 +651,13 @@ Set `spaceline-highlight-face-func' to
 (with-eval-after-load 'company (add-hook 'emacs-lisp-mode-hook #'company-mode 't))
 
 ;; Elm mode
-(package-install 'flycheck-elm)
+(my-package-install 'flycheck-elm)
 (require 'flycheck-elm)
 (add-to-list 'load-path "~/.emacs.d/private/elm-mode")
-(package-install 'f)
-(package-install 'dash)
-(package-install 's)
-(package-install 'let-alist)
+(my-package-install 'f)
+(my-package-install 'dash)
+(my-package-install 's)
+(my-package-install 'let-alist)
 (require 'elm-mode)
 (setq elm-format-on-save 't
       elm-format-elm-version "0.18"
@@ -670,10 +678,10 @@ Set `spaceline-highlight-face-func' to
       (setq elm-package--contents (append (json-read) nil)))))
 
 ;; Fish mode
-(package-install 'fish-mode)
+(my-package-install 'fish-mode)
 
 ;; JavaScript
-(package-install 'nodejs-repl)
+(my-package-install 'nodejs-repl)
 (require 'nodejs-repl)
 (add-hook
  'js-mode-hook
@@ -689,10 +697,10 @@ Set `spaceline-highlight-face-func' to
 (setq js-indent-level 4)
 
 ;; Proof General
-(package-install 'proof-general)
+(my-package-install 'proof-general)
 
 ;; Coq
-(package-install 'company-coq)
+(my-package-install 'company-coq)
 (add-hook 'coq-mode-hook #'company-coq-mode)
 (setq proof-three-window-mode-policy 'hybrid
       proof-script-fly-past-comments t
@@ -700,7 +708,7 @@ Set `spaceline-highlight-face-func' to
       company-coq-disabled-features '(hello))
 
 ;; Haskell mode
-(package-install 'haskell-mode)
+(my-package-install 'haskell-mode)
 (require 'haskell-interactive-mode)
 ;; See https://github.com/haskell/haskell-mode/issues/1553#issuecomment-358373643
 (setq haskell-process-args-ghci
@@ -715,7 +723,7 @@ Set `spaceline-highlight-face-func' to
 (require 'haskell-process)
 (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 (setq haskell-process-type 'auto)
-(package-install 'dante)
+(my-package-install 'dante)
 (add-hook 'haskell-mode-hook #'flycheck-mode)
 (add-hook 'dante-mode-hook
           #'(lambda ()
@@ -729,8 +737,8 @@ Set `spaceline-highlight-face-func' to
                 (shell-command-to-string "agda-mode locate")))
 
 ;; Ocaml
-(package-install 'tuareg)
-(package-install 'merlin)
+(my-package-install 'tuareg)
+(my-package-install 'merlin)
 (let ((opam-share (ignore-errors (car (process-lines "opam" "config" "var" "share")))))
   (when (and opam-share (file-directory-p opam-share))
     ;; Register Merlin
@@ -747,7 +755,7 @@ Set `spaceline-highlight-face-func' to
 (require 'purescript-mode-autoloads)
 (add-to-list 'Info-default-directory-list "~/.emacs.d/private/purescript-mode/")
 (add-to-list 'auto-mode-alist '("\\.purs\\'" . purescript-mode))
-(package-install 'psc-ide)
+(my-package-install 'psc-ide)
 (require 'psc-ide)
 (add-hook 'purescript-mode-hook
           (lambda ()
@@ -760,7 +768,7 @@ Set `spaceline-highlight-face-func' to
 
 ;; Guix
 (add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
-(package-install 'geiser)
+(my-package-install 'geiser)
 (add-hook 'scheme-mode-hook #'geiser-mode)
 (with-eval-after-load 'geiser-guile
   (add-to-list 'geiser-guile-load-path "~/projects/guix"))
@@ -768,8 +776,8 @@ Set `spaceline-highlight-face-func' to
   (add-to-list 'yas-snippet-dirs "~/projects/guix/etc/snippets"))
 
 ;; Common Lisp
-(package-install 'slime)
-(package-install 'slime-company)
+(my-package-install 'slime)
+(my-package-install 'slime-company)
 
 ;; Rust
 (add-to-list 'load-path "~/.emacs.d/private/rust-mode/")
@@ -777,7 +785,7 @@ Set `spaceline-highlight-face-func' to
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 
 ;; SQL
-(package-install 'sql)
+(my-package-install 'sql)
 (setq
  sql-product 'postgres
  sql-connection-alist
@@ -785,7 +793,11 @@ Set `spaceline-highlight-face-func' to
            (sql-port 5432)
            (sql-server "localhost")
            (sql-user "postgres")
-           (sql-database "vetpro")))
+           (sql-database "vetpro"))
+   (customer (sql-product 'postgres)
+             (sql-port 5432)
+             (sql-server "localhost")
+             (sql-user "postgres")))
  sql-postgres-login-params
  '((user :default "postgres")
    (database :default "vetpro")
@@ -796,12 +808,12 @@ Set `spaceline-highlight-face-func' to
   (progn
     (sql-set-product-feature
      'postgres :prompt-regexp "^.* λ ")
-    (define-key sql-mode-map (kbd "C-c C-i") #'(lambda () (interactive) (sql-connect 'vetpro)))
+    (define-key sql-mode-map (kbd "C-c C-i") #'sql-connect)
     (define-key sql-mode-map (kbd "C-c C-k") #'(lambda () (interactive)
-                                                 (with-current-buffer (get-buffer "*SQL: <vetpro>*") (comint-clear-buffer))))))
+                                                 (with-current-buffer sql-buffer (comint-clear-buffer))))))
 
 ;; YAML
-(package-install 'yaml-mode)
+(my-package-install 'yaml-mode)
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 
@@ -809,11 +821,11 @@ Set `spaceline-highlight-face-func' to
 (add-to-list 'auto-mode-alist '("\\.plist\\'" . xml-mode))
 
 ;; Dhall
-(package-install 'dhall-mode)
+(my-package-install 'dhall-mode)
 (add-to-list 'auto-mode-alist '("\\.dhall\\'" . dhall-mode))
 
 ;; Markdown
-(package-install 'markdown-mode)
+(my-package-install 'markdown-mode)
 (autoload 'markdown-mode "markdown-mode"
   "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
@@ -824,35 +836,35 @@ Set `spaceline-highlight-face-func' to
 
 ;; Docker
 ;; dockerfile
-(package-install 'dockerfile-mode)
+(my-package-install 'dockerfile-mode)
 (require 'dockerfile-mode)
 (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
 
 ;; docker management
-(package-install 'docker)
+(my-package-install 'docker)
 
 ;; Shellcheck
 (add-hook 'sh-mode-hook #'flycheck-mode)
 
 ;; Vimrc
-(package-install 'vimrc-mode)
+(my-package-install 'vimrc-mode)
 (require 'vimrc-mode)
 (add-to-list 'auto-mode-alist '("\\.vim\\(rc\\)?\\'" . vimrc-mode))
 
 ;; CSV
-(package-install 'csv-mode)
+(my-package-install 'csv-mode)
 (require 'csv-mode)
 
 ;; CMake
-(package-install 'cmake-mode)
+(my-package-install 'cmake-mode)
 (require 'cmake-mode)
 
 ;; ELF
-(package-install 'elf-mode)
+(my-package-install 'elf-mode)
 (add-to-list 'auto-mode-alist '("\\.\\(?:a\\|so\\)\\'" . elf-mode))
 
 ;; Web mode
-(package-install 'web-mode)
+(my-package-install 'web-mode)
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
@@ -865,11 +877,10 @@ Set `spaceline-highlight-face-func' to
 (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
 
 ;; Emmet
-(package-install 'emmet-mode)
+(my-package-install 'emmet-mode)
 (require 'emmet-mode)
 (setq emmet-move-cursor-between-quotes t)
 (add-hook 'css-mode-hook  'emmet-mode)
 (add-hook 'web-mode-hook 'emmet-mode)
 
 ;;; init.el ends here
- 
