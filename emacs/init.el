@@ -43,7 +43,7 @@
 (setq-default truncate-lines 't)
 (add-to-listq
  default-frame-alist '(ns-transparent-titlebar . t)
- default-frame-alist '(font . "Iosevka 18"))
+ default-frame-alist '(font . "Iosevka 16"))
 (set-fontset-font "fontset-default" 'unicode "DejaVu Sans")
 
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -71,7 +71,7 @@
   (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
 
 ;; Font
-(set-face-attribute 'default t :font "Iosevka 18")
+(set-face-attribute 'default t :font "Iosevka 16")
 
 ;; Custom
 (setq custom-file "/dev/null"
