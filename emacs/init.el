@@ -37,7 +37,7 @@
 (setq-default truncate-lines 't)
 (add-to-listq
  default-frame-alist '(ns-transparent-titlebar . t)
- default-frame-alist '(font . "Fantasque Sans Mono 16"))
+ default-frame-alist '(font . "Iosevka 18"))
 (set-fontset-font "fontset-default" 'unicode "DejaVu Sans")
 
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -65,7 +65,7 @@
   (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
 
 ;; Font
-(set-face-attribute 'default t :font "FantasqueSansMono Nerd Font Mono 16")
+(set-face-attribute 'default t :font "Iosevka 18")
 
 ;; Custom
 (setq custom-file "/dev/null"
@@ -570,11 +570,11 @@ Set `spaceline-highlight-face-func' to
 (define-key debbugs-gnu-mode-map (kbd "C-c") debbugs-gnu-mode-map)
 
 ;; Idris mode
-(add-to-listq load-path "~/.emacs.d/layers/+lang/idris/local/idris-mode")
+(add-to-listq load-path "~/.emacs.d/private/idris-mode")
 
-(byte-compile-file "~/.emacs.d/layers/+lang/idris/local/idris-mode/idris-mode.el")
-(byte-compile-file "~/.emacs.d/layers/+lang/idris/local/idris-mode/idris-ipkg-mode.el")
-(byte-compile-file "~/.emacs.d/layers/+lang/idris/local/idris-mode/inferior-idris.el")
+(byte-compile-file "~/.emacs.d/private/idris-mode/idris-mode.el")
+(byte-compile-file "~/.emacs.d/private/idris-mode/idris-ipkg-mode.el")
+(byte-compile-file "~/.emacs.d/private/idris-mode/inferior-idris.el")
 
 (require 'idris-mode)
 (require 'inferior-idris)
@@ -597,7 +597,7 @@ Set `spaceline-highlight-face-func' to
 ;; Elm mode
 (package-install 'flycheck-elm)
 (require 'flycheck-elm)
-(add-to-list 'load-path "~/.emacs.d/layers/+lang/elm/local/elm-mode")
+(add-to-list 'load-path "~/.emacs.d/private/elm-mode")
 (package-install 'f)
 (package-install 'dash)
 (package-install 's)
@@ -744,3 +744,4 @@ Set `spaceline-highlight-face-func' to
 (add-to-list 'auto-mode-alist '("\\.\\(?:a\\|so\\)\\'" . elf-mode))
 
 ;;; init.el ends here
+ 
