@@ -530,9 +530,7 @@ Set `spaceline-highlight-face-func' to
    default))
 (setq solarized-high-contrast-mode-line t)
 (setq x-underline-at-descent-line t)
-(if (daemonp)
-    (load-theme 'solarized-dark)
-  (load-theme 'solarized-light))
+(load-theme 'solarized-dark)
 
 ;; Transparency in terminal
 (defun my-make-frame-transparent (frame)
