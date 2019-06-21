@@ -30,6 +30,7 @@
                                         bindings))
                                 (seq-partition bindings 2)
                                 `(,name))))))
+
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
       initial-scratch-message ""
@@ -111,6 +112,10 @@
  create-lockfiles nil
  auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t)))
 
+;; Fill column indicator
+(package-install 'fill-column-indicator)
+(require 'fill-column-indicator)
+
 ;; Evil
 (setq evil-want-C-u-scroll t
       evil-disable-insert-state-bindings t
@@ -145,6 +150,8 @@
 (evil-set-initial-state 'proced 'normal)
 (evil-set-initial-state 'ert-results-mode 'normal)
 (evil-set-initial-state 'Info-mode 'normal)
+(evil-set-initial-state 'comint-mode 'normal)
+
 
 ;; Magit
 (package-install 'magit)
@@ -157,12 +164,39 @@
 (package-install 'ibuffer-projectile)
 (projectile-mode +1)
 (setq projectile-completion-system 'ivy
-      projectile-indexing-method 'hybrid)
+      projectile-indexing-method 'hybrid
+      projectile-enable-caching 't)
 (add-hook 'ibuffer-hook
           (lambda ()
             (ibuffer-projectile-set-filter-groups)
             (unless (eq ibuffer-sorting-mode 'alphabetic)
               (ibuffer-do-sort-by-alphabetic))))
+
+(defun my-projectile-compile-buffer-name (project kind)
+  "Get the name for `PROJECT's command `KIND' (`RUN' | `TEST' | `COMPILE')."
+  (concat "*" project "-" kind "*"))
+
+(defun my-projectile-command (kind)
+  "Do command `KIND' (`RUN' | `TEST' | `COMPILE') the projectile project in a compilation buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'*."
+  (interactive)
+  (let* ((old-compile-buffer (get-buffer "*compilation*"))
+         (buffer-name (my-projectile-compile-buffer-name (projectile-project-name) kind))
+         (old-cmd-buffer (get-buffer buffer-name)))
+    (when old-compile-buffer (kill-buffer old-compile-buffer))
+    (funcall (intern (concat "projectile-" kind "-project")) nil)
+    (with-current-buffer (get-buffer "*compilation*")
+      (when old-cmd-buffer (kill-buffer old-cmd-buffer))
+      (rename-buffer buffer-name))))
+
+(defun my-switch-to-compile-buffer (kind)
+  "Switch to compile buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'."
+  (switch-to-buffer (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
+
+;; Org
+(org-babel-do-load-languages 'org-babel-load-languages
+ '((js . t)
+   (haskell . t)
+   (emacs-lisp . nil)))
 
 ;; Imenu Anywhere
 (package-install 'imenu-anywhere)
@@ -203,6 +237,13 @@
 (setq-default display-line-numbers-type 'relative)
 (global-hl-line-mode +1)
 
+(defun next-line-number (curr)
+  "Get the next line number after `CURR'."
+  (pcase curr
+    ('absolute 'relative)
+    ('relative 'nil)
+    (_ 'absolute)))
+
 ;; Which key
 (package-install 'which-key)
 (require 'which-key)
@@ -216,6 +257,8 @@
   ('darwin (progn (package-install 'osx-clipboard)
                   (osx-clipboard-mode +1))))
 
+;; Compilation
+(define-key compilation-mode-map (kbd "C-c C-l") #'recompile)
 ;; Avy
 (package-install 'avy)
 
@@ -270,17 +313,20 @@
 
 (define-prefix-keymap my-process-map
   "my process keybindings"
+  "d" docker
   "l" list-processes
   "p" proced)
 
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
   "b" ivy-switch-buffer
-  "c" (lambda () (interactive) (pop-to-buffer (get-buffer-create "*compilation*")))
+  "c" (lambda () (interactive) (my-switch-to-compile-buffer "compile"))
   "d" (lambda () (interactive) (kill-buffer (current-buffer)))
   "i" ibuffer
   "m" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Messages*")))
-  "s" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Scratch*"))))
+  "r" (lambda () (interactive) (my-switch-to-compile-buffer "run"))
+  "s" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Scratch*")))
+  "t" (lambda () (interactive) (my-switch-to-compile-buffer "test")))
 
 (define-prefix-keymap my-compile-map
   "my keybindings for compiling"
@@ -339,7 +385,7 @@
 (define-prefix-keymap my-projectile-map
   "my projectile keybindings"
   "b" counsel-projectile-switch-to-buffer
-  "c" projectile-compile-project
+  "c" (lambda () (interactive) (my-projectile-command "compile"))
   "d" counsel-projectile-find-dir
   "D" (lambda () (interactive) (dired (projectile-project-root)))
   "f" counsel-projectile-find-file
@@ -347,9 +393,10 @@
   "l" switch-project-workspace
   "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
   "p" counsel-projectile-switch-project
-  "r" projectile-run-project
-  "t" projectile-test-project
-  "'" (lambda () (interactive) (projectile-with-default-dir (projectile-project-root) (multi-term))))
+  "r" (lambda () (interactive) (my-projectile-command "run"))
+  "t" (lambda () (interactive) (my-projectile-command "test"))
+  "'" (lambda () (interactive) (projectile-with-default-dir (projectile-project-root) (multi-term)))
+  "]" projectile-find-tag)
 
 (define-prefix-keymap my-quit-map
   "my quit keybindings"
@@ -370,6 +417,7 @@
   "D" toggle-debug-on-quit
   "f" toggle-frame-fullscreen
   "l" toggle-truncate-lines
+  "r" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
   "t" counsel-load-theme
   "w" whitespace-mode)
 
@@ -378,7 +426,9 @@
   (kbd "TAB") eyebrowse-last-window-config
   "/" (lambda nil () (interactive) (progn (split-window-horizontally) (balance-windows-area)))
   "-" (lambda nil () (interactive) (progn (split-window-vertically) (balance-windows-area)))
+  "c" make-frame
   "d" (lambda nil () (interactive) (progn (delete-window) (balance-windows-area)))
+  "D" delete-frame
   "h" (lambda nil () (interactive) (tmux-navigate "left"))
   "j" (lambda nil () (interactive) (tmux-navigate "down"))
   "k" (lambda nil () (interactive) (tmux-navigate "up"))
@@ -420,15 +470,8 @@
                           (xterm-color-filter string)))))))
 
 
-;; All the icons
-(package-install 'all-the-icons)
-(require 'all-the-icons)
-(let ((window-system 'mac)) (all-the-icons-install-fonts 't))
-
 ;; Spaceline
 (package-install 'spaceline)
-(package-install 'spaceline-all-the-icons)
-;; (require 'spaceline-all-the-icons)
 (require 'spaceline-config)
 (if (or (string= 'term (daemonp))
         (not (display-graphic-p (selected-frame))))
@@ -492,7 +535,7 @@ Set `spaceline-highlight-face-func' to
   (load-theme 'solarized-light))
 
 ;; Transparency in terminal
-(defun on-frame-open (frame)
+(defun my-make-frame-transparent (frame)
   "Make `FRAME' transparent'."
   (if (or (not (display-graphic-p frame))
 	  (string= 'base (daemonp))
@@ -524,12 +567,15 @@ Set `spaceline-highlight-face-func' to
 (package-install 'eyebrowse)
 (setq eyebrowse-keymap-prefix "")
 (eyebrowse-mode 1)
-(eyebrowse-rename-window-config (eyebrowse--get 'current-slot) "dotfiles")
 
 ;; Flycheck
 (package-install 'flycheck)
 (require 'flycheck)
 (global-flycheck-mode)
+
+;; ispell
+(setq ispell-program-name "aspell"
+      ispell-list-command "--list")
 
 ;; Company
 (package-install 'company)
@@ -569,6 +615,10 @@ Set `spaceline-highlight-face-func' to
 (setq debbugs-gnu-mode-map (make-sparse-keymap))
 (define-key debbugs-gnu-mode-map (kbd "C-c") debbugs-gnu-mode-map)
 
+;; Restclient
+(package-install 'restclient)
+(add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
+
 ;; Idris mode
 (add-to-listq load-path "~/.emacs.d/private/idris-mode")
 
@@ -603,15 +653,41 @@ Set `spaceline-highlight-face-func' to
 (package-install 's)
 (package-install 'let-alist)
 (require 'elm-mode)
-(setq elm-format-on-save 't)
+(setq elm-format-on-save 't
+      elm-format-elm-version "0.18"
+      elm-package-catalog-root "http://package.elm-lang.org/")
 (eval-after-load 'flycheck
   '(add-hook 'flycheck-mode-hook #'flycheck-elm-setup))
 (with-eval-after-load 'company-mode (add-to-list 'company-backends 'company-elm))
+;; Can't get only elm 18 packages without this hack
+(defun elm-package-refresh-contents ()
+  "Refresh the package list."
+  (interactive)
+  (elm--assert-dependency-file)
+  (let* ((all-packages (elm-package--build-uri "all-packages?elm-package-version=0.18")))
+    (with-current-buffer (url-retrieve-synchronously all-packages)
+      (goto-char (point-min))
+      (re-search-forward "^ *$")
+      (setq elm-package--marked-contents nil)
+      (setq elm-package--contents (append (json-read) nil)))))
 
 ;; Fish mode
 (package-install 'fish-mode)
 
 ;; JavaScript
+(package-install 'nodejs-repl)
+(require 'nodejs-repl)
+(add-hook
+ 'js-mode-hook
+ (lambda nil
+   (progn
+     (define-key js-mode-map (kbd "C-c C-s") 'nodejs-repl)
+     (define-key js-mode-map (kbd "C-c C-c") 'nodejs-repl-send-last-expression)
+     (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
+     (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
+     (define-key js-mode-map (kbd "C-c C-l") 'nodejs-repl-load-file)
+     (define-key js-mode-map (kbd "C-c C-k") (lambda () (interactive) (with-current-buffer "*nodejs*" (comint-clear-buffer))))
+     (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl))))
 (setq js-indent-level 4)
 
 ;; Proof General
@@ -648,6 +724,8 @@ Set `spaceline-highlight-face-func' to
               (flycheck-add-next-checker 'haskell-dante)
               '(warning . haskell-hlint)))
 
+(define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
+
 ;; Agda mode
 (load-library (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
@@ -679,6 +757,8 @@ Set `spaceline-highlight-face-func' to
             (company-mode)
             (flycheck-mode)
             (turn-on-purescript-indentation)))
+(define-key purescript-mode-map (kbd "C-c C-s") 'psc-ide-server-start)
+(define-key purescript-mode-map (kbd "C-c C-q") 'psc-ide-server-quit)
 
 ;; Guix
 (add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
@@ -693,17 +773,34 @@ Set `spaceline-highlight-face-func' to
 (package-install 'slime)
 (package-install 'slime-company)
 
+;; Rust
+(add-to-list 'load-path "~/.emacs.d/private/rust-mode/")
+(autoload 'rust-mode "rust-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+
 ;; SQL
 (package-install 'sql)
-(setq sql-postgres-login-params
-      '((user :default "postgres")
-        (database :default "vetpro")
-        (server :default "localhost")
-        (port :default 5432)))
+(setq
+ sql-product 'postgres
+ sql-connection-alist
+ '((vetpro (sql-product 'postgres)
+           (sql-port 5432)
+           (sql-server "localhost")
+           (sql-user "postgres")
+           (sql-database "vetpro")))
+ sql-postgres-login-params
+ '((user :default "postgres")
+   (database :default "vetpro")
+   (server :default "localhost")
+   (port :default 5432)))
 
 (with-eval-after-load 'sql
-  (sql-set-product-feature
-   'postgres :prompt-regexp "^.* λ "))
+  (progn
+    (sql-set-product-feature
+     'postgres :prompt-regexp "^.* λ ")
+    (define-key sql-mode-map (kbd "C-c C-i") #'(lambda () (interactive) (sql-connect 'vetpro)))
+    (define-key sql-mode-map (kbd "C-c C-k") #'(lambda () (interactive)
+                                                 (with-current-buffer (get-buffer "*SQL: <vetpro>*") (comint-clear-buffer))))))
 
 ;; YAML
 (package-install 'yaml-mode)
@@ -727,6 +824,15 @@ Set `spaceline-highlight-face-func' to
   "Major mode for editing GitHub Flavored Markdown files" t)
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
+;; Docker
+;; dockerfile
+(package-install 'dockerfile-mode)
+(require 'dockerfile-mode)
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+
+;; docker management
+(package-install 'docker)
+
 ;; Shellcheck
 (add-hook 'sh-mode-hook #'flycheck-mode)
 
@@ -735,6 +841,10 @@ Set `spaceline-highlight-face-func' to
 (require 'vimrc-mode)
 (add-to-list 'auto-mode-alist '("\\.vim\\(rc\\)?\\'" . vimrc-mode))
 
+;; CSV
+(package-install 'csv-mode)
+(require 'csv-mode)
+
 ;; CMake
 (package-install 'cmake-mode)
 (require 'cmake-mode)
@@ -742,6 +852,26 @@ Set `spaceline-highlight-face-func' to
 ;; ELF
 (package-install 'elf-mode)
 (add-to-list 'auto-mode-alist '("\\.\\(?:a\\|so\\)\\'" . elf-mode))
+
+;; Web mode
+(package-install 'web-mode)
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
+
+;; Emmet
+(package-install 'emmet-mode)
+(require 'emmet-mode)
+(setq emmet-move-cursor-between-quotes t)
+(add-hook 'css-mode-hook  'emmet-mode)
+(add-hook 'web-mode-hook 'emmet-mode)
 
 ;;; init.el ends here
  
