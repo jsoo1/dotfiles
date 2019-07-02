@@ -366,6 +366,10 @@
   "s" magit-status
   "l" magit-log-buffer-file)
 
+(define-prefix-keymap my-insert-map
+  "my insertion keybindings"
+  "c" insert-char)
+
 (define-prefix-keymap my-jump-map
   "my jump keybindings"
   "i" counsel-imenu
@@ -789,7 +793,9 @@ Set `spaceline-highlight-face-func' to
  '((user :default "postgres")
    (database :default "vetpro")
    (server :default "localhost")
-   (port :default 5432)))
+   (port :default 5432))
+ sql-postgres-options
+ '("-P" "pager=off" "--set 'tuples on'" "--no-align"))
 
 (with-eval-after-load 'sql
   (progn
