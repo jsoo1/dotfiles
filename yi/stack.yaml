@@ -1,0 +1,12 @@
+resolver: lts-8.18
+packages:
+- '.'
+- location: '../../'
+  subdirs:
+    - 'yi-core'
+    - 'yi-frontend-vty'
+    - 'yi-keymap-vim'
+    - 'yi-language'
+    - 'yi-misc-modes'
+    - 'yi-mode-haskell'
+extra-deps: []
