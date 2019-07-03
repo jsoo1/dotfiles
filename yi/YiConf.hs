@@ -1,3 +1,4 @@
+module YiConf where
 {-# LANGUAGE OverloadedStrings #-}
 
 import           Data.Monoid

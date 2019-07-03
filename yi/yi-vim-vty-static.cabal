@@ -12,6 +12,9 @@ source-repository head
   type: git
   location: https://github.com/yi-editor/yi
 
+other-modules:
+  - MyConfig
+        
 executable yi
   main-is: Main.hs
   hs-source-dirs:

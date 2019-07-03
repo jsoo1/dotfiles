@@ -1,3 +1,4 @@
+module Main where
 -- This example requires manual rebuild (as opposed to dynamic ones, automatically rebuilding the
 -- config upon changes). This config is useful for distribution of the editor in binary form as such
 -- a build have almost all libraries statically linked in.
