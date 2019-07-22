@@ -198,7 +198,7 @@
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
                                (haskell . t)
-                               (emacs-lisp . nil)))
+                               (sql . t)))
 
 ;; Imenu Anywhere
 (my-package-install 'imenu-anywhere)
@@ -795,7 +795,7 @@ Set `spaceline-highlight-face-func' to
    (server :default "localhost")
    (port :default 5432))
  sql-postgres-options
- '("-P" "pager=off" "--set 'tuples on'" "--no-align"))
+ '("-P" "pager=off" "--tuples-only" "--no-align"))
 
 (with-eval-after-load 'sql
   (progn
@@ -871,5 +871,10 @@ Set `spaceline-highlight-face-func' to
 (setq emmet-move-cursor-between-quotes t)
 (add-hook 'css-mode-hook  'emmet-mode)
 (add-hook 'web-mode-hook 'emmet-mode)
+
+;; Prolog
+(my-package-install 'ediprolog)
+(require 'ediprolog)
+(add-to-list 'auto-mode-alist '("\\.pro\\'" . prolog-mode))
 
 ;;; init.el ends here

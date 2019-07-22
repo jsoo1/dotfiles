@@ -1,5 +1,7 @@
 let abbr cmd arg = return $ ":! " ++ cmd ++ " " ++ arg
 
+:set prompt "\ESC[34mλ> \ESC[m"
+
 -- hoogle
 :def! haddocks (\arg -> return $ ":! hoogle --color --info \'" ++ arg ++ "\'")
 :def! hoogle (\arg -> return $ ":! hoogle --color \'" ++ arg ++ "\'")
