@@ -97,6 +97,10 @@
 (require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
 
+;; Email
+(setq user-mail-address "jsoo1@asu.edu"
+      user-full-name "John Soo")
+
 ;; Shell
 (my-package-install 'multi-term)
 (setq shell-file-name "bash")
@@ -262,6 +266,7 @@
 
 ;; Compilation
 (define-key compilation-mode-map (kbd "C-c C-l") #'recompile)
+
 ;; Avy
 (my-package-install 'avy)
 
@@ -426,6 +431,7 @@
   "l" toggle-truncate-lines
   "r" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
   "t" counsel-load-theme
+  "T" toggle-transparency
   "w" whitespace-mode)
 
 (define-prefix-keymap my-window-map
@@ -539,6 +545,25 @@ Set `spaceline-highlight-face-func' to
 (setq solarized-high-contrast-mode-line t)
 (setq x-underline-at-descent-line t)
 (load-theme 'solarized-dark)
+
+;; Transparency in GUI
+(defun toggle-transparency ()
+  "Toggle frame transparency."
+   (interactive)
+   (let ((alpha (frame-parameter nil 'alpha)))
+     (set-frame-parameter
+      nil 'alpha
+      (if (eql (cond ((numberp alpha) alpha)
+                     ((numberp (cdr alpha)) (cdr alpha))
+                     ;; Also handle undocumented (<active> <inactive>) form.
+                     ((numberp (cadr alpha)) (cadr alpha)))
+               100)
+          '(85 . 50) '(100 . 100)))))
+
+(defun transparency (value)
+   "Set the transparency of the frame window to `VALUE'.  0=transparent/100=opaque."
+   (interactive "nTransparency Value 0 - 100 opaque:")
+   (set-frame-parameter (selected-frame) 'alpha value))
 
 ;; Transparency in terminal
 (defun my-make-frame-transparent (frame)
