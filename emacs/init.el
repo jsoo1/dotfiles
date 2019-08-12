@@ -34,7 +34,7 @@
 (defun my-package-install (package)
   "Install `PACKAGE' unless already installed."
   (unless (package-installed-p package)
-    (my-package-install package)))
+    (package-install package)))
 
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
@@ -80,6 +80,8 @@
 ;; Package
 (require 'package)
 (add-to-list 'load-path "~/.emacs.d/private/evil-tmux-navigator")
+(add-to-list 'load-path "~/.guix-profile/share/emacs/site-lisp/guix.d/cedille-1.1.1")
+(add-to-list 'load-path "~/.guix-profile/share/emacs/site-lisp/guix.d/se-mode-1.1.1")
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
@@ -813,6 +815,10 @@ Set `spaceline-highlight-face-func' to
 (autoload 'rust-mode "rust-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 
+;; Cedille
+(setq cedille-path-el "~/.guix-profile/share/emacs/site-lisp/guix.d/cedille-1.1.1/")
+(require 'cedille-mode)
+
 ;; SQL
 (my-package-install 'sql)
 (setq
@@ -913,10 +919,5 @@ Set `spaceline-highlight-face-func' to
 (setq emmet-move-cursor-between-quotes t)
 (add-hook 'css-mode-hook  'emmet-mode)
 (add-hook 'web-mode-hook 'emmet-mode)
-
-;; Prolog
-(my-package-install 'ediprolog)
-(require 'ediprolog)
-(add-to-list 'auto-mode-alist '("\\.pro\\'" . prolog-mode))
 
 ;;; init.el ends here
