@@ -43,7 +43,7 @@
 (setq-default truncate-lines 't)
 (add-to-listq
  default-frame-alist '(ns-transparent-titlebar . t)
- default-frame-alist '(font . "Iosevka 16"))
+ default-frame-alist '(font . "Iosevka 18"))
 (set-fontset-font "fontset-default" 'unicode "DejaVu Sans")
 
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -71,7 +71,7 @@
   (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
 
 ;; Font
-(set-face-attribute 'default t :font "Iosevka 16")
+(set-face-attribute 'default t :font "Iosevka 18")
 
 ;; Custom
 (setq custom-file "/dev/null"
@@ -203,7 +203,8 @@
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
                                (haskell . t)
-                               (emacs-lisp . nil)))
+                               (emacs-lisp . t)
+                               (sql . t)))
 
 ;; Imenu Anywhere
 (my-package-install 'imenu-anywhere)
@@ -266,7 +267,6 @@
 
 ;; Compilation
 (define-key compilation-mode-map (kbd "C-c C-l") #'recompile)
-
 ;; Avy
 (my-package-install 'avy)
 
@@ -371,6 +371,10 @@
   "b" magit-blame
   "s" magit-status
   "l" magit-log-buffer-file)
+
+(define-prefix-keymap my-insert-map
+  "my insertion keybindings"
+  "c" insert-char)
 
 (define-prefix-keymap my-jump-map
   "my jump keybindings"
@@ -827,7 +831,9 @@ Set `spaceline-highlight-face-func' to
  '((user :default "postgres")
    (database :default "vetpro")
    (server :default "localhost")
-   (port :default 5432)))
+   (port :default 5432))
+ sql-postgres-options
+ '("-P" "pager=off" "--tuples-only" "--no-align"))
 
 (with-eval-after-load 'sql
   (progn
@@ -907,5 +913,10 @@ Set `spaceline-highlight-face-func' to
 (setq emmet-move-cursor-between-quotes t)
 (add-hook 'css-mode-hook  'emmet-mode)
 (add-hook 'web-mode-hook 'emmet-mode)
+
+;; Prolog
+(my-package-install 'ediprolog)
+(require 'ediprolog)
+(add-to-list 'auto-mode-alist '("\\.pro\\'" . prolog-mode))
 
 ;;; init.el ends here
