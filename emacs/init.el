@@ -44,7 +44,7 @@
 (add-to-listq
  default-frame-alist '(ns-transparent-titlebar . t)
  default-frame-alist '(font . "Iosevka 18"))
-(set-fontset-font "fontset-default" 'unicode "DejaVu Sans")
+(set-fontset-font "fontset-default" 'unicode "DejaVu Math Tex Gyre")
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -154,6 +154,10 @@
 (evil-set-initial-state 'proced 'normal)
 (evil-set-initial-state 'ert-results-mode 'normal)
 (evil-set-initial-state 'comint-mode 'normal)
+(evil-set-initial-state 'gnus 'normal)
+(evil-set-initial-state 'gnus-group-mode 'normal)
+(evil-set-initial-state 'gnus-summary-mode 'normal)
+(evil-set-initial-state 'gnus-article-mode 'normal)
 
 ;; Magit
 (my-package-install 'magit)
@@ -195,23 +199,19 @@
   (switch-to-buffer (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
 
 ;; Org
+;; babel
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
                                (haskell . t)
                                (sql . t)))
-
-;; Imenu Anywhere
-(my-package-install 'imenu-anywhere)
-
-(defun projectile-imenu ()
-  "Imenu across projectile buffers defined by `PROJECTILE-PROJECT-BUFFERS', filtering out magit buffers."
-  (interactive)
-  (let ((imenu-anywhere-buffer-list-function #'projectile-project-buffers)
-        (imenu-anywhere-buffer-filter-functions
-         (cons (lambda (_ other)
-                 (if (numberp (string-match-p "magit" (buffer-name other))) nil 't))
-               imenu-anywhere-buffer-filter-functions)))
-    (ivy-imenu-anywhere)))
+;; export
+(setq
+ org-export-with-author nil
+ org-export-with-toc nil
+ org-export-with-title nil
+ org-export-with-creator nil
+ org-export-time-stamp-file nil
+ org-html-validation-link nil)
 
 ;; Anzu
 (my-package-install 'anzu)
@@ -339,6 +339,7 @@
   "b" describe-bindings
   "f" describe-function
   "F" counsel-describe-face
+  "I" info-apropos
   "k" describe-key
   "m" describe-mode
   "t" describe-theme
@@ -398,7 +399,6 @@
   "D" (lambda () (interactive) (dired (projectile-project-root)))
   "e" projectile-edit-dir-locals
   "f" counsel-projectile-find-file
-  "i" projectile-imenu
   "I" projectile-invalidate-cache
   "l" switch-project-workspace
   "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
