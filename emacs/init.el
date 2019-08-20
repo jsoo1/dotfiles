@@ -729,6 +729,10 @@ Set `spaceline-highlight-face-func' to
 (load-library (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
 
+;; Mercury
+(add-to-list 'load-path "~/.emacs.d/private/metal-mercury-mode/")
+(require 'metal-mercury-mode)
+
 ;; Ocaml
 (my-package-install 'tuareg)
 (my-package-install 'merlin)
@@ -804,6 +808,14 @@ Set `spaceline-highlight-face-func' to
     (define-key sql-mode-map (kbd "C-c C-i") #'sql-connect)
     (define-key sql-mode-map (kbd "C-c C-k") #'(lambda () (interactive)
                                                  (with-current-buffer sql-buffer (comint-clear-buffer))))))
+
+;; Cedille
+(setq cedille-path "~/projects/cedille")
+(add-to-list 'load-path cedille-path)
+(require 'cedille-mode)
+(define-key cedille-mode-map (kbd "C-c C-l") #'cedille-start-navigation)
+(evil-define-key 'normal cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
+(evil-define-key 'insert cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
 
 ;; YAML
 (my-package-install 'yaml-mode)
