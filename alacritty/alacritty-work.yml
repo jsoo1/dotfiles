@@ -118,7 +118,7 @@ font:
     #   - (macOS) Menlo
     #   - (Linux) monospace
     #   - (Windows) Consolas
-    family: Iosevka
+    family: PragmataPro
 
     # The `style` can be specified to pick a specific face.
     style: Regular
@@ -549,7 +549,7 @@ key_bindings:
   - { key: H,      mods: Command, action: Hide             }
   - { key: Q,      mods: Command, action: Quit             }
   - { key: W,      mods: Command, action: Quit             }
-  # - { key: F,      mods: Command|Control, action: ToggleSimpleFullscreen }
+  - { key: F,      mods: Command|Control, action: ToggleSimpleFullscreen }
 
   - { key: Paste,                   action: Paste                            }
   - { key: Copy,                    action: Copy                             }
