@@ -44,7 +44,7 @@
 (add-to-listq
  default-frame-alist '(ns-transparent-titlebar . t)
  default-frame-alist '(font . "Iosevka 18"))
-(set-fontset-font "fontset-default" 'unicode "DejaVu Sans")
+(set-fontset-font "fontset-default" 'unicode "DejaVu Math Tex Gyre")
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -80,8 +80,6 @@
 ;; Package
 (require 'package)
 (add-to-list 'load-path "~/.emacs.d/private/evil-tmux-navigator")
-(add-to-list 'load-path "~/.guix-profile/share/emacs/site-lisp/guix.d/cedille-1.1.1")
-(add-to-list 'load-path "~/.guix-profile/share/emacs/site-lisp/guix.d/se-mode-1.1.1")
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
@@ -267,6 +265,10 @@
   ('darwin (progn (my-package-install 'osx-clipboard)
                   (osx-clipboard-mode +1))))
 
+;; GNUTLS issues
+;; Skip v1.3 per https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341#19
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
 ;; Compilation
 (define-key compilation-mode-map (kbd "C-c C-l") #'recompile)
 ;; Avy
@@ -319,7 +321,7 @@
   "y" 'my-yank-map
   "z" 'my-zoom-map
   "'" 'multi-term
-  "/" 'counsel-projectile-grep)
+  "/" 'counsel-projectile-rg)
 
 (define-prefix-keymap my-process-map
   "my process keybindings"
@@ -816,8 +818,8 @@ Set `spaceline-highlight-face-func' to
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 
 ;; Cedille
-(setq cedille-path-el "~/.guix-profile/share/emacs/site-lisp/guix.d/cedille-1.1.1/")
 (require 'cedille-mode)
+(define-key cedille-mode-map (kbd "C-c C-l") #'cedille-start-navigation)
 
 ;; SQL
 (my-package-install 'sql)
