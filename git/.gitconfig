@@ -8,7 +8,7 @@
 [merge]
 	conflictstyle = diff3
 [user]
-	email = jsoo@panosoft.com
+	email = jsoo1@asu.edu
 	name = John Soo
 [alias]
 	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
