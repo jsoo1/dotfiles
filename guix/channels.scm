@@ -6,4 +6,7 @@
  (channel
   (name 'private)
   (url "file:///home/john/projects/guix-channel/.git")
-  (branch "master")))
+  (branch "master"))
+ (channel
+  (name 'next)
+  (url "https://gitlab.com/atlas-engineer/next-guix-channel")))
