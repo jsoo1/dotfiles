@@ -481,13 +481,13 @@
 ;; Mode Line
 (setq-default
  mode-line-format `((:eval evil-mode-line-tag)
-                    "   "
+                    " "
                     (:eval anzu--mode-line-format)
-                    "   "
+                    " "
                     ,mode-line-buffer-identification
-                    "   "
+                    " "
                     (:eval mode-name)
-                    "   "
+                    "     "
                     (:eval vc-mode)))
 
 ;; Theme
