@@ -478,48 +478,6 @@
                  (funcall 'compilation-filter proc
                           (xterm-color-filter string)))))))
 
-;; Theme
-(my-package-install 'solarized-theme)
-(require 'solarized-theme)
-
-(setq
- custom-safe-themes
- '("0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f"
-   "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879"
-   "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4"
-   default))
-(setq x-underline-at-descent-line t)
-(load-theme 'solarized-dark)
-
-;; Transparency in terminal
-(defun my-make-frame-transparent (frame)
-  "Make `FRAME' transparent'."
-  (if (or (not (display-graphic-p frame))
-	  (string= 'base (daemonp))
-          (string= 'term (daemonp)))
-      (progn (set-face-background 'default "unspecified-bg" frame)
-             (set-face-background 'line-number "#073642" frame))))
-
-(my-make-frame-transparent (selected-frame))
-(add-hook 'after-make-frame-functions #'my-make-frame-transparent)
-
-(defun on-after-init ()
-  "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
-  (unless (or (display-graphic-p (selected-frame))
-              (not (string= 'base (daemonp)))
-              (not (string= 'term (daemonp))))
-    (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-           (set-face-background 'line-number "#073642" (selected-frame)))))
-
-(add-hook 'window-setup-hook #'on-after-init)
-
-(if (or (string= 'base (daemonp))
-        (string= 'term (daemonp))
-        (not (display-graphic-p (selected-frame))))
-
-    (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-           (set-face-background 'line-number "#073642" (selected-frame))))
-
 ;; Eyebrowse
 (my-package-install 'eyebrowse)
 (setq eyebrowse-keymap-prefix "")
@@ -529,27 +487,6 @@
 (my-package-install 'flycheck)
 (require 'flycheck)
 (global-flycheck-mode)
-
-;; Mode Line
-(set-face-attribute
- 'mode-line nil
- :underline nil
- :overline nil
- :foreground "#839496"
- :background "#073642"
- :box '(:width 0))
-
-(setq flycheck-mode-line-prefix "errors")
-(setq-default
- mode-line-format `((:eval evil-mode-line-tag)
-                    "  %b   "
-                    (:eval mode-name)
-                    "  "
-                    (:eval vc-mode)
-                    "  "
-                    flycheck-mode-line
-                    "  "
-                    (:eval anzu--mode-line-format)))
 
 ;; ispell
 (setq ispell-program-name "aspell"
@@ -853,5 +790,67 @@
 (my-package-install 'ediprolog)
 (require 'ediprolog)
 (add-to-list 'auto-mode-alist '("\\.pro\\'" . prolog-mode))
+
+;; Theme
+(my-package-install 'solarized-theme)
+(require 'solarized-theme)
+
+(setq
+ custom-safe-themes
+ '("0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f"
+   "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879"
+   "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4"
+   default))
+(load-theme 'solarized-dark)
+
+;; Transparency in terminal
+(defun my-make-frame-transparent (frame)
+  "Make `FRAME' transparent'."
+  (if (or (not (display-graphic-p frame))
+	  (string= 'base (daemonp))
+          (string= 'term (daemonp)))
+      (progn (set-face-background 'default "unspecified-bg" frame)
+             (set-face-background 'line-number "#073642" frame))))
+
+(my-make-frame-transparent (selected-frame))
+(add-hook 'after-make-frame-functions #'my-make-frame-transparent)
+
+(defun on-after-init ()
+  "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
+  (unless (or (display-graphic-p (selected-frame))
+              (not (string= 'base (daemonp)))
+              (not (string= 'term (daemonp))))
+    (progn (set-face-background 'default "unspecified-bg" (selected-frame))
+           (set-face-background 'line-number "#073642" (selected-frame)))))
+
+(add-hook 'window-setup-hook #'on-after-init)
+
+(if (or (string= 'base (daemonp))
+        (string= 'term (daemonp))
+        (not (display-graphic-p (selected-frame))))
+
+    (progn (set-face-background 'default "unspecified-bg" (selected-frame))
+           (set-face-background 'line-number "#073642" (selected-frame))))
+
+;; Mode Line
+(set-face-attribute
+ 'mode-line nil
+ :underline nil
+ :overline nil
+ :foreground "#839496"
+ :background "#073642"
+ :box '(:width 0))
+
+(setq flycheck-mode-line-prefix "errors")
+(setq-default
+ mode-line-format `((:eval evil-mode-line-tag)
+                    "  %b   "
+                    (:eval mode-name)
+                    "  "
+                    flycheck-mode-line
+                    "  "
+                    (:eval vc-mode)
+                    "  "
+                    (:eval anzu--mode-line-format)))
 
 ;;; init.el ends here
