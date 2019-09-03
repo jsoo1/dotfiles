@@ -215,11 +215,8 @@
 
 ;; Anzu
 (my-package-install 'anzu)
-(setq anzu-cons-mode-line-p nil)
 (global-anzu-mode)
-(if (or (string= 'term (daemonp)) (not (display-graphic-p (selected-frame)))
-        (set-face-foreground 'anzu-mode-line "#002b36" nil))
-    (set-face-foreground 'anzu-mode-line "#dc322f" nil))
+(set-face-foreground 'anzu-mode-line "#dc322f" nil)
 (my-package-install 'evil-anzu)
 (with-eval-after-load 'evil (require 'evil-anzu))
 
@@ -336,6 +333,7 @@
 
 (define-prefix-keymap my-describe-map
   "my describe keybindings"
+  "a" counsel-apropos
   "b" describe-bindings
   "f" describe-function
   "F" counsel-describe-face
@@ -479,55 +477,17 @@
                  (funcall 'compilation-filter proc
                           (xterm-color-filter string)))))))
 
-
-;; Spaceline
-(my-package-install 'spaceline)
-(require 'spaceline-config)
-(if (or (string= 'term (daemonp))
-        (not (display-graphic-p (selected-frame))))
-    (progn (setq powerline-default-separator 'utf-8)
-           (spaceline-spacemacs-theme))
-  (progn (setq powerline-default-separator nil)
-         (spaceline-spacemacs-theme)))
-
-(dolist (s '((solarized-evil-normal "#859900" "Evil normal state face.")
-             (solarized-evil-insert "#b58900" "Evil insert state face.")
-             (solarized-evil-emacs "#2aa198" "Evil emacs state face.")
-             (solarized-evil-replace "#dc322f" "Evil replace state face.")
-             (solarized-evil-visual "#268bd2" "Evil visual state face.")
-             (solarized-evil-motion "#586e75" "Evil motion state face.")
-             (solarized-unmodified "#586e75" "Unmodified buffer face.")
-             (solarized-modified "#2aa198" "Modified buffer face.")
-             (solarized-read-only "#586e75" "Read-only buffer face.")))
-  (eval `(defface ,(nth 0 s) `((t (:background ,(nth 1 s) :foreground "#002b36" :inherit 'mode-line))) ,(nth 2 s) :group 'spaceline)))
-
-(defvar solarized-evil-state-faces
-  '((normal . solarized-evil-normal)
-    (insert . solarized-evil-insert)
-    (emacs . solarized-evil-emacs)
-    (replace . solarized-evil-replace)
-    (visual . solarized-evil-visual)
-    (motion . solarized-evil-motion))
-  "Association list mapping evil states to their corresponding highlight faces.
-Is used by `solarized-highlight-face-func'.")
-
-(defun solarized-highlight-face ()
-  "Set the highlight face depending on the evil state.
-Set `spaceline-highlight-face-func' to
-`solarized-highlight-face' to use this."
-  (if (bound-and-true-p evil-local-mode)
-      (let* ((state (if (eq 'operator evil-state) evil-previous-state evil-state))
-             (face (assq state solarized-evil-state-faces)))
-        (if face (cdr face) (spaceline-highlight-face-default)))
-
-    (spaceline-highlight-face-default)))
-
-(setq powerline-image-apple-rgb t
-      powerline-text-scale-factor 1.1
-      spaceline-highlight-face-func #'solarized-highlight-face)
-
-(spaceline-toggle-minor-modes-off)
-(spaceline-toggle-projectile-root-on)
+;; Mode Line
+(setq-default
+ mode-line-format `((:eval evil-mode-line-tag)
+                    "   "
+                    (:eval anzu--mode-line-format)
+                    "   "
+                    ,mode-line-buffer-identification
+                    "   "
+                    (:eval mode-name)
+                    "   "
+                    (:eval vc-mode)))
 
 ;; Theme
 (my-package-install 'solarized-theme)
@@ -539,7 +499,6 @@ Set `spaceline-highlight-face-func' to
    "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879"
    "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4"
    default))
-(setq solarized-high-contrast-mode-line t)
 (setq x-underline-at-descent-line t)
 (load-theme 'solarized-dark)
 
@@ -788,11 +747,7 @@ Set `spaceline-highlight-face-func' to
            (sql-port 5432)
            (sql-server "localhost")
            (sql-user "postgres")
-           (sql-database "vetpro"))
-   (customer (sql-product 'postgres)
-             (sql-port 5432)
-             (sql-server "localhost")
-             (sql-user "postgres")))
+           (sql-database "vetpro")))
  sql-postgres-login-params
  '((user :default "postgres")
    (database :default "vetpro")
