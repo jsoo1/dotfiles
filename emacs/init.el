@@ -839,7 +839,7 @@
  :overline nil
  :foreground "#839496"
  :background "#073642"
- :box '(:width 0))
+ :box '(:line-width 1 :color "#073642" :style 'unspecified))
 
 (setq flycheck-mode-line-prefix "errors")
 (setq-default
