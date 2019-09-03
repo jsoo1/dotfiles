@@ -216,6 +216,7 @@
 ;; Anzu
 (my-package-install 'anzu)
 (global-anzu-mode)
+(setq anzu-cons-mode-line-p 'nil)
 (set-face-foreground 'anzu-mode-line "#dc322f" nil)
 (my-package-install 'evil-anzu)
 (with-eval-after-load 'evil (require 'evil-anzu))
