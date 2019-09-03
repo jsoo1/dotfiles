@@ -478,18 +478,6 @@
                  (funcall 'compilation-filter proc
                           (xterm-color-filter string)))))))
 
-;; Mode Line
-(setq-default
- mode-line-format `((:eval evil-mode-line-tag)
-                    " "
-                    (:eval anzu--mode-line-format)
-                    " "
-                    ,mode-line-buffer-identification
-                    " "
-                    (:eval mode-name)
-                    "     "
-                    (:eval vc-mode)))
-
 ;; Theme
 (my-package-install 'solarized-theme)
 (require 'solarized-theme)
@@ -541,6 +529,27 @@
 (my-package-install 'flycheck)
 (require 'flycheck)
 (global-flycheck-mode)
+
+;; Mode Line
+(set-face-attribute
+ 'mode-line nil
+ :underline nil
+ :overline nil
+ :foreground "#839496"
+ :background "#073642"
+ :box '(:width 0))
+
+(setq flycheck-mode-line-prefix "errors")
+(setq-default
+ mode-line-format `((:eval evil-mode-line-tag)
+                    "  %b   "
+                    (:eval mode-name)
+                    "  "
+                    (:eval vc-mode)
+                    "  "
+                    flycheck-mode-line
+                    "  "
+                    (:eval anzu--mode-line-format)))
 
 ;; ispell
 (setq ispell-program-name "aspell"
