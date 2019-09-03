@@ -3,6 +3,7 @@
 [core]
 	autocrlf = input
 	safecrlf = true
+        editor = vim
 [branch]
 	autoSetupMerge = false
 	autoSetupRebase = never
