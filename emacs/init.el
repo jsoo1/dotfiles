@@ -217,7 +217,6 @@
 (my-package-install 'anzu)
 (global-anzu-mode)
 (setq anzu-cons-mode-line-p 'nil)
-(set-face-foreground 'anzu-mode-line "#dc322f" nil)
 (my-package-install 'evil-anzu)
 (with-eval-after-load 'evil (require 'evil-anzu))
 
@@ -842,15 +841,33 @@
  :box '(:line-width 1 :color "#073642" :style 'unspecified))
 
 (setq flycheck-mode-line-prefix "errors")
+
+(defun evil-state-foreground (state)
+  "The mode line color for evil-state `STATE'."
+  (pcase state
+    ('normal  "#859900")
+    ('insert  "#b58900")
+    ('emacs   "#2aa198")
+    ('replace "#dc322f")
+    ('visual  "#268bd2")
+    ('motion  "#2aa198")))
+
+(defun eyebrowse-slot ()
+  "The formatted version of the current slot name."
+  (eyebrowse-format-slot
+   (nth (- (eyebrowse--get 'current-slot) 1)
+        (eyebrowse--get 'window-configs))))
+
 (setq-default
- mode-line-format `((:eval evil-mode-line-tag)
-                    "  %b   "
+ mode-line-format `(" "
+                    (:eval (propertize (eyebrowse-slot) 'bold 't 'face `(:foreground ,(evil-state-foreground evil-state))))
+                    "  %b  "
                     (:eval mode-name)
-                    "  "
+                    " "
                     flycheck-mode-line
-                    "  "
+                    " "
                     (:eval vc-mode)
-                    "  "
+                    " "
                     (:eval anzu--mode-line-format)))
 
 ;;; init.el ends here
