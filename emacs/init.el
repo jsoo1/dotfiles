@@ -840,8 +840,6 @@
  :background "#073642"
  :box '(:line-width 1 :color "#073642" :style 'unspecified))
 
-(setq flycheck-mode-line-prefix "errors")
-
 (defun evil-state-foreground (state)
   "The mode line color for evil-state `STATE'."
   (pcase state
@@ -852,16 +850,42 @@
     ('visual  "#268bd2")
     ('motion  "#2aa198")))
 
+(defun my-flycheck-error-format (errors)
+  "Format `ERRORS', if there are any of type warning or error."
+  (let-alist errors
+    (if (or .error .warning)
+        `(,(propertize (format "E:%s" (or .error 0))
+                       'face `(:foreground "#dc322f"))
+          " "
+          ,(propertize (format "W:%s" (or .warning 0))
+                       'face `(:foreground    "#2aa198")))
+      "")))
+
+(defun my-flycheck-mode-line-status-text ()
+  "Get text for the current flycheck state."
+    (pcase flycheck-last-status-change
+      (`not-checked "")
+      (`no-checker "-")
+      (`running "*")
+      (`errored "!")
+      (`finished (my-flycheck-error-format
+                  (flycheck-count-errors flycheck-current-errors)))
+      (`interrupted ".")
+      (`suspicious "?")))
+
 (setq-default
- mode-line-format `(" "
-                    (:eval (propertize (projectile-project-name) 'bold 't 'face `(:foreground ,(evil-state-foreground evil-state))))
-                    "  %b  "
-                    (:eval mode-name)
-                    " "
-                    flycheck-mode-line
-                    " "
-                    (:eval vc-mode)
-                    " "
-                    (:eval anzu--mode-line-format)))
+ mode-line-format
+ `(" "
+   (:eval (propertize
+           (projectile-project-name)
+           'face `(:foreground ,(evil-state-foreground evil-state) :weight bold)))
+   "  %b "
+   (:eval vc-mode)
+   "  "
+   (:eval (if (and (featurep 'flycheck) flycheck-mode)
+              (my-flycheck-mode-line-status-text)
+            ""))
+   "  "
+   (:eval anzu--mode-line-format)))
 
 ;;; init.el ends here
