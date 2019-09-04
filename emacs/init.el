@@ -852,15 +852,9 @@
     ('visual  "#268bd2")
     ('motion  "#2aa198")))
 
-(defun eyebrowse-slot ()
-  "The formatted version of the current slot name."
-  (eyebrowse-format-slot
-   (nth (- (eyebrowse--get 'current-slot) 1)
-        (eyebrowse--get 'window-configs))))
-
 (setq-default
  mode-line-format `(" "
-                    (:eval (propertize (eyebrowse-slot) 'bold 't 'face `(:foreground ,(evil-state-foreground evil-state))))
+                    (:eval (propertize (projectile-project-name) 'bold 't 'face `(:foreground ,(evil-state-foreground evil-state))))
                     "  %b  "
                     (:eval mode-name)
                     " "
