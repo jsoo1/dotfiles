@@ -858,7 +858,7 @@
                        'face `(:foreground "#dc322f"))
           " "
           ,(propertize (format "W:%s" (or .warning 0))
-                       'face `(:foreground    "#2aa198")))
+                       'face `(:foreground "#b58900")))
       "")))
 
 (defun my-flycheck-mode-line-status-text ()
@@ -885,7 +885,7 @@
    (:eval (if (and (featurep 'flycheck) flycheck-mode)
               (my-flycheck-mode-line-status-text)
             ""))
-   "  "
+   " "
    (:eval anzu--mode-line-format)))
 
 ;;; init.el ends here
