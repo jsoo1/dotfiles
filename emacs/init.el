@@ -205,27 +205,19 @@
                                (haskell . t)
                                (emacs-lisp . t)
                                (sql . t)))
-
-;; Imenu Anywhere
-(my-package-install 'imenu-anywhere)
-
-(defun projectile-imenu ()
-  "Imenu across projectile buffers defined by `PROJECTILE-PROJECT-BUFFERS', filtering out magit buffers."
-  (interactive)
-  (let ((imenu-anywhere-buffer-list-function #'projectile-project-buffers)
-        (imenu-anywhere-buffer-filter-functions
-         (cons (lambda (_ other)
-                 (if (numberp (string-match-p "magit" (buffer-name other))) nil 't))
-               imenu-anywhere-buffer-filter-functions)))
-    (ivy-imenu-anywhere)))
+;; export
+(setq
+ org-export-with-author nil
+ org-export-with-toc nil
+ org-export-with-title nil
+ org-export-with-creator nil
+ org-export-time-stamp-file nil
+ org-html-validation-link nil)
 
 ;; Anzu
 (my-package-install 'anzu)
-(setq anzu-cons-mode-line-p nil)
 (global-anzu-mode)
-(if (or (string= 'term (daemonp)) (not (display-graphic-p (selected-frame)))
-        (set-face-foreground 'anzu-mode-line "#002b36" nil))
-    (set-face-foreground 'anzu-mode-line "#dc322f" nil))
+(setq anzu-cons-mode-line-p 'nil)
 (my-package-install 'evil-anzu)
 (with-eval-after-load 'evil (require 'evil-anzu))
 
@@ -346,9 +338,11 @@
 
 (define-prefix-keymap my-describe-map
   "my describe keybindings"
+  "a" counsel-apropos
   "b" describe-bindings
   "f" describe-function
   "F" counsel-describe-face
+  "I" info-apropos
   "k" describe-key
   "m" describe-mode
   "t" describe-theme
@@ -408,7 +402,6 @@
   "D" (lambda () (interactive) (dired (projectile-project-root)))
   "e" projectile-edit-dir-locals
   "f" counsel-projectile-find-file
-  "i" projectile-imenu
   "I" projectile-invalidate-cache
   "l" switch-project-workspace
   "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
@@ -439,7 +432,6 @@
   "l" toggle-truncate-lines
   "r" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
   "t" counsel-load-theme
-  "T" toggle-transparency
   "w" whitespace-mode)
 
 (define-prefix-keymap my-window-map
@@ -489,118 +481,6 @@
                (lambda (proc string)
                  (funcall 'compilation-filter proc
                           (xterm-color-filter string)))))))
-
-
-;; Spaceline
-(my-package-install 'spaceline)
-(require 'spaceline-config)
-(if (or (string= 'term (daemonp))
-        (not (display-graphic-p (selected-frame))))
-    (progn (setq powerline-default-separator 'utf-8)
-           (spaceline-spacemacs-theme))
-  (progn (setq powerline-default-separator nil)
-         (spaceline-spacemacs-theme)))
-
-(dolist (s '((solarized-evil-normal "#859900" "Evil normal state face.")
-             (solarized-evil-insert "#b58900" "Evil insert state face.")
-             (solarized-evil-emacs "#2aa198" "Evil emacs state face.")
-             (solarized-evil-replace "#dc322f" "Evil replace state face.")
-             (solarized-evil-visual "#268bd2" "Evil visual state face.")
-             (solarized-evil-motion "#586e75" "Evil motion state face.")
-             (solarized-unmodified "#586e75" "Unmodified buffer face.")
-             (solarized-modified "#2aa198" "Modified buffer face.")
-             (solarized-read-only "#586e75" "Read-only buffer face.")))
-  (eval `(defface ,(nth 0 s) `((t (:background ,(nth 1 s) :foreground "#002b36" :inherit 'mode-line))) ,(nth 2 s) :group 'spaceline)))
-
-(defvar solarized-evil-state-faces
-  '((normal . solarized-evil-normal)
-    (insert . solarized-evil-insert)
-    (emacs . solarized-evil-emacs)
-    (replace . solarized-evil-replace)
-    (visual . solarized-evil-visual)
-    (motion . solarized-evil-motion))
-  "Association list mapping evil states to their corresponding highlight faces.
-Is used by `solarized-highlight-face-func'.")
-
-(defun solarized-highlight-face ()
-  "Set the highlight face depending on the evil state.
-Set `spaceline-highlight-face-func' to
-`solarized-highlight-face' to use this."
-  (if (bound-and-true-p evil-local-mode)
-      (let* ((state (if (eq 'operator evil-state) evil-previous-state evil-state))
-             (face (assq state solarized-evil-state-faces)))
-        (if face (cdr face) (spaceline-highlight-face-default)))
-
-    (spaceline-highlight-face-default)))
-
-(setq powerline-image-apple-rgb t
-      powerline-text-scale-factor 1.1
-      spaceline-highlight-face-func #'solarized-highlight-face)
-
-(spaceline-toggle-minor-modes-off)
-(spaceline-toggle-projectile-root-on)
-
-;; Theme
-(my-package-install 'solarized-theme)
-(require 'solarized-theme)
-
-(setq
- custom-safe-themes
- '("0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f"
-   "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879"
-   "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4"
-   default))
-(setq solarized-high-contrast-mode-line t)
-(setq x-underline-at-descent-line t)
-(load-theme 'solarized-dark)
-
-;; Transparency in GUI
-(defun toggle-transparency ()
-  "Toggle frame transparency."
-   (interactive)
-   (let ((alpha (frame-parameter nil 'alpha)))
-     (set-frame-parameter
-      nil 'alpha
-      (if (eql (cond ((numberp alpha) alpha)
-                     ((numberp (cdr alpha)) (cdr alpha))
-                     ;; Also handle undocumented (<active> <inactive>) form.
-                     ((numberp (cadr alpha)) (cadr alpha)))
-               100)
-          '(85 . 50) '(100 . 100)))))
-
-(defun transparency (value)
-   "Set the transparency of the frame window to `VALUE'.  0=transparent/100=opaque."
-   (interactive "nTransparency Value 0 - 100 opaque:")
-   (set-frame-parameter (selected-frame) 'alpha value))
-
-;; Transparency in terminal
-(defun my-make-frame-transparent (frame)
-  "Make `FRAME' transparent'."
-  (if (or (not (display-graphic-p frame))
-	  (string= 'base (daemonp))
-          (string= 'term (daemonp)))
-      (progn (set-face-background 'default "unspecified-bg" frame)
-             (set-face-background 'line-number "#073642" frame))))
-
-(my-make-frame-transparent (selected-frame))
-(add-hook 'after-make-frame-functions #'my-make-frame-transparent)
-
-(defun on-after-init ()
-  "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
-  (unless (or (display-graphic-p (selected-frame))
-              (not (string= 'base (daemonp)))
-              (not (string= 'term (daemonp))))
-    (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-           (set-face-background 'line-number "#073642" (selected-frame)))))
-
-(add-hook 'window-setup-hook #'on-after-init)
-
-(if (or (string= 'base (daemonp))
-        (string= 'term (daemonp))
-        (not (display-graphic-p (selected-frame))))
-
-    (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-           (set-face-background 'line-number "#073642" (selected-frame))))
 
 ;; Eyebrowse
 (my-package-install 'eyebrowse)
@@ -769,6 +649,10 @@ Set `spaceline-highlight-face-func' to
 (load-library (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
 
+;; Mercury
+(add-to-list 'load-path "~/.emacs.d/private/metal-mercury-mode/")
+(require 'metal-mercury-mode)
+
 ;; Ocaml
 (my-package-install 'tuareg)
 (my-package-install 'merlin)
@@ -830,11 +714,7 @@ Set `spaceline-highlight-face-func' to
            (sql-port 5432)
            (sql-server "localhost")
            (sql-user "postgres")
-           (sql-database "vetpro"))
-   (customer (sql-product 'postgres)
-             (sql-port 5432)
-             (sql-server "localhost")
-             (sql-user "postgres")))
+           (sql-database "vetpro")))
  sql-postgres-login-params
  '((user :default "postgres")
    (database :default "vetpro")
@@ -921,5 +801,108 @@ Set `spaceline-highlight-face-func' to
 (setq emmet-move-cursor-between-quotes t)
 (add-hook 'css-mode-hook  'emmet-mode)
 (add-hook 'web-mode-hook 'emmet-mode)
+
+;; Prolog
+(my-package-install 'ediprolog)
+(require 'ediprolog)
+(add-to-list 'auto-mode-alist '("\\.pro\\'" . prolog-mode))
+
+;; Theme
+(my-package-install 'solarized-theme)
+(require 'solarized-theme)
+
+(setq
+ custom-safe-themes
+ '("0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f"
+   "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879"
+   "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4"
+   default))
+(load-theme 'solarized-dark)
+
+;; Transparency in terminal
+(defun my-make-frame-transparent (frame)
+  "Make `FRAME' transparent'."
+  (if (or (not (display-graphic-p frame))
+	  (string= 'base (daemonp))
+          (string= 'term (daemonp)))
+      (progn (set-face-background 'default "unspecified-bg" frame)
+             (set-face-background 'line-number "#073642" frame))))
+
+(my-make-frame-transparent (selected-frame))
+(add-hook 'after-make-frame-functions #'my-make-frame-transparent)
+
+(defun on-after-init ()
+  "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
+  (unless (or (display-graphic-p (selected-frame))
+              (not (string= 'base (daemonp)))
+              (not (string= 'term (daemonp))))
+    (progn (set-face-background 'default "unspecified-bg" (selected-frame))
+           (set-face-background 'line-number "#073642" (selected-frame)))))
+
+(add-hook 'window-setup-hook #'on-after-init)
+
+(if (or (string= 'base (daemonp))
+        (string= 'term (daemonp))
+        (not (display-graphic-p (selected-frame))))
+
+    (progn (set-face-background 'default "unspecified-bg" (selected-frame))
+           (set-face-background 'line-number "#073642" (selected-frame))))
+
+;; Mode Line
+(set-face-attribute
+ 'mode-line nil
+ :underline nil
+ :overline nil
+ :foreground "#839496"
+ :background "#073642"
+ :box '(:line-width 1 :color "#073642" :style 'unspecified))
+
+(defun evil-state-foreground (state)
+  "The mode line color for evil-state `STATE'."
+  (pcase state
+    ('normal  "#859900")
+    ('insert  "#b58900")
+    ('emacs   "#2aa198")
+    ('replace "#dc322f")
+    ('visual  "#268bd2")
+    ('motion  "#2aa198")))
+
+(defun my-flycheck-error-format (errors)
+  "Format `ERRORS', if there are any of type warning or error."
+  (let-alist errors
+    (if (or .error .warning)
+        `(,(propertize (format "E:%s" (or .error 0))
+                       'face `(:foreground "#dc322f"))
+          " "
+          ,(propertize (format "W:%s" (or .warning 0))
+                       'face `(:foreground "#b58900")))
+      "")))
+
+(defun my-flycheck-mode-line-status-text ()
+  "Get text for the current flycheck state."
+    (pcase flycheck-last-status-change
+      (`not-checked "")
+      (`no-checker "-")
+      (`running "*")
+      (`errored "!")
+      (`finished (my-flycheck-error-format
+                  (flycheck-count-errors flycheck-current-errors)))
+      (`interrupted ".")
+      (`suspicious "?")))
+
+(setq-default
+ mode-line-format
+ `(" "
+   (:eval (propertize
+           (projectile-project-name)
+           'face `(:foreground ,(evil-state-foreground evil-state) :weight bold)))
+   "  %b "
+   (:eval vc-mode)
+   "  "
+   (:eval (if (and (featurep 'flycheck) flycheck-mode)
+              (my-flycheck-mode-line-status-text)
+            ""))
+   " "
+   (:eval anzu--mode-line-format)))
 
 ;;; init.el ends here
