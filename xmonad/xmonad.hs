@@ -94,7 +94,7 @@ main =
             \ --output HDMI-1-1 --primary --left-of eDP-1-1\
             \ --output eDP-1-1"
           -- <+> spawn "compton --config ~/.config/compton/compton.conf"
-          <+> spawn "feh --bg-fill ~/Downloads/richter-eisberg.jpg"
+          <+> spawn "feh --bg-fill ~/Downloads/richter-lucerne.jpg"
       }
 
         `additionalKeys`
