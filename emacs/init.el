@@ -34,7 +34,7 @@
 (defun my-package-install (package)
   "Install `PACKAGE' unless already installed."
   (unless (package-installed-p package)
-    (my-package-install package)))
+    (package-install package)))
 
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
@@ -153,6 +153,7 @@
 (evil-set-initial-state 'debugger-mode 'normal)
 (evil-set-initial-state 'proced 'normal)
 (evil-set-initial-state 'ert-results-mode 'normal)
+(evil-set-initial-state 'Info-mode 'normal)
 (evil-set-initial-state 'comint-mode 'normal)
 (evil-set-initial-state 'gnus 'normal)
 (evil-set-initial-state 'gnus-group-mode 'normal)
@@ -204,6 +205,7 @@
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
                                (haskell . t)
+                               (emacs-lisp . t)
                                (sql . t)))
 ;; export
 (setq
@@ -765,6 +767,10 @@
 ;; CMake
 (my-package-install 'cmake-mode)
 (require 'cmake-mode)
+
+;; ELF
+(my-package-install 'elf-mode)
+(add-to-list 'auto-mode-alist '("\\.\\(?:a\\|so\\)\\'" . elf-mode))
 
 ;; Web mode
 (my-package-install 'web-mode)
