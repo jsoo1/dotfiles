@@ -867,16 +867,18 @@
     ('visual  "#268bd2")
     ('motion  "#2aa198")))
 
+(defun my-flycheck-error-str (n fg)
+  "Properties string for a number of errors `N' with foreground color `FG'."
+  (propertize (format "%s" n) 'face `(:foreground ,fg)))
+
 (defun my-flycheck-error-format (errors)
   "Format `ERRORS', if there are any of type warning or error."
   (let-alist errors
-    (if (or .error .warning)
-        `(,(propertize (format "E:%s" (or .error 0))
-                       'face `(:foreground "#dc322f"))
-          " "
-          ,(propertize (format "W:%s" (or .warning 0))
-                       'face `(:foreground "#b58900")))
-      "")))
+    `(,(if .error (my-flycheck-error-str .error "#dc322f")
+         "")
+      " "
+      ,(if .warning (my-flycheck-error-str .warning  "#b58900")
+         ""))))
 
 (defun my-flycheck-mode-line-status-text ()
   "Get text for the current flycheck state."
