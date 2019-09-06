@@ -44,8 +44,8 @@ main =
       , focusFollowsMouse = False
       , borderWidth = 2
       , modMask = myModMask
-      , normalBorderColor = hashCode dkGrey
-      , focusedBorderColor = hashCode green
+      , normalBorderColor = unSpaceColor dkGrey
+      , focusedBorderColor = unSpaceColor green
       , handleEventHook = handleEventHook def <+> docksEventHook
       , manageHook = manageDocks <+> manageHook def 
       , layoutHook =
@@ -270,7 +270,7 @@ data SegmentScheme =
     }
 
 
-newtype SpaceColor = SpaceColor String
+newtype SpaceColor = SpaceColor { unSpaceColor :: String }
 
 
 currentWSSegmentScheme :: SegmentScheme
@@ -323,13 +323,9 @@ visibleWSSegmentScheme =
     }
 
 
-hashCode :: SpaceColor -> String
-hashCode (SpaceColor hash) = hash
-
-
 xmobarSpaceColor :: SpaceColor -> SpaceColor -> String -> String
 xmobarSpaceColor =
-  xmobarColor `on` hashCode
+  xmobarColor `on` unSpaceColor
 
 
 xmobarActionSegment :: String -> String -> String

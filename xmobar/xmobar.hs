@@ -59,7 +59,7 @@ Config
       "default"
       "Master"
       [ "-t"
-      , "<volume>%  <status>  vol"
+      , "<volume>% | <status> | vol"
       , "--"
       , "--on"
       , "on"
@@ -71,16 +71,16 @@ Config
       , "#002b36,#dc322f"
       ]
       200
-    , Run Date "%Y-%m-%d  %l:%M %p" "date" 600
+    , Run Date "%Y-%m-%d | %l:%M %p " "date" 600
     , Run StdinReader
     ]
   , sepChar = "%"
   , alignSep = "}{"
   , template =
-    "<fc=#002b36,#859900> hi </fc><fc=#859900,#002b36></fc>%StdinReader%\
+    "<fc=#002b36,#859900> λ </fc>%StdinReader%\
       \}{\
-      \<action=`amixer -q set Master toggle`><fc=#586e75,#002b36></fc><fc=#002b36,#586e75> %default:Master% </fc></action><fc=#002b36,#586e75></fc>\
-      \<fc=#002b36,#002b36></fc><fc=#586e75,#002b36>%wlp9s0wi% </fc>\
-      \<fc=#586e75,#002b36> bat %battery%</fc><fc=#002b36,#002b36></fc>\
-      \<fc=#586e75,#002b36></fc><fc=#002b36,#586e75> %date% </fc>"
+      \<action=`amixer -q set Master toggle`><fc=#002b36,#586e75> %default:Master% </fc></action>\
+      \<fc=#586e75,#002b36> %wlp9s0wi% </fc>\
+      \<fc=#586e75,#002b36>| bat %battery% </fc>\
+      \<fc=#002b36,#586e75> %date% </fc>"
   }
