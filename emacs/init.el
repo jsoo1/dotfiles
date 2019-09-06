@@ -171,7 +171,8 @@
 (projectile-mode +1)
 (setq projectile-completion-system 'ivy
       projectile-indexing-method 'hybrid
-      projectile-enable-caching 't)
+      projectile-enable-caching 't
+      projectile-project-search-path "~/projects/")
 (add-hook 'ibuffer-hook
           (lambda ()
             (ibuffer-projectile-set-filter-groups)
@@ -877,7 +878,9 @@
  mode-line-format
  `(" "
    (:eval (propertize
-           (projectile-project-name)
+           (if (string-equal "-" (projectile-project-name))
+               (format "%s" evil-state)
+             (projectile-project-name))
            'face `(:foreground ,(evil-state-foreground evil-state) :weight bold)))
    "  %b "
    (:eval vc-mode)
