@@ -72,10 +72,10 @@ main =
                   $ " " ++ wsId ++ " " ++ titleFor hidden wsId ++ " "
             , ppHiddenNoWindows =
                 \wsId ->
-                  xmobarColor' base01 base03 $ " " ++ wsId ++ "       "
+                  xmobarColor' base01 base03 $ " " ++ wsId ++ "        "
             , ppVisibleNoWindows =
                 Just $ \wsId ->
-                         xmobarColor' base01 base03 $ " " ++ wsId ++ "       "
+                         xmobarColor' base01 base03 $ " " ++ wsId ++ "        "
             , ppVisible =
               \wsId ->
                 xmobarColor' base01 base03
@@ -197,7 +197,7 @@ titleFor windowNames wsId =
 
 titleFormat :: Show a => a -> String
 titleFormat =
-  take 7 . (" " ++) . show
+  take 8 . (" " ++) . show
 
 
 allTitles :: WindowSet -> X WorkspaceTitles
