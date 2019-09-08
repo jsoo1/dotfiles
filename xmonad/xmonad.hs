@@ -62,17 +62,17 @@ main =
             { ppOutput = hPutStrLn xmobarPipe
             , ppCurrent =
                 \wsId ->
-                  xmobarColor' base01 base03
+                  xmobarColor' base03 base01
                   $ " " ++ wsId ++ " " ++ maybe "      " titleFormat current ++ " "
             , ppHidden =
                 \wsId ->
-                  xmobarColor' base03 base01
+                  xmobarColor' base01 base03
                   -- FIXME
                   -- $ xmobarAction ("xdotool key super+" ++ wsId) "1" 
                   $ " " ++ wsId ++ " " ++ titleFor hidden wsId ++ " "
             , ppVisible =
               \wsId ->
-                xmobarColor' base03 base01
+                xmobarColor' base01 base03
                 $ " " ++ wsId ++ " " ++ titleFor visible wsId ++ " "
             , ppUrgent =
                 \wsId ->
