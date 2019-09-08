@@ -1,4 +1,5 @@
 {-# LANGUAGE NamedFieldPuns #-}
+{-# LANGUAGE RecordWildCards #-}
 
 
 module Main where
@@ -44,34 +45,35 @@ main =
       , focusFollowsMouse = False
       , borderWidth = 2
       , modMask = myModMask
-      , normalBorderColor = unSpaceColor dkGrey
-      , focusedBorderColor = unSpaceColor green
+      , normalBorderColor = unSpaceColor base03
+      , focusedBorderColor = unSpaceColor base03
       , handleEventHook = handleEventHook def <+> docksEventHook
-      , manageHook = manageDocks <+> manageHook def 
+      , manageHook = manageDocks <+> manageHook def
       , layoutHook =
-          layoutHook def
-            |> smartBorders
-            |> spacingRaw True (Border 5 5 5 5) True (Border 5 5 5 5) True
-            |> avoidStruts
+          avoidStruts
+          $ spacingRaw True (Border 5 5 5 5) True (Border 5 5 5 5) True
+          $ smartBorders
+          $ layoutHook def
 
       , logHook = do
-          Titles {current, hidden, visible} <- withWindowSet allTitles
+          Titles {..} <- withWindowSet allTitles
 
           dynamicLogWithPP $ xmobarPP
             { ppOutput = hPutStrLn xmobarPipe
             , ppCurrent =
-                current
-                  |> maybe "       " titleFormat
-                  |> wsArrowRight currentWSSegmentScheme
+                \wsId ->
+                  xmobarColor' base01 base03
+                  $ " " ++ wsId ++ " " ++ maybe "      " titleFormat current ++ " "
             , ppHidden =
                 \wsId ->
-                  titleFor hidden wsId
-                    |> flip (wsArrowRight hiddenWSSegmentScheme) wsId
-                    |> xmobarActionSegment ("xdotool key super+" ++ wsId)
+                  xmobarColor' base03 base01
+                  -- FIXME
+                  -- $ xmobarAction ("xdotool key super+" ++ wsId) "1" 
+                  $ " " ++ wsId ++ " " ++ titleFor hidden wsId ++ " "
             , ppVisible =
-                \wsId ->
-                  titleFor visible wsId
-                    |> flip (wsArrowRight visibleWSSegmentScheme) wsId
+              \wsId ->
+                xmobarColor' base03 base01
+                $ " " ++ wsId ++ " " ++ titleFor visible wsId ++ " "
             , ppUrgent =
                 \wsId ->
                   let
@@ -80,10 +82,11 @@ main =
                       then titleFor visible wsId
                       else titleFor hidden wsId
                   in
-                    wsArrowRight urgentWSSegmentScheme t wsId
-                      |> xmobarActionSegment ("xdotool key super+" ++ wsId)
-            , ppSep = mempty
-            , ppWsSep = mempty
+                    xmobarColor' base03 base0 t
+                    -- FIXME
+                    -- $ xmobarAction ("xdotool key super+" ++ wsId) "1" t
+            , ppSep = ""
+            , ppWsSep = ""
             , ppTitle = const ""
             , ppOrder = \(ws:_:t:e) -> e ++ [ ws, t ]
             }
@@ -183,9 +186,7 @@ data WorkspaceTitles =
 
 titleFor :: (Show a, Ord k) => Map.Map k (Maybe a) -> k -> String
 titleFor windowNames wsId =
-  Map.lookup wsId windowNames
-    |> join
-    |> maybe "" titleFormat
+  maybe "" titleFormat $ join $ Map.lookup wsId windowNames
 
 
 titleFormat :: Show a => a -> String
@@ -195,15 +196,11 @@ titleFormat =
 
 allTitles :: WindowSet -> X WorkspaceTitles
 allTitles windowSet = do
-  currentTitle <- currentMasterWindow windowSet
-  visibleTitles <- masterWindowsFor (fmap W.workspace . W.visible) windowSet
-  hiddenTitles <- masterWindowsFor W.hidden windowSet
+  current <- currentMasterWindow windowSet
+  visible <- masterWindowsFor (fmap W.workspace . W.visible) windowSet
+  hidden <- masterWindowsFor W.hidden windowSet
 
-  pure Titles
-    { current = currentTitle
-    , visible = visibleTitles
-    , hidden = hiddenTitles
-    }
+  pure Titles {..}
 
 
 masterWindow :: W.Workspace i l Window -> X (Maybe NamedWindow)
@@ -224,153 +221,13 @@ currentMasterWindow :: WindowSet -> X (Maybe NamedWindow)
 currentMasterWindow = masterWindow . W.workspace . W.current
 
 
-wsArrowRight :: SegmentScheme -> String -> String -> String
-wsArrowRight SegmentScheme { fgColor, bgColorInner, bgColorLeft, bgColorRight } wsTitle =
-  xmobarSpaceColor fgColor bgColorInner
-  . (xmobarSpaceColor bgColorLeft bgColorInner (show solidRightChevron) ++)
-  . (++ xmobarSpaceColor bgColorInner bgColorRight (show solidRightChevron))
-  . (++ xmobarSpaceColor bgColorRight bgColorInner " ")
-  . (++ xmobarSpaceColor fgColor bgColorInner wsTitle)
-  . (++ xmobarSpaceColor fgColor bgColorInner (show rightChevron))
-  . (++ xmobarSpaceColor bgColorRight bgColorInner " ")
-  . (xmobarSpaceColor bgColorRight bgColorInner " " ++)
-
-titleArrowRight :: SegmentScheme -> String -> String
-titleArrowRight SegmentScheme { fgColor, bgColorInner, bgColorLeft, bgColorRight } =
-  xmobarSpaceColor fgColor bgColorInner
-  . (xmobarSpaceColor bgColorLeft bgColorInner (show solidRightChevron) ++)
-  . (++ xmobarSpaceColor bgColorInner bgColorRight (show solidRightChevron))
-  . (++ xmobarSpaceColor bgColorRight bgColorInner " ")
-  . (xmobarSpaceColor bgColorRight bgColorInner " " ++)
-
-
-newtype Separator = Separator String
-
-instance Show Separator where
-  show (Separator s) = s
-
-
-solidRightChevron :: Separator
-solidRightChevron = Separator "\57520"
-
-
-rightChevron :: Separator
-rightChevron = Separator "\57521"
-
-
 --  ============= COLORS ============
-
-
-data SegmentScheme =
-  SegmentScheme
-    { fgColor      :: SpaceColor
-    , bgColorInner :: SpaceColor
-    , bgColorLeft  :: SpaceColor
-    , bgColorRight :: SpaceColor
-    }
-
 
 newtype SpaceColor = SpaceColor { unSpaceColor :: String }
 
-
-currentWSSegmentScheme :: SegmentScheme
-currentWSSegmentScheme =
-  SegmentScheme
-    { fgColor = base03
-    , bgColorInner = base01
-    , bgColorLeft = base03
-    , bgColorRight = base03
-    }
-
-
-hiddenWSSegmentScheme :: SegmentScheme
-hiddenWSSegmentScheme =
-  SegmentScheme
-    { fgColor = base01
-    , bgColorInner =  base03
-    , bgColorLeft = base03
-    , bgColorRight = base03
-    }
-
-
-titleSegmentScheme :: SegmentScheme
-titleSegmentScheme =
-  SegmentScheme
-    { fgColor = base01
-    , bgColorInner = base03
-    , bgColorLeft = base03
-    , bgColorRight = base03
-    }
-
-
-urgentWSSegmentScheme :: SegmentScheme
-urgentWSSegmentScheme =
-  SegmentScheme
-    { fgColor = base03
-    , bgColorInner = grey
-    , bgColorLeft = base03
-    , bgColorRight = base03
-    }
-
-
-visibleWSSegmentScheme :: SegmentScheme
-visibleWSSegmentScheme =
-  SegmentScheme
-    { fgColor = base03
-    , bgColorInner = base01
-    , bgColorLeft = base03
-    , bgColorRight = base03
-    }
-
-
-xmobarSpaceColor :: SpaceColor -> SpaceColor -> String -> String
-xmobarSpaceColor =
+xmobarColor' :: SpaceColor -> SpaceColor -> String -> String
+xmobarColor' =
   xmobarColor `on` unSpaceColor
-
-
-xmobarActionSegment :: String -> String -> String
-xmobarActionSegment a c =
-  "<action=`"++ a ++ "`>" ++ c ++ "</action>"
-
-
-blue :: SpaceColor
-blue = SpaceColor "#268bd2"
-
-
-green :: SpaceColor
-green = SpaceColor "#859900"
-
-
-pink :: SpaceColor
-pink = SpaceColor "#d33682"
-
-
-cyan :: SpaceColor
-cyan = SpaceColor "#2aa198"
-
-
-purple :: SpaceColor
-purple = SpaceColor "#6c71c4"
-
-
-offWhite :: SpaceColor
-offWhite = SpaceColor "#f4f4f4"
-
-
-grey :: SpaceColor
-grey = SpaceColor "#292b2e"
-
-
-dkGrey :: SpaceColor
-dkGrey = SpaceColor "#15171a"
-
-
-ltGrey :: SpaceColor
-ltGrey = SpaceColor "grey"
-
-
-eisbergGrey :: SpaceColor
-eisbergGrey = SpaceColor "#778784"
 
 -- Solarized
 
