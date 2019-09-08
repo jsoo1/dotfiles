@@ -70,6 +70,12 @@ main =
                   -- FIXME
                   -- $ xmobarAction ("xdotool key super+" ++ wsId) "1" 
                   $ " " ++ wsId ++ " " ++ titleFor hidden wsId ++ " "
+            , ppHiddenNoWindows =
+                \wsId ->
+                  xmobarColor' base01 base03 $ " " ++ wsId ++ "       "
+            , ppVisibleNoWindows =
+                Just $ \wsId ->
+                         xmobarColor' base01 base03 $ " " ++ wsId ++ "       "
             , ppVisible =
               \wsId ->
                 xmobarColor' base01 base03
@@ -164,9 +170,9 @@ main =
               , shiftTo Prev EmptyWS
             )
           -- TODO: Fix
-          , ( ( myModMask .|. shiftMask, xK_4 )
-            , spawn "scrot --select '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/screenshots/'"
-            )
+          -- , ( ( myModMask .|. shiftMask, xK_4 )
+          --   , spawn "scrot --select '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/screenshots/'"
+          --   )
           , ( ( myModMask, xK_4 )
             , spawn "scrot '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/screenshots/'"
             )
