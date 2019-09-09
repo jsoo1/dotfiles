@@ -70,12 +70,6 @@ main =
                   -- FIXME
                   -- $ xmobarAction ("xdotool key super+" ++ wsId) "1" 
                   $ " " ++ wsId ++ " " ++ titleFor hidden wsId ++ " "
-            , ppHiddenNoWindows =
-                \wsId ->
-                  xmobarColor' base01 base03 $ " " ++ wsId ++ "        "
-            , ppVisibleNoWindows =
-                Just $ \wsId ->
-                         xmobarColor' base01 base03 $ " " ++ wsId ++ "        "
             , ppVisible =
               \wsId ->
                 xmobarColor' base01 base03
