@@ -109,12 +109,13 @@
 (setq byte-compile-warnings t)
 (setq byte-compile-error-on-warn nil)
 
-;; Backups, lockfiles, auto-saves
+;; Backups, lockfiles, auto-saves, local variables
 (setq
  backup-directory-alist `((".*" . "~/.emacs.d/private/backups/"))
  delete-old-versions nil
  create-lockfiles nil
- auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t)))
+ auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t))
+ enable-local-eval t)
 
 ;; Fill column indicator
 (my-package-install 'fill-column-indicator)
@@ -369,8 +370,9 @@
 
 (define-prefix-keymap my-jump-map
   "my jump keybindings"
+  "c" avy-goto-char
   "i" counsel-imenu
-  "j" avy-goto-char
+  "j" avy-goto-char-2
   "l" avy-goto-line
   "=" indent-region-or-buffer)
 
@@ -841,6 +843,15 @@
  :foreground "#839496"
  :background "#073642"
  :box '(:line-width 1 :color "#073642" :style 'unspecified))
+
+(set-face-attribute
+ 'mode-line-inactive nil
+ :underline nil
+ :overline nil
+ :foreground "#586e75"
+ :background "#002b36"
+ :box '(:line-width 1 :color "#002b36" :style 'unspecified))
+
 
 (defun evil-state-foreground (state)
   "The mode line color for evil-state `STATE'."
