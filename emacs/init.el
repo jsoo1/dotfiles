@@ -106,7 +106,8 @@
 (setq shell-file-name "bash")
 
 ;; Dired
-(add-hook 'dired-mode-hook #'auto-revert-mode)
+(add-hook 'dired-mode-hook
+          (lambda () (dired-hide-details-mode) (auto-revert-mode)))
 
 ;; Byte compile
 (require 'bytecomp)
@@ -118,7 +119,11 @@
  backup-directory-alist `((".*" . "~/.emacs.d/private/backups/"))
  delete-old-versions nil
  create-lockfiles nil
- auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t)))
+ auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t))
+ enable-local-eval t)
+
+;; Winner
+(winner-mode t)
 
 ;; Fill column indicator
 (my-package-install 'fill-column-indicator)
@@ -154,7 +159,7 @@
 (evil-set-initial-state 'compilation-mode 'normal)
 (evil-set-initial-state 'ibuffer-mode 'normal)
 (evil-set-initial-state 'package-menu-mode 'normal)
-(evil-set-initial-state 'debugger-mode 'normal)
+(evil-set-initial-state 'debugger-mode 'emacs)
 (evil-set-initial-state 'proced 'normal)
 (evil-set-initial-state 'ert-results-mode 'normal)
 (evil-set-initial-state 'Info-mode 'normal)
@@ -376,8 +381,9 @@
 
 (define-prefix-keymap my-jump-map
   "my jump keybindings"
+  "c" avy-goto-char
   "i" counsel-imenu
-  "j" avy-goto-char
+  "j" avy-goto-char-2
   "l" avy-goto-line
   "=" indent-region-or-buffer)
 
@@ -451,7 +457,9 @@
   "K" evil-window-move-very-top
   "L" evil-window-move-far-right
   "m" delete-other-windows
-  "r" eyebrowse-rename-window-config
+  "r" winner-redo
+  "R" eyebrowse-rename-window-config
+  "u" winner-undo
   "w" eyebrowse-switch-to-window-config
   "=" balance-windows-area)
 
@@ -613,6 +621,14 @@
 (my-package-install 'proof-general)
 
 ;; Coq
+(add-hook
+ 'coq-mode-hook
+ (lambda ()
+   (set-face-attribute
+    'proof-locked-face nil
+    :underline nil
+    :background "#073642")))
+
 (my-package-install 'company-coq)
 (add-hook 'coq-mode-hook #'company-coq-mode)
 (setq proof-three-window-mode-policy 'hybrid
@@ -697,9 +713,20 @@
 (my-package-install 'slime-company)
 
 ;; Rust
-(add-to-list 'load-path "~/.emacs.d/private/rust-mode/")
-(autoload 'rust-mode "rust-mode" nil t)
+(my-package-install 'rust-mode)
+(my-package-install 'racer)
+(my-package-install 'flycheck-rust)
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+(add-hook 'rust-mode-hook #'racer-mode)
+(add-hook 'racer-mode-hook #'eldoc-mode)
+(add-hook 'racer-mode-hook #'company-mode)
+(require 'rust-mode)
+(define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+(setq
+ racer-rust-src-path "~/.guix-profile/lib/rustlib/src/rust/src"
+ rust-format-on-save t)
+(with-eval-after-load 'rust-mode
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 ;; Cedille
 (require 'cedille-mode)
@@ -857,6 +884,14 @@
  :background "#073642"
  :box '(:line-width 1 :color "#073642" :style 'unspecified))
 
+(set-face-attribute
+ 'mode-line-inactive nil
+ :overline nil
+ :underline nil
+ :foreground "#586e75"
+ :background "#002b36"
+ :box '(:line-width 1 :color "#002b36" :style unspecified))
+
 (defun evil-state-foreground (state)
   "The mode line color for evil-state `STATE'."
   (pcase state
@@ -896,7 +931,9 @@
  mode-line-format
  `(" "
    (:eval (propertize
-           (projectile-project-name)
+           (if (string-equal "-" (projectile-project-name))
+               (format "%s" evil-state)
+             (projectile-project-name))
            'face `(:foreground ,(evil-state-foreground evil-state) :weight bold)))
    "  %b "
    (:eval vc-mode)
