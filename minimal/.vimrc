@@ -12,3 +12,4 @@ set backspace=indent,eol,start
 set bg=dark
 set number
 set ruler
+syntax enable
