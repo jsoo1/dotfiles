@@ -77,6 +77,9 @@
 (setq custom-file "/dev/null"
       initial-buffer-choice "~/dotfiles/emacs/init.el")
 
+;; GC Threshold
+(setq gc-cons-threshold 200000000)
+
 ;; Package
 (require 'package)
 (add-to-list 'load-path "~/.emacs.d/private/evil-tmux-navigator")
@@ -102,7 +105,9 @@
 (setq shell-file-name "bash")
 
 ;; Dired
-(add-hook 'dired-mode-hook #'auto-revert-mode)
+(add-hook 'dired-mode-hook (lambda ()
+                             (auto-revert-mode)
+                             (dired-hide-details-mode)))
 
 ;; Byte compile
 (require 'bytecomp)
@@ -116,6 +121,11 @@
  create-lockfiles nil
  auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t))
  enable-local-eval t)
+
+;; Imenu List
+(my-package-install 'imenu-list)
+(require 'imenu-list)
+(setq imenu-list-size 0.2)
 
 ;; Fill column indicator
 (my-package-install 'fill-column-indicator)
@@ -161,7 +171,7 @@
 (my-package-install 'magit)
 (my-package-install 'evil-magit)
 (require 'evil-magit)
-(setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
+(setq magit-display-buffer-function #'magit-display-buffer-traditional)
 
 ;; Projectile
 (my-package-install 'projectile)
@@ -424,8 +434,9 @@
   "d" toggle-debug-on-error
   "D" toggle-debug-on-quit
   "f" toggle-frame-fullscreen
+  "i" imenu-list-smart-toggle
   "l" toggle-truncate-lines
-  "r" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
+  "n" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
   "t" counsel-load-theme
   "w" whitespace-mode)
 
@@ -693,7 +704,12 @@
            (sql-port 5432)
            (sql-server "localhost")
            (sql-user "postgres")
-           (sql-database "vetpro")))
+           (sql-database "vetpro"))
+   (feature (sql-product 'postgres)
+            (sql-port 5431)
+            (sql-server "localhost")
+            (sql-user "postgres")
+            (sql-database "vetpro")))
  sql-postgres-login-params
  '((user :default "postgres")
    (database :default "vetpro")
@@ -878,21 +894,24 @@
 
 (defun my-flycheck-mode-line-status-text ()
   "Get text for the current flycheck state."
-    (pcase flycheck-last-status-change
-      (`not-checked "")
-      (`no-checker "-")
-      (`running "*")
-      (`errored "!")
-      (`finished (my-flycheck-error-format
-                  (flycheck-count-errors flycheck-current-errors)))
-      (`interrupted ".")
-      (`suspicious "?")))
+  (pcase flycheck-last-status-change
+    (`not-checked "")
+    (`no-checker "-")
+    (`running "*")
+    (`errored "!")
+    (`finished (my-flycheck-error-format
+                (flycheck-count-errors flycheck-current-errors)))
+    (`interrupted ".")
+    (`suspicious "?")))
 
 (setq-default
  mode-line-format
  `(" "
    (:eval (propertize
-           (projectile-project-name)
+           (let ((pname (projectile-project-name)))
+             (if (string-equal "-" pname)
+               (format "%s" evil-state)
+             pname))
            'face `(:foreground ,(evil-state-foreground evil-state) :weight bold)))
    "  %b "
    (:eval vc-mode)
@@ -901,6 +920,7 @@
               (my-flycheck-mode-line-status-text)
             ""))
    " "
-   (:eval anzu--mode-line-format)))
+   (:eval anzu--mode-line-format))
+ imenu-list-mode-line-format mode-line-format)
 
 ;;; init.el ends here
