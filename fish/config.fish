@@ -18,6 +18,9 @@ set -x FZF_DEFAULT_OPTS '
 '
 set -x FZF_DEFAULT_COMMAND 'rg --files --hidden --ignore .git --smartcase --glob "!.git/*"'
 
+# cargo
+set -x CARGO_HOME "~/.cargo"
+
 # fish cwd color
 set -x fish_color_cwd yellow
 
