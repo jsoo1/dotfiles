@@ -127,6 +127,9 @@
 (require 'imenu-list)
 (setq imenu-list-size 0.2)
 
+;; Winner
+(winner-mode t)
+
 ;; Fill column indicator
 (my-package-install 'fill-column-indicator)
 (require 'fill-column-indicator)
@@ -161,7 +164,7 @@
 (evil-set-initial-state 'compilation-mode 'normal)
 (evil-set-initial-state 'ibuffer-mode 'normal)
 (evil-set-initial-state 'package-menu-mode 'normal)
-(evil-set-initial-state 'debugger-mode 'normal)
+(evil-set-initial-state 'debugger-mode 'emacs)
 (evil-set-initial-state 'proced 'normal)
 (evil-set-initial-state 'ert-results-mode 'normal)
 (evil-set-initial-state 'Info-mode 'normal)
@@ -436,7 +439,7 @@
   "f" toggle-frame-fullscreen
   "i" imenu-list-smart-toggle
   "l" toggle-truncate-lines
-  "n" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
+  "r" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
   "t" counsel-load-theme
   "w" whitespace-mode)
 
@@ -457,7 +460,9 @@
   "K" evil-window-move-very-top
   "L" evil-window-move-far-right
   "m" delete-other-windows
-  "r" eyebrowse-rename-window-config
+  "r" winner-redo
+  "R" eyebrowse-rename-window-config
+  "u" winner-undo
   "w" eyebrowse-switch-to-window-config
   "=" balance-windows-area)
 
@@ -619,6 +624,14 @@
 (my-package-install 'proof-general)
 
 ;; Coq
+(add-hook
+ 'coq-mode-hook
+ (lambda ()
+   (set-face-attribute
+    'proof-locked-face nil
+    :underline nil
+    :background "#073642")))
+
 (my-package-install 'company-coq)
 (add-hook 'coq-mode-hook #'company-coq-mode)
 (setq proof-three-window-mode-policy 'hybrid
@@ -693,7 +706,19 @@
 ;; Rust
 (add-to-list 'load-path "~/.emacs.d/private/rust-mode/")
 (autoload 'rust-mode "rust-mode" nil t)
+(my-package-install 'racer)
+(my-package-install 'flycheck-rust)
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+(add-hook 'rust-mode-hook #'racer-mode)
+(add-hook 'racer-mode-hook #'eldoc-mode)
+(add-hook 'racer-mode-hook #'company-mode)
+(require 'rust-mode)
+(define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+(setq
+ racer-rust-src-path "~/.guix-profile/lib/rustlib/src/rust/src"
+ rust-format-on-save t)
+(with-eval-after-load 'rust-mode
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 ;; SQL
 (my-package-install 'sql)
@@ -862,12 +887,11 @@
 
 (set-face-attribute
  'mode-line-inactive nil
- :underline nil
  :overline nil
+ :underline nil
  :foreground "#586e75"
  :background "#002b36"
  :box '(:line-width 1 :color "#002b36" :style 'unspecified))
-
 
 (defun evil-state-foreground (state)
   "The mode line color for evil-state `STATE'."
@@ -894,15 +918,15 @@
 
 (defun my-flycheck-mode-line-status-text ()
   "Get text for the current flycheck state."
-  (pcase flycheck-last-status-change
-    (`not-checked "")
-    (`no-checker "-")
-    (`running "*")
-    (`errored "!")
-    (`finished (my-flycheck-error-format
-                (flycheck-count-errors flycheck-current-errors)))
-    (`interrupted ".")
-    (`suspicious "?")))
+    (pcase flycheck-last-status-change
+      (`not-checked "")
+      (`no-checker "-")
+      (`running "*")
+      (`errored "!")
+      (`finished (my-flycheck-error-format
+                  (flycheck-count-errors flycheck-current-errors)))
+      (`interrupted ".")
+      (`suspicious "?")))
 
 (setq-default
  mode-line-format
