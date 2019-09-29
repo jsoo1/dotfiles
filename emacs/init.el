@@ -323,6 +323,7 @@
 (define-prefix-keymap my-process-map
   "my process keybindings"
   "d" docker
+  "g" guix
   "l" list-processes
   "p" proced)
 
