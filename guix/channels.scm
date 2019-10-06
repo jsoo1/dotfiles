@@ -2,7 +2,7 @@
  (channel
   (name 'guix)
   (url "file:///home/john/projects/guix/.git")
-  (branch "master"))
+  (branch "core-updates"))
  (channel
   (name 'private)
   (url "file:///home/john/projects/guix-channel/.git")

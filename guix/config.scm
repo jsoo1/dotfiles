@@ -89,6 +89,7 @@ EndSection\n")
  (host-name "ecenter")
  (timezone "America/Los_Angeles")
  (locale "en_US.utf8")
+ (locale-libcs (list glibc-2.28 (canonical-package glibc)))
  (keyboard-layout ctrl-nocaps)
  (initrd-modules %base-initrd-modules)
  (bootloader
