@@ -295,184 +295,6 @@
 (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
 (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 
-(evil-leader/set-leader "<SPC>")
-
-(evil-leader/set-key
-  "<SPC>" 'counsel-M-x
-  "TAB"'evil-switch-to-windows-last-buffer
-  "a" 'my-process-map
-  "b" 'my-buffer-map
-  "c" 'my-compile-map
-  "d" 'dired
-  "e" 'my-error-map
-  "f" 'my-file-map
-  "g" 'my-git-map
-  "h" 'my-describe-map
-  "j" 'my-jump-map
-  "p" 'my-projectile-map
-  "q" 'my-quit-map
-  "s" 'my-search-map
-  "t" 'my-toggle-map
-  "w" 'my-window-map
-  "x" 'my-text-map
-  "y" 'my-yank-map
-  "z" 'my-zoom-map
-  "'" 'multi-term
-  "/" 'counsel-projectile-rg)
-
-(define-prefix-keymap my-process-map
-  "my process keybindings"
-  "d" docker
-  "g" guix
-  "l" list-processes
-  "p" proced)
-
-(define-prefix-keymap my-buffer-map
-  "my buffer keybindings"
-  "b" ivy-switch-buffer
-  "c" (lambda () (interactive) (my-switch-to-compile-buffer "compile"))
-  "d" (lambda () (interactive) (kill-buffer (current-buffer)))
-  "i" ibuffer
-  "m" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Messages*")))
-  "r" (lambda () (interactive) (my-switch-to-compile-buffer "run"))
-  "s" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Scratch*")))
-  "t" (lambda () (interactive) (my-switch-to-compile-buffer "test")))
-
-(define-prefix-keymap my-compile-map
-  "my keybindings for compiling"
-  "b" (lambda () (interactive) (pop-to-buffer (get-buffer-create "*compilation*"))))
-
-(define-prefix-keymap my-describe-map
-  "my describe keybindings"
-  "a" counsel-apropos
-  "b" describe-bindings
-  "f" describe-function
-  "F" counsel-describe-face
-  "I" info-apropos
-  "k" describe-key
-  "m" describe-mode
-  "t" describe-theme
-  "w" woman
-  "v" describe-variable)
-
-(define-prefix-keymap my-error-map
-  "my flycheck keybindings"
-  "b" flycheck-buffer
-  "n" flycheck-next-error
-  "l" flycheck-list-errors
-  "p" flycheck-previous-error)
-
-(define-prefix-keymap my-file-map
-  "my file keybindings"
-  "f" counsel-find-file
-  "l" find-file-literally
-  "r" counsel-recentf
-  "s" save-buffer
-  "y" (lambda () (interactive) (kill-new (buffer-file-name (current-buffer)))))
-
-(define-prefix-keymap my-git-map
-  "my git keybindings"
-  "b" magit-blame
-  "s" magit-status
-  "l" magit-log-buffer-file)
-
-(define-prefix-keymap my-insert-map
-  "my insertion keybindings"
-  "c" insert-char)
-
-(define-prefix-keymap my-jump-map
-  "my jump keybindings"
-  "c" avy-goto-char
-  "i" counsel-imenu
-  "j" avy-goto-char-2
-  "l" avy-goto-line
-  "=" indent-region-or-buffer)
-
-(defun switch-project-workspace ()
-  "Switch to a known projectile project in a new workspace."
-  (interactive)
-  (let ((eyebrowse-new-workspace
-         #'(lambda ()
-             (->> (projectile-project-name)
-                  (eyebrowse-rename-window-config (eyebrowse--get 'current-slot)))))
-        (projectile-switch-project-action
-         #'(lambda ()
-             (eyebrowse-create-window-config)
-             (projectile-find-file))))
-    (projectile-switch-project)))
-
-(define-prefix-keymap my-projectile-map
-  "my projectile keybindings"
-  "b" counsel-projectile-switch-to-buffer
-  "c" (lambda () (interactive) (my-projectile-command "compile"))
-  "d" counsel-projectile-find-dir
-  "D" (lambda () (interactive) (dired (projectile-project-root)))
-  "e" projectile-edit-dir-locals
-  "f" counsel-projectile-find-file
-  "I" projectile-invalidate-cache
-  "l" switch-project-workspace
-  "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
-  "p" counsel-projectile-switch-project
-  "r" (lambda () (interactive) (my-projectile-command "run"))
-  "t" (lambda () (interactive) (my-projectile-command "test"))
-  "'" (lambda () (interactive) (projectile-with-default-dir (projectile-project-root) (multi-term)))
-  "]" projectile-find-tag)
-
-(define-prefix-keymap my-quit-map
-  "my quit keybindings"
-  "q" save-buffers-kill-terminal)
-
-(define-prefix-keymap my-search-map
-  "my searching keybindings"
-  "s" swiper)
-
-(define-prefix-keymap my-text-map
-  "my text keybindings"
-  "d" delete-trailing-whitespace)
-
-(define-prefix-keymap my-toggle-map
-  "my toggles"
-  "c" (lambda nil () (interactive) (fci-mode (if (bound-and-true-p fci-mode) -1 1)))
-  "d" toggle-debug-on-error
-  "D" toggle-debug-on-quit
-  "f" toggle-frame-fullscreen
-  "l" toggle-truncate-lines
-  "r" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
-  "t" counsel-load-theme
-  "w" whitespace-mode)
-
-(define-prefix-keymap my-window-map
-  "my window keybindings"
-  (kbd "TAB") eyebrowse-last-window-config
-  "/" (lambda nil () (interactive) (progn (split-window-horizontally) (balance-windows-area)))
-  "-" (lambda nil () (interactive) (progn (split-window-vertically) (balance-windows-area)))
-  "c" make-frame
-  "d" (lambda nil () (interactive) (progn (delete-window) (balance-windows-area)))
-  "D" delete-frame
-  "h" (lambda nil () (interactive) (tmux-navigate "left"))
-  "j" (lambda nil () (interactive) (tmux-navigate "down"))
-  "k" (lambda nil () (interactive) (tmux-navigate "up"))
-  "l" (lambda nil () (interactive) (tmux-navigate "right"))
-  "H" evil-window-move-far-left
-  "J" evil-window-move-very-bottom
-  "K" evil-window-move-very-top
-  "L" evil-window-move-far-right
-  "m" delete-other-windows
-  "r" winner-redo
-  "R" eyebrowse-rename-window-config
-  "u" winner-undo
-  "w" eyebrowse-switch-to-window-config
-  "=" balance-windows-area)
-
-(define-prefix-keymap my-yank-map
-  "my yanking keybindings"
-  "y" counsel-yank-pop)
-
-(define-prefix-keymap my-zoom-map
-  "my zoom/text scaling keybindings"
-  "+" text-scale-increase
-  "-" text-scale-decrease)
-
 ;; Compilation and shell ansi colors
 (my-package-install 'xterm-color)
 (require 'xterm-color)
@@ -928,9 +750,8 @@
       (`interrupted ".")
       (`suspicious "?")))
 
-(setq-default
- mode-line-format
- `(" "
+(defvar my-mode-line-format
+  `(" "
    (:eval (propertize
            (if (string-equal "-" (projectile-project-name))
                (format "%s" evil-state)
@@ -944,5 +765,195 @@
             ""))
    " "
    (:eval anzu--mode-line-format)))
+
+(setq-default mode-line-format nil)
+
+(defun toggle-mode-line ()
+  "Toggle mode-line."
+  (interactive)
+  (let ((ml (if mode-line-format 'nil my-mode-line-format)))
+    (setq mode-line-format ml)
+    (setq-default mode-line-format ml)
+    (force-mode-line-update t)))
+
+;; Keybindings
+(evil-leader/set-leader "<SPC>")
+
+(evil-leader/set-key
+  "<SPC>" 'counsel-M-x
+  "TAB"'evil-switch-to-windows-last-buffer
+  "a" 'my-process-map
+  "b" 'my-buffer-map
+  "c" 'my-compile-map
+  "d" 'dired
+  "e" 'my-error-map
+  "f" 'my-file-map
+  "g" 'my-git-map
+  "h" 'my-describe-map
+  "j" 'my-jump-map
+  "p" 'my-projectile-map
+  "q" 'my-quit-map
+  "s" 'my-search-map
+  "t" 'my-toggle-map
+  "w" 'my-window-map
+  "x" 'my-text-map
+  "y" 'my-yank-map
+  "z" 'my-zoom-map
+  "'" 'multi-term
+  "/" 'counsel-projectile-rg)
+
+(define-prefix-keymap my-process-map
+  "my process keybindings"
+  "d" docker
+  "g" guix
+  "l" list-processes
+  "p" proced)
+
+(define-prefix-keymap my-buffer-map
+  "my buffer keybindings"
+  "b" ivy-switch-buffer
+  "c" (lambda () (interactive) (my-switch-to-compile-buffer "compile"))
+  "d" (lambda () (interactive) (kill-buffer (current-buffer)))
+  "i" ibuffer
+  "m" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Messages*")))
+  "r" (lambda () (interactive) (my-switch-to-compile-buffer "run"))
+  "s" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Scratch*")))
+  "t" (lambda () (interactive) (my-switch-to-compile-buffer "test")))
+
+(define-prefix-keymap my-compile-map
+  "my keybindings for compiling"
+  "b" (lambda () (interactive) (pop-to-buffer (get-buffer-create "*compilation*"))))
+
+(define-prefix-keymap my-describe-map
+  "my describe keybindings"
+  "a" counsel-apropos
+  "b" describe-bindings
+  "f" describe-function
+  "F" counsel-describe-face
+  "I" info-apropos
+  "k" describe-key
+  "m" describe-mode
+  "t" describe-theme
+  "w" woman
+  "v" describe-variable)
+
+(define-prefix-keymap my-error-map
+  "my flycheck keybindings"
+  "b" flycheck-buffer
+  "n" flycheck-next-error
+  "l" flycheck-list-errors
+  "p" flycheck-previous-error)
+
+(define-prefix-keymap my-file-map
+  "my file keybindings"
+  "f" counsel-find-file
+  "l" find-file-literally
+  "r" counsel-recentf
+  "s" save-buffer
+  "y" (lambda () (interactive) (kill-new (buffer-file-name (current-buffer)))))
+
+(define-prefix-keymap my-git-map
+  "my git keybindings"
+  "b" magit-blame
+  "s" magit-status
+  "l" magit-log-buffer-file)
+
+(define-prefix-keymap my-insert-map
+  "my insertion keybindings"
+  "c" insert-char)
+
+(define-prefix-keymap my-jump-map
+  "my jump keybindings"
+  "c" avy-goto-char
+  "i" counsel-imenu
+  "j" avy-goto-char-2
+  "l" avy-goto-line
+  "=" indent-region-or-buffer)
+
+(defun switch-project-workspace ()
+  "Switch to a known projectile project in a new workspace."
+  (interactive)
+  (let ((eyebrowse-new-workspace
+         #'(lambda ()
+             (->> (projectile-project-name)
+                  (eyebrowse-rename-window-config (eyebrowse--get 'current-slot)))))
+        (projectile-switch-project-action
+         #'(lambda ()
+             (eyebrowse-create-window-config)
+             (projectile-find-file))))
+    (projectile-switch-project)))
+
+(define-prefix-keymap my-projectile-map
+  "my projectile keybindings"
+  "b" counsel-projectile-switch-to-buffer
+  "c" (lambda () (interactive) (my-projectile-command "compile"))
+  "d" counsel-projectile-find-dir
+  "D" (lambda () (interactive) (dired (projectile-project-root)))
+  "e" projectile-edit-dir-locals
+  "f" counsel-projectile-find-file
+  "I" projectile-invalidate-cache
+  "l" switch-project-workspace
+  "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
+  "p" counsel-projectile-switch-project
+  "r" (lambda () (interactive) (my-projectile-command "run"))
+  "t" (lambda () (interactive) (my-projectile-command "test"))
+  "'" (lambda () (interactive) (projectile-with-default-dir (projectile-project-root) (multi-term)))
+  "]" projectile-find-tag)
+
+(define-prefix-keymap my-quit-map
+  "my quit keybindings"
+  "q" save-buffers-kill-terminal)
+
+(define-prefix-keymap my-search-map
+  "my searching keybindings"
+  "s" swiper)
+
+(define-prefix-keymap my-text-map
+  "my text keybindings"
+  "d" delete-trailing-whitespace)
+
+(define-prefix-keymap my-toggle-map
+  "my toggles"
+  "c" (lambda nil () (interactive) (fci-mode (if (bound-and-true-p fci-mode) -1 1)))
+  "d" toggle-debug-on-error
+  "D" toggle-debug-on-quit
+  "f" toggle-frame-fullscreen
+  "l" toggle-truncate-lines
+  "m" toggle-mode-line
+  "r" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
+  "t" counsel-load-theme
+  "w" whitespace-mode)
+
+(define-prefix-keymap my-window-map
+  "my window keybindings"
+  (kbd "TAB") eyebrowse-last-window-config
+  "/" (lambda nil () (interactive) (progn (split-window-horizontally) (balance-windows-area)))
+  "-" (lambda nil () (interactive) (progn (split-window-vertically) (balance-windows-area)))
+  "c" make-frame
+  "d" (lambda nil () (interactive) (progn (delete-window) (balance-windows-area)))
+  "D" delete-frame
+  "h" (lambda nil () (interactive) (tmux-navigate "left"))
+  "j" (lambda nil () (interactive) (tmux-navigate "down"))
+  "k" (lambda nil () (interactive) (tmux-navigate "up"))
+  "l" (lambda nil () (interactive) (tmux-navigate "right"))
+  "H" evil-window-move-far-left
+  "J" evil-window-move-very-bottom
+  "K" evil-window-move-very-top
+  "L" evil-window-move-far-right
+  "m" delete-other-windows
+  "r" winner-redo
+  "R" eyebrowse-rename-window-config
+  "u" winner-undo
+  "w" eyebrowse-switch-to-window-config
+  "=" balance-windows-area)
+
+(define-prefix-keymap my-yank-map
+  "my yanking keybindings"
+  "y" counsel-yank-pop)
+
+(define-prefix-keymap my-zoom-map
+  "my zoom/text scaling keybindings"
+  "+" text-scale-increase
+  "-" text-scale-decrease)
 
 ;;; init.el ends here
