@@ -14,6 +14,7 @@ import           Data.Maybe                   (listToMaybe)
 import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
 import           XMonad
+import           XMonad.Actions.CycleWS       (WSType (..), moveTo, shiftTo)
 import           XMonad.Actions.WindowBringer
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
@@ -126,6 +127,18 @@ main = do
               , menuArgs = [ "-dmenu", "-i" ]
               }
             )
+          , ( (mod1Mask, xK_p)
+            , moveTo Prev NonEmptyWS
+            )
+          , ( (mod1Mask, xK_n)
+            , moveTo Next NonEmptyWS
+            )
+          , ( (mod1Mask .|. shiftMask, xK_p)
+            , shiftTo Prev EmptyWS
+            )
+          , ( (mod1Mask .|. shiftMask, xK_n)
+            , shiftTo Next EmptyWS
+            )
           , ( (mod1Mask, xF86XK_AudioLowerVolume)
             , spawn "amixer -q -D pulse sset Master 2%-"
             )
@@ -137,13 +150,8 @@ main = do
             )
           ]
 
-        `removeKeys`
-          [ (mod1Mask, xK_n)
-          , (mod1Mask, xK_p)
-          ]
 
-
-data WorkspaceTitles =
+tata WorkspaceTitles =
   Titles
   { hidden  :: Map.Map WorkspaceId (Maybe NamedWindow)
   , current :: Maybe NamedWindow

@@ -279,7 +279,7 @@ It should only modify the values of Spacemacs settings."
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
    dotspacemacs-mode-line-theme (if (or (string-equal "frame" (daemonp)) (display-graphic-p))
                                     '(
-                                      spacemacs
+                                      all-the-icons
                                       :separator arrow
                                       :separator-scale 1.5
                                       )
