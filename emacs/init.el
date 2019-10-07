@@ -84,6 +84,7 @@
 (require 'package)
 (add-to-list 'load-path "~/.emacs.d/private/evil-tmux-navigator")
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(package-refresh-contents t)
 (package-initialize)
 
 ;; Path
@@ -174,7 +175,7 @@
 (my-package-install 'magit)
 (my-package-install 'evil-magit)
 (require 'evil-magit)
-(setq magit-display-buffer-function #'magit-display-buffer-traditional)
+(setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
 
 ;; Projectile
 (my-package-install 'projectile)
@@ -268,8 +269,17 @@
   ('darwin (progn (my-package-install 'osx-clipboard)
                   (osx-clipboard-mode +1))))
 
+;; VTerm
+(add-to-list 'load-path "~/.emacs.d/private/emacs-libvterm")
+(add-to-list 'load-path "~/.emacs.d/private/multi-libvterm")
+(require 'vterm)
+(require 'multi-libvterm)
+(setq vterm-shell "fish")
+
+
 ;; Compilation
 (define-key compilation-mode-map (kbd "C-c C-l") #'recompile)
+
 ;; Avy
 (my-package-install 'avy)
 
@@ -319,7 +329,7 @@
   "x" 'my-text-map
   "y" 'my-yank-map
   "z" 'my-zoom-map
-  "'" 'multi-term
+  "'" 'multi-libvterm
   "/" 'counsel-projectile-rg)
 
 (define-prefix-keymap my-process-map
@@ -416,7 +426,7 @@
   "p" counsel-projectile-switch-project
   "r" (lambda () (interactive) (my-projectile-command "run"))
   "t" (lambda () (interactive) (my-projectile-command "test"))
-  "'" (lambda () (interactive) (projectile-with-default-dir (projectile-project-root) (multi-term)))
+  "'" multi-libvterm-projectile
   "]" projectile-find-tag)
 
 (define-prefix-keymap my-quit-map
@@ -704,8 +714,9 @@
 (my-package-install 'slime-company)
 
 ;; Rust
-(add-to-list 'load-path "~/.emacs.d/private/rust-mode/")
-(autoload 'rust-mode "rust-mode" nil t)
+;; (add-to-list 'load-path "~/.emacs.d/private/rust-mode/")
+;; (autoload 'rust-mode "rust-mode" nil t)
+(my-package-install 'rust-mode)
 (my-package-install 'racer)
 (my-package-install 'flycheck-rust)
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
