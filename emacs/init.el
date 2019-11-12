@@ -170,6 +170,7 @@
 (evil-set-initial-state 'ert-results-mode 'normal)
 (evil-set-initial-state 'Info-mode 'normal)
 (evil-set-initial-state 'comint-mode 'normal)
+(evil-set-initial-state 'org-agenda-mode 'normal)
 
 ;; Magit
 (my-package-install 'magit)
@@ -217,6 +218,38 @@
                                (haskell . t)
                                (emacs-lisp . t)
                                (sql . t)))
+(setq org-agenda-files '("~/Desktop/org"
+                         "~/projects/client-browser/TODOs.org"
+                         "~/projects/feature-decisions/TODOs.org"
+                         "~/projects/report-server/TODOs.org"
+                         "~/projects/renderer-lib/TODOs.org"
+                         "~/projects/combinator/TODOs.org"
+                         "~/projects/backend/TODOs.org"
+                         "~/projects/form-generator/TODOs.org"
+                         "~/projects/data-migrator/TODOs.org"
+                         "~/projects/ml-crash-course/TODOs.org"
+                         "~/projects/schema-migrator/TODOs.org")
+      org-todo-keywords
+      '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELLED"))
+      counsel-projectile-org-capture-templates
+      '(("t" "[${name}] Todo" entry
+         (file+headline "${root}/TODOs.org" "Todos")
+         "* TODO %?
+  %u
+  %a")
+        ("bt" "[${name}] Note" entry
+         (file+headline "${root}/TODOs.org" "Notes")
+         "* %?
+  %t")))
+
+(with-eval-after-load 'org-agenda-mode
+  (progn
+    (define-key org-agenda-mode-map (kbd "C-c") org-agenda-mode-map)
+    (define-key org-agenda-mode-map (kbd "C-m") #'org-agenda-month-view)
+    (define-key org-agenda-mode-map "m" #'org-agenda-month-view)))
+
+
+
 ;; export
 (setq
  org-export-with-author nil
@@ -474,6 +507,9 @@
 ;; Haskell mode
 (my-package-install 'haskell-mode)
 (my-package-install 'intero)
+;; (add-to-list 'load-path "~/.emacs.d/private/flycheck-haskell")
+;; (add-hook 'haskell-mode-hook #'flycheck-haskell-setup)
+
 (require 'haskell-process)
 (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
 (setq haskell-process-type 'auto
@@ -481,6 +517,15 @@
       '("--with-ghc=ghci"
         "--ghci-options=-ferror-spans"
         "--no-build" "--no-load" "--test" "--bench")
+      haskell-process-args-cabal-new-repl
+      '(; "all"
+        "--ghc-option=-ferror-spans")
+      haskell-process-args-cabal-repl
+      '(; "all"
+        "--ghc-option=-ferror-spans")
+      haskell-mode-stylish-haskell-path "/Users/john/.cabal/bin/ormolu"
+      haskell-stylish-on-save 't
+      flycheck-haskell-hpack-preference 'prefer-cabal
       haskell-process-log 't
       haskell-interactive-popup-errors 'nil)
 
