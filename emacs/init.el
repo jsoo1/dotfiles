@@ -919,6 +919,7 @@
   "i" counsel-imenu
   "j" avy-goto-char-2
   "l" avy-goto-line
+  "t" evil-jump-to-tag
   "=" indent-region-or-buffer)
 
 (defun switch-project-workspace ()
@@ -967,7 +968,7 @@
   "i" imenu-list-smart-toggle
   "l" toggle-truncate-lines
   "m" toggle-mode-line
-  "r" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
+  "n" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
   "t" counsel-load-theme
   "w" whitespace-mode)
 
