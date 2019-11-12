@@ -857,6 +857,7 @@
   "my process keybindings"
   "d" docker
   "l" list-processes
+  "o" org-agenda
   "p" proced)
 
 (define-prefix-keymap my-buffer-map
@@ -928,8 +929,10 @@
 
 (define-prefix-keymap my-projectile-map
   "my projectile keybindings"
+  "a" counsel-projectile-org-agenda
   "b" counsel-projectile-switch-to-buffer
   "c" (lambda () (interactive) (my-projectile-command "compile"))
+  "C" counsel-projectile-org-capture
   "d" counsel-projectile-find-dir
   "D" (lambda () (interactive) (dired (projectile-project-root)))
   "e" projectile-edit-dir-locals
