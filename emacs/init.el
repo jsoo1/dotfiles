@@ -791,31 +791,31 @@
 
 (defun my-flycheck-mode-line-status-text ()
   "Get text for the current flycheck state."
-    (pcase flycheck-last-status-change
-      (`not-checked "")
-      (`no-checker "-")
-      (`running "*")
-      (`errored "!")
-      (`finished (my-flycheck-error-format
-                  (flycheck-count-errors flycheck-current-errors)))
-      (`interrupted ".")
-      (`suspicious "?")))
+  (pcase flycheck-last-status-change
+    (`not-checked "")
+    (`no-checker "-")
+    (`running "*")
+    (`errored "!")
+    (`finished (my-flycheck-error-format
+                (flycheck-count-errors flycheck-current-errors)))
+    (`interrupted ".")
+    (`suspicious "?")))
 
 (defvar my-mode-line-format
   `(" "
-   (:eval (propertize
-           (if (string-equal "-" (projectile-project-name))
-               (format "%s" evil-state)
-             (projectile-project-name))
-           'face `(:foreground ,(evil-state-foreground evil-state) :weight bold)))
-   "  %b "
-   (:eval vc-mode)
-   "  "
-   (:eval (if (and (featurep 'flycheck) flycheck-mode)
-              (my-flycheck-mode-line-status-text)
-            ""))
-   " "
-   (:eval anzu--mode-line-format)))
+    (:eval (propertize
+            (if (string-equal "-" (projectile-project-name))
+                (format "%s" evil-state)
+              (projectile-project-name))
+            'face `(:foreground ,(evil-state-foreground evil-state) :weight bold)))
+    "  %b "
+    (:eval vc-mode)
+    "  "
+    (:eval (if (and (featurep 'flycheck) flycheck-mode)
+               (my-flycheck-mode-line-status-text)
+             ""))
+    " "
+    (:eval anzu--mode-line-format)))
 
 (setq-default mode-line-format nil)
 
