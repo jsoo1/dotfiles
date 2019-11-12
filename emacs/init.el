@@ -358,11 +358,6 @@
                  (funcall 'compilation-filter proc
                           (xterm-color-filter string)))))))
 
-;; Eyebrowse
-(my-package-install 'eyebrowse)
-(setq eyebrowse-keymap-prefix "")
-(eyebrowse-mode 1)
-
 ;; Flycheck
 (my-package-install 'flycheck)
 (require 'flycheck)
@@ -928,14 +923,7 @@
 (defun switch-project-workspace ()
   "Switch to a known projectile project in a new workspace."
   (interactive)
-  (let ((eyebrowse-new-workspace
-         #'(lambda ()
-             (->> (projectile-project-name)
-                  (eyebrowse-rename-window-config (eyebrowse--get 'current-slot)))))
-        (projectile-switch-project-action
-         #'(lambda ()
-             (eyebrowse-create-window-config)
-             (projectile-find-file))))
+  (let ((projectile-switch-project-action #'projectile-find-file))
     (projectile-switch-project)))
 
 (define-prefix-keymap my-projectile-map
@@ -982,7 +970,6 @@
 
 (define-prefix-keymap my-window-map
   "my window keybindings"
-  (kbd "TAB") eyebrowse-last-window-config
   "/" (lambda nil () (interactive) (progn (split-window-horizontally) (balance-windows-area)))
   "-" (lambda nil () (interactive) (progn (split-window-vertically) (balance-windows-area)))
   "c" make-frame
@@ -998,9 +985,7 @@
   "L" evil-window-move-far-right
   "m" delete-other-windows
   "r" winner-redo
-  "R" eyebrowse-rename-window-config
   "u" winner-undo
-  "w" eyebrowse-switch-to-window-config
   "=" balance-windows-area)
 
 (define-prefix-keymap my-yank-map
