@@ -998,6 +998,7 @@
 (define-prefix-keymap my-zoom-map
   "my zoom/text scaling keybindings"
   "+" text-scale-increase
+  "=" text-scale-increase
   "-" text-scale-decrease)
 
 ;;; init.el ends here
