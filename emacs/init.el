@@ -278,7 +278,7 @@
 (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
 
 ;; Line numbers
-(global-display-line-numbers-mode 1)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (setq-default display-line-numbers-type 'relative)
 (global-hl-line-mode +1)
 
