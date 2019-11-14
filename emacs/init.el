@@ -530,6 +530,15 @@
   (add-to-list 'geiser-guile-load-path "~/projects/guix"))
 (with-eval-after-load 'yasnippet
   (add-to-list 'yas-snippet-dirs "~/projects/guix/etc/snippets"))
+(require 'scheme)
+(defvar guile-imenu-generic-expression
+  (cons '("Public" "^(define-public\\s-+(?\\(\\sw+\\)" 1)
+        scheme-imenu-generic-expression)
+  "Imenu generic expression for Guile modes.  See `imenu-generic-expression'.")
+(add-hook
+ 'scheme-mode-hook
+ (lambda ()
+   (setq-local imenu-generic-expression guile-imenu-generic-expression)))
 
 ;; Common Lisp
 (my-package-install 'slime)
