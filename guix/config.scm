@@ -11,7 +11,7 @@
                         font-tamzen))
              ((gnu packages fontutils) #:select (fontconfig))
              ((gnu packages gnupg) #:select (gnupg))
-             ((gnu packages linux) #:select (bluez))
+             ((gnu packages linux) #:select (bluez light))
              ((gnu packages lsof) #:select (lsof))
              ((gnu packages ncurses) #:select (ncurses))
              ((gnu packages shells) #:select (fish))
@@ -83,7 +83,6 @@ EndSection\n")
   (file-append
    font-tamzen "/share/kbd/consolefonts/TamzenForPowerline10x20.psf"))
 
-
 (operating-system
   (host-name "ecenter")
   (timezone "America/Los_Angeles")
@@ -152,6 +151,8 @@ EndSection\n")
     fontconfig font-fantasque-sans font-iosevka
     ;; window manager related
     xmonad ghc-xmonad-contrib xmobar rofi
+    ;; backlight config
+    light
     ;;for HTTPS access
     curl nss-certs
     ;; essentials
@@ -162,6 +163,10 @@ EndSection\n")
     ;; for keyboards
     bluez
     %base-packages))
+  (setuid-programs
+   (cons
+    #~(string-append #$light "/bin/light")
+    %setuid-programs))
   (services
    (cons*
     ;; TODO: Add service for modprobe.d modules?
