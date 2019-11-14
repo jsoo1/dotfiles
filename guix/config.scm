@@ -23,6 +23,7 @@
              ((gnu packages vim) #:select (vim))
              ((gnu packages web-browsers) #:select (lynx))
              ((gnu packages xdisorg) #:select (rofi xcape))
+             ((gnu packages wm) #:select (xmobar))
              ((gnu services base)
               #:select (gpm-service-type
                         gpm-configuration))
@@ -58,7 +59,6 @@
                         gdm-configuration
                         xorg-configuration))
              (guix gexp)
-             ((xmobar) #:select (xmobar-plus2))
              ((xmonad) #:select (my-ghc-xmonad-contrib my-xmonad))
              ((yaft) #:select (yaft)))
 
@@ -152,7 +152,7 @@ EndSection\n")
     ;; kmscon fonts
     fontconfig font-fantasque-sans font-iosevka
     ;; window manager related
-    my-xmonad my-ghc-xmonad-contrib xmobar-plus2 rofi
+    my-xmonad my-ghc-xmonad-contrib xmobar rofi
     ;;for HTTPS access
     curl nss-certs
     ;; essentials
