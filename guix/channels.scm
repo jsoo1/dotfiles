@@ -2,7 +2,7 @@
  (channel
   (name 'guix)
   (url "file:///home/john/projects/guix/.git")
-  (branch "master"))
+  (branch "keep-ungoogled-chromium"))
  (channel
   (name 'private)
   (url "file:///home/john/projects/guix-channel/.git")
