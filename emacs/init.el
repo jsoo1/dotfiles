@@ -233,8 +233,9 @@
 (my-package-install 'counsel-projectile)
 (my-package-install 'wgrep)
 (ivy-mode 1)
-(setq ivy-use-virtual-buffers t)
-(setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+(counsel-mode 1)
+(setq ivy-use-virtual-buffers t
+      ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
 (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
 
 ;; Line numbers
@@ -672,7 +673,8 @@
 
 (setq
  custom-safe-themes
- '("0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f"
+ '("5dbdb4a71a0e834318ae868143bb4329be492dd04bdf8b398fb103ba1b8c681a"
+   "0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f"
    "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879"
    "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4"
    default))
