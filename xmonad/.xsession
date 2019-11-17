@@ -1,6 +1,5 @@
 #! /run/current-system/profile/bin/bash
 
 xsetroot -cursor_name left_ptr
-pulseaudio --daemonize
-light -S 50.0
+light -S 35.0
 xmonad

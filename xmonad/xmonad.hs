@@ -98,6 +98,7 @@ main =
             \ --output eDP-1-1"
           <+> spawn "compton --config ~/.config/compton/compton.conf"
           <+> spawn "feh --bg-fill ~/Downloads/richter-lucerne.jpg"
+          <+> spawn "xcape -e 'Control_L=Escape'"
       }
 
         `additionalKeys`
