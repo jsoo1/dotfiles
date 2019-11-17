@@ -33,6 +33,7 @@
              ((gnu services dns)
               #:select (dnsmasq-service-type
                         dnsmasq-configuration))
+             (gnu services docker)
              ((gnu services networking)
               #:select (network-manager-service-type
                         network-manager-configuration))
@@ -178,6 +179,7 @@ EndSection\n")
     ;;          (xcape-configuration
     ;;           "john"
     ;;           '(("Control_L" . "Escape"))))
+    (service docker-service-type)
     (service kmscon-service-type
              (kmscon-configuration
               (virtual-terminal "tty8")
