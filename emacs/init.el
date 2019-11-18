@@ -481,16 +481,15 @@
 (setq haskell-process-args-cabal-new-repl
       '("--ghc-options=-ferror-spans --ghc-options=-fshow-loaded-modules"))
 (require 'haskell-process)
-(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 (setq haskell-process-type 'auto)
-(my-package-install 'dante)
-(add-hook 'haskell-mode-hook #'flycheck-mode)
-(add-hook 'dante-mode-hook
-          #'(lambda ()
-              (flycheck-add-next-checker 'haskell-dante)
-              '(warning . haskell-hlint)))
-
-(define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
+(setq my-old-haskell-mode-hook haskell-mode-hook)
+(add-hook 'haskell-mode-hook
+          (lambda ()
+            (interactive-haskell-mode)
+            (flycheck-mode)
+            (flycheck-disable-checker 'haskell-ghc)))
+(define-key haskell-mode-map (kbd "C-c C-f")
+  'haskell-mode-stylish-buffer)
 
 ;; Agda mode
 (load-library (let ((coding-system-for-read 'utf-8))
