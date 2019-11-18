@@ -204,6 +204,13 @@
   "Switch to compile buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'."
   (switch-to-buffer (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
 
+;; Dir Locals -- see https://emacs.stackexchange.com/questions/13080/reloading-directory-local-variables
+(defun my-reload-dir-locals-for-current-buffer ()
+  "Reload dir locals for the current buffer."
+  (interactive)
+  (let ((enable-local-variables :all))
+    (hack-dir-local-variables-non-file-buffer)))
+
 ;; Org
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
@@ -801,6 +808,7 @@
   "f" 'my-file-map
   "g" 'my-git-map
   "h" 'my-describe-map
+  "i" 'my-insert-map
   "j" 'my-jump-map
   "p" 'my-projectile-map
   "q" 'my-quit-map
@@ -907,6 +915,7 @@
   "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
   "p" counsel-projectile-switch-project
   "r" (lambda () (interactive) (my-projectile-command "run"))
+  "R" my-reload-dir-locals-for-current-buffer
   "t" (lambda () (interactive) (my-projectile-command "test"))
   "'" (lambda () (interactive) (projectile-with-default-dir (projectile-project-root) (multi-term)))
   "]" projectile-find-tag)
