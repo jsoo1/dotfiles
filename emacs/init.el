@@ -205,11 +205,12 @@
   (switch-to-buffer (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
 
 ;; Dir Locals -- see https://emacs.stackexchange.com/questions/13080/reloading-directory-local-variables
-(defun my-reload-dir-locals-for-current-buffer ()
-  "Reload dir locals for the current buffer."
+(defun my-projectile-reload-dir-locals ()
+  "Reload each buffer with the same `default-directory` as the current buffer's."
   (interactive)
-  (let ((enable-local-variables :all))
-    (hack-dir-local-variables-non-file-buffer)))
+  (dolist (buffer (projectile-project-buffers))
+    (with-current-buffer buffer
+      (hack-dir-local-variables-non-file-buffer))))
 
 ;; Org
 (org-babel-do-load-languages 'org-babel-load-languages
@@ -914,7 +915,7 @@
   "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
   "p" counsel-projectile-switch-project
   "r" (lambda () (interactive) (my-projectile-command "run"))
-  "R" my-reload-dir-locals-for-current-buffer
+  "R" my-projectile-reload-dir-locals
   "t" (lambda () (interactive) (my-projectile-command "test"))
   "'" (lambda () (interactive) (projectile-with-default-dir (projectile-project-root) (multi-term)))
   "]" projectile-find-tag)

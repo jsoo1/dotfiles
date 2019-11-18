@@ -21,23 +21,21 @@ abbr --add -U -- rest "loginctl suspend"
 abbr --add -U -- bat "upower -I (upower -e | grep BAT)"
 
 # Emacs
-abbr --add -U -- ed "emacs -q -l ~/dotfiles/emacs/init.el --bg-daemon=term"
-abbr --add -U -- em "env TERM=xterm-24bits emacsclient -nw --socket-name term"
-# TODO Figure out fish issues
-# abbr --add -U -- e "env TERM=xterm-24bits emacsclient -nw --socket-name term"
+abbr --add -U -- ed "emacs --bg-daemon=term"
 function em
     env TERM=xterm-24bits emacsclient -nw --socket-name term
 end
 
 # Tmux
+function tm
+    env TERM=xterm-24bits tmux new-session -A -s (basename (pwd)) -n emacs
+end
 abbr --add -U -- tma "env TERM=xterm-24bits tmux attach -t"
-abbr --add -U -- ta "env TERM=xterm-24bits tmux attach -t"
 abbr --add -U -- tml "tmux list-sessions"
 abbr --add -U -- tmux "env TERM=xterm-24bits tmux new-session -A -s (basename (pwd)) -n emacs"
-abbr --add -U -- tm "env TERM=xterm-24bits tmux new-session -A -s (basename (pwd)) -n emacs"
 
 # Lynx
-abbr lynx = lynx -cfg=~/.config/lynx/lynx.cfg
+abbr --add -U -- lynx lynx -cfg=~/.config/lynx/lynx.cfg
 function google -a query
     lynx -cfg=~/.config/lynx/lynx.cfg "www.google.com/search?q='"$query"'"
 end
