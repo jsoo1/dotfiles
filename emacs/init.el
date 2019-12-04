@@ -77,10 +77,14 @@
 (setq custom-file "/dev/null"
       initial-buffer-choice "~/dotfiles/emacs/init.el")
 
+;; GC Threshold
+(setq gc-cons-threshold 200000000)
+
 ;; Package
 (require 'package)
 (add-to-list 'load-path "~/.emacs.d/private/evil-tmux-navigator")
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(package-refresh-contents t)
 (package-initialize)
 
 ;; Path
@@ -106,23 +110,27 @@
 (setq shell-file-name "bash")
 
 ;; Dired
-(add-hook 'dired-mode-hook
-          (lambda () (dired-hide-details-mode) (auto-revert-mode)))
+(add-hook 'dired-mode-hook (lambda ()
+                             (auto-revert-mode)
+                             (dired-hide-details-mode)))
 
 ;; Byte compile
 (require 'bytecomp)
 (setq byte-compile-warnings t)
 (setq byte-compile-error-on-warn nil)
 
-;; Backups, lockfiles, auto-saves
+;; Backups, lockfiles, auto-saves, local variables
 (setq
  backup-directory-alist `((".*" . "~/.emacs.d/private/backups/"))
  delete-old-versions nil
  create-lockfiles nil
- auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t)))
+ auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t))
+ enable-local-eval t)
 
-;; Local variables
-(setq enable-local-eval t)
+;; Imenu List
+(my-package-install 'imenu-list)
+(require 'imenu-list)
+(setq imenu-list-size 0.2)
 
 ;; Winner
 (winner-mode t)
@@ -166,6 +174,7 @@
 (evil-set-initial-state 'ert-results-mode 'normal)
 (evil-set-initial-state 'Info-mode 'normal)
 (evil-set-initial-state 'comint-mode 'normal)
+(evil-set-initial-state 'org-agenda-mode 'normal)
 
 ;; Magit
 (my-package-install 'magit)
@@ -179,7 +188,8 @@
 (projectile-mode +1)
 (setq projectile-completion-system 'ivy
       projectile-indexing-method 'hybrid
-      projectile-enable-caching 't)
+      projectile-enable-caching 't
+      projectile-project-search-path "~/projects/")
 (add-hook 'ibuffer-hook
           (lambda ()
             (ibuffer-projectile-set-filter-groups)
@@ -220,6 +230,27 @@
                                (haskell . t)
                                (emacs-lisp . t)
                                (sql . t)))
+(setq org-todo-keywords
+      '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELLED"))
+      counsel-projectile-org-capture-templates
+      '(("t" "[${name}] Todo" entry
+         (file+headline "${root}/TODOs.org" "Todos")
+         "* TODO %?
+  %u
+  %a")
+        ("bt" "[${name}] Note" entry
+         (file+headline "${root}/TODOs.org" "Notes")
+         "* %?
+  %t")))
+
+(with-eval-after-load 'org-agenda-mode
+  (progn
+    (define-key org-agenda-mode-map (kbd "C-c") org-agenda-mode-map)
+    (define-key org-agenda-mode-map (kbd "C-m") #'org-agenda-month-view)
+    (define-key org-agenda-mode-map "m" #'org-agenda-month-view)))
+
+
+
 ;; export
 (setq
  org-export-with-author nil
@@ -249,7 +280,7 @@
 (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
 
 ;; Line numbers
-(global-display-line-numbers-mode 1)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (setq-default display-line-numbers-type 'relative)
 (global-hl-line-mode +1)
 
@@ -323,11 +354,6 @@
                (lambda (proc string)
                  (funcall 'compilation-filter proc
                           (xterm-color-filter string)))))))
-
-;; Eyebrowse
-(my-package-install 'eyebrowse)
-(setq eyebrowse-keymap-prefix "")
-(eyebrowse-mode 1)
 
 ;; Flycheck
 (my-package-install 'flycheck)
@@ -578,10 +604,6 @@
 (with-eval-after-load 'rust-mode
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
-;; Cedille
-(require 'cedille-mode)
-(define-key cedille-mode-map (kbd "C-c C-l") #'cedille-start-navigation)
-
 ;; SQL
 (my-package-install 'sql)
 (setq
@@ -591,7 +613,12 @@
            (sql-port 5432)
            (sql-server "localhost")
            (sql-user "postgres")
-           (sql-database "vetpro")))
+           (sql-database "vetpro"))
+   (logs (sql-product 'postgres)
+            (sql-port 5432)
+            (sql-server "localhost")
+            (sql-user "postgres")
+            (sql-database "countySchemaMigrator")))
  sql-postgres-login-params
  '((user :default "postgres")
    (database :default "vetpro")
@@ -607,6 +634,11 @@
     (define-key sql-mode-map (kbd "C-c C-i") #'sql-connect)
     (define-key sql-mode-map (kbd "C-c C-k") #'(lambda () (interactive)
                                                  (with-current-buffer sql-buffer (comint-clear-buffer))))))
+
+;; Cedille
+(require 'cedille-mode)
+(define-key cedille-mode-map (kbd "C-c C-l") #'cedille-start-navigation)
+(evil-define-key 'normal cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
 
 ;; YAML
 (my-package-install 'yaml-mode)
@@ -635,7 +667,6 @@
 (my-package-install 'dockerfile-mode)
 (require 'dockerfile-mode)
 (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
-(my-package-install 'docker-tramp)
 
 ;; docker management
 (my-package-install 'docker)
@@ -691,8 +722,7 @@
 
 (setq
  custom-safe-themes
- '("5dbdb4a71a0e834318ae868143bb4329be492dd04bdf8b398fb103ba1b8c681a"
-   "0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f"
+ '("0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f"
    "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879"
    "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4"
    default))
@@ -747,7 +777,7 @@
  :underline nil
  :foreground "#586e75"
  :background "#002b36"
- :box '(:line-width 1 :color "#002b36" :style unspecified))
+ :box '(:line-width 1 :color "#002b36" :style 'unspecified))
 
 (defun evil-state-foreground (state)
   "The mode line color for evil-state `STATE'."
@@ -842,6 +872,7 @@
   "d" docker
   "g" guix
   "l" list-processes
+  "o" org-agenda
   "p" proced)
 
 (define-prefix-keymap my-buffer-map
@@ -903,25 +934,21 @@
   "i" counsel-imenu
   "j" avy-goto-char-2
   "l" avy-goto-line
+  "t" evil-jump-to-tag
   "=" indent-region-or-buffer)
 
 (defun switch-project-workspace ()
   "Switch to a known projectile project in a new workspace."
   (interactive)
-  (let ((eyebrowse-new-workspace
-         #'(lambda ()
-             (->> (projectile-project-name)
-                  (eyebrowse-rename-window-config (eyebrowse--get 'current-slot)))))
-        (projectile-switch-project-action
-         #'(lambda ()
-             (eyebrowse-create-window-config)
-             (projectile-find-file))))
+  (let ((projectile-switch-project-action #'projectile-find-file))
     (projectile-switch-project)))
 
 (define-prefix-keymap my-projectile-map
   "my projectile keybindings"
+  "a" counsel-projectile-org-agenda
   "b" counsel-projectile-switch-to-buffer
   "c" (lambda () (interactive) (my-projectile-command "compile"))
+  "C" counsel-projectile-org-capture
   "d" counsel-projectile-find-dir
   "D" (lambda () (interactive) (dired (projectile-project-root)))
   "e" projectile-edit-dir-locals
@@ -954,15 +981,15 @@
   "d" toggle-debug-on-error
   "D" toggle-debug-on-quit
   "f" toggle-frame-fullscreen
+  "i" imenu-list-smart-toggle
   "l" toggle-truncate-lines
   "m" toggle-mode-line
-  "r" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
+  "n" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
   "t" counsel-load-theme
   "w" whitespace-mode)
 
 (define-prefix-keymap my-window-map
   "my window keybindings"
-  (kbd "TAB") eyebrowse-last-window-config
   "/" (lambda nil () (interactive) (progn (split-window-horizontally) (balance-windows-area)))
   "-" (lambda nil () (interactive) (progn (split-window-vertically) (balance-windows-area)))
   "c" make-frame
@@ -978,9 +1005,7 @@
   "L" evil-window-move-far-right
   "m" delete-other-windows
   "r" winner-redo
-  "R" eyebrowse-rename-window-config
   "u" winner-undo
-  "w" eyebrowse-switch-to-window-config
   "=" balance-windows-area)
 
 (define-prefix-keymap my-yank-map
@@ -990,6 +1015,7 @@
 (define-prefix-keymap my-zoom-map
   "my zoom/text scaling keybindings"
   "+" text-scale-increase
+  "=" text-scale-increase
   "-" text-scale-decrease)
 
 ;;; init.el ends here
