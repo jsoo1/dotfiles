@@ -119,8 +119,10 @@
  backup-directory-alist `((".*" . "~/.emacs.d/private/backups/"))
  delete-old-versions nil
  create-lockfiles nil
- auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t))
- enable-local-eval t)
+ auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t)))
+
+;; Local variables
+(setq enable-local-eval t)
 
 ;; Winner
 (winner-mode t)
@@ -470,23 +472,31 @@
 
 ;; Haskell mode
 (my-package-install 'haskell-mode)
+(my-package-install 'haskell-snippets)
 (require 'haskell-interactive-mode)
-;; See https://github.com/haskell/haskell-mode/issues/1553#issuecomment-358373643
-(setq haskell-process-args-ghci
-      '("-ferror-spans" "-fshow-loaded-modules"))
-(setq haskell-process-args-cabal-repl
-      '("--ghc-options=-ferror-spans -fshow-loaded-modules"))
-(setq haskell-process-args-stack-ghci
-      '("--ghci-options=-ferror-spans -fshow-loaded-modules"
-        "--no-build" "--no-load"))
-(setq haskell-process-args-cabal-new-repl
-      '("--ghc-options=-ferror-spans --ghc-options=-fshow-loaded-modules"))
 (require 'haskell-process)
-(setq haskell-process-type 'auto)
-(setq my-old-haskell-mode-hook haskell-mode-hook)
+(require 'haskell-snippets)
+;; See https://github.com/haskell/haskell-mode/issues/1553#issuecomment-358373643
+(setq haskell-process-args-ghci '("-ferror-spans")
+      haskell-process-args-cabal-repl '("--ghc-options=-ferror-spans")
+      haskell-process-args-stack-ghci
+      '("--ghci-options=-ferror-spans" "--no-build" "--no-load")
+      haskell-process-args-cabal-new-repl '("--ghc-options=-ferror-spans")
+      haskell-process-type 'auto
+      haskell-process-log 't
+      haskell-interactive-popup-errors nil
+      safe-local-variable-values
+      (append
+       '((haskell-stylish-on-save . t)
+         (haskell-mode-stylish-haskell-path . "ormolu")
+         (haskell-mode-stylish-haskell-args . ("--ghc-opt TypeApplications"))
+         (haskell-process-type . cabal-new-repl))
+       safe-local-variable-values)
+      my-old-haskell-mode-hook haskell-mode-hook)
 (add-hook 'haskell-mode-hook
           (lambda ()
             (interactive-haskell-mode)
+            (yas-minor-mode-on)
             (flycheck-mode)
             (flycheck-disable-checker 'haskell-ghc)))
 (define-key haskell-mode-map (kbd "C-c C-f")
@@ -625,6 +635,7 @@
 (my-package-install 'dockerfile-mode)
 (require 'dockerfile-mode)
 (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+(my-package-install 'docker-tramp)
 
 ;; docker management
 (my-package-install 'docker)
@@ -695,6 +706,11 @@
           (string= 'term (daemonp)))
       (progn (set-face-background 'default "unspecified-bg" frame)
              (set-face-background 'line-number "#073642" frame))))
+
+(defun my-make-this-frame-transparent ()
+  "Make `selected-frame' transparent."
+  (interactive)
+  (my-make-frame-transparent (selected-frame)))
 
 (my-make-frame-transparent (selected-frame))
 (add-hook 'after-make-frame-functions #'my-make-frame-transparent)
