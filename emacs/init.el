@@ -192,6 +192,9 @@
             (unless (eq ibuffer-sorting-mode 'alphabetic)
               (ibuffer-do-sort-by-alphabetic))))
 
+;; Don't always ask me to reload the tags table
+(setq tags-revert-without-query 1)
+
 (defun my-projectile-compile-buffer-name (project kind)
   "Get the name for `PROJECT's command `KIND' (`RUN' | `TEST' | `COMPILE')."
   (concat "*" project "-" kind "*"))
@@ -213,6 +216,8 @@
   (switch-to-buffer (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
 
 ;; Org
+(my-package-install 'evil-org)
+(require 'evil-org)
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
                                (haskell . t)
@@ -220,7 +225,6 @@
                                (sql . t)))
 (setq org-agenda-files '("~/Desktop/org"
                          "~/projects/client-browser/TODOs.org"
-                         "~/projects/feature-decisions/TODOs.org"
                          "~/projects/report-server/TODOs.org"
                          "~/projects/renderer-lib/TODOs.org"
                          "~/projects/combinator/TODOs.org"
@@ -248,8 +252,6 @@
     (define-key org-agenda-mode-map (kbd "C-m") #'org-agenda-month-view)
     (define-key org-agenda-mode-map "m" #'org-agenda-month-view)))
 
-
-
 ;; export
 (setq
  org-export-with-author nil
@@ -273,6 +275,7 @@
 (my-package-install 'counsel-projectile)
 (my-package-install 'wgrep)
 (ivy-mode 1)
+(counsel-mode 1)
 (setq ivy-use-virtual-buffers t)
 (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
 (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
@@ -362,6 +365,7 @@
 (my-package-install 'flycheck)
 (require 'flycheck)
 (global-flycheck-mode)
+(add-hook 'flycheck-error-list-mode auto-revert-mode)
 
 ;; ispell
 (setq ispell-program-name "aspell"
@@ -501,11 +505,12 @@
 
 ;; Haskell mode
 (my-package-install 'haskell-mode)
+(my-package-install 'haskell-snippets)
 (my-package-install 'intero)
 ;; (add-to-list 'load-path "~/.emacs.d/private/flycheck-haskell")
 ;; (add-hook 'haskell-mode-hook #'flycheck-haskell-setup)
-
 (require 'haskell-process)
+(require 'haskell-snippets)
 (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
 (setq haskell-process-type 'auto
       haskell-process-args-stack-ghci
@@ -524,6 +529,7 @@
       haskell-process-log 't
       haskell-interactive-popup-errors 'nil)
 
+(add-hook 'haskell-mode-hook #'yas-minor-mode-on)
 (define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
 
 ;; Agda mode
@@ -561,6 +567,12 @@
             (flycheck-mode)))
 (define-key purescript-mode-map (kbd "C-c C-s") 'psc-ide-server-start)
 (define-key purescript-mode-map (kbd "C-c C-q") 'psc-ide-server-quit)
+(add-hook
+ 'purescript-mode-hook
+ (lambda ()
+   (setq-local company-backends
+              (append '((company-math-symbols-latex company-latex-commands))
+                      company-backends))))
 
 ;; Guix
 (add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
@@ -624,6 +636,10 @@
     (define-key sql-mode-map (kbd "C-c C-k") #'(lambda () (interactive)
                                                  (with-current-buffer sql-buffer (comint-clear-buffer))))))
 
+;; Math/TeX
+(add-to-list 'load-path "~/.emacs.d/private/company-math")
+(require 'company-math)
+
 ;; Cedille
 (setq cedille-path "~/projects/cedille")
 (add-to-list 'load-path cedille-path)
@@ -631,6 +647,15 @@
 (define-key cedille-mode-map (kbd "C-c C-l") #'cedille-start-navigation)
 (evil-define-key 'normal cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
 (evil-define-key 'insert cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
+(add-hook
+ 'cedille-mode-hook
+ (lambda ()
+   (setq-local company-backends
+              (append '((company-math-symbols-latex company-latex-commands))
+                      company-backends))))
+
+;; Dot/Graphviz
+(my-package-install 'graphviz-dot-mode)
 
 ;; YAML
 (my-package-install 'yaml-mode)
@@ -713,11 +738,11 @@
 (require 'solarized-theme)
 
 (setq
- custom-safe-themes
- '("0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f"
-   "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879"
-   "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4"
-   default))
+ custom-safe-themes '("2809bcb77ad21312897b541134981282dc455ccd7c14d74cc333b6e549b824f3"
+                      "0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f"
+                      "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879"
+                      "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4"
+                      default))
 (load-theme 'solarized-dark)
 
 ;; Transparency in terminal
@@ -836,12 +861,15 @@
   "a" 'my-process-map
   "b" 'my-buffer-map
   "c" 'my-compile-map
+  "C" 'my-counsel-map
   "d" 'dired
   "e" 'my-error-map
   "f" 'my-file-map
   "g" 'my-git-map
   "h" 'my-describe-map
+  "i" 'my-insert-map
   "j" 'my-jump-map
+  "o" 'my-org-map
   "p" 'my-projectile-map
   "q" 'my-quit-map
   "s" 'my-search-map
@@ -868,19 +896,37 @@
   "i" ibuffer
   "m" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Messages*")))
   "r" (lambda () (interactive) (my-switch-to-compile-buffer "run"))
+  "R" revert-buffer
   "s" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Scratch*")))
   "t" (lambda () (interactive) (my-switch-to-compile-buffer "test")))
 
 (define-prefix-keymap my-compile-map
   "my keybindings for compiling"
-  "b" (lambda () (interactive) (pop-to-buffer (get-buffer-create "*compilation*"))))
+  "b" (lambda () (interactive) (pop-to-buffer (get-buffer-create "*compilation*")))
+  "c" counsel-compile)
+
+(define-prefix-keymap my-counsel-map
+  "my keybindings to counsel"
+  "b" counsel-switch-buffer
+  "c" counsel-colors-emacs
+  "d" counsel-dired
+  "g" counsel-git
+  "h" counsel-command-history
+  "i" counsel-ibuffer
+  "m" counsel-minor
+  "M" counsel-major
+  "p" counsel-projectile
+  "v" counsel-set-variable
+  "w" counsel-colors-web)
 
 (define-prefix-keymap my-describe-map
   "my describe keybindings"
   "a" counsel-apropos
   "b" describe-bindings
+  "c" describe-char
   "f" describe-function
   "F" counsel-describe-face
+  "i" counsel-info-lookup-symbol
   "I" info-apropos
   "k" describe-key
   "m" describe-mode
@@ -899,19 +945,22 @@
   "my file keybindings"
   "f" counsel-find-file
   "l" find-file-literally
-  "r" counsel-recentf
+  "r" counsel-buffer-or-recentf
   "s" save-buffer
   "y" (lambda () (interactive) (kill-new (buffer-file-name (current-buffer)))))
 
 (define-prefix-keymap my-git-map
   "my git keybindings"
   "b" magit-blame
+  "c" counsel-git-checkout
+  "r" magit-refresh-all
   "s" magit-status
   "l" magit-log-buffer-file)
 
 (define-prefix-keymap my-insert-map
   "my insertion keybindings"
-  "c" insert-char)
+  "c" insert-char
+  "u" counsel-unicode-char)
 
 (define-prefix-keymap my-jump-map
   "my jump keybindings"
@@ -919,19 +968,28 @@
   "i" counsel-imenu
   "j" avy-goto-char-2
   "l" avy-goto-line
+  "o" counsel-org-goto-all
   "t" evil-jump-to-tag
   "=" indent-region-or-buffer)
+
+(define-prefix-keymap my-org-map
+  "my org bindings"
+  "a" counsel-projectile-org-agenda
+  "c" counsel-projectile-org-capture
+  "g" counsel-org-goto
+  "i" counsel-org-entity
+  "t" counsel-org-tag)
 
 (defun switch-project-workspace ()
   "Switch to a known projectile project in a new workspace."
   (interactive)
-  (let ((projectile-switch-project-action #'projectile-find-file))
-    (projectile-switch-project)))
+  (let* ((projectile-switch-project-action #'projectile-find-file))
+    (counsel-projectile-switch-project)))
 
 (define-prefix-keymap my-projectile-map
   "my projectile keybindings"
   "a" counsel-projectile-org-agenda
-  "b" counsel-projectile-switch-to-buffer
+  "b" counsel-projectile
   "c" (lambda () (interactive) (my-projectile-command "compile"))
   "C" counsel-projectile-org-capture
   "d" counsel-projectile-find-dir
