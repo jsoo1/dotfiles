@@ -215,6 +215,14 @@
   "Switch to compile buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'."
   (switch-to-buffer (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
 
+;; Dir Locals -- see https://emacs.stackexchange.com/questions/13080/reloading-directory-local-variables
+(defun my-projectile-reload-dir-locals ()
+  "Reload each buffer with the same `default-directory` as the current buffer's."
+  (interactive)
+  (dolist (buffer (projectile-project-buffers))
+    (with-current-buffer buffer
+      (hack-dir-local-variables-non-file-buffer))))
+
 ;; Org
 (my-package-install 'evil-org)
 (require 'evil-org)
@@ -276,8 +284,8 @@
 (my-package-install 'wgrep)
 (ivy-mode 1)
 (counsel-mode 1)
-(setq ivy-use-virtual-buffers t)
-(setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
+(setq ivy-use-virtual-buffers t
+      ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
 (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
 
 ;; Line numbers
@@ -582,6 +590,15 @@
   (add-to-list 'geiser-guile-load-path "~/projects/guix"))
 (with-eval-after-load 'yasnippet
   (add-to-list 'yas-snippet-dirs "~/projects/guix/etc/snippets"))
+(require 'scheme)
+(defvar guile-imenu-generic-expression
+  (cons '("Public" "^(define-public\\s-+(?\\(\\sw+\\)" 1)
+        scheme-imenu-generic-expression)
+  "Imenu generic expression for Guile modes.  See `imenu-generic-expression'.")
+(add-hook
+ 'scheme-mode-hook
+ (lambda ()
+   (setq-local imenu-generic-expression guile-imenu-generic-expression)))
 
 ;; Common Lisp
 (my-package-install 'slime)
@@ -754,6 +771,11 @@
       (progn (set-face-background 'default "unspecified-bg" frame)
              (set-face-background 'line-number "#073642" frame))))
 
+(defun my-make-this-frame-transparent ()
+  "Make `selected-frame' transparent."
+  (interactive)
+  (my-make-frame-transparent (selected-frame)))
+
 (my-make-frame-transparent (selected-frame))
 (add-hook 'after-make-frame-functions #'my-make-frame-transparent)
 
@@ -884,6 +906,7 @@
 (define-prefix-keymap my-process-map
   "my process keybindings"
   "d" docker
+  "g" guix
   "l" list-processes
   "o" org-agenda
   "p" proced)
@@ -979,12 +1002,11 @@
   "g" counsel-org-goto
   "i" counsel-org-entity
   "t" counsel-org-tag)
-
 (defun switch-project-workspace ()
   "Switch to a known projectile project in a new workspace."
   (interactive)
-  (let* ((projectile-switch-project-action #'projectile-find-file))
-    (counsel-projectile-switch-project)))
+  (let ((projectile-switch-project-action #'projectile-find-file))
+    (projectile-switch-project)))
 
 (define-prefix-keymap my-projectile-map
   "my projectile keybindings"
@@ -1001,6 +1023,7 @@
   "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
   "p" counsel-projectile-switch-project
   "r" (lambda () (interactive) (my-projectile-command "run"))
+  "R" my-projectile-reload-dir-locals
   "t" (lambda () (interactive) (my-projectile-command "test"))
   "'" multi-libvterm-projectile
   "]" projectile-find-tag)
