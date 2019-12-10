@@ -25,11 +25,10 @@ abbr rest "pmset sleepnow"
 
 # Emacs
 function em -d "Start an emacsclient -t" -a file
-    env TERM=xterm-24bits /Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=term $file
+    env TERM=xterm-24bits emacsclient -t --socket-name=term $file
 end
-abbr ed "/Applications/Emacs.app/Contents/MacOS/Emacs --daemon=term"
-abbr ec  "/Applications/Emacs.app/Contents/MacOS/Emacs --daemon=frame"
-abbr e "/Applications/Emacs.app/Contents/MacOS/Emacs"
+abbr ed "emacs --daemon=term"
+abbr ec  "emacs --daemon=frame"
 
 # Tmux
 function tma -d "Select a tmux session with fuzzy search"
