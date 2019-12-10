@@ -74,8 +74,7 @@
 (set-face-attribute 'default t :font "Iosevka 18")
 
 ;; Custom
-(setq custom-file "/dev/null"
-      initial-buffer-choice "~/dotfiles/emacs/init.el")
+(setq custom-file "/dev/null")
 
 ;; GC Threshold
 (setq gc-cons-threshold 200000000)
@@ -104,6 +103,35 @@
 ;; Shell
 (my-package-install 'multi-term)
 (setq shell-file-name "bash")
+
+;; EShell
+(require 'eshell)
+(setq initial-buffer-choice eshell
+      eshell-highlight-prompt nil
+      eshell-prompt-function
+      (lambda ()
+        (concat
+         (propertize (eshell/whoami) 'face `(:foreground "#93a1a1"))
+         " "
+         (propertize (eshell/pwd) 'face `(:foreground "#268bd2"))
+         " "
+         (propertize (or (magit-get-current-branch) "") 'face `(:foreground "#859900"))
+         (propertize " λ " 'face `(:foreground "#b58900" :weight normal))))
+      eshell-prompt-regexp "^.*λ "
+      eshell-banner-message "")
+
+(set-face-attribute
+ 'eshell-prompt nil
+ :weight 'normal
+ :foreground "#93a1a1")
+
+(defun my-side-eshell (props)
+  "Pop Eshell in a buffer using window `PROPS'."
+  (interactive)
+  (with-current-buffer (get-buffer-create eshell-buffer-name)
+    (display-buffer-in-side-window (current-buffer) props)
+    (eshell-mode))
+  (pop-to-buffer eshell-buffer-name))
 
 ;; Dired
 (add-hook 'dired-mode-hook (lambda ()
@@ -312,14 +340,6 @@
                      (xclip-mode 1)))
   ('darwin (progn (my-package-install 'osx-clipboard)
                   (osx-clipboard-mode +1))))
-
-;; VTerm
-(add-to-list 'load-path "~/.emacs.d/private/emacs-libvterm")
-(add-to-list 'load-path "~/.emacs.d/private/multi-libvterm")
-(require 'vterm)
-(require 'multi-libvterm)
-(setq vterm-shell "fish")
-
 
 ;; Compilation
 (define-key compilation-mode-map (kbd "C-c C-l") #'recompile)
@@ -900,7 +920,7 @@
   "x" 'my-text-map
   "y" 'my-yank-map
   "z" 'my-zoom-map
-  "'" 'multi-libvterm
+  "'" 'eshell
   "/" 'counsel-projectile-rg)
 
 (define-prefix-keymap my-process-map
@@ -1025,7 +1045,7 @@
   "r" (lambda () (interactive) (my-projectile-command "run"))
   "R" my-projectile-reload-dir-locals
   "t" (lambda () (interactive) (my-projectile-command "test"))
-  "'" multi-libvterm-projectile
+  "'" projectile-run-eshell
   "]" projectile-find-tag)
 
 (define-prefix-keymap my-quit-map
@@ -1057,6 +1077,7 @@
   "my window keybindings"
   "/" (lambda nil () (interactive) (progn (split-window-horizontally) (balance-windows-area)))
   "-" (lambda nil () (interactive) (progn (split-window-vertically) (balance-windows-area)))
+  "'" (lambda nil () (interactive) (my-side-eshell '((side . right) (slot . 1))) (balance-windows-area))
   "c" make-frame
   "d" (lambda nil () (interactive) (progn (delete-window) (balance-windows-area)))
   "D" delete-frame
