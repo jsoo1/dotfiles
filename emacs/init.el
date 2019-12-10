@@ -105,8 +105,11 @@
 (setq shell-file-name "bash")
 
 ;; EShell
-(require 'eshell)
-(setq initial-buffer-choice eshell
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (when (not (display-graphic-p)) (cd default-directory))
+            (eshell)))
+(setq initial-buffer-choice (lambda () (get-buffer-create "*eshell*"))
       eshell-highlight-prompt nil
       eshell-prompt-function
       (lambda ()
@@ -116,14 +119,11 @@
          (propertize (eshell/pwd) 'face `(:foreground "#268bd2"))
          " "
          (propertize (or (magit-get-current-branch) "") 'face `(:foreground "#859900"))
-         (propertize " λ " 'face `(:foreground "#b58900" :weight normal))))
-      eshell-prompt-regexp "^.*λ "
+         " "
+         (propertize "λ" 'face `(:foreground "#b58900" :weight normal))
+         " "))
+      eshell-prompt-regexp "^[^λ]* [λ] "
       eshell-banner-message "")
-
-(set-face-attribute
- 'eshell-prompt nil
- :weight 'normal
- :foreground "#93a1a1")
 
 (defun my-side-eshell (props)
   "Pop Eshell in a buffer using window `PROPS'."
@@ -977,6 +977,7 @@
   "I" info-apropos
   "k" describe-key
   "m" describe-mode
+  "s" describe-symbol
   "t" describe-theme
   "w" woman
   "v" describe-variable)
