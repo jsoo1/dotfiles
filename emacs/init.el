@@ -288,6 +288,10 @@
     (define-key org-agenda-mode-map (kbd "C-m") #'org-agenda-month-view)
     (define-key org-agenda-mode-map "m" #'org-agenda-month-view)))
 
+(set-face-attribute
+ 'variable-pitch nil
+ :family "Monospace")
+
 ;; export
 (setq
  org-export-with-author nil
