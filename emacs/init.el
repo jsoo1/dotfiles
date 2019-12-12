@@ -77,6 +77,9 @@
 (setq custom-file "/dev/null"
       initial-buffer-choice "~/dotfiles/emacs/init.el")
 
+;; Tab width
+(setq tab-width 4)
+
 ;; GC Threshold
 (setq gc-cons-threshold 200000000)
 
@@ -722,7 +725,8 @@
 
 (setq
  custom-safe-themes
- '("0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f"
+ '("2809bcb77ad21312897b541134981282dc455ccd7c14d74cc333b6e549b824f3"
+   "0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f"
    "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879"
    "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4"
    default))
