@@ -74,8 +74,7 @@
 (set-face-attribute 'default t :font "Iosevka 18")
 
 ;; Custom
-(setq custom-file "/dev/null"
-      initial-buffer-choice "~/dotfiles/emacs/init.el")
+(setq custom-file "/dev/null")
 
 ;; Tab width
 (setq tab-width 4)
@@ -111,6 +110,35 @@
 ;; Shell
 (my-package-install 'multi-term)
 (setq shell-file-name "bash")
+
+;; EShell
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (when (not (display-graphic-p)) (cd default-directory))
+            (eshell)))
+(setq initial-buffer-choice (lambda () (get-buffer-create "*eshell*"))
+      eshell-highlight-prompt nil
+      eshell-prompt-function
+      (lambda ()
+        (concat
+         (propertize (eshell/whoami) 'face `(:foreground "#93a1a1"))
+         " "
+         (propertize (eshell/pwd) 'face `(:foreground "#268bd2"))
+         " "
+         (propertize (or (magit-get-current-branch) "") 'face `(:foreground "#859900"))
+         " "
+         (propertize "λ" 'face `(:foreground "#b58900" :weight normal))
+         " "))
+      eshell-prompt-regexp "^[^λ]* [λ] "
+      eshell-banner-message "")
+
+(defun my-side-eshell (props)
+  "Pop Eshell in a buffer using window `PROPS'."
+  (interactive)
+  (with-current-buffer (get-buffer-create eshell-buffer-name)
+    (display-buffer-in-side-window (current-buffer) props)
+    (eshell-mode))
+  (pop-to-buffer eshell-buffer-name))
 
 ;; Dired
 (add-hook 'dired-mode-hook (lambda ()
@@ -199,6 +227,9 @@
             (unless (eq ibuffer-sorting-mode 'alphabetic)
               (ibuffer-do-sort-by-alphabetic))))
 
+;; Don't always ask me to reload the tags table
+(setq tags-revert-without-query 1)
+
 (defun my-projectile-compile-buffer-name (project kind)
   "Get the name for `PROJECT's command `KIND' (`RUN' | `TEST' | `COMPILE')."
   (concat "*" project "-" kind "*"))
@@ -228,6 +259,8 @@
       (hack-dir-local-variables-non-file-buffer))))
 
 ;; Org
+(my-package-install 'evil-org)
+(require 'evil-org)
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
                                (haskell . t)
@@ -252,7 +285,9 @@
     (define-key org-agenda-mode-map (kbd "C-m") #'org-agenda-month-view)
     (define-key org-agenda-mode-map "m" #'org-agenda-month-view)))
 
-
+(set-face-attribute
+ 'variable-pitch nil
+ :family "Monospace")
 
 ;; export
 (setq
@@ -362,6 +397,7 @@
 (my-package-install 'flycheck)
 (require 'flycheck)
 (global-flycheck-mode)
+(add-hook 'flycheck-error-list-mode #'auto-revert-mode)
 
 ;; ispell
 (setq ispell-program-name "aspell"
@@ -514,6 +550,7 @@
       haskell-process-type 'auto
       haskell-process-log 't
       haskell-interactive-popup-errors nil
+      flycheck-haskell-hpack-preference 'prefer-cabal
       safe-local-variable-values
       (append
        '((haskell-stylish-on-save . t)
@@ -522,14 +559,15 @@
          (haskell-process-type . cabal-new-repl))
        safe-local-variable-values)
       my-old-haskell-mode-hook haskell-mode-hook)
+
 (add-hook 'haskell-mode-hook
           (lambda ()
             (interactive-haskell-mode)
             (yas-minor-mode-on)
             (flycheck-mode)
             (flycheck-disable-checker 'haskell-ghc)))
-(define-key haskell-mode-map (kbd "C-c C-f")
-  'haskell-mode-stylish-buffer)
+
+(define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
 
 ;; Agda mode
 (load-library (let ((coding-system-for-read 'utf-8))
@@ -568,6 +606,12 @@
             (turn-on-purescript-indentation)))
 (define-key purescript-mode-map (kbd "C-c C-s") 'psc-ide-server-start)
 (define-key purescript-mode-map (kbd "C-c C-q") 'psc-ide-server-quit)
+(add-hook
+ 'purescript-mode-hook
+ (lambda ()
+   (setq-local company-backends
+              (append '((company-math-symbols-latex company-latex-commands))
+                      company-backends))))
 
 ;; Guix
 (add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
@@ -638,10 +682,23 @@
     (define-key sql-mode-map (kbd "C-c C-k") #'(lambda () (interactive)
                                                  (with-current-buffer sql-buffer (comint-clear-buffer))))))
 
+;; Math/TeX
+(add-to-list 'load-path "~/.emacs.d/private/company-math")
+(require 'company-math)
+
 ;; Cedille
 (require 'cedille-mode)
 (define-key cedille-mode-map (kbd "C-c C-l") #'cedille-start-navigation)
 (evil-define-key 'normal cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
+(add-hook
+ 'cedille-mode-hook
+ (lambda ()
+   (setq-local company-backends
+              (append '((company-math-symbols-latex company-latex-commands))
+                      company-backends))))
+
+;; Dot/Graphviz
+(my-package-install 'graphviz-dot-mode)
 
 ;; YAML
 (my-package-install 'yaml-mode)
@@ -853,6 +910,7 @@
   "a" 'my-process-map
   "b" 'my-buffer-map
   "c" 'my-compile-map
+  "C" 'my-counsel-map
   "d" 'dired
   "e" 'my-error-map
   "f" 'my-file-map
@@ -860,6 +918,7 @@
   "h" 'my-describe-map
   "i" 'my-insert-map
   "j" 'my-jump-map
+  "o" 'my-org-map
   "p" 'my-projectile-map
   "q" 'my-quit-map
   "s" 'my-search-map
@@ -868,7 +927,7 @@
   "x" 'my-text-map
   "y" 'my-yank-map
   "z" 'my-zoom-map
-  "'" 'multi-term
+  "'" 'eshell
   "/" 'counsel-projectile-rg)
 
 (define-prefix-keymap my-process-map
@@ -887,22 +946,41 @@
   "i" ibuffer
   "m" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Messages*")))
   "r" (lambda () (interactive) (my-switch-to-compile-buffer "run"))
+  "R" revert-buffer
   "s" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Scratch*")))
   "t" (lambda () (interactive) (my-switch-to-compile-buffer "test")))
 
 (define-prefix-keymap my-compile-map
   "my keybindings for compiling"
-  "b" (lambda () (interactive) (pop-to-buffer (get-buffer-create "*compilation*"))))
+  "b" (lambda () (interactive) (pop-to-buffer (get-buffer-create "*compilation*")))
+  "c" counsel-compile)
+
+(define-prefix-keymap my-counsel-map
+  "my keybindings to counsel"
+  "b" counsel-switch-buffer
+  "c" counsel-colors-emacs
+  "d" counsel-dired
+  "g" counsel-git
+  "h" counsel-command-history
+  "i" counsel-ibuffer
+  "m" counsel-minor
+  "M" counsel-major
+  "p" counsel-projectile
+  "v" counsel-set-variable
+  "w" counsel-colors-web)
 
 (define-prefix-keymap my-describe-map
   "my describe keybindings"
   "a" counsel-apropos
   "b" describe-bindings
+  "c" describe-char
   "f" describe-function
   "F" counsel-describe-face
+  "i" counsel-info-lookup-symbol
   "I" info-apropos
   "k" describe-key
   "m" describe-mode
+  "s" describe-symbol
   "t" describe-theme
   "w" woman
   "v" describe-variable)
@@ -918,19 +996,22 @@
   "my file keybindings"
   "f" counsel-find-file
   "l" find-file-literally
-  "r" counsel-recentf
+  "r" counsel-buffer-or-recentf
   "s" save-buffer
   "y" (lambda () (interactive) (kill-new (buffer-file-name (current-buffer)))))
 
 (define-prefix-keymap my-git-map
   "my git keybindings"
   "b" magit-blame
+  "c" counsel-git-checkout
+  "r" magit-refresh-all
   "s" magit-status
   "l" magit-log-buffer-file)
 
 (define-prefix-keymap my-insert-map
   "my insertion keybindings"
-  "c" insert-char)
+  "c" insert-char
+  "u" counsel-unicode-char)
 
 (define-prefix-keymap my-jump-map
   "my jump keybindings"
@@ -938,9 +1019,17 @@
   "i" counsel-imenu
   "j" avy-goto-char-2
   "l" avy-goto-line
+  "o" counsel-org-goto-all
   "t" evil-jump-to-tag
   "=" indent-region-or-buffer)
 
+(define-prefix-keymap my-org-map
+  "my org bindings"
+  "a" counsel-projectile-org-agenda
+  "c" counsel-projectile-org-capture
+  "g" counsel-org-goto
+  "i" counsel-org-entity
+  "t" counsel-org-tag)
 (defun switch-project-workspace ()
   "Switch to a known projectile project in a new workspace."
   (interactive)
@@ -950,7 +1039,7 @@
 (define-prefix-keymap my-projectile-map
   "my projectile keybindings"
   "a" counsel-projectile-org-agenda
-  "b" counsel-projectile-switch-to-buffer
+  "b" counsel-projectile
   "c" (lambda () (interactive) (my-projectile-command "compile"))
   "C" counsel-projectile-org-capture
   "d" counsel-projectile-find-dir
@@ -964,7 +1053,7 @@
   "r" (lambda () (interactive) (my-projectile-command "run"))
   "R" my-projectile-reload-dir-locals
   "t" (lambda () (interactive) (my-projectile-command "test"))
-  "'" (lambda () (interactive) (projectile-with-default-dir (projectile-project-root) (multi-term)))
+  "'" projectile-run-eshell
   "]" projectile-find-tag)
 
 (define-prefix-keymap my-quit-map
@@ -996,6 +1085,7 @@
   "my window keybindings"
   "/" (lambda nil () (interactive) (progn (split-window-horizontally) (balance-windows-area)))
   "-" (lambda nil () (interactive) (progn (split-window-vertically) (balance-windows-area)))
+  "'" (lambda nil () (interactive) (my-side-eshell '((side . right) (slot . 1))) (balance-windows-area))
   "c" make-frame
   "d" (lambda nil () (interactive) (progn (delete-window) (balance-windows-area)))
   "D" delete-frame
