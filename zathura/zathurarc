@@ -1,5 +1,5 @@
 map <C-=> zoom in
 map <C--> zoom out
-set font "FantasqueSansMono Nerd Font Mono normal 12"
+set font "Iosevka 14"
 set default-bg "#292b2E"
 set selection-clipboard clipboard
