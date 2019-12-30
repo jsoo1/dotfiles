@@ -63,14 +63,14 @@ window:
   startup_mode: Fullscreen
 
   # Window title
-  #title: Alacritty
+  title: Alacritty
 
   # Window class (Linux only):
-  class:
+  class: Alacritty
     # Application instance name
-    instance: Alacritty
-    # General application class
-    general: Alacritty
+    # instance: Alacritty
+    # # General application class
+    # general: Alacritty
 
   # GTK theme variant (Linux only)
   #
