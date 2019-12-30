@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: empty
-# key: empty
-# --
-empty${1:name} : $1
-empty$1 =
-$>{ $0
-$>}

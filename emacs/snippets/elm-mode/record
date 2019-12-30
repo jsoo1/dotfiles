@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: record
-# key: record
-# --
-$>{ $0
-$>}

@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: decoder
-# key: decoder
-# --
-${1:type}Decoder : Decode.Decoder $1
-$1Decoder =
-$>Decode.succeed ${1:$(capitalize yas-text)}
-$>$0
