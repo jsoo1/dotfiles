@@ -18,7 +18,6 @@
              ((gnu packages shells) #:select (fish))
              ((gnu packages shellutils) #:select (fzy))
              ((gnu packages ssh) #:select (openssh))
-             ((gnu packages terminals) #:select (termite))
              ((gnu packages tmux) #:select (tmux))
              ((gnu packages version-control) #:select (git))
              ((gnu packages vim) #:select (vim))
@@ -168,7 +167,7 @@ EndSection\n")
  (setuid-programs
   (append
    `(,#~(string-append #$light "/bin/light")
-        ,#~(string-append #$docker-cli "/bin/docker"))
+     ,#~(string-append #$docker-cli "/bin/docker"))
    %setuid-programs))
  (services
   (cons*
