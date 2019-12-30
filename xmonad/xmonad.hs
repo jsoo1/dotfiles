@@ -41,7 +41,7 @@ main =
     xmobarPipe <- spawnPipe "xmobar ~/.config/xmobar/xmobar.hs"
 
     xmonad $ docks def
-      { terminal = "termite"
+      { terminal = "alacritty"
       , focusFollowsMouse = False
       , borderWidth = 2
       , modMask = myModMask
