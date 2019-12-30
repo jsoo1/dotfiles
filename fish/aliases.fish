@@ -36,6 +36,7 @@ function tm
 end
 abbr --add -U -- tma "env TERM=xterm-24bits tmux attach -t"
 abbr --add -U -- tml "tmux list-sessions"
+abbr --add -U -- tm "env TERM=xterm-24bits tmux new-session -A -s (basename (pwd)) -n emacs"
 
 # Lynx
 abbr --add -U -- lynx lynx -cfg=~/.config/lynx/lynx.cfg
