@@ -1113,3 +1113,4 @@
   "-" text-scale-decrease)
 
 ;;; init.el ends here
+(put 'proof-frob-locked-end 'disabled nil)
