@@ -116,7 +116,8 @@
         (concat
          (propertize (eshell/whoami) 'face `(:foreground "#93a1a1"))
          " "
-         (propertize (eshell/pwd) 'face `(:foreground "#268bd2"))
+         (propertize (replace-regexp-in-string (concat "^" (getenv "HOME")) "~" (eshell/pwd))
+                     'face `(:foreground "#268bd2"))
          " "
          (propertize (or (magit-get-current-branch) "") 'face `(:foreground "#859900"))
          " "
@@ -138,6 +139,15 @@
                              (auto-revert-mode)
                              (dired-hide-details-mode)))
 
+;; Dired-git-info
+(my-package-install 'dired-git-info)
+(require 'dired)
+(define-key dired-mode-map ")" #'dired-git-info-mode)
+
+;; Diredfl from mr. purcell
+(my-package-install 'diredfl)
+(diredfl-global-mode -1)
+
 ;; Byte compile
 (require 'bytecomp)
 (setq byte-compile-warnings t)
@@ -149,7 +159,16 @@
  delete-old-versions nil
  create-lockfiles nil
  auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t))
- enable-local-eval t)
+ enable-local-eval t
+ safe-local-variable-values
+ (append
+  '((elm-format-command . "/usr/local/bin/elm-format")
+    (elm-format-command . "~/.local/bin/elm-format")
+    (elm-format-command . "elm-format")
+    (elm-format-elm-version . "0.18")
+    (elm-format-elm-version . "0.19")
+    (flycheck-elm-executable . "npx elm"))
+  safe-local-variable-values))
 
 ;; Imenu List
 (my-package-install 'imenu-list)
@@ -397,7 +416,7 @@
 (my-package-install 'flycheck)
 (require 'flycheck)
 (global-flycheck-mode)
-(add-hook 'flycheck-error-list-mode auto-revert-mode)
+(add-hook 'flycheck-error-list-mode #'auto-revert-mode)
 
 ;; ispell
 (setq ispell-program-name "aspell"
@@ -455,7 +474,7 @@
 (require 'idris-mode)
 (require 'inferior-idris)
 (require 'idris-ipkg-mode)
-(setq idris-interpreter-path "/usr/local/bin/idris")
+(setq idris-interpreter-path "/Users/john/.nix-profile/bin/idris")
 
 (dolist (f '((idris-active-term-face        "#657b83")
              (idris-semantic-type-face      "#b58900")
@@ -482,8 +501,7 @@
 (setq elm-format-on-save 't
       elm-format-elm-version "0.18"
       elm-package-catalog-root "http://package.elm-lang.org/")
-(eval-after-load 'flycheck
-  '(add-hook 'flycheck-mode-hook #'flycheck-elm-setup))
+(add-hook 'flycheck-mode-hook #'flycheck-elm-setup)
 (with-eval-after-load 'company-mode (add-to-list 'company-backends 'company-elm))
 ;; Can't get only elm 18 packages without this hack
 (defun elm-package-refresh-contents ()
@@ -623,6 +641,10 @@
  'scheme-mode-hook
  (lambda ()
    (setq-local imenu-generic-expression guile-imenu-generic-expression)))
+
+;; Nix
+(my-package-install 'nix-mode)
+(add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
 
 ;; Common Lisp
 (my-package-install 'slime)
@@ -1001,6 +1023,7 @@
   "my git keybindings"
   "b" magit-blame
   "c" counsel-git-checkout
+  "g" magit-file-dispatch
   "r" magit-refresh-all
   "s" magit-status
   "l" magit-log-buffer-file)
