@@ -4,7 +4,7 @@
              ((gnu packages certs) #:select (nss-certs))
              ((gnu packages curl) #:select (curl))
              ((gnu packages docker) #:select (docker-cli))
-             ((gnu packages emacs) #:select (emacs))
+             ((gnu packages emacs) #:select (emacs-next))
              ((gnu packages fonts)
               #:select (font-adobe-source-code-pro
                         font-fantasque-sans
@@ -160,7 +160,7 @@ EndSection\n")
    lsof inetutils git fish openssh gnupg htop ncurses tmux fzy lynx
    tree yaft glibc-utf8-locales
    ;; text editors
-   vim emacs
+   vim emacs-next
    ;; for keyboards
    bluez
    %base-packages))
