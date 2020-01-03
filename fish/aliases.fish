@@ -17,6 +17,7 @@ end
 
 # System Utils
 abbr --add -U -- ls "exa"
+abbr --add -U -- ll "exa -l"
 abbr --add -U -- lsa "exa -l"
 abbr --add -U -- lsah "exa -l"
 abbr --add -U -- tree "exa -T"
