@@ -16,8 +16,10 @@ function gitpurge
 end
 
 # System Utils
-abbr --add -U -- lsa "ls -lsa"
-abbr --add -U -- lsah "ls -lsah"
+abbr --add -U -- ls "exa"
+abbr --add -U -- lsa "exa -l"
+abbr --add -U -- lsah "exa -l"
+abbr --add -U -- tree "exa -T"
 abbr --add -U -- psg 'ps -eF | rg -i'
 abbr --add -U -- rest "loginctl suspend"
 abbr --add -U -- bat "upower -I (upower -e | rg BAT)"
