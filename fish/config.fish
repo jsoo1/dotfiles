@@ -1,4 +1,4 @@
-set -gx PATH $PATH /usr/local/anaconda3/bin /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /Users/john/.cargo/bin /Users/john/.local/bin /Users/john/Library/Python/3.6/bin
+set -gx PATH /Users/john/.local/bin $PATH /usr/local/anaconda3/bin /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /Users/john/.cargo/bin /Users/john/Library/Python/3.6/bin
 
 # Work related binaries
 set -gx PATH $PATH /Users/john/projects/client-browser/.bin /Users/john/.cabal/bin
@@ -18,6 +18,12 @@ set -x FZF_DEFAULT_OPTS '
   --color=marker:#719e07,fg+:#839496,prompt:#719e07,hl+:#719e07
 '
 set -x FZF_DEFAULT_COMMAND 'rg --files --hidden --ignore .git --smartcase --glob "!.git/*"'
+
+# Nix
+if test -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+  fenv source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+end
+
 
 # fish cwd color
 set -x fish_color_cwd magenta
@@ -92,4 +98,4 @@ if test "Darwin" = (uname)
     eval (direnv hook fish)
 end
 
-eval (opam env)
+# eval (opam env)
