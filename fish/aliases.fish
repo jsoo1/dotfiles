@@ -16,8 +16,11 @@ abbr gco 'git checkout'
 alias gitpurge 'git branch --merged | grep -v "\*" | grep -v "master" | xargs -n 1 git branch -d'
 
 # System Utils
-abbr lsa "ls -lsa"
-abbr lsah "ls -lsah"
+abbr ls "exa"
+abbr ll "exa -l"
+abbr lsa "exa -la"
+abbr lsah "exa -la"
+abbr tree "exa -T"
 abbr rmi "rm -i"
 abbr psg "ps aux | rg -i"
 abbr dfh "df -H"
