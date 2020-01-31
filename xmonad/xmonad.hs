@@ -39,6 +39,7 @@ main :: IO ()
 main = do
   replace
 
+  -- TODO: Fix too many bars without external display
   nScreens <- countScreens
   xmobarPipes <- traverse (spawnPipe . xmobarCmd) [0 ..nScreens]
 
