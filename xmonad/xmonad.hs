@@ -72,57 +72,6 @@ main = do
     }
     `additionalKeys` myCommands
 
--- ============== Bar ==============
-
-xmobarCmd :: Int -> String
-xmobarCmd screen =
-  "xmobar ~/.config/xmobar/xmobar.hs --screen=" <> show screen
-
-myXmobar :: Handle -> X ()
-myXmobar xmobarPipe = do
-  Titles {..} <- withWindowSet allTitles
-
-  let unScreenId :: ScreenId -> Int
-      unScreenId (S i) = i
-  let wsPrefix :: Maybe ScreenId -> WorkspaceId -> String
-      wsPrefix screen wsId =
-        " " ++ maybe " " (show . succ . unScreenId) screen ++ " | " ++ wsId ++ " "
-
-  dynamicLogWithPP $ xmobarPP
-    { ppOutput = hPutStrLn xmobarPipe
-    , ppCurrent =
-        \wsId ->
-          xmobarColor' base03 base01
-          $ wsPrefix (pure (fst current)) wsId ++ titleFormat current ++ " "
-    , ppHidden =
-        \wsId ->
-          xmobarColor' base01 base03
-          -- FIXME
-          -- $ xmobarAction ("xdotool key super+" ++ wsId) "1"
-          $ wsPrefix Nothing wsId ++ " " ++ hiddenTitle hidden wsId ++ " "
-    , ppVisible =
-      \wsId ->
-        xmobarColor' base01 base03
-        $ wsPrefix (fst <$> Map.lookup wsId visible) wsId
-          ++ titleFor visible wsId ++ " "
-    , ppUrgent =
-        \wsId ->
-          let
-            t =
-              if null $ titleFor visible wsId
-              then titleFor visible wsId
-              else hiddenTitle hidden wsId
-          in
-            xmobarColor' base03 base0 t
-            -- FIXME
-            -- $ xmobarAction ("xdotool key super+" ++ wsId) "1" t
-    , ppSep = ""
-    , ppWsSep = ""
-    , ppTitle = const ""
-    , ppOrder = \(ws:_:t:e) -> e ++ [ ws, t ]
-    }
-
-
 -- ============== Keybindings ==============
 
 myModMask :: KeyMask
@@ -198,6 +147,57 @@ myCommands =
     , spawn "scrot '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/screenshots/'"
     )
   ]
+
+
+-- ============== Bar ==============
+
+xmobarCmd :: Int -> String
+xmobarCmd screen =
+  "xmobar ~/.config/xmobar/xmobar.hs --screen=" <> show screen
+
+myXmobar :: Handle -> X ()
+myXmobar xmobarPipe = do
+  Titles {..} <- withWindowSet allTitles
+
+  let unScreenId :: ScreenId -> Int
+      unScreenId (S i) = i
+  let wsPrefix :: Maybe ScreenId -> WorkspaceId -> String
+      wsPrefix screen wsId =
+        " " ++ maybe " " (show . succ . unScreenId) screen ++ " | " ++ wsId ++ " "
+
+  dynamicLogWithPP $ xmobarPP
+    { ppOutput = hPutStrLn xmobarPipe
+    , ppCurrent =
+        \wsId ->
+          xmobarColor' base03 base01
+          $ wsPrefix (pure (fst current)) wsId ++ titleFormat current ++ " "
+    , ppHidden =
+        \wsId ->
+          xmobarColor' base01 base03
+          -- FIXME
+          -- $ xmobarAction ("xdotool key super+" ++ wsId) "1"
+          $ wsPrefix Nothing wsId ++ " " ++ hiddenTitle hidden wsId ++ " "
+    , ppVisible =
+      \wsId ->
+        xmobarColor' base01 base03
+        $ wsPrefix (fst <$> Map.lookup wsId visible) wsId
+          ++ titleFor visible wsId ++ " "
+    , ppUrgent =
+        \wsId ->
+          let
+            t =
+              if null $ titleFor visible wsId
+              then titleFor visible wsId
+              else hiddenTitle hidden wsId
+          in
+            xmobarColor' base03 base0 t
+            -- FIXME
+            -- $ xmobarAction ("xdotool key super+" ++ wsId) "1" t
+    , ppSep = ""
+    , ppWsSep = ""
+    , ppTitle = const ""
+    , ppOrder = \(ws:_:t:e) -> e ++ [ ws, t ]
+    }
 
 
 -- ============== Titles ==============
