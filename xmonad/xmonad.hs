@@ -1,30 +1,33 @@
-{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE RecordWildCards #-}
 
 
 module Main where
 
 
-import           Control.Monad                (join)
-import           Data.Function                (on)
-import qualified Data.Map.Strict              as Map
-import           Data.Maybe                   (listToMaybe)
+import           Control.Monad                    (join)
+import           Data.Coerce                      (coerce)
+import           Data.Function                    (on)
+import qualified Data.Map.Strict                  as Map
+import           Data.Maybe                       (listToMaybe)
 
 
 import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
 import           XMonad
-import           XMonad.Actions.CycleWS       (WSType(..), moveTo, shiftTo)
+import           XMonad.Actions.CycleWS           (WSType (..), moveTo, shiftTo)
 import           XMonad.Actions.WindowBringer
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
-import           XMonad.Layout.NoBorders      (smartBorders)
+import qualified XMonad.Layout.IndependentScreens as IndependentScreens
+import           XMonad.Layout.NoBorders          (smartBorders)
 import           XMonad.Layout.Spacing
-import qualified XMonad.StackSet              as W
-import           XMonad.Util.EZConfig         (additionalKeys)
+import qualified XMonad.StackSet                  as W
+import           XMonad.Util.EZConfig             (additionalKeys)
 import           XMonad.Util.NamedWindows
 import           XMonad.Util.Replace
-import           XMonad.Util.Run              (spawnPipe, runProcessWithInput, runInTerm)
+import           XMonad.Util.Run                  (runInTerm,
+                                                   runProcessWithInput,
+                                                   spawnPipe)
 
 
 infixl 1 |>
@@ -33,9 +36,7 @@ infixl 1 |>
 
 
 main :: IO ()
-main =
-  let myModMask = mod4Mask in
-  do
+main = do
     replace
 
     xmobarPipe <- spawnPipe "xmobar ~/.config/xmobar/xmobar.hs"
@@ -45,8 +46,8 @@ main =
       , focusFollowsMouse = False
       , borderWidth = 2
       , modMask = myModMask
-      , normalBorderColor = unSpaceColor base03
-      , focusedBorderColor = unSpaceColor base03
+      , normalBorderColor = coerce base03
+      , focusedBorderColor = coerce base03
       , handleEventHook = handleEventHook def <+> docksEventHook
       , manageHook = manageDocks <+> manageHook def
       , layoutHook =
@@ -55,42 +56,7 @@ main =
           $ smartBorders
           $ layoutHook def
 
-      , logHook = do
-          Titles {..} <- withWindowSet allTitles
-
-          dynamicLogWithPP $ xmobarPP
-            { ppOutput = hPutStrLn xmobarPipe
-            , ppCurrent =
-                \wsId ->
-                  xmobarColor' base03 base01
-                  $ " " ++ wsId ++ " " ++ maybe "      " titleFormat current ++ " "
-            , ppHidden =
-                \wsId ->
-                  xmobarColor' base01 base03
-                  -- FIXME
-                  -- $ xmobarAction ("xdotool key super+" ++ wsId) "1" 
-                  $ " " ++ wsId ++ " " ++ titleFor hidden wsId ++ " "
-            , ppVisible =
-              \wsId ->
-                xmobarColor' base01 base03
-                $ " " ++ wsId ++ " " ++ titleFor visible wsId ++ " "
-            , ppUrgent =
-                \wsId ->
-                  let
-                    t =
-                      if null $ titleFor visible wsId
-                      then titleFor visible wsId
-                      else titleFor hidden wsId
-                  in
-                    xmobarColor' base03 base0 t
-                    -- FIXME
-                    -- $ xmobarAction ("xdotool key super+" ++ wsId) "1" t
-            , ppSep = ""
-            , ppWsSep = ""
-            , ppTitle = const ""
-            , ppOrder = \(ws:_:t:e) -> e ++ [ ws, t ]
-            }
-
+      , logHook = myXmobar xmobarPipe
       , startupHook =
           spawn
             "xrandr\
@@ -100,78 +66,123 @@ main =
           <+> spawn "feh --bg-fill ~/Downloads/richter-lucerne.jpg"
           <+> spawn "xcape -e 'Control_L=Escape'"
       }
+      `additionalKeys` myCommands
 
-        `additionalKeys`
+-- ============== Bar ==============
 
-          [ ( ( myModMask, xK_space )
-            , spawn "fish -c \"rofi -show combi -modi combi\""
-            )
-          , ( ( myModMask .|. controlMask, xK_f)
-            , broadcastMessage ToggleStruts
-              <+> spawn "dbus-send \
-                        \--session \
-                        \--dest=org.Xmobar.Control \
-                        \--type=method_call \
-                        \--print-reply \
-                        \'/org/Xmobar/Control' \
-                        \org.Xmobar.Control.SendSignal \
-                        \\"string:Toggle 0\""
-              <+> refresh
-            )
-          , ( ( myModMask .|. shiftMask, xK_x )
-            , spawn "xlock -mode rain"
-            )
-          , ( ( myModMask .|. shiftMask, xK_s )
-            , spawn "loginctl suspend"
-            )
-          , ( ( myModMask, xK_Tab )
-            , gotoMenuConfig $ def
-              { menuCommand = "rofi"
-              , menuArgs = [ "-dmenu", "-i" ]
-              }
-            )
-          , ( ( myModMask,  xK_o )
-            -- TODO: Fix TERM for tmux (should be: TERM=xterm-24bits tmux attach-session -t ...)
-            , do
-                selection <- runProcessWithInput "bash" ["-c", "tmux list-sessions | rofi -dmenu -i | cut -d : -f 1"] ""
-                runInTerm "" ("env TERM=xterm-24bits tmux attach-session -t " <> selection)
-            )
-          , ( ( 0, xF86XK_AudioLowerVolume )
-            , spawn "amixer -q set Master 2%-"
-            )
-          , ( ( 0, xF86XK_AudioRaiseVolume )
-            , spawn "amixer -q set Master 2%+"
-            )
-          , ( ( 0, xF86XK_AudioMute )
-            , spawn "amixer -q set Master toggle"
-            )
-          -- TODO: Figure out how to work around superuser
-          , ( ( 0, xF86XK_MonBrightnessUp )
-            , spawn "sudo light -A 5"
-            )
-          , ( ( 0, xF86XK_MonBrightnessDown )
-            , spawn "sudo light -U 5"
-            )
-          , ( ( myModMask, xK_n )
-            , moveTo Next NonEmptyWS
-            )
-          , ( ( myModMask, xK_p )
-            , moveTo Prev NonEmptyWS
-            )
-          , ( ( myModMask .|. shiftMask, xK_n )
-              , shiftTo Next EmptyWS
-            )
-          , ( ( myModMask .|. shiftMask, xK_p )
-              , shiftTo Prev EmptyWS
-            )
-          -- TODO: Fix
-          -- , ( ( myModMask .|. shiftMask, xK_4 )
-          --   , spawn "scrot --select '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/screenshots/'"
-          --   )
-          , ( ( myModMask, xK_4 )
-            , spawn "scrot '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/screenshots/'"
-            )
-          ]
+myXmobar :: Handle -> X ()
+myXmobar xmobarPipe = do
+  Titles {..} <- withWindowSet allTitles
+
+  dynamicLogWithPP $ xmobarPP
+    { ppOutput = hPutStrLn xmobarPipe
+    , ppCurrent =
+        \wsId ->
+          xmobarColor' base03 base01
+          $ " " ++ wsId ++ " " ++ maybe "      " titleFormat current ++ " "
+    , ppHidden =
+        \wsId ->
+          xmobarColor' base01 base03
+          -- FIXME
+          -- $ xmobarAction ("xdotool key super+" ++ wsId) "1"
+          $ " " ++ wsId ++ " " ++ titleFor hidden wsId ++ " "
+    , ppVisible =
+      \wsId ->
+        xmobarColor' base01 base03
+        $ " " ++ wsId ++ " " ++ titleFor visible wsId ++ " "
+    , ppUrgent =
+        \wsId ->
+          let
+            t =
+              if null $ titleFor visible wsId
+              then titleFor visible wsId
+              else titleFor hidden wsId
+          in
+            xmobarColor' base03 base0 t
+            -- FIXME
+            -- $ xmobarAction ("xdotool key super+" ++ wsId) "1" t
+    , ppSep = ""
+    , ppWsSep = ""
+    , ppTitle = const ""
+    , ppOrder = \(ws:_:t:e) -> e ++ [ ws, t ]
+    }
+
+
+-- ============== Keybindings ==============
+
+myModMask :: KeyMask
+myModMask = mod4Mask
+
+myCommands :: [((KeyMask, KeySym), X ())]
+myCommands =
+  [ ( ( myModMask, xK_space )
+    , spawn "fish -c \"rofi -show combi -modi combi\""
+    )
+  , ( ( myModMask .|. controlMask, xK_f)
+    , broadcastMessage ToggleStruts
+      <+> spawn "dbus-send \
+                \--session \
+                \--dest=org.Xmobar.Control \
+                \--type=method_call \
+                \--print-reply \
+                \'/org/Xmobar/Control' \
+                \org.Xmobar.Control.SendSignal \
+                \\"string:Toggle 0\""
+      <+> refresh
+    )
+  , ( ( myModMask .|. shiftMask, xK_x )
+    , spawn "xlock -mode rain"
+    )
+  , ( ( myModMask .|. shiftMask, xK_s )
+    , spawn "loginctl suspend"
+    )
+  , ( ( myModMask, xK_Tab )
+    , gotoMenuConfig $ def
+      { menuCommand = "rofi"
+      , menuArgs = [ "-dmenu", "-i" ]
+      }
+    )
+  , ( ( myModMask,  xK_o )
+    , do
+        selection <- runProcessWithInput "bash" ["-c", "tmux list-sessions | rofi -dmenu -i | cut -d : -f 1"] ""
+        runInTerm "" ("env TERM=xterm-24bits tmux attach-session -t " <> selection)
+    )
+  , ( ( 0, xF86XK_AudioLowerVolume )
+    , spawn "amixer -q set Master 2%-"
+    )
+  , ( ( 0, xF86XK_AudioRaiseVolume )
+    , spawn "amixer -q set Master 2%+"
+    )
+  , ( ( 0, xF86XK_AudioMute )
+    , spawn "amixer -q set Master toggle"
+    )
+  -- TODO: Figure out how to work around superuser
+  , ( ( 0, xF86XK_MonBrightnessUp )
+    , spawn "sudo light -A 5"
+    )
+  , ( ( 0, xF86XK_MonBrightnessDown )
+    , spawn "sudo light -U 5"
+    )
+  , ( ( myModMask, xK_n )
+    , moveTo Next NonEmptyWS
+    )
+  , ( ( myModMask, xK_p )
+    , moveTo Prev NonEmptyWS
+    )
+  , ( ( myModMask .|. shiftMask, xK_n )
+      , shiftTo Next EmptyWS
+    )
+  , ( ( myModMask .|. shiftMask, xK_p )
+      , shiftTo Prev EmptyWS
+    )
+  -- TODO: Fix
+  -- , ( ( myModMask .|. shiftMask, xK_4 )
+  --   , spawn "scrot --select '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/screenshots/'"
+  --   )
+  , ( ( myModMask, xK_4 )
+    , spawn "scrot '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/screenshots/'"
+    )
+  ]
 
 
 -- ============== Titles ==============
