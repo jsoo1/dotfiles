@@ -35,11 +35,6 @@ import           XMonad.Util.Run                  (runInTerm,
                                                    spawnPipe)
 
 
-infixl 1 |>
-(|>) :: a -> (a -> b) -> b
-(|>) = flip ($)
-
-
 main :: IO ()
 main = do
   replace
@@ -210,19 +205,21 @@ data WorkspaceTitles =
     , visible :: Map.Map WorkspaceId (ScreenId, Maybe NamedWindow)
     }
 
+emptyTitle :: String
+emptyTitle = "         "
 
 titleFor :: (Show a, Show b, Ord k) => Map.Map k (b, Maybe a) -> k -> String
 titleFor windowNames wsId =
-  maybe "         " titleFormat $  Map.lookup wsId windowNames
+  maybe emptyTitle titleFormat $  Map.lookup wsId windowNames
 
 
 titleFormat :: (Show a, Show b) => (a, Maybe b) -> String
-titleFormat (_, windowName) = take 20 $ maybe "         " show windowName
+titleFormat (_, windowName) = take 20 $ maybe emptyTitle show windowName
 
 
 hiddenTitle :: (Show a, Ord k) => Map.Map k (Maybe a) -> k -> String
 hiddenTitle windowNames wsId =
-    maybe "         " show $ join $ Map.lookup wsId windowNames
+    take 20 $ maybe emptyTitle show $ join $ Map.lookup wsId windowNames
 
 
 allTitles :: WindowSet -> X WorkspaceTitles
