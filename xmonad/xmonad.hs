@@ -1,12 +1,16 @@
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TupleSections   #-}
 
 
 module Main where
 
 
+import           Control.Applicative              (liftA2)
 import           Control.Monad                    (join)
 import           Data.Coerce                      (coerce)
+import           Data.Foldable                    (traverse_)
 import           Data.Function                    (on)
+import           Data.List                        (intercalate)
 import qualified Data.Map.Strict                  as Map
 import           Data.Maybe                       (listToMaybe)
 
@@ -15,10 +19,11 @@ import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
 import           XMonad
 import           XMonad.Actions.CycleWS           (WSType (..), moveTo, shiftTo)
+import           XMonad.Actions.PhysicalScreens   (getScreen)
 import           XMonad.Actions.WindowBringer
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
-import qualified XMonad.Layout.IndependentScreens as IndependentScreens
+import           XMonad.Layout.IndependentScreens (countScreens)
 import           XMonad.Layout.NoBorders          (smartBorders)
 import           XMonad.Layout.Spacing
 import qualified XMonad.StackSet                  as W
@@ -37,66 +42,76 @@ infixl 1 |>
 
 main :: IO ()
 main = do
-    replace
+  replace
 
-    xmobarPipe <- spawnPipe "xmobar ~/.config/xmobar/xmobar.hs"
+  nScreens <- countScreens
+  xmobarPipes <- traverse (spawnPipe . xmobarCmd) [0 ..nScreens]
 
-    xmonad $ docks def
-      { terminal = "alacritty"
-      , focusFollowsMouse = False
-      , borderWidth = 2
-      , modMask = myModMask
-      , normalBorderColor = coerce base03
-      , focusedBorderColor = coerce base03
-      , handleEventHook = handleEventHook def <+> docksEventHook
-      , manageHook = manageDocks <+> manageHook def
-      , layoutHook =
-          avoidStruts
-          $ spacingRaw True (Border 5 5 5 5) True (Border 5 5 5 5) True
-          $ smartBorders
-          $ layoutHook def
-
-      , logHook = myXmobar xmobarPipe
-      , startupHook =
-          spawn
-            "xrandr\
-            \ --output HDMI-1-1 --primary --left-of eDP-1-1\
-            \ --output eDP-1-1"
-          <+> spawn "compton --config ~/.config/compton/compton.conf"
-          <+> spawn "feh --bg-fill ~/Downloads/richter-lucerne.jpg"
-          <+> spawn "xcape -e 'Control_L=Escape'"
-      }
-      `additionalKeys` myCommands
+  xmonad $ docks def
+    { terminal = "alacritty"
+    , focusFollowsMouse = False
+    , borderWidth = 2
+    , modMask = myModMask
+    , normalBorderColor = coerce base03
+    , focusedBorderColor = coerce base03
+    , handleEventHook = handleEventHook def <+> docksEventHook
+    , manageHook = manageDocks <+> manageHook def
+    , layoutHook =
+        avoidStruts
+        $ spacingRaw True (Border 5 5 5 5) True (Border 5 5 5 5) True
+        $ smartBorders
+        $ layoutHook def
+    , logHook = traverse_ myXmobar xmobarPipes
+    , startupHook =
+        spawn
+          "xrandr\
+          \ --output HDMI-1 --left-of eDP-1-1\
+          \ --output eDP-1-1"
+        <+> spawn "compton --config ~/.config/compton/compton.conf"
+        <+> spawn "feh --bg-fill ~/Downloads/richter-lucerne.jpg"
+    }
+    `additionalKeys` myCommands
 
 -- ============== Bar ==============
+
+xmobarCmd :: Int -> String
+xmobarCmd screen =
+  "xmobar ~/.config/xmobar/xmobar.hs --screen=" <> show screen
 
 myXmobar :: Handle -> X ()
 myXmobar xmobarPipe = do
   Titles {..} <- withWindowSet allTitles
+
+  let unScreenId :: ScreenId -> Int
+      unScreenId (S i) = i
+  let wsPrefix :: Maybe ScreenId -> WorkspaceId -> String
+      wsPrefix screen wsId =
+        " " ++ maybe " " (show . succ . unScreenId) screen ++ " | " ++ wsId ++ " "
 
   dynamicLogWithPP $ xmobarPP
     { ppOutput = hPutStrLn xmobarPipe
     , ppCurrent =
         \wsId ->
           xmobarColor' base03 base01
-          $ " " ++ wsId ++ " " ++ maybe "      " titleFormat current ++ " "
+          $ wsPrefix (pure (fst current)) wsId ++ titleFormat current ++ " "
     , ppHidden =
         \wsId ->
           xmobarColor' base01 base03
           -- FIXME
           -- $ xmobarAction ("xdotool key super+" ++ wsId) "1"
-          $ " " ++ wsId ++ " " ++ titleFor hidden wsId ++ " "
+          $ wsPrefix Nothing wsId ++ " " ++ hiddenTitle hidden wsId ++ " "
     , ppVisible =
       \wsId ->
         xmobarColor' base01 base03
-        $ " " ++ wsId ++ " " ++ titleFor visible wsId ++ " "
+        $ wsPrefix (fst <$> Map.lookup wsId visible) wsId
+          ++ titleFor visible wsId ++ " "
     , ppUrgent =
         \wsId ->
           let
             t =
               if null $ titleFor visible wsId
               then titleFor visible wsId
-              else titleFor hidden wsId
+              else hiddenTitle hidden wsId
           in
             xmobarColor' base03 base0 t
             -- FIXME
@@ -191,46 +206,49 @@ myCommands =
 data WorkspaceTitles =
   Titles
     { hidden  :: Map.Map WorkspaceId (Maybe NamedWindow)
-    , current :: Maybe NamedWindow
-    , visible :: Map.Map WorkspaceId (Maybe NamedWindow)
+    , current :: (ScreenId, Maybe NamedWindow)
+    , visible :: Map.Map WorkspaceId (ScreenId, Maybe NamedWindow)
     }
 
 
-titleFor :: (Show a, Ord k) => Map.Map k (Maybe a) -> k -> String
+titleFor :: (Show a, Show b, Ord k) => Map.Map k (b, Maybe a) -> k -> String
 titleFor windowNames wsId =
-  maybe "" titleFormat $ join $ Map.lookup wsId windowNames
+  maybe "         " titleFormat $  Map.lookup wsId windowNames
 
 
-titleFormat :: Show a => a -> String
-titleFormat =
-  take 8 . (" " ++) . show
+titleFormat :: (Show a, Show b) => (a, Maybe b) -> String
+titleFormat (_, windowName) = take 20 $ maybe "         " show windowName
+
+
+hiddenTitle :: (Show a, Ord k) => Map.Map k (Maybe a) -> k -> String
+hiddenTitle windowNames wsId =
+    maybe "         " show $ join $ Map.lookup wsId windowNames
 
 
 allTitles :: WindowSet -> X WorkspaceTitles
-allTitles windowSet = do
-  current <- currentMasterWindow windowSet
-  visible <- masterWindowsFor (fmap W.workspace . W.visible) windowSet
-  hidden <- masterWindowsFor W.hidden windowSet
+allTitles W.StackSet {..} = do
+  currMaster <- masterWindow (W.workspace current)
+  visible' <-
+    Map.fromList
+    <$> traverse
+        (\s -> (wsId s,) . ( W.screen s,) <$> masterWindow (W.workspace s))
+        visible
+  hidden' <-
+    Map.fromList
+    <$> traverse (\w -> (W.tag w,) <$> masterWindow w) hidden
 
-  pure Titles {..}
+  pure Titles
+    { current = (W.screen current, currMaster)
+    , visible = visible'
+    , hidden = hidden'
+    }
 
+wsId :: Ord i => W.Screen i l Window sId sd -> i
+wsId = W.tag . W.workspace
 
 masterWindow :: W.Workspace i l Window -> X (Maybe NamedWindow)
 masterWindow =
   traverse getName . listToMaybe . W.integrate' . W.stack
-
-
-masterWindowsFor ::
-  Ord i
-  => (a -> [W.Workspace i l Window])
-  -> a
-  -> X (Map.Map i (Maybe NamedWindow))
-masterWindowsFor =
-  (.) (traverse masterWindow . Map.fromList . fmap (\x -> (W.tag x, x)))
-
-
-currentMasterWindow :: WindowSet -> X (Maybe NamedWindow)
-currentMasterWindow = masterWindow . W.workspace . W.current
 
 
 --  ============= COLORS ============
