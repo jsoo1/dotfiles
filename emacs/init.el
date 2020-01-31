@@ -623,7 +623,8 @@
   (add-to-list 'yas-snippet-dirs "~/projects/guix/etc/snippets"))
 (require 'scheme)
 (defvar guile-imenu-generic-expression
-  (cons '("Public" "^(define-public\\s-+(?\\(\\sw+\\)" 1)
+  (append '(("Public" "^(define-public\\s-+(?\\(\\sw+\\)" 1)
+            ("Functions*" "^(define\\*\\s-+(?\\(\\sw+\\)" 1))
         scheme-imenu-generic-expression)
   "Imenu generic expression for Guile modes.  See `imenu-generic-expression'.")
 (add-hook
