@@ -15,8 +15,6 @@ Config
   , persistent = False
   , hideOnStart = False
   , iconRoot = "."
-  , allDesktops = True
-  , overrideRedirect = True
   , commands =
     [ Run Weather
         "KSNA"
@@ -77,7 +75,7 @@ Config
   , sepChar = "%"
   , alignSep = "}{"
   , template =
-    "<fc=#002b36,#859900> λ </fc>%StdinReader%\
+    "<fc=#002b36,#859900> λ</fc>%StdinReader%\
       \}{\
       \<action=`amixer -q set Master toggle`><fc=#002b36,#586e75> %default:Master% </fc></action>\
       \<fc=#586e75,#002b36> %wlp9s0wi% </fc>\

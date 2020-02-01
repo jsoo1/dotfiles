@@ -41,7 +41,7 @@ main = do
 
   -- TODO: Fix too many bars without external display
   nScreens <- countScreens
-  xmobarPipes <- traverse (spawnPipe . xmobarCmd) [0 ..nScreens]
+  xmobarPipes <- traverse (xmobarCmd nScreens) [1 ..nScreens]
 
   xmonad $ docks def
     { terminal = "alacritty"
@@ -147,31 +147,36 @@ myCommands =
 
 -- ============== Bar ==============
 
-xmobarCmd :: Int -> String
-xmobarCmd screen =
-  "xmobar ~/.config/xmobar/xmobar.hs --screen=" <> show screen
+xmobarCmd :: MonadIO m => Int -> Int -> m (Int, Handle)
+xmobarCmd nScreens screen = do
+  xmobarPipe <- spawnPipe cmd
+  pure ( screen, xmobarPipe )
+  where
+    cmd = "xmobar ~/.config/xmobar/xmobar.hs --screen=" <> show (succ nScreens - screen)
 
-myXmobar :: Handle -> X ()
-myXmobar xmobarPipe = do
+
+myXmobar :: (Int, Handle) -> X ()
+myXmobar (screenId, xmobarPipe) = do
   Titles {..} <- withWindowSet allTitles
 
   let unScreenId :: ScreenId -> Int
       unScreenId (S i) = i
   let wsPrefix :: Maybe ScreenId -> WorkspaceId -> String
       wsPrefix screen wsId =
-        " " ++ maybe " " (show . succ . unScreenId) screen ++ " | " ++ wsId ++ " "
+        " " ++ maybe " " (show . succ . unScreenId) screen ++ "|" ++ wsId ++ " "
 
   dynamicLogWithPP $ xmobarPP
-    { ppOutput = hPutStrLn xmobarPipe
+    { ppOutput =
+        hPutStrLn xmobarPipe
+        . (xmobarColor' base03 green (show screenId ++ ". ") ++)
     , ppCurrent =
         \wsId ->
           xmobarColor' base03 base01
           $ wsPrefix (pure (fst current)) wsId ++ titleFormat current ++ " "
     , ppHidden =
         \wsId ->
+          -- xmobarAction ("xdotool key super+" ++ wsId) "1" $
           xmobarColor' base01 base03
-          -- FIXME
-          -- $ xmobarAction ("xdotool key super+" ++ wsId) "1"
           $ wsPrefix Nothing wsId ++ " " ++ hiddenTitle hidden wsId ++ " "
     , ppVisible =
       \wsId ->
@@ -186,9 +191,8 @@ myXmobar xmobarPipe = do
               then titleFor visible wsId
               else hiddenTitle hidden wsId
           in
+            -- xmobarAction ("xdotool key super+" ++ wsId) "1" $
             xmobarColor' base03 base0 t
-            -- FIXME
-            -- $ xmobarAction ("xdotool key super+" ++ wsId) "1" t
     , ppSep = ""
     , ppWsSep = ""
     , ppTitle = const ""
@@ -241,8 +245,10 @@ allTitles W.StackSet {..} = do
     , hidden = hidden'
     }
 
+
 wsId :: Ord i => W.Screen i l Window sId sd -> i
 wsId = W.tag . W.workspace
+
 
 masterWindow :: W.Workspace i l Window -> X (Maybe NamedWindow)
 masterWindow =
@@ -270,3 +276,6 @@ base01 = SpaceColor "#586e75"
 
 base03 :: SpaceColor
 base03 = SpaceColor "#002b36"
+
+green :: SpaceColor
+green = SpaceColor "#859900"
