@@ -173,8 +173,8 @@ myXmobar (screenId, xmobarPipe) = do
           $ wsPrefix wsId ++ titleFormat current
     , ppHidden =
         \wsId ->
-          -- xmobarAction ("xdotool key super+" ++ wsId) "1" $
-          xmobarColor' base01 base03
+          xmobarAction ("xdotool key super+" ++ wsId) "1"
+          $ xmobarColor' base01 base03
           $ wsPrefix wsId ++ hiddenTitle hidden wsId
     , ppVisible =
       \wsId ->
@@ -188,8 +188,8 @@ myXmobar (screenId, xmobarPipe) = do
               then titleFor visible wsId
               else hiddenTitle hidden wsId
           in
-            -- xmobarAction ("xdotool key super+" ++ wsId) "1" $
-            xmobarColor' base03 base0 t
+            xmobarAction ("xdotool key super+" ++ wsId) "1"
+            $ xmobarColor' base03 base0 t
     , ppSep = ""
     , ppWsSep = ""
     , ppTitle = const ""

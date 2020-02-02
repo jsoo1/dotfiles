@@ -70,12 +70,12 @@ Config
       ]
       200
     , Run Date "%Y-%m-%d | %l:%M %p " "date" 600
-    , Run StdinReader
+    , Run UnsafeStdinReader
     ]
   , sepChar = "%"
   , alignSep = "}{"
   , template =
-    "<fc=#002b36,#859900> λ</fc>%StdinReader%\
+    "<fc=#002b36,#859900> λ</fc>%UnsafeStdinReader%\
       \}{\
       \<action=`amixer -q set Master toggle`><fc=#002b36,#586e75> %default:Master% </fc></action>\
       \<fc=#586e75,#002b36> %wlp9s0wi% </fc>\
