@@ -934,6 +934,7 @@
 (define-prefix-keymap my-process-map
   "my process keybindings"
   "d" docker
+  "e" gnus
   "g" guix
   "l" list-processes
   "o" org-agenda
