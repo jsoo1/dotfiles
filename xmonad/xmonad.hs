@@ -159,11 +159,9 @@ myXmobar :: (Int, Handle) -> X ()
 myXmobar (screenId, xmobarPipe) = do
   Titles {..} <- withWindowSet allTitles
 
-  let unScreenId :: ScreenId -> Int
-      unScreenId (S i) = i
-  let wsPrefix :: Maybe ScreenId -> WorkspaceId -> String
-      wsPrefix screen wsId =
-        " " ++ maybe " " (show . succ . unScreenId) screen ++ "|" ++ wsId ++ " "
+  let wsPrefix :: WorkspaceId -> String
+      wsPrefix wsId =
+        " " ++ show screenId ++ "," ++ wsId ++ " | "
 
   dynamicLogWithPP $ xmobarPP
     { ppOutput =
@@ -172,17 +170,16 @@ myXmobar (screenId, xmobarPipe) = do
     , ppCurrent =
         \wsId ->
           xmobarColor' base03 base01
-          $ wsPrefix (pure (fst current)) wsId ++ titleFormat current ++ " "
+          $ wsPrefix wsId ++ titleFormat current
     , ppHidden =
         \wsId ->
           -- xmobarAction ("xdotool key super+" ++ wsId) "1" $
           xmobarColor' base01 base03
-          $ wsPrefix Nothing wsId ++ " " ++ hiddenTitle hidden wsId ++ " "
+          $ wsPrefix wsId ++ hiddenTitle hidden wsId
     , ppVisible =
       \wsId ->
         xmobarColor' base01 base03
-        $ wsPrefix (fst <$> Map.lookup wsId visible) wsId
-          ++ titleFor visible wsId ++ " "
+        $ wsPrefix wsId ++ titleFor visible wsId
     , ppUrgent =
         \wsId ->
           let
@@ -219,12 +216,12 @@ titleFor windowNames wsId =
 
 
 titleFormat :: (Show a, Show b) => (a, Maybe b) -> String
-titleFormat (_, windowName) = take 20 $ maybe emptyTitle show windowName
+titleFormat (_, windowName) = (++ " ") $ take 20 $ maybe emptyTitle show windowName
 
 
 hiddenTitle :: (Show a, Ord k) => Map.Map k (Maybe a) -> k -> String
 hiddenTitle windowNames wsId =
-    take 20 $ maybe emptyTitle show $ join $ Map.lookup wsId windowNames
+    (++ " ") $ take 20 $ maybe emptyTitle show $ join $ Map.lookup wsId windowNames
 
 
 allTitles :: WindowSet -> X WorkspaceTitles
