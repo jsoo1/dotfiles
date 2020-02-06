@@ -259,12 +259,15 @@
       (hack-dir-local-variables-non-file-buffer))))
 
 ;; Org
+(require 'org-tempo)
 (my-package-install 'evil-org)
 (require 'evil-org)
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
                                (haskell . t)
                                (emacs-lisp . t)
+                               (scheme . t)
+                               (shell . t)
                                (sql . t)))
 (setq org-todo-keywords
       '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELLED"))
@@ -631,6 +634,8 @@
  'scheme-mode-hook
  (lambda ()
    (setq-local imenu-generic-expression guile-imenu-generic-expression)))
+(with-eval-after-load 'geiser-guile
+       (add-to-list 'geiser-guile-load-path "~/projects/guix"))
 
 ;; Common Lisp
 (my-package-install 'slime)
