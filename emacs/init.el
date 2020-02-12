@@ -39,6 +39,7 @@
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
       initial-scratch-message ""
+      focus-follows-mouse t
       vc-follow-symlinks 't)
 (setq-default truncate-lines 't)
 (add-to-listq
@@ -83,7 +84,7 @@
 (require 'package)
 (add-to-list 'load-path "~/.emacs.d/private/evil-tmux-navigator")
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(package-refresh-contents t)
+;; (package-refresh-contents t)
 (package-initialize)
 
 ;; Path
@@ -167,7 +168,10 @@
     (elm-format-command . "elm-format")
     (elm-format-elm-version . "0.18")
     (elm-format-elm-version . "0.19")
-    (flycheck-elm-executable . "npx elm"))
+    (flycheck-elm-executable . "npx elm")
+    (haskell-process-wrapper-function
+     . (lambda (argv)
+         (append (list "env" "NO_COLOR=true") argv))))
   safe-local-variable-values))
 
 ;; Imenu List
@@ -176,7 +180,7 @@
 (setq imenu-list-size 0.2)
 
 ;; Winner
-(winner-mode t)
+;; (winner-mode t)
 
 ;; Fill column indicator
 (my-package-install 'fill-column-indicator)
@@ -218,6 +222,9 @@
 (evil-set-initial-state 'Info-mode 'normal)
 (evil-set-initial-state 'comint-mode 'normal)
 (evil-set-initial-state 'org-agenda-mode 'normal)
+
+(evil-declare-not-repeat #'flycheck-next-error)
+(evil-declare-not-repeat #'flycheck-previous-error)
 
 ;; Magit
 (my-package-install 'magit)
@@ -558,7 +565,7 @@
 (my-package-install 'haskell-snippets)
 (my-package-install 'intero)
 ;; (add-to-list 'load-path "~/.emacs.d/private/flycheck-haskell")
-;; (add-hook 'haskell-mode-hook #'flycheck-haskell-setup)
+(add-hook 'haskell-mode-hook #'flycheck-haskell-setup)
 (require 'haskell-process)
 (require 'haskell-snippets)
 (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
@@ -1002,6 +1009,7 @@
   "s" describe-symbol
   "t" describe-theme
   "w" woman
+  "W" man
   "v" describe-variable)
 
 (define-prefix-keymap my-error-map
