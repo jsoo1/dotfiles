@@ -565,6 +565,8 @@
 
 (add-hook 'haskell-mode-hook
           (lambda ()
+            (setq-local paragraph-separate "[ \t\f]*$"
+                        paragraph-start "\f\\|[ \t]*$")
             (interactive-haskell-mode)
             (yas-minor-mode-on)
             (flycheck-mode)
