@@ -95,28 +95,7 @@ EndSection\n")
   (bootloader-configuration
    (bootloader grub-efi-bootloader)
    (target "/boot/efi")
-   (keyboard-layout ctrl-nocaps)
-   (menu-entries
-    `(,(menu-entry
-        (label "ubuntu")
-        (linux "/boot/vmlinuz-4.15.0-43-generic")
-        (linux-arguments
-         '("root=UUID=45658f04-8790-437f-9590-13025ffb7264"
-           "ro"
-           "quiet"
-           "splash"
-           "vt.handoff=1"))
-        (initrd "/boot/initrd.img-4.15.0-43-generic"))
-      ,(menu-entry
-        (label "void")
-        (linux "(hd1,2)/boot/vmlinuz-4.19.33_1")
-        (linux-arguments
-         '("root=UUID=42533fd0-59d6-448c-9a7d-cf10d13647ff"
-           "ro"
-           "loglevel=4"
-           "slub_debug=P"
-           "page_poison=1"))
-        (initrd "(hd1,2)/boot/initramfs-4.19.33_1.img"))))))
+   (keyboard-layout ctrl-nocaps)))
  (file-systems
   (cons* (file-system
           (device
