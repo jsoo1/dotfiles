@@ -116,12 +116,11 @@ myCommands =
   , ( ( 0, xF86XK_AudioMute )
     , spawn "amixer -q set Master toggle"
     )
-  -- TODO: Figure out how to work around superuser
   , ( ( 0, xF86XK_MonBrightnessUp )
-    , spawn "sudo light -A 5"
+    , spawn "light -A 2.5"
     )
   , ( ( 0, xF86XK_MonBrightnessDown )
-    , spawn "sudo light -U 5"
+    , spawn "light -U 2.5"
     )
   , ( ( myModMask, xK_n )
     , moveTo Next NonEmptyWS

@@ -145,8 +145,9 @@ EndSection\n")
    bluez
    %base-packages))
  (setuid-programs
-  (cons
-   #~(string-append #$docker-cli "/bin/docker")
+  (append
+   `(,#~(string-append #$docker-cli "/bin/docker")
+     ,#~(string-append #$light "/bin/light"))
    %setuid-programs))
  (services
   (cons*
