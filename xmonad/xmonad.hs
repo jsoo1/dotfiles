@@ -135,13 +135,6 @@ myCommands =
   , ( ( myModMask .|. shiftMask, xK_p )
       , shiftTo Prev EmptyWS
     )
-  -- TODO: Fix
-  -- , ( ( myModMask .|. shiftMask, xK_4 )
-  --   , spawn "scrot --select '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/screenshots/'"
-  --   )
-  -- , ( ( myModMask, xK_4 )
-  --   , spawn "scrot '%Y-%m-%d_$wx$h.png' -e 'mv $f ~/screenshots/'"
-  --   )
   ]
 
 
