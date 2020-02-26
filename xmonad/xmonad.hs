@@ -76,7 +76,7 @@ myModMask = mod4Mask
 myCommands :: [((KeyMask, KeySym), X ())]
 myCommands =
   [ ( ( myModMask, xK_space )
-    , spawn "fish -c \"rofi -show combi -modi combi\""
+    , spawn "fish -c \"dmenu_run\""
     )
   , ( ( myModMask .|. controlMask, xK_f)
     , broadcastMessage ToggleStruts
@@ -98,14 +98,14 @@ myCommands =
     )
   , ( ( myModMask, xK_Tab )
     , gotoMenuConfig $ def
-      { menuCommand = "rofi"
-      , menuArgs = [ "-dmenu", "-i" ]
+      { menuCommand = "dmenu"
+      , menuArgs = []
       }
     )
   , ( ( myModMask,  xK_o )
     , do
-        selection <- runProcessWithInput "bash" ["-c", "tmux list-sessions | rofi -dmenu -i | cut -d : -f 1"] ""
-        runInTerm "" ("env TERM=xterm-24bits tmux attach-session -t " <> selection)
+        selection <- runProcessWithInput "bash" ["-c", "tmux list-sessions | dmenu | cut -d : -f 1"] ""
+        runInTerm "" (if null selection then "" else "env TERM=xterm-24bits tmux attach-session -t " <> selection)
     )
   , ( ( 0, xF86XK_AudioLowerVolume )
     , spawn "amixer -q set Master 2%-"

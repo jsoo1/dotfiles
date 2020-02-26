@@ -22,7 +22,7 @@
              ((gnu packages version-control) #:select (git))
              ((gnu packages vim) #:select (vim))
              ((gnu packages web-browsers) #:select (lynx))
-             ((gnu packages xdisorg) #:select (rofi xcape))
+             ((gnu packages xdisorg) #:select (xcape))
              ((gnu packages wm) #:select (xmonad ghc-xmonad-contrib xmobar))
              ((gnu services base)
               #:select (gpm-service-type
@@ -60,6 +60,7 @@
                         gdm-configuration
                         xorg-configuration))
              (guix gexp)
+             ((dmenu) #:select (my-dmenu))
              ((yaft) #:select (yaft)))
 
 (define cst-trackball
@@ -130,7 +131,7 @@ EndSection\n")
    ;; kmscon fonts
    fontconfig font-fantasque-sans font-iosevka
    ;; window manager related
-   xmonad ghc-xmonad-contrib xmobar rofi
+   xmonad ghc-xmonad-contrib xmobar my-dmenu
    ;; backlight config
    light
    ;;for HTTPS access
