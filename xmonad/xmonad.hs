@@ -6,7 +6,7 @@ module Main where
 
 
 import           Control.Applicative              (liftA2)
-import           Control.Monad                    (join)
+import           Control.Monad                    (join, unless)
 import           Data.Coerce                      (coerce)
 import           Data.Foldable                    (traverse_)
 import           Data.Function                    (on)
@@ -105,7 +105,8 @@ myCommands =
   , ( ( myModMask,  xK_o )
     , do
         selection <- runProcessWithInput "bash" ["-c", "tmux list-sessions | dmenu | cut -d : -f 1"] ""
-        runInTerm "" (if null selection then "" else "env TERM=xterm-24bits tmux attach-session -t " <> selection)
+        unless (null selection) $
+          runInTerm "" $ "env TERM=xterm-24bits tmux attach-session -t " <> selection
     )
   , ( ( 0, xF86XK_AudioLowerVolume )
     , spawn "amixer -q set Master 2%-"
@@ -117,10 +118,10 @@ myCommands =
     , spawn "amixer -q set Master toggle"
     )
   , ( ( 0, xF86XK_MonBrightnessUp )
-    , spawn "light -A 2.5"
+    , spawn "light -A 2.0"
     )
   , ( ( 0, xF86XK_MonBrightnessDown )
-    , spawn "light -U 2.5"
+    , spawn "light -U 2.0"
     )
   , ( ( myModMask, xK_n )
     , moveTo Next NonEmptyWS
