@@ -99,14 +99,18 @@ myCommands =
   , ( ( myModMask, xK_Tab )
     , gotoMenuConfig $ def
       { menuCommand = "dmenu"
-      , menuArgs = []
+      , menuArgs = [ "-f", "-p", "workspace" ]
       }
     )
   , ( ( myModMask,  xK_o )
     , do
-        selection <- runProcessWithInput "bash" ["-c", "tmux list-sessions | dmenu | cut -d : -f 1"] ""
-        unless (null selection) $
-          runInTerm "" $ "env TERM=xterm-24bits tmux attach-session -t " <> selection
+        session <- dmenuTmuxSessions
+        unless (null session) $ tmuxAttachSession session
+    )
+  , ( ( myModMask .|. shiftMask,  xK_o )
+    , do
+        dir <- dmenuGitDirs
+        unless (null dir) $ tmuxNewSession dir
     )
   , ( ( 0, xF86XK_AudioLowerVolume )
     , spawn "amixer -q set Master 2%-"
@@ -136,6 +140,58 @@ myCommands =
       , shiftTo Prev EmptyWS
     )
   ]
+
+-- ============== Dmenu/Tmux =============
+
+
+envTmux :: String -> X ()
+envTmux args =
+  runInTerm "" $ "env TERM=xterm-24bits tmux " <> args
+
+
+dmenuGitDirs :: X String
+dmenuGitDirs =
+  runProcessWithInput "bash"
+  [ "-c"
+  , "fd '\\.git' '/' -t d -H \
+    \-E '\\.github' \
+    \-E '\\.cache' \
+    \-E '\\.tmux' \
+    \-E '\\.cargo' \
+    \-E /gnu/store \
+    \-E '\\.git-credential-cache' \
+    \| sed -E 's/\\/\\.git$//' | \
+    \dmenu -f -p 'repository'"
+  ]
+  ""
+
+
+tmuxNewSession :: String -> X ()
+tmuxNewSession fullPath = do
+  sessionName <-
+    runProcessWithInput "bash"
+    [ "-c"
+    ,  "basename " <> fullPath
+    ]
+    ""
+  let sessionName' = (\c -> if c == '.' then '-' else c) <$> sessionName
+  let fullPath' = filter (/= '\n') fullPath
+  let sessionDetails = " -c " <> fullPath' <> " -n emacs" <> " -s " <> sessionName'
+  envTmux $ "new-session -A" <> sessionDetails 
+
+
+dmenuTmuxSessions :: X String
+dmenuTmuxSessions =
+  runProcessWithInput "bash"
+  [ "-c"
+  , "tmux list-sessions | dmenu -f -p session | cut -d : -f 1"
+  ]
+  ""
+
+
+tmuxAttachSession :: String -> X ()
+tmuxAttachSession session =
+  envTmux $ "attach-session -t " <> session
 
 
 -- ============== Bar ==============
