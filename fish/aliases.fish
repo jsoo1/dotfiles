@@ -24,6 +24,7 @@ abbr --add -U -- tree "exa -T"
 abbr --add -U -- psg 'ps -eF | rg -i'
 abbr --add -U -- rest "loginctl suspend"
 abbr --add -U -- bat "upower -I (upower -e | rg BAT)"
+abbr --add -U -- awk "gawk"
 
 # Emacs
 abbr --add -U -- ed "emacs --bg-daemon=term"
