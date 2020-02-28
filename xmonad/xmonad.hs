@@ -76,9 +76,7 @@ myModMask = mod4Mask
 
 myCommands :: [((KeyMask, KeySym), X ())]
 myCommands =
-  [ ( ( myModMask, xK_space )
-    , spawn "fish -c \"dmenu_run\""
-    )
+  [ ( ( myModMask, xK_space ), spawn "dmenu_run" )
   , ( ( myModMask .|. controlMask, xK_f)
     , broadcastMessage ToggleStruts
       <+> spawn "dbus-send \
@@ -91,12 +89,8 @@ myCommands =
                 \\"string:Toggle 0\""
       <+> refresh
     )
-  , ( ( myModMask .|. shiftMask, xK_x )
-    , spawn "xlock -mode rain"
-    )
-  , ( ( myModMask .|. shiftMask, xK_s )
-    , spawn "loginctl suspend"
-    )
+  , ( ( myModMask .|. shiftMask, xK_x ), spawn "xlock -mode rain" )
+  , ( ( myModMask .|. shiftMask, xK_s ), spawn "loginctl suspend" )
   , ( ( myModMask, xK_Tab )
     , gotoMenuConfig $ def
       { menuCommand = "dmenu"
@@ -112,27 +106,13 @@ myCommands =
   , ( ( 0, xF86XK_AudioRaiseVolume )
     , spawn "amixer -q set Master 2%+"
     )
-  , ( ( 0, xF86XK_AudioMute )
-    , spawn "amixer -q set Master toggle"
-    )
-  , ( ( 0, xF86XK_MonBrightnessUp )
-    , spawn "light -A 2.0"
-    )
-  , ( ( 0, xF86XK_MonBrightnessDown )
-    , spawn "light -U 2.0"
-    )
-  , ( ( myModMask, xK_n )
-    , moveTo Next NonEmptyWS
-    )
-  , ( ( myModMask, xK_p )
-    , moveTo Prev NonEmptyWS
-    )
-  , ( ( myModMask .|. shiftMask, xK_n )
-      , shiftTo Next EmptyWS
-    )
-  , ( ( myModMask .|. shiftMask, xK_p )
-      , shiftTo Prev EmptyWS
-    )
+  , ( ( 0, xF86XK_AudioMute ), spawn "amixer -q set Master toggle" )
+  , ( ( 0, xF86XK_MonBrightnessUp ), spawn "light -A 2.0" )
+  , ( ( 0, xF86XK_MonBrightnessDown ), spawn "light -U 2.0" )
+  , ( ( myModMask, xK_n ), moveTo Next NonEmptyWS )
+  , ( ( myModMask, xK_p ), moveTo Prev NonEmptyWS )
+  , ( ( myModMask .|. shiftMask, xK_n ), shiftTo Next EmptyWS )
+  , ( ( myModMask .|. shiftMask, xK_p ), shiftTo Prev EmptyWS )
   ]
 
 -- ============== Dmenu/Tmux =============
@@ -171,7 +151,7 @@ tmuxNewSession fullPath = do
   let sessionName' = (\c -> if c == '.' then '-' else c) <$> sessionName
   let fullPath' = filter (/= '\n') fullPath
   let sessionDetails = " -c " <> fullPath' <> " -n emacs" <> " -s " <> sessionName'
-  envTmux $ "new-session -A" <> sessionDetails 
+  envTmux $ "new-session -A" <> sessionDetails
 
 
 -- ============== Bar ==============
