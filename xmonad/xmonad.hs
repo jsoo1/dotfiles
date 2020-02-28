@@ -63,6 +63,7 @@ main = do
           "xrandr\
           \ --output HDMI-1 --left-of eDP-1-1\
           \ --output eDP-1-1"
+        <+> spawn "light -S 30.0"
         <+> spawn "compton --config ~/.config/compton/compton.conf"
         <+> spawn "feh --bg-fill ~/Downloads/richter-lucerne.jpg"
     }
