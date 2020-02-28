@@ -103,14 +103,7 @@ myCommands =
       }
     )
   , ( ( myModMask,  xK_o )
-    , do
-        session <- dmenuTmuxSessions
-        unless (null session) $ tmuxAttachSession session
-    )
-  , ( ( myModMask .|. shiftMask,  xK_o )
-    , do
-        dir <- dmenuGitDirs
-        unless (null dir) $ tmuxNewSession dir
+    , dmenuGitDirs >>= \dir -> unless (null dir) $ tmuxNewSession dir
     )
   , ( ( 0, xF86XK_AudioLowerVolume )
     , spawn "amixer -q set Master 2%-"
@@ -160,8 +153,8 @@ dmenuGitDirs =
     \-E '\\.cargo' \
     \-E /gnu/store \
     \-E '\\.git-credential-cache' \
-    \| sed -E 's/\\/\\.git$//' | \
-    \dmenu -f -p 'repository'"
+    \| sed -E 's/\\/\\.git$//' \
+    \| dmenu -f -p 'repository'"
   ]
   ""
 
@@ -178,20 +171,6 @@ tmuxNewSession fullPath = do
   let fullPath' = filter (/= '\n') fullPath
   let sessionDetails = " -c " <> fullPath' <> " -n emacs" <> " -s " <> sessionName'
   envTmux $ "new-session -A" <> sessionDetails 
-
-
-dmenuTmuxSessions :: X String
-dmenuTmuxSessions =
-  runProcessWithInput "bash"
-  [ "-c"
-  , "tmux list-sessions | dmenu -f -p session | cut -d : -f 1"
-  ]
-  ""
-
-
-tmuxAttachSession :: String -> X ()
-tmuxAttachSession session =
-  envTmux $ "attach-session -t " <> session
 
 
 -- ============== Bar ==============
