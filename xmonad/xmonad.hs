@@ -123,6 +123,10 @@ envTmux args =
   runInTerm "" $ "env TERM=xterm-24bits tmux " <> args
 
 
+emacsCmd :: String -> String
+emacsCmd args =
+  "env TERM=xterm-24bits emacsclient -nw --socket-name term " <> args
+
 dmenuGitDirs :: X String
 dmenuGitDirs =
   runProcessWithInput "bash"
@@ -148,10 +152,11 @@ tmuxNewSession fullPath = do
     ,  "basename " <> fullPath
     ]
     ""
-  let sessionName' = (\c -> if c == '.' then '-' else c) <$> sessionName
+  let dotToDash c = if c == '.' then '-' else c
+  let sessionName' = filter (/= '\n') $ dotToDash <$> sessionName
   let fullPath' = filter (/= '\n') fullPath
-  let sessionDetails = " -c " <> fullPath' <> " -n emacs" <> " -s " <> sessionName'
-  envTmux $ "new-session -A" <> sessionDetails
+  let sessionDetails = " -c " <> fullPath' <> " -n emacs -s " <> sessionName'
+  envTmux $ "new-session -A" <> sessionDetails <> " '" <> emacsCmd fullPath' <> "'"
 
 
 -- ============== Bar ==============

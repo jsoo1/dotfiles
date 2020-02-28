@@ -135,6 +135,7 @@
    "xev"
    "xfontsel"
    "xinput"
+   "xmessage"
    "xmonad"
    "xrandr"
    "xsetroot"
