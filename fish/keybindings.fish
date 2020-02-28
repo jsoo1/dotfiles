@@ -8,6 +8,10 @@ bind -M insert \cr __fzy_history
 bind \ct __fzy_files
 bind -M insert \ct __fzy_files
 
+# --------- Git repos ---------
+bind \co __fzy_git_repos
+bind -M insert \co __fzy_git_repos
+
 # MIT License for __fzf_parse_commandline and __fzf_get_dir
 # The MIT License (MIT)
 
@@ -114,3 +118,21 @@ function __fzy_history -d "Find in history"
     commandline -f repaint
 end
 
+function __ls_git_repos -d "List git repos"
+    fd '\.git' '/' -t d -H -I \
+    -E '\.github' \
+    -E '\.cache' \
+    -E '\.tmux' \
+    -E '\.cargo' \
+    -E /gnu/store \
+    -E '\.git-credential-cache' \
+    -E '\.spago' \
+    | sed -E 's/\/\.git$//'
+end
+
+function __fzy_git_repos -d "Find a git repo"
+    begin
+        __ls_git_repos | fzy | read -l result
+        and commandline -- "env TERM=xterm-24bits tmux new-session -A -s (basename $result | tr '.' '-') -c $result -n emacs '$EDITOR $result'"
+    end
+end
