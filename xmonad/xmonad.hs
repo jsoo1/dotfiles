@@ -138,6 +138,8 @@ dmenuGitDirs =
     \-E '\\.cargo' \
     \-E /gnu/store \
     \-E '\\.git-credential-cache' \
+    \-E '\\.spago' \
+    \-I \
     \| sed -E 's/\\/\\.git$//' \
     \| dmenu -f -p 'repository'"
   ]
