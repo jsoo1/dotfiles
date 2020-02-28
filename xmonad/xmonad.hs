@@ -131,7 +131,7 @@ dmenuGitDirs :: X String
 dmenuGitDirs =
   runProcessWithInput "bash"
   [ "-c"
-  , "fd '\\.git' '/' -t d -H \
+  , "fd '\\.git' '/' -t d -H -I \
     \-E '\\.github' \
     \-E '\\.cache' \
     \-E '\\.tmux' \
@@ -139,7 +139,6 @@ dmenuGitDirs =
     \-E /gnu/store \
     \-E '\\.git-credential-cache' \
     \-E '\\.spago' \
-    \-I \
     \| sed -E 's/\\/\\.git$//' \
     \| dmenu -f -p 'repository'"
   ]
