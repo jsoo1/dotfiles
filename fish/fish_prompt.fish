@@ -23,7 +23,7 @@ end
 function _remote_hostname
   echo (whoami)
   if test -n "$SSH_CONNECTION"
-    echo " (ssh)"
+    echo " (ssh) "
   end
 end
 
@@ -50,8 +50,13 @@ function fish_prompt
       set virtualenv ""
   end
 
+  if test -n "$GUIX_ENVIRONMENT"
+      set genv " [env]"
+  else
+      set genv ""
+  end
 
-  echo -n -s (_remote_hostname) ' ' $green $virtualenv ' ' $cwd $blue $git_status $normal ' ' $arrow ' '
+  echo -n -s (_remote_hostname) $green $genv$virtualenv ' ' $cwd $blue $git_status $normal ' ' $arrow ' '
 end
 
 function fish_right_prompt -d "Show the time as the right prompt"
