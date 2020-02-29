@@ -29,18 +29,18 @@ abbr --add -U -- awk "gawk"
 # Emacs
 abbr --add -U -- ed "emacs --bg-daemon=term"
 function em
-    env TERM=xterm-24bits emacsclient -nw --socket-name term $argv
+    emacsclient -nw --socket-name term $argv
 end
-abbr --add -U -- e env TERM=xterm-24bits emacsclient -nw --socket-name term $argv
+abbr --add -U -- e emacsclient -nw --socket-name term $argv
 
 # Tmux
-abbr --add -U -- tmux "env TERM=xterm-24bits tmux new-session -A -s (basename (pwd)) -n emacs"
+abbr --add -U -- tmux "tmux new-session -A -s (basename (pwd)) -n emacs"
 function tm
     env TERM=xterm-24bits tmux new-session -A -s (basename (pwd)) -n emacs
 end
-abbr --add -U -- tma "env TERM=xterm-24bits tmux attach -t"
+abbr --add -U -- tma "tmux attach -t"
 abbr --add -U -- tml "tmux list-sessions"
-abbr --add -U -- tm "env TERM=xterm-24bits tmux new-session -A -s (basename (pwd)) -n emacs"
+abbr --add -U -- tm "tmux new-session -A -s (basename (pwd)) -n emacs"
 
 # Lynx
 abbr --add -U -- lynx lynx -cfg=~/.config/lynx/lynx.cfg
