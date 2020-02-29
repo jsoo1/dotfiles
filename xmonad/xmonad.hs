@@ -118,14 +118,15 @@ myCommands =
 -- ============== Dmenu/Tmux =============
 
 
-envTmux :: String -> X ()
-envTmux args =
-  runInTerm "" $ "env TERM=xterm-24bits tmux " <> args
+tmux :: String -> X ()
+tmux args =
+  runInTerm "" $ "tmux " <> args
 
 
 emacsCmd :: String -> String
 emacsCmd args =
-  "env TERM=xterm-24bits emacsclient -nw --socket-name term " <> args
+  "emacsclient -nw --socket-name term " <> args
+
 
 dmenuGitDirs :: X String
 dmenuGitDirs =
@@ -157,7 +158,7 @@ tmuxNewSession fullPath = do
   let sessionName' = filter (/= '\n') $ dotToDash <$> sessionName
   let fullPath' = filter (/= '\n') fullPath
   let sessionDetails = " -c " <> fullPath' <> " -n emacs -s " <> sessionName'
-  envTmux $ "new-session -A" <> sessionDetails <> " '" <> emacsCmd fullPath' <> "'"
+  tmux $ "new-session -A" <> sessionDetails <> " '" <> emacsCmd fullPath' <> "'"
 
 
 -- ============== Bar ==============
