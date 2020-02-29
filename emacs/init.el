@@ -301,6 +301,12 @@
  org-export-time-stamp-file nil
  org-html-validation-link nil)
 
+;; LaTex
+(add-hook
+ 'latex-mode-hook (lambda ()
+                    (setq-local paragraph-separate "[ \t\f]*$"
+                                paragraph-start "\f\\|[ \t]*$")))
+
 ;; Anzu
 (my-package-install 'anzu)
 (global-anzu-mode)
