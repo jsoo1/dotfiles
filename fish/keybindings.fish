@@ -133,6 +133,6 @@ end
 function __fzy_git_repos -d "Find a git repo"
     begin
         __ls_git_repos | fzy | read -l result
-        and commandline -- "env TERM=xterm-24bits tmux new-session -A -s (basename $result | tr '.' '-') -c $result -n emacs '$EDITOR $result'"
+        and commandline -- "tmux new-session -A -s (basename $result | tr '.' '-') -c $result -n emacs '$EDITOR $result'"
     end
 end

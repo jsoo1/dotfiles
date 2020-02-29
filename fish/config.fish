@@ -1,7 +1,7 @@
 set -gx PATH $PATH /home/john/.cargo/bin /home/john/.local/bin 
 
 # Emacsclient for EDITOR
-set -xg EDITOR 'env TERM=xterm-24bits emacsclient -t --socket-name=term'
+set -xg EDITOR 'emacsclient -t --socket-name=term'
 set -xg ALTERNATE_EDITOR 'vim'
 
 # Something weird happens without this
