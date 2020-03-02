@@ -76,7 +76,7 @@ myModMask = mod4Mask
 
 myCommands :: [((KeyMask, KeySym), X ())]
 myCommands =
-  [ ( ( myModMask, xK_space ), spawn "dmenu_run" )
+  [ ( ( myModMask, xK_space ), spawn "dmenu_run -F" )
   , ( ( myModMask .|. controlMask, xK_f)
     , broadcastMessage ToggleStruts
       <+> spawn "dbus-send \
@@ -94,7 +94,7 @@ myCommands =
   , ( ( myModMask, xK_Tab )
     , gotoMenuConfig $ def
       { menuCommand = "dmenu"
-      , menuArgs = [ "-f", "-p", "workspace" ]
+      , menuArgs = [ "-f", "-F", "-p", "workspace" ]
       }
     )
   , ( ( myModMask,  xK_o )
@@ -141,7 +141,7 @@ dmenuGitDirs =
     \-E '\\.git-credential-cache' \
     \-E '\\.spago' \
     \| sed -E 's/\\/\\.git$//' \
-    \| dmenu -f -p 'repository'"
+    \| dmenu -f -F -p 'repository'"
   ]
   ""
 
