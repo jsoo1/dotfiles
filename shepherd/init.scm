@@ -9,7 +9,7 @@
     #:docstring "Xcape service."
     #:respawn? #t
     #:start (make-forkexec-constructor
-             '("/home/john/.guix-profile/bin/xcape" "-d" "-e" "'Control_L=Escape'")
+             '("/home/john/.guix-profile/bin/xcape" "-e" "Control_L=Escape")
              #:user "john")
     #:stop (make-kill-destructor)
     #:actions (make-actions)))

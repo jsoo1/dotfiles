@@ -79,7 +79,7 @@ EndSection\n")
     Option \"ignore\" \"on\"
 EndSection\n")
 
-(define ctrl-nocaps (keyboard-layout "us" #:options '("ctrl:nocaps")))
+(define ctrl-nocaps (keyboard-layout "us" #:options '("ctrl:swapcaps")))
 
 (define tamzen-psf-font
   (file-append
