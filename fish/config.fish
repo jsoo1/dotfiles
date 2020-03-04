@@ -1,4 +1,13 @@
-set -gx PATH $PATH /home/john/.cargo/bin /home/john/.local/bin 
+if test -z "$MY_SHEP_SOCK"
+    rm "$HOME/var/run/shepherd/socket" \
+    && shepherd --quiet --insecure \
+        --socket="$HOME/var/run/shepherd/socket" \
+        --config="$HOME/dotfiles/shepherd/init.scm" \
+        --logfile="$HOME/var/log/shepherd.log" \
+    && set -Ux MY_SHEP_SOCK "$HOME/var/run/shepherd/socket"
+end
+
+set -gx PATH $PATH /home/john/.cargo/bin /home/john/.local/bin
 
 # Emacsclient for EDITOR
 set -xg EDITOR 'emacsclient -t --socket-name=term'
