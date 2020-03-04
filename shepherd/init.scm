@@ -3,17 +3,6 @@
 ;; Services known to shepherd:
 ;; Add new services (defined using 'make <service>') to shepherd here by
 ;; providing them as arguments to 'register-services'.
-(define xcape
-  (make <service>
-    #:provides '(xcape)
-    #:docstring "Xcape service."
-    #:respawn? #t
-    #:start (make-forkexec-constructor
-             '("/home/john/.guix-profile/bin/xcape" "-e" "Control_L=Escape")
-             #:user "john")
-    #:stop (make-kill-destructor)
-    #:actions (make-actions)))
-
 (define emacs-term
   (make <service>
     #:provides '(emacs-term)
@@ -27,7 +16,6 @@
     #:actions (make-actions)))
 
 (register-services emacs-term)
-(register-services xcape)
 
 ;; Send shepherd into the background
 (action 'shepherd 'daemonize)
@@ -35,5 +23,5 @@
 ;; Services to start when shepherd starts:
 ;; Add the name of each service that should be started to the list
 ;; below passed to 'for-each'.
-(for-each start '(xcape emacs-term))
+(for-each start '(emacs-term))
        

@@ -66,6 +66,7 @@ main = do
         <+> spawn "light -S 30.0"
         <+> spawn "compton --config ~/.config/compton/compton.conf"
         <+> spawn "feh --bg-fill ~/Downloads/richter-lucerne.jpg"
+        <+> spawn "xcape -e 'Control_L=Escape'"
     }
     `additionalKeys` myCommands
 
@@ -158,7 +159,7 @@ tmuxNewSession fullPath = do
   let sessionName' = filter (/= '\n') $ dotToDash <$> sessionName
   let fullPath' = filter (/= '\n') fullPath
   let sessionDetails = " -c " <> fullPath' <> " -n emacs -s " <> sessionName'
-  tmux $ "new-session -A" <> sessionDetails <> " '" <> emacsCmd fullPath' <> "'"
+  tmux $ "new-session -A" <> sessionDetails <> " ' exec " <> emacsCmd fullPath' <> "'"
 
 
 -- ============== Bar ==============
