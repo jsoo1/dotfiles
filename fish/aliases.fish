@@ -35,9 +35,9 @@ end
 abbr --add -U -- e emacsclient -nw --socket-name term $argv
 
 # Tmux
-abbr --add -U -- tmux "tmux new-session -A -s (basename (pwd)) -n emacs"
+abbr --add -U -- tmux "tmux new-session -A -s (basename (pwd) | tr '.' '-') -n emacs"
 function tm
-    env TERM=xterm-24bits tmux new-session -A -s (basename (pwd)) -n emacs
+    env TERM=xterm-24bits tmux new-session -A -s (basename (pwd) | tr '.' '-') -n emacs
 end
 abbr --add -U -- tma "tmux attach -t"
 abbr --add -U -- tml "tmux list-sessions"
