@@ -99,7 +99,6 @@
                   "/run/current-system/profile/sbin"
                   "~/dotfiles/emacs/"))
 
-(my-package-install 'exec-path-from-shell)
 (require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
 
@@ -108,7 +107,6 @@
       user-full-name "John Soo")
 
 ;; Shell
-(my-package-install 'multi-term)
 (setq shell-file-name "bash")
 
 ;; EShell
@@ -167,24 +165,19 @@
 (winner-mode t)
 
 ;; Fill column indicator
-(my-package-install 'fill-column-indicator)
 (require 'fill-column-indicator)
 
 ;; Evil
 (setq evil-want-C-u-scroll t
       evil-disable-insert-state-bindings t
       evil-want-abbrev-expand-on-insert-exit nil) ; somehow needs to happen before any mention of evil mode
-(my-package-install 'evil)
 (require 'evil)
-(my-package-install 'evil-surround)
 (require 'evil-surround)
-(my-package-install 'evil-commentary)
 (require 'evil-commentary)
 (my-package-install 'evil-leader)
 (require 'evil-leader)
 (my-package-install 'evil-escape)
 (require 'evil-escape)
-(my-package-install 'smartparens)
 (require 'smartparens-config)
 (require 'navigate)
 
@@ -208,14 +201,10 @@
 (evil-set-initial-state 'org-agenda-mode 'normal)
 
 ;; Magit
-(my-package-install 'magit)
-(my-package-install 'evil-magit)
 (require 'evil-magit)
 (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
 
 ;; Projectile
-(my-package-install 'projectile)
-(my-package-install 'ibuffer-projectile)
 (projectile-mode +1)
 (setq projectile-completion-system 'ivy
       projectile-indexing-method 'hybrid
@@ -260,7 +249,6 @@
 
 ;; Org
 (require 'org-tempo)
-(my-package-install 'evil-org)
 (require 'evil-org)
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
@@ -308,18 +296,11 @@
                                 paragraph-start "\f\\|[ \t]*$")))
 
 ;; Anzu
-(my-package-install 'anzu)
 (global-anzu-mode)
 (setq anzu-cons-mode-line-p 'nil)
-(my-package-install 'evil-anzu)
 (with-eval-after-load 'evil (require 'evil-anzu))
 
 ;; Ivy
-(my-package-install 'ivy)
-(my-package-install 'counsel)
-(my-package-install 'swiper)
-(my-package-install 'counsel-projectile)
-(my-package-install 'wgrep)
 (ivy-mode 1)
 (counsel-mode 1)
 (setq ivy-use-virtual-buffers t
@@ -339,7 +320,6 @@
     (_ 'absolute)))
 
 ;; Which key
-(my-package-install 'which-key)
 (require 'which-key)
 (which-key-mode)
 (setq which-key-idle-delay 0.1)
@@ -357,12 +337,6 @@
 
 ;; Compilation
 (define-key compilation-mode-map (kbd "C-c C-l") #'recompile)
-;; Avy
-(my-package-install 'avy)
-
-;; OSX Clipboard
-(my-package-install 'osx-clipboard)
-(osx-clipboard-mode +1)
 
 ;; Keybindings
 (define-key comint-mode-map (kbd "C-c C-k" ) #'comint-clear-buffer)
@@ -385,7 +359,6 @@
 (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 
 ;; Compilation and shell ansi colors
-(my-package-install 'xterm-color)
 (require 'xterm-color)
 (setq compilation-environment '("TERM=xterm-256color"))
 (add-hook 'compilation-start-hook
@@ -403,7 +376,6 @@
                           (xterm-color-filter string)))))))
 
 ;; Flycheck
-(my-package-install 'flycheck)
 (require 'flycheck)
 (global-flycheck-mode)
 (add-hook 'flycheck-error-list-mode #'auto-revert-mode)
@@ -413,7 +385,6 @@
       ispell-list-command "--list")
 
 ;; Company
-(my-package-install 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 (with-eval-after-load 'company
   (progn
@@ -443,7 +414,6 @@
         (message "Indented buffer.")))))
 
 ;; Debbugs
-(my-package-install 'debbugs)
 (setq debbugs-gnu-all-packages '("emacs" "guix" "guix-patches"))
 (setq debbugs-gnu-default-packages '("guix" "guix-patches"))
 ;; Slightly broken, but hey
@@ -451,7 +421,6 @@
 (define-key debbugs-gnu-mode-map (kbd "C-c") debbugs-gnu-mode-map)
 
 ;; Restclient
-(my-package-install 'restclient)
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
 ;; Idris mode
@@ -483,10 +452,6 @@
 (my-package-install 'flycheck-elm)
 (require 'flycheck-elm)
 (add-to-list 'load-path "~/.emacs.d/private/elm-mode")
-(my-package-install 'f)
-(my-package-install 'dash)
-(my-package-install 's)
-(my-package-install 'let-alist)
 (require 'elm-mode)
 (setq elm-format-on-save 't
       elm-format-elm-version "0.18"
@@ -506,11 +471,7 @@
       (setq elm-package--marked-contents nil)
       (setq elm-package--contents (append (json-read) nil)))))
 
-;; Fish mode
-(my-package-install 'fish-mode)
-
 ;; JavaScript
-(my-package-install 'nodejs-repl)
 (require 'nodejs-repl)
 (add-hook
  'js-mode-hook
@@ -545,7 +506,6 @@
       company-coq-disabled-features '(hello))
 
 ;; Haskell mode
-(my-package-install 'haskell-mode)
 (my-package-install 'haskell-snippets)
 (require 'haskell-interactive-mode)
 (require 'haskell-process)
@@ -589,7 +549,6 @@
 (require 'metal-mercury-mode)
 
 ;; Ocaml
-(my-package-install 'tuareg)
 (my-package-install 'merlin)
 (let ((opam-share (ignore-errors (car (process-lines "opam" "config" "var" "share")))))
   (when (and opam-share (file-directory-p opam-share))
@@ -626,7 +585,6 @@
 
 ;; Guix
 (add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
-(my-package-install 'geiser)
 (add-hook 'scheme-mode-hook #'geiser-mode)
 (with-eval-after-load 'geiser-guile
   (add-to-list 'geiser-guile-load-path "~/projects/guix"))
@@ -645,12 +603,7 @@
 (with-eval-after-load 'geiser-guile
        (add-to-list 'geiser-guile-load-path "~/projects/guix"))
 
-;; Common Lisp
-(my-package-install 'slime)
-(my-package-install 'slime-company)
-
 ;; Rust
-(my-package-install 'rust-mode)
 (my-package-install 'racer)
 (my-package-install 'flycheck-rust)
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
@@ -711,11 +664,7 @@
               (append '((company-math-symbols-latex company-latex-commands))
                       company-backends))))
 
-;; Dot/Graphviz
-(my-package-install 'graphviz-dot-mode)
-
 ;; YAML
-(my-package-install 'yaml-mode)
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 
@@ -727,7 +676,6 @@
 (add-to-list 'auto-mode-alist '("\\.dhall\\'" . dhall-mode))
 
 ;; Markdown
-(my-package-install 'markdown-mode)
 (autoload 'markdown-mode "markdown-mode"
   "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
@@ -738,27 +686,20 @@
 
 ;; Docker
 ;; dockerfile
-(my-package-install 'dockerfile-mode)
 (require 'dockerfile-mode)
 (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
-
-;; docker management
-(my-package-install 'docker)
 
 ;; Shellcheck
 (add-hook 'sh-mode-hook #'flycheck-mode)
 
 ;; Vimrc
-(my-package-install 'vimrc-mode)
 (require 'vimrc-mode)
 (add-to-list 'auto-mode-alist '("\\.vim\\(rc\\)?\\'" . vimrc-mode))
 
 ;; CSV
-(my-package-install 'csv-mode)
 (require 'csv-mode)
 
 ;; CMake
-(my-package-install 'cmake-mode)
 (require 'cmake-mode)
 
 ;; ELF
@@ -766,7 +707,6 @@
 (add-to-list 'auto-mode-alist '("\\.\\(?:a\\|so\\)\\'" . elf-mode))
 
 ;; Web mode
-(my-package-install 'web-mode)
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
@@ -779,21 +719,16 @@
 (add-to-list 'auto-mode-alist '("\\.xml\\'" . web-mode))
 
 ;; Emmet
-(my-package-install 'emmet-mode)
 (require 'emmet-mode)
 (setq emmet-move-cursor-between-quotes t)
 (add-hook 'css-mode-hook  'emmet-mode)
 (add-hook 'web-mode-hook 'emmet-mode)
 
 ;; Prolog
-(my-package-install 'ediprolog)
 (require 'ediprolog)
 (add-to-list 'auto-mode-alist '("\\.pro\\'" . prolog-mode))
 
 ;; Theme
-(my-package-install 'solarized-theme)
-(require 'solarized-theme)
-
 (setq
  custom-safe-themes
  '("2809bcb77ad21312897b541134981282dc455ccd7c14d74cc333b6e549b824f3"
@@ -801,7 +736,7 @@
    "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879"
    "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4"
    default))
-(load-theme 'solarized-dark)
+(load-theme 'doom-solarized-dark)
 
 ;; Transparency in terminal
 (defun my-make-frame-transparent (frame)
