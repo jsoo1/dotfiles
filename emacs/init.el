@@ -326,8 +326,6 @@
 
 ;; Clipboard
 (pcase system-type
-  ('gnu/linux (progn (my-package-install 'xclip)
-                     (xclip-mode 1)))
   ('darwin (progn (my-package-install 'osx-clipboard)
                   (osx-clipboard-mode +1))))
 
