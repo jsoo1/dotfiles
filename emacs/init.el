@@ -105,9 +105,21 @@
 (require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
 
+;; Pinentry
+(setf epa-pinentry-mode 'loopback)
+
 ;; Email
 (setq user-mail-address "jsoo1@asu.edu"
       user-full-name "John Soo")
+
+;; Erc
+(defun my-erc ()
+  (interactive)
+  (let ((erc-prompt-for-password nil))
+    (erc-tls
+     :server "irc.refl.club"
+     :port 5555
+     :nick "jsoo")))
 
 ;; Shell
 (setq shell-file-name "bash")
@@ -882,6 +894,7 @@
   "d" docker
   "e" gnus
   "g" guix
+  "i" my-erc
   "l" list-processes
   "o" org-agenda
   "p" proced)
