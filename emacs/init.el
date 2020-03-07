@@ -79,6 +79,9 @@
 ;; Tab width
 (setq tab-width 4)
 
+;; Trailing whitespace
+(add-hook 'before-save-hook #'delete-trailing-whitespace)
+
 ;; GC Threshold
 (setq gc-cons-threshold 200000000)
 
