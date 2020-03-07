@@ -1,5 +1,5 @@
 # vi mode
-fish_vi_key_bindings
+fish_hybrid_key_bindings
 
 # ---------- FZY -----------
 bind \cr __fzy_history
