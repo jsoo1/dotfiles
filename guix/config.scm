@@ -82,7 +82,6 @@ EndSection\n")
 ;; Workaround for https://github.com/alols/xcape/issues/62
 ;; I would prefer nocaps
 (define ctrl-nocaps (keyboard-layout "us" #:options '("ctrl:nocaps")))
-(define ctrl-swapcaps (keyboard-layout "us" #:options '("ctrl:swapcaps")))
 
 (define tamzen-psf-font
   (file-append
@@ -93,13 +92,13 @@ EndSection\n")
   (timezone "America/Los_Angeles")
   (locale "en_US.utf8")
   (locale-libcs (list glibc-2.28 (canonical-package glibc)))
-  (keyboard-layout ctrl-swapcaps)
+  (keyboard-layout ctrl-nocaps)
   (initrd-modules %base-initrd-modules)
   (bootloader
    (bootloader-configuration
     (bootloader grub-efi-bootloader)
     (target "/boot/efi")
-    (keyboard-layout ctrl-swapcaps)))
+    (keyboard-layout ctrl-nocaps)))
   (file-systems
    (cons* (file-system
             (device
@@ -195,7 +194,7 @@ EndSection\n")
         (inherit c)
         (xorg-configuration
          (xorg-configuration
-          (keyboard-layout ctrl-swapcaps)
+          (keyboard-layout ctrl-nocaps)
           (extra-config `(,cst-trackball ,touchscreen-disable)))))))))
   ;; Allow resolution of '.local' host names with mDNS.
   (name-service-switch %mdns-host-lookup-nss))
