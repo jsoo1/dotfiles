@@ -113,6 +113,9 @@
       user-full-name "John Soo")
 
 ;; Erc
+
+(setq erc-hide-list '("JOIN" "PART" "QUIT"))
+(setq erc-autojoin-channels-alist '("#guix"))
 (defun my-erc ()
   (interactive)
   (let ((erc-prompt-for-password nil))
