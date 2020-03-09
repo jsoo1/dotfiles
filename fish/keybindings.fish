@@ -1,5 +1,5 @@
 # vi mode
-fish_vi_key_bindings
+fish_hybrid_key_bindings
 
 # ---------- FZY -----------
 bind \cr __fzy_history
@@ -7,6 +7,10 @@ bind -M insert \cr __fzy_history
 
 bind \ct __fzy_files
 bind -M insert \ct __fzy_files
+
+# --------- Git repos ---------
+bind \co __fzy_git_repos
+bind -M insert \co __fzy_git_repos
 
 # MIT License for __fzf_parse_commandline and __fzf_get_dir
 # The MIT License (MIT)
@@ -114,10 +118,28 @@ function __fzy_history -d "Find in history"
     commandline -f repaint
 end
 
-function fzf_docker_images -d "Find a docker image"
+function __ls_git_repos -d "List git repos"
+    fd '\.git' '/' -t d -H -I \
+    -E '\.github' \
+    -E '\.cache' \
+    -E '\.tmux' \
+    -E '\.cargo' \
+    -E /gnu/store \
+    -E '\.git-credential-cache' \
+    -E '\.spago' \
+    | sed -E 's/\/\.git$//'
+end
+
+function __fzy_git_repos -d "Find a git repo"
     begin
-        docker images | awk '{ print $1 ":" $2 " " $3 }' | rg -v 'REPOSITORY:TAG' | column -t | fzf | awk '{ print $1 }' | read -l result
-        and commandline -- $result
+        __ls_git_repos | fzy | read -l result
+        and commandline -- "tmux new-session -A -s (basename $result | tr '.' '-') -c $result -n emacs '$EDITOR $result'"
     end
-    commandline -f repaint
+end
+
+function fzy_docker_images -d "Find a docker image"
+    begin
+        docker images | awk '{ print $1 ":" $2 " " $3 }' | rg -v 'REPOSITORY:TAG' | column -t | fzy | awk '{ print $1 }' | read -l result
+        and commandline -it -- $result
+    end
 end

@@ -1,30 +1,28 @@
 # Git
-abbr gb 'git branch'
-abbr gbd 'git branch -D'
-abbr gst 'git status'
-abbr gf 'git fetch'
-abbr ga 'git add'
-abbr gc 'git commit'
-abbr gcb 'git checkout -b'
-abbr glg 'git log'
-abbr grb 'git rebase'
-abbr gl 'git pull'
-abbr gp 'git push'
-abbr gd 'git diff'
-abbr gm 'git merge'
-abbr gco 'git checkout'
-alias gitpurge 'git branch --merged | grep -v "\*" | grep -v "master" | xargs -n 1 git branch -d'
+abbr --add -U -- gb 'git branch'
+abbr --add -U -- gst 'git status'
+abbr --add -U -- gf 'git fetch'
+abbr --add -U -- ga 'git add'
+abbr --add -U -- gc 'git commit'
+abbr --add -U -- glg 'git log'
+abbr --add -U -- grb 'git rebase'
+abbr --add -U -- gl 'git pull'
+abbr --add -U -- gp 'git push'
+abbr --add -U -- gd 'git diff'
+abbr --add -U -- gm 'git merge'
+abbr --add -U -- gco 'git checkout'
+function gitpurge
+    git branch --merged | rg -v "\*" | rg -v "master" | xargs -n 1 git branch -d
+end
 
 # System Utils
-abbr ls "exa"
-abbr ll "exa -l"
-abbr lsa "exa -la"
-abbr lsah "exa -la"
-abbr tree "exa -T"
-abbr rmi "rm -i"
-abbr psg "ps aux | rg -i"
-abbr dfh "df -H"
-abbr rest "pmset sleepnow"
+abbr --add -U -- ls "exa"
+abbr --add -U -- ll "exa -l"
+abbr --add -U -- lsa "exa -la"
+abbr --add -U -- lsah "exa -la"
+abbr --add -U -- tree "exa -T"
+abbr --add -U -- psg 'ps -e --format pid,command | rg -i'
+abbr --add -U -- rest "pmset sleepnow"
 
 # Emacs
 function em -d "Start an emacsclient -t" -a file

@@ -26,10 +26,7 @@ end
 
 
 # fish cwd color
-set -x fish_color_cwd magenta
-
-# vi mode
-fish_vi_key_bindings
+set -x fish_color_cwd yellow
 
 # no greeting, plz
 set fish_greeting ""
@@ -42,6 +39,11 @@ end
 # prompt :)
 if test -e ~/.config/fish/fish_prompt.fish
     source ~/.config/fish/fish_prompt.fish
+end
+
+# keybindings
+if test -e ~/.config/fish/keybindings.fish
+    source ~/.config/fish/keybindings.fish
 end
 
 # fixes for emacs
@@ -57,11 +59,6 @@ if test "$TERM" = "dumb"
   function fish_title; end
 end
 
-# this function may be required
-function fish_title
-  true
-end
-
 # aliases
 if test -e ~/.config/fish/aliases.fish
   source ~/.config/fish/aliases.fish
@@ -74,24 +71,11 @@ end
 
 # pretty vi mode
 function fish_mode_prompt; end
-function fish_mode_prompt --description 'Displays the current mode'
-  # Do nothing if not in vi mode
-  if set -q __fish_vi_mode
-    switch $fish_bind_mode
-      case default
-        set_color --background BC6EC5 white
-        echo '[N]'
-      case insert
-        set_color --bold --background green white
-        echo '[I]'
-      case visual
-        set_color --bold --background magenta white
-        echo '[V]'
-    end
-    set_color normal
-    echo -n ' '
-  end
-end
+
+set fish_cursor_default     block
+set fish_cursor_insert      block
+set fish_cursor_replace_one underscore
+set fish_cursor_visual      block
 
 # python direnv package
 if test "Darwin" = (uname)
