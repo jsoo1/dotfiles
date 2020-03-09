@@ -589,6 +589,9 @@
 (add-hook 'haskell-mode-hook #'yas-minor-mode-on)
 (define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
 
+(add-hook 'haskell-mode-hook (lambda () (setq-local paragraph-separate "[ \t\f]*$"
+                                                    paragraph-start "\f\\|[ \t]*$")))
+
 ;; Agda mode
 (load-library (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
