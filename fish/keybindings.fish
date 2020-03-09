@@ -119,15 +119,20 @@ function __fzy_history -d "Find in history"
 end
 
 function __ls_git_repos -d "List git repos"
-    fd '\.git' '/' -t d -H -I \
-    -E '\.github' \
-    -E '\.cache' \
-    -E '\.tmux' \
-    -E '\.cargo' \
-    -E /gnu/store \
-    -E '\.git-credential-cache' \
-    -E '\.spago' \
-    | sed -E 's/\/\.git$//'
+    fd '\.git' /Users/john/{projects,vpn,.emacs.d,dotfiles} -t d -H -I \
+        -E '\.gitlab' \
+        -E '\.github' \
+        -E '\.cache' \
+        -E '\.tmux' \
+        -E '\.cargo' \
+        -E '\.git-credential-cache' \
+        -E '\.spago' \
+        -E '.*stack-work.*' \
+        -E '\.local.*' \
+        -E '\.config.*' \
+        -E 'Applications.*' \
+        -E 'Library.*' \
+        -x dirname
 end
 
 function __fzy_git_repos -d "Find a git repo"
