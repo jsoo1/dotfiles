@@ -114,3 +114,10 @@ function __fzy_history -d "Find in history"
     commandline -f repaint
 end
 
+function fzf_docker_images -d "Find a docker image"
+    begin
+        docker images | awk '{ print $1 ":" $2 " " $3 }' | rg -v 'REPOSITORY:TAG' | column -t | fzf | awk '{ print $1 }' | read -l result
+        and commandline -- $result
+    end
+    commandline -f repaint
+end
