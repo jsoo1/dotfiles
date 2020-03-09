@@ -127,18 +127,13 @@ function __ls_git_repos -d "List git repos"
         -E '\.cargo' \
         -E '\.git-credential-cache' \
         -E '\.spago' \
-        -E '.*stack-work.*' \
-        -E '\.local.*' \
-        -E '\.config.*' \
-        -E 'Applications.*' \
-        -E 'Library.*' \
         -x dirname
 end
 
 function __fzy_git_repos -d "Find a git repo"
     begin
         __ls_git_repos | fzy | read -l result
-        and commandline -- "tmux new-session -A -s (basename $result | tr '.' '-') -c $result -n emacs '$EDITOR $result'"
+        and commandline -it -- "tmux new-session -A -s (basename $result | tr '.' '-') -c $result -n emacs '$EDITOR $result'"
     end
 end
 
