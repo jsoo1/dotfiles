@@ -77,6 +77,9 @@
 ;; Custom
 (setq custom-file "/dev/null")
 
+;; Tab width
+(setq tab-width 4)
+
 ;; GC Threshold
 (setq gc-cons-threshold 200000000)
 
@@ -84,7 +87,7 @@
 (require 'package)
 (add-to-list 'load-path "~/.emacs.d/private/evil-tmux-navigator")
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-;; (package-refresh-contents t)
+(package-refresh-contents t)
 (package-initialize)
 
 ;; Path
@@ -100,6 +103,25 @@
 (my-package-install 'exec-path-from-shell)
 (require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
+
+;; Pinentry
+(setf epa-pinentry-mode 'loopback)
+
+;; Email
+(setq user-mail-address "jsoo1@asu.edu"
+      user-full-name "John Soo")
+
+;; Erc
+
+(setq erc-hide-list '("JOIN" "PART" "QUIT"))
+(setq erc-autojoin-channels-alist '("#guix"))
+(defun my-erc ()
+  (interactive)
+  (let ((erc-prompt-for-password nil))
+    (erc-tls
+     :server "irc.refl.club"
+     :port 5555
+     :nick "jsoo")))
 
 ;; Shell
 (my-package-install 'multi-term)
@@ -180,7 +202,7 @@
 (setq imenu-list-size 0.2)
 
 ;; Winner
-;; (winner-mode t)
+(winner-mode t)
 
 ;; Fill column indicator
 (my-package-install 'fill-column-indicator)
@@ -284,6 +306,8 @@
                              '((js . t)
                                (haskell . t)
                                (emacs-lisp . t)
+                               (scheme . t)
+                               (shell . t)
                                (sql . t)))
 (setq org-agenda-files '("~/Desktop/org"
                          "~/projects/client-browser/TODOs.org"
@@ -327,6 +351,12 @@
  org-export-time-stamp-file nil
  org-html-validation-link nil)
 
+;; LaTex
+(add-hook
+ 'latex-mode-hook (lambda ()
+                    (setq-local paragraph-separate "[ \t\f]*$"
+                                paragraph-start "\f\\|[ \t]*$")))
+
 ;; Anzu
 (my-package-install 'anzu)
 (global-anzu-mode)
@@ -366,10 +396,12 @@
 
 ;; Clipboard
 (pcase system-type
-  ('gnu/linux (progn (my-package-install 'xclip)
-                     (xclip-mode 1)))
   ('darwin (progn (my-package-install 'osx-clipboard)
                   (osx-clipboard-mode +1))))
+
+;; GNUTLS issues
+;; Skip v1.3 per https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341#19
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 ;; Compilation
 (define-key compilation-mode-map (kbd "C-c C-l") #'recompile)
@@ -644,7 +676,8 @@
   (add-to-list 'yas-snippet-dirs "~/projects/guix/etc/snippets"))
 (require 'scheme)
 (defvar guile-imenu-generic-expression
-  (cons '("Public" "^(define-public\\s-+(?\\(\\sw+\\)" 1)
+  (append '(("Public" "^(define-public\\s-+(?\\(\\sw+\\)" 1)
+            ("Functions*" "^(define\\*\\s-+(?\\(\\sw+\\)" 1))
         scheme-imenu-generic-expression)
   "Imenu generic expression for Guile modes.  See `imenu-generic-expression'.")
 (add-hook
@@ -659,6 +692,8 @@
 ;; Common Lisp
 (my-package-install 'slime)
 (my-package-install 'slime-company)
+(with-eval-after-load 'geiser-guile
+       (add-to-list 'geiser-guile-load-path "~/projects/guix"))
 
 ;; Rust
 ;; (add-to-list 'load-path "~/.emacs.d/private/rust-mode/")
@@ -807,16 +842,11 @@
 (add-to-list 'auto-mode-alist '("\\.pro\\'" . prolog-mode))
 
 ;; Theme
-(my-package-install 'solarized-theme)
-(require 'solarized-theme)
-
+(my-package-install 'doom-themes)
 (setq
- custom-safe-themes '("2809bcb77ad21312897b541134981282dc455ccd7c14d74cc333b6e549b824f3"
-                      "0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f"
-                      "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879"
-                      "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4"
-                      default))
-(load-theme 'solarized-dark)
+ custome-safe-themes '("229c5cf9c9bd4012be621d271320036c69a14758f70e60385e87880b46d60780"
+                       default))
+(load-theme 'doom-solarized-dark)
 
 ;; Transparency in terminal
 (defun my-make-frame-transparent (frame)
@@ -962,7 +992,9 @@
 (define-prefix-keymap my-process-map
   "my process keybindings"
   "d" docker
+  "e" gnus
   "g" guix
+  "i" my-erc
   "l" list-processes
   "o" org-agenda
   "p" proced)
