@@ -26,18 +26,16 @@ abbr --add -U -- rest "pmset sleepnow"
 
 # Emacs
 function em -d "Start an emacsclient -t" -a file
-    env TERM=xterm-24bits emacsclient -t --socket-name=term $file
+    emacsclient -t --socket-name=term $file
 end
 abbr ed "emacs --daemon=term"
 abbr ec  "emacs --daemon=frame"
 
 # Tmux
-function tma -d "Select a tmux session with fuzzy search"
-    env TERM=xterm-24bits tmux attach -t (tmux list-sessions | fzf --height=15% | cut -f 1 -d :)
-end
-abbr ta "env TERM=xterm-24bits tmux attach -t"
+abbr tma "tmux attach -t "
+abbr ta "tmux attach -t"
 abbr tml "tmux list-sessions"
-abbr tmux "env TERM=xterm-24bits tmux new-session -A -n 'emacs' -s (basename (pwd))"
+abbr tmux "tmux new-session -A -n 'emacs' -s (basename (pwd))"
 
 # Docker
 abbr dockerpurge 'docker rmi (docker images -a --filter=dangling=true -q)'
@@ -67,14 +65,14 @@ end
 
 complete -c vpout --no-files
 
-function tl -d 'select tldr from fzf'
-    tldr (tldr --list | tr ', ' '\n ' | fzf | tr -d ' ')
+function tl -d 'select tldr from fzy'
+    tldr (tldr --list | tr ', ' '\n ' | fzy | tr -d ' ')
 end
 
 complete -c tldr --no-files
 
-function pidof -d 'select a pid via fzf'
-    ps waux | fzf | sed -E 's/[[:space:]]+/ /g' | cut -d ' ' -f 2
+function pidof -d 'select a pid via fzy'
+    ps waux | fzy | sed -E 's/[[:space:]]+/ /g' | cut -d ' ' -f 2
 end
 
 complete -c pidof --no-files

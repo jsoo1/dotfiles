@@ -5,25 +5,16 @@ set -gx PATH $PATH /Users/john/projects/client-browser/.bin /Users/john/.cabal/b
 set -gx PKG_CONFIG_PATH $PKG_CONFIG_PATH '/usr/local/Cellar/libffi/3.2.1/lib/pkgconfig/'
 
 # Emacsclient for EDITOR
-set -xg EDITOR 'env TERM=xterm-24bits /Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=term'
+set -xg EDITOR '/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=term'
 set -xg ALTERNATE_EDITOR 'vim'
 
 # i3 Sensible Terminal
 set -xg TERMINAL 'alacritty'
 
-# Fuzzy Finder
-set -x FZF_DEFAULT_OPTS '
-  --color=bg+:#073642,spinner:#719e07,hl:#586e75
-  --color=fg:#839496,header:#586e75,info:#cb4b16,pointer:#719e07
-  --color=marker:#719e07,fg+:#839496,prompt:#719e07,hl+:#719e07
-'
-set -x FZF_DEFAULT_COMMAND 'rg --files --hidden --ignore .git --smartcase --glob "!.git/*"'
-
 # Nix
 if test -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
   fenv source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
 end
-
 
 # fish cwd color
 set -x fish_color_cwd yellow
