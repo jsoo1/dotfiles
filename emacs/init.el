@@ -842,11 +842,11 @@
 (add-to-list 'auto-mode-alist '("\\.pro\\'" . prolog-mode))
 
 ;; Theme
-(my-package-install 'doom-themes)
+(my-package-install 'solarized-theme)
 (setq
- custome-safe-themes '("229c5cf9c9bd4012be621d271320036c69a14758f70e60385e87880b46d60780"
-                       default))
-(load-theme 'doom-solarized-dark)
+ custom-safe-themes ("2809bcb77ad21312897b541134981282dc455ccd7c14d74cc333b6e549b824f3"
+                     default))
+(load-theme 'solarized-dark)
 
 ;; Transparency in terminal
 (defun my-make-frame-transparent (frame)
