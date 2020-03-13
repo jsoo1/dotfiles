@@ -13,3 +13,5 @@ set bg=dark
 set number
 set ruler
 syntax enable
+autocmd BufEnter *.elm :setlocal filetype=ocaml
+
