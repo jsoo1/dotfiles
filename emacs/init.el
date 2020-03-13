@@ -114,7 +114,6 @@
 ;; Erc
 
 (setq erc-hide-list '("JOIN" "PART" "QUIT"))
-(setq erc-autojoin-channels-alist '("#guix"))
 (defun my-erc ()
   (interactive)
   (let ((erc-prompt-for-password nil))
@@ -844,8 +843,8 @@
 ;; Theme
 (my-package-install 'solarized-theme)
 (setq
- custom-safe-themes ("2809bcb77ad21312897b541134981282dc455ccd7c14d74cc333b6e549b824f3"
-                     default))
+ custom-safe-themes '("2809bcb77ad21312897b541134981282dc455ccd7c14d74cc333b6e549b824f3"
+                      default))
 (load-theme 'solarized-dark)
 
 ;; Transparency in terminal
