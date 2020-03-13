@@ -113,9 +113,8 @@
       user-full-name "John Soo")
 
 ;; Erc
-
+(setq erc-autojoin-channels-alist nil)
 (setq erc-hide-list '("JOIN" "PART" "QUIT"))
-(setq erc-autojoin-channels-alist '("#guix"))
 (defun my-erc ()
   (interactive)
   (let ((erc-prompt-for-password nil))
@@ -217,6 +216,7 @@
 (evil-set-initial-state 'Info-mode 'normal)
 (evil-set-initial-state 'comint-mode 'normal)
 (evil-set-initial-state 'org-agenda-mode 'normal)
+(evil-set-initial-state 'erc-mode 'normal)
 
 ;; Magit
 (require 'evil-magit)
@@ -228,11 +228,25 @@
       projectile-indexing-method 'hybrid
       projectile-enable-caching 't
       projectile-project-search-path "~/projects/")
-(add-hook 'ibuffer-hook
-          (lambda ()
-            (ibuffer-projectile-set-filter-groups)
-            (unless (eq ibuffer-sorting-mode 'alphabetic)
-              (ibuffer-do-sort-by-alphabetic))))
+
+;; IBuffer
+(defun my-set-ibuffer-filter-groups ()
+  (ibuffer-projectile-set-filter-groups)
+  (setq
+   ibuffer-filter-groups
+   (append
+    (ibuffer-projectile-generate-filter-groups)
+    '(("ERC" (mode . erc-mode))
+      ("Coq" (or (mode . coq-shell-mode)
+                 (mode . coq-response-mode)
+                 (mode .  coq-goals-mode))))))
+  (unless (eq ibuffer-sorting-mode 'alphabetic)
+    (ibuffer-do-sort-by-alphabetic))
+  (ibuffer-update nil t))
+
+(add-hook 'ibuffer-hook #'ibuffer-auto-mode)
+(add-hook 'ibuffer-hook #'my-set-ibuffer-filter-groups)
+(setq ibuffer-show-empty-filter-groups nil)
 
 ;; Don't always ask me to reload the tags table
 (setq tags-revert-without-query 1)
