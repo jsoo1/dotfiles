@@ -21,7 +21,7 @@ abbr --add -U -- ll "exa -l"
 abbr --add -U -- lsa "exa -la"
 abbr --add -U -- lsah "exa -la"
 abbr --add -U -- tree "exa -T"
-abbr --add -U -- psg 'ps -e --format pid,command | rg -i'
+abbr --add -U -- psg 'ps -e -o pid,command | rg -i'
 abbr --add -U -- rest "pmset sleepnow"
 
 # Emacs
