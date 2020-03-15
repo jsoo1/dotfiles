@@ -142,12 +142,13 @@ EndSection\n")
     bluez
     %base-packages))
   (setuid-programs
-   (append
-    `(,#~(string-append #$docker-cli "/bin/docker")
-      ,#~(string-append #$light "/bin/light"))
+   (cons
+    #~(string-append #$docker-cli "/bin/docker")
     %setuid-programs))
   (services
    (cons*
+    (simple-service 'light-udev-rules
+                    udev-service-type `(,light))
     ;; TODO: Add service for modprobe.d modules?
     (bluetooth-service #:auto-enable? #t)
     (service dnsmasq-service-type
