@@ -1,4 +1,4 @@
-#! /run/current-system/profile/bin/env
+#! /run/current-system/profile/bin/env fish
 
 set -Ux MY_SHEP_SOCK "$HOME/var/run/shepherd/socket"
 set -l pidfile "$HOME/var/run/shepherd/pid"
@@ -12,4 +12,3 @@ if status is-login
         eval "$shep_cmd" 2>&1 >> "$logfile"
     end 2>/dev/null 1>/dev/null
 end
-
