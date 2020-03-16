@@ -52,11 +52,16 @@ MODULES = \
 
 softlink = ln -s $(1) $(2)
 
+# ----------- top level commands -------------
 .PHONY: install
-install: | $(SOFTLINKS)
+install: | $(SOFTLINKS) ## Install the dotfiles to $HOME (default)
 
 .PHONY: modprobe
-modprobe: $(MODPROBE)
+modprobe: $(MODPROBE) ## Some hardware specific modules. Probably don't apply to you.
+
+.PHONY: help
+help:
+	@grep -E '^[a-zA-Z_ -]+:.*?## .*$$' Makefile | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 # ------------ softlinks -------------
 $(HOME)/.profile: | $(HOME)
