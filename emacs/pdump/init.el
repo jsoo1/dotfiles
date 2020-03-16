@@ -1,123 +1,126 @@
-;;; package --- init.el
+;;; package --- Summary
+;;; My not minimal-ish anymore init.el
 ;;; Commentary:
+;;; use like any ol init.el
 ;;; Code:
 
+;; Package
 (require 'package)
+(package-refresh-contents t)
 (package-initialize)
-(defun my-package-install (package)
-  "Install `PACKAGE' unless already installed."
-  (unless (package-installed-p package)
-    (package-install package)))
 
-(add-to-list 'load-path "~/.emacs.d/private/evil-tmux-navigator")
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-;; From guix
-;; (my-package-install 'exec-path-from-shell)
-(require 'exec-path-from-shell)
-;; (my-package-install 'multi-term)
-(require 'multi-term)
+;; Path
+(setq exec-path '("~/.local/.bin"
+                  "/run/setuid-programs"
+                  "~/.config/guix/current/bin"
+                  "~/.guix-profile/bin"
+                  "~/.guix-profile/sbin"
+                  "/run/current-system/profile/bin"
+                  "/run/current-system/profile/sbin"
+                  "~/dotfiles/emacs/"))
+
+(exec-path-from-shell-initialize)
+
+;; Byte compile
+(require 'bytecomp)
+(setq byte-compile-warnings t)
+(setq byte-compile-error-on-warn nil)
+
+;; Imenu List
 (my-package-install 'imenu-list)
-;; (require 'imenu-list)
-;; From guix
-;; (my-package-install 'fill-column-indicator)
-(require 'fill-column-indicator)
-(setq evil-want-C-u-scroll t
-      evil-disable-insert-state-bindings t
-      evil-want-abbrev-expand-on-insert-exit nil) ; somehow needs to happen before any mention of evil mode
-;; From guix
-;; (my-package-install 'evil)
-(require 'evil)
-;; (my-package-install 'evil-surround)
-(require 'evil-surround)
-;; (my-package-install 'evil-commentary)
-(require 'evil-commentary)
+(require 'imenu-list)
+(setq imenu-list-size 0.2)
+
+;; Winner
+(winner-mode t)
+
+;; Evil
 (my-package-install 'evil-leader)
-;; (require 'evil-leader)
+(require 'evil-leader)
 (my-package-install 'evil-escape)
-;; (require 'evil-escape)
-(my-package-install 'smartparens)
-;; (require 'smartparens-config)
-;; (require 'navigate)
-;; From guix
-;; (my-package-install 'magit)
-(require 'magit)
-;; (my-package-install 'evil-magit)
-(require 'evil-magit)
-;; (my-package-install 'projectile)
-(require 'projectile)
-;; (my-package-install 'ibuffer-projectile)
-(require 'ibuffer-projectile)
-;; (my-package-install 'evil-org)
-(require 'evil-org)
-;; (my-package-install 'anzu)
-(require 'anzu)
-;; (my-package-install 'evil-anzu)
-(with-eval-after-load 'evil (require 'evil-anzu))
-;; (my-package-install 'ivy)
-(require 'ivy)
-(my-package-install 'counsel)
-(require 'counsel)
-(my-package-install 'swiper)
-(require 'swiper)
-;; From guix
-;; (my-package-install 'counsel-projectile)
-(require 'counsel-projectile)
-;; (my-package-install 'wgrep)
-(require 'wgrep)
-;; (my-package-install 'which-key)
-(require 'which-key)
-;; (my-package-install 'avy)
-(require 'avy)
-(my-package-install 'osx-clipboard)
-;; (require 'osx-clipboard)
-;; From guix
-;; (my-package-install 'xterm-color)
-(require 'xterm-color)
-;; (my-package-install 'flycheck)
-(require 'flycheck)
-;; (my-package-install 'company)
-(require 'company)
-;; (my-package-install 'debbugs)
-(require 'debbugs)
-;; (my-package-install 'restclient)
-(require 'restclient)
-(add-to-list 'load-path "~/.emacs.d/private/idris-mode")
+(require 'evil-escape)
+(add-to-list 'load-path "~/.emacs.d/private/evil-tmux-navigator")
+(require 'navigate)
+
+(evil-escape-mode)
+(setq-default evil-escape-key-sequence "df")
+(setq-default evil-escape-unordered-key-sequence 't)
+(global-evil-leader-mode)
+
+;; Idris mode
+(add-to-listq load-path "~/.emacs.d/private/idris-mode")
+
 (byte-compile-file "~/.emacs.d/private/idris-mode/idris-mode.el")
 (byte-compile-file "~/.emacs.d/private/idris-mode/idris-ipkg-mode.el")
 (byte-compile-file "~/.emacs.d/private/idris-mode/inferior-idris.el")
+
 (require 'idris-mode)
 (require 'inferior-idris)
 (require 'idris-ipkg-mode)
+(setq idris-interpreter-path "/home/john/.guix-profile/bin/idris")
 
+(dolist (f '((idris-active-term-face        "#657b83")
+             (idris-semantic-type-face      "#b58900")
+             (idris-semantic-data-face      "#dc322f")
+             (idris-semantic-function-face  "#859900")
+             (idris-semantic-bound-face     "#6c71c4")))
+  (set-face-foreground (car f) (cadr f)))
+
+(define-key idris-repl-mode-map (kbd "C-c C-k" ) #'idris-repl-clear-buffer)
+(define-key idris-mode-map (kbd "C-c C-k") #'idris-repl-clear-buffer)
+
+;; Elm mode
 (my-package-install 'flycheck-elm)
 (require 'flycheck-elm)
 (add-to-list 'load-path "~/.emacs.d/private/elm-mode")
-;; From guix
-;; (my-package-install 'f)
-;; (my-package-install 'dash)
-;; (my-package-install 's)
-;; (my-package-install 'let-alist)
 (require 'elm-mode)
-;; From guix
-;; (my-package-install 'fish-mode)
-;; (require 'fish-mode)
-;; (my-package-install 'nodejs-repl)
-;; (require 'nodejs-repl)
+(setq elm-format-on-save 't
+      elm-format-elm-version "0.18"
+      elm-package-catalog-root "http://package.elm-lang.org/")
+(eval-after-load 'flycheck
+  '(add-hook 'flycheck-mode-hook #'flycheck-elm-setup))
+(with-eval-after-load 'company-mode (add-to-list 'company-backends 'company-elm))
+;; Can't get only elm 18 packages without this hack
+(defun elm-package-refresh-contents ()
+  "Refresh the package list."
+  (interactive)
+  (elm--assert-dependency-file)
+  (let* ((all-packages (elm-package--build-uri "all-packages?elm-package-version=0.18")))
+    (with-current-buffer (url-retrieve-synchronously all-packages)
+      (goto-char (point-min))
+      (re-search-forward "^ *$")
+      (setq elm-package--marked-contents nil)
+      (setq elm-package--contents (append (json-read) nil)))))
+
+;; Proof General
 (my-package-install 'proof-general)
-(require 'proof-general)
+
+;; Coq
+(add-hook
+ 'coq-mode-hook
+ (lambda ()
+   (set-face-attribute
+    'proof-locked-face nil
+    :underline nil
+    :background "#073642")))
+
 (my-package-install 'company-coq)
-(require 'company-coq)
-;; From guix
-;; (my-package-install 'haskell-mode)
-(require 'haskell-interactive-mode)
-(require 'haskell-process)
+(add-hook 'coq-mode-hook #'company-coq-mode)
+(setq proof-three-window-mode-policy 'hybrid
+      proof-script-fly-past-comments t
+      proof-splash-seen t
+      company-coq-disabled-features '(hello))
+
+;; Haskell mode
 (my-package-install 'haskell-snippets)
 (require 'haskell-snippets)
-;; From guix
-;; (my-package-install 'tuareg)
-(require 'tuareg)
+
+;; Mercury
+(add-to-list 'load-path "~/.emacs.d/private/metal-mercury-mode/")
+(require 'metal-mercury-mode)
+
+;; Ocaml
 (my-package-install 'merlin)
-(require 'merlin)
 (let ((opam-share (ignore-errors (car (process-lines "opam" "config" "var" "share")))))
   (when (and opam-share (file-directory-p opam-share))
     ;; Register Merlin
@@ -128,64 +131,85 @@
     (add-hook 'caml-mode-hook 'merlin-mode t)
     ;; Use opam switch to lookup ocamlmerlin binary
     (setq merlin-command 'opam)))
+
+;; Purescript
 (add-to-list 'load-path "~/.emacs.d/private/purescript-mode")
 (require 'purescript-mode-autoloads)
 (add-to-list 'Info-default-directory-list "~/.emacs.d/private/purescript-mode/")
+(add-to-list 'auto-mode-alist '("\\.purs\\'" . purescript-mode))
 (my-package-install 'psc-ide)
 (require 'psc-ide)
-;; From guix
-;; (my-package-install 'geiser)
-(require 'geiser)
-;; (my-package-install 'slime)
-(require 'slime)
-;; (my-package-install 'slime-company)
-(require 'slime-company)
-;; (my-package-install 'rust-mode)
-(require 'rust-mode)
+(add-hook 'purescript-mode-hook
+          (lambda ()
+            (psc-ide-mode)
+            (company-mode)
+            (flycheck-mode)
+            (turn-on-purescript-indentation)))
+(define-key purescript-mode-map (kbd "C-c C-s") 'psc-ide-server-start)
+(define-key purescript-mode-map (kbd "C-c C-q") 'psc-ide-server-quit)
+(add-hook
+ 'purescript-mode-hook
+ (lambda ()
+   (setq-local company-backends
+              (append '((company-math-symbols-latex company-latex-commands))
+                      company-backends))))
+
+;; Rust
 (my-package-install 'racer)
-(require 'racer)
 (my-package-install 'flycheck-rust)
-(require 'flycheck-rust)
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+(add-hook 'rust-mode-hook #'racer-mode)
+(add-hook 'racer-mode-hook #'eldoc-mode)
+(add-hook 'racer-mode-hook #'company-mode)
+(require 'rust-mode)
+(define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+(setq
+ racer-rust-src-path "~/.guix-profile/lib/rustlib/src/rust/src"
+ rust-format-on-save t)
+(with-eval-after-load 'rust-mode
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+;; SQL
 (my-package-install 'sql)
-(require 'sql)
-;; From guix
-;; (my-package-install 'graphviz-dot-mode)
-(require 'graphviz-dot-mode)
-;; From guix
-;; (my-package-install 'yaml-mode)
-(require 'yaml-mode)
-(my-package-install 'dhall-mode)
-(require 'dhall-mode)
-;; From guix
-;; (my-package-install 'markdown-mode)
-(require 'markdown-mode)
-;; (my-package-install 'dockerfile-mode)
-(require 'dockerfile-mode)
-;; (my-package-install 'docker)
-(require 'docker)
-;; (my-package-install 'vimrc-mode)
-(require 'vimrc-mode)
-;; (my-package-install 'csv-mode)
-(require 'csv-mode)
-;; (my-package-install 'cmake-mode)
-(require 'cmake-mode)
-(my-package-install 'elf-mode)
-(require 'elf-mode)
-;; From guix
-;; (my-package-install 'web-mode)
-(require 'web-mode)
-;; (my-package-install 'emmet-mode)
-(require 'emmet-mode)
-;; (my-package-install 'ediprolog)
-(require 'ediprolog)
-;; (my-package-install 'solarized-theme)
-(require 'solarized-theme)
-(load-library (let ((coding-system-for-read 'utf-8))
-                (shell-command-to-string "agda-mode locate")))
-(add-to-list 'load-path "/home/john/.emacs.d/private/metal-mercury-mode/")
-(require 'metal-mercury-mode)
+(setq
+ sql-product 'postgres
+ sql-connection-alist
+ '((vetpro (sql-product 'postgres)
+           (sql-port 5432)
+           (sql-server "localhost")
+           (sql-user "postgres")
+           (sql-database "vetpro"))
+   (logs (sql-product 'postgres)
+            (sql-port 5432)
+            (sql-server "localhost")
+            (sql-user "postgres")
+            (sql-database "countySchemaMigrator")))
+ sql-postgres-login-params
+ '((user :default "postgres")
+   (database :default "vetpro")
+   (server :default "localhost")
+   (port :default 5432))
+ sql-postgres-options
+ '("-P" "pager=off" "--tuples-only" "--no-align"))
+
+(with-eval-after-load 'sql
+  (progn
+    (sql-set-product-feature
+     'postgres :prompt-regexp "^.* λ ")
+    (define-key sql-mode-map (kbd "C-c C-i") #'sql-connect)
+    (define-key sql-mode-map (kbd "C-c C-k") #'(lambda () (interactive)
+                                                 (with-current-buffer sql-buffer (comint-clear-buffer))))))
+
+;; Math/TeX
 (add-to-list 'load-path "~/.emacs.d/private/company-math")
 (require 'company-math)
-(require 'cedille-mode)
 
-;;; predump.el ends here
+;; Dhall
+(my-package-install 'dhall-mode)
+(add-to-list 'auto-mode-alist '("\\.dhall\\'" . dhall-mode))
+
+;; ELF
+(my-package-install 'elf-mode)
+(add-to-list 'auto-mode-alist '("\\.\\(?:a\\|so\\)\\'" . elf-mode))
+;;; init.el ends here
+(put 'proof-frob-locked-end 'disabled nil)
