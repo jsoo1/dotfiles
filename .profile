@@ -3,7 +3,7 @@
 set -Ux MY_SHEP_SOCK "$HOME/var/run/shepherd/socket"
 set -l pidfile "$HOME/var/run/shepherd/pid"
 set -l logfile "$HOME/var/log/shepherd.log"
-set -l conf "$HOME/dotfiles/shepherd/init.scm"
+set -l conf "$HOME/.config/shepherd/init.scm"
 set -l shep_cmd  "shepherd --pid=$pidfile --socket=$MY_SHEP_SOCK --logfile=$logfile --config=$conf"
 
 if status is-login
