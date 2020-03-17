@@ -1119,13 +1119,13 @@
 (define-prefix-keymap my-projectile-map
   "my projectile keybindings"
   "a" counsel-projectile-org-agenda
-  "b" counsel-projectile
+  "b" counsel-projectile-switch-to-buffer
   "c" (lambda () (interactive) (my-projectile-command "compile"))
   "C" counsel-projectile-org-capture
   "d" counsel-projectile-find-dir
   "D" (lambda () (interactive) (dired (projectile-project-root)))
   "e" projectile-edit-dir-locals
-  "f" counsel-projectile-find-file
+  "f" counsel-projectile
   "I" projectile-invalidate-cache
   "l" switch-project-workspace
   "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
