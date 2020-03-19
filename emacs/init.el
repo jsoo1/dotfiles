@@ -171,7 +171,6 @@
  enable-local-eval t)
 
 ;; Imenu List
-(my-package-install 'imenu-list)
 (require 'imenu-list)
 (setq imenu-list-size 0.2)
 
@@ -188,9 +187,7 @@
 (require 'evil)
 (require 'evil-surround)
 (require 'evil-commentary)
-(my-package-install 'evil-leader)
 (require 'evil-leader)
-(my-package-install 'evil-escape)
 (require 'evil-escape)
 (require 'smartparens-config)
 (require 'navigate)
@@ -476,9 +473,7 @@
 (with-eval-after-load 'company (add-hook 'emacs-lisp-mode-hook #'company-mode 't))
 
 ;; Elm mode
-(my-package-install 'flycheck-elm)
 (require 'flycheck-elm)
-(add-to-list 'load-path "~/.emacs.d/private/elm-mode")
 (require 'elm-mode)
 (setq elm-format-on-save 't
       elm-format-elm-version "0.18"
