@@ -52,7 +52,7 @@
    "emacs-magit"
    "emacs-markdown-mode"
    "emacs-multi-term"
-   "emacs-next"
+   "emacs-next-no-x"
    "emacs-nodejs-repl"
    "emacs-projectile"
    "emacs-restclient"

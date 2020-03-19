@@ -44,15 +44,12 @@
 (add-to-listq
  default-frame-alist '(ns-transparent-titlebar . t)
  default-frame-alist '(font . "Iosevka 18"))
-(set-fontset-font "fontset-default" 'unicode "DejaVu Math Tex Gyre")
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (toggle-frame-fullscreen)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
-(scroll-bar-mode -1)
-(horizontal-scroll-bar-mode -1)
 
 ;; No tabs
 (setq-default indent-tabs-mode nil)
