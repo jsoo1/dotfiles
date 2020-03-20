@@ -17,6 +17,20 @@
 
 (register-services emacs-term)
 
+(define dunst
+  (make <service>
+    #:provides '(dunst)
+    #:docstring "Dunst notification service"
+    #:respawn #t
+    #:start (make-forkexec-constructor
+             `("/home/john/.guix-profile/bin/dunst"
+               #:user "john"
+               #:log-file "home/john/var/log/dunst.log"))
+    #:stop (make-kill-destructor)
+    #:actions (make-actions)))
+
+(register-services dunst)
+
 ;; Send shepherd into the background
 (action 'shepherd 'daemonize)
 
@@ -24,4 +38,3 @@
 ;; Add the name of each service that should be started to the list
 ;; below passed to 'for-each'.
 (for-each start '(emacs-term))
-       
