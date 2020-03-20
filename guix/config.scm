@@ -125,7 +125,7 @@ EndSection\n")
     ;; nice tty font
     font-tamzen
     ;; kmscon fonts
-    fontconfig font-fantasque-sans font-iosevka
+    fontconfig font-iosevka
     ;; window manager related
     xmonad ghc-xmonad-contrib xmobar my-dmenu
     ;; backlight config
