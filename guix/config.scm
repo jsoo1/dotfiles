@@ -7,7 +7,6 @@
              ((gnu packages emacs) #:select (emacs-next-no-x))
              ((gnu packages fonts)
               #:select (font-adobe-source-code-pro
-                        font-fantasque-sans
                         font-iosevka
                         font-tamzen))
              ((gnu packages fontutils) #:select (fontconfig))

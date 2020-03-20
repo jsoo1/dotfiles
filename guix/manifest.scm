@@ -80,6 +80,8 @@
    "fish"
    "font-dejavu"
    "font-iosevka"
+   "font-iosevka-term"
+   "font-iosevka-term-slab"
    "font-tamzen"
    "freecad"
    "garcon"

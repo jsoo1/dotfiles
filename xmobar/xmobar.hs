@@ -1,6 +1,6 @@
 Config
   { font =
-    "xft:Iosevka:size=14:normal:antialias=true"
+    "xft:Iosevka Term Slab:size=15:normal:antialias=true"
   , additionalFonts = []
   , borderColor = "#002b36"
   , border = TopB
