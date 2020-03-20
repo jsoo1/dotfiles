@@ -1,0 +1,2 @@
+[global]
+        browser = /home/john/.guix-profile/bin/icecat

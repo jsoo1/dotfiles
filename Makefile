@@ -6,6 +6,7 @@ DIRS = \
 	$(HOME)/.emacs.d \
 	$(XDG_HOME)/alacritty \
 	$(XDG_HOME)/compton \
+	$(XDG_HOME)/dunst \
 	$(XDG_HOME)/fish \
 	$(XDG_HOME)/git \
 	$(XDG_HOME)/guix \
@@ -22,6 +23,8 @@ SOFTLINKS = \
 	$(XDG_HOME)/alacritty/alacritty.yml \
 	$(HOME)/.bashrc \
 	$(HOME)/.bash_profile \
+	$(XDG_HOME)/compton/compton.conf \
+	$(XDG_HOME)/dunst/dunstrc \
 	$(XDG_HOME)/fish/aliases.fish \
 	$(XDG_HOME)/fish/colors.fish \
 	$(XDG_HOME)/fish/config.fish \
@@ -78,6 +81,9 @@ $(HOME)/.bash_profile: | $(HOME) ## Bash configuration (per session)
 
 $(XDG_HOME)/compton/compton.conf: | $(XDG_HOME)/compton ## Compton configuration
 	$(call softlink,$(PWD)/compton/compton.conf,$@)
+
+$(XDG_HOME)/dunst/dunstrc: | $(XDG_HOME)/dunst ## Dunst configuration
+	$(call softlink,$(PWD)/dunst/dunstrc,$@)
 
 $(XDG_HOME)/fish/aliases.fish: | $(XDG_HOME)/fish ## Fish aliases, abbreviations, and functions
 	$(call softlink,$(PWD)/fish/aliases.fish,$@)

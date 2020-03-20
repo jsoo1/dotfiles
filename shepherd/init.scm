@@ -23,9 +23,9 @@
     #:docstring "Dunst notification service"
     #:respawn #t
     #:start (make-forkexec-constructor
-             `("/home/john/.guix-profile/bin/dunst"
-               #:user "john"
-               #:log-file "home/john/var/log/dunst.log"))
+             `("/home/john/.guix-profile/bin/dunst")
+             #:user "john"
+             #:log-file "/home/john/var/log/dunst.log")
     #:stop (make-kill-destructor)
     #:actions (make-actions)))
 
@@ -37,4 +37,4 @@
 ;; Services to start when shepherd starts:
 ;; Add the name of each service that should be started to the list
 ;; below passed to 'for-each'.
-(for-each start '(emacs-term))
+(for-each start '(dunst emacs-term))
