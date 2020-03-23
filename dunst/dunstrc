@@ -1,2 +1,16 @@
 [global]
-        browser = /home/john/.guix-profile/bin/icecat
+    browser = /home/john/.guix-profile/bin/icecat
+    dmenu = /run/current-system/profile/bin/dmenu -p dunst:
+    font = Iosevka Term Slab 15
+    padding = 8
+    transparency = 20
+
+[urgency_low]
+    background =  "#586e75"
+    foreground = "#002b36"
+    timeout = 10
+
+[urgency_normal]
+    background = "#002b36"
+    foreground = "#586e75"
+    timeout = 10
