@@ -4,6 +4,7 @@ MODPROBE = /run/modprobe.d
 DIRS = \
 	$(HOME) \
 	$(HOME)/.emacs.d \
+	$(HOME)/.gnupg \
 	$(XDG_HOME)/alacritty \
 	$(XDG_HOME)/compton \
 	$(XDG_HOME)/dunst \
@@ -31,6 +32,7 @@ SOFTLINKS = \
 	$(XDG_HOME)/fish/fish_prompt.fish \
 	$(XDG_HOME)/fish/keybindings.fish \
 	$(HOME)/.ghci \
+	$(HOME)/.gnupg/gnupg.conf \
 	$(HOME)/.haskeline \
 	$(XDG_HOME)/git/config \
 	$(XDG_HOME)/guix/channels.scm \
@@ -102,6 +104,9 @@ $(XDG_HOME)/fish/keybindings.fish: | $(XDG_HOME)/fish ## Fish keybindings
 
 $(HOME)/.ghci: | $(HOME) ## ghci configuration
 	$(call softlink,$(PWD)/ghci/.ghci,$@)
+
+$(HOME)/.gnupg/gnupg.conf: | $(HOME)/.gnupg ## gnupg configuration
+	$(call softlink,$(PWD)/gnupg/gnupg.conf,$@)
 
 $(HOME)/.haskeline: | $(HOME) ## haskeline configuration (for ghci)
 	$(call softlink,$(PWD)/ghci/.haskeline,$@)
