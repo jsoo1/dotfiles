@@ -107,7 +107,8 @@
 
 ;; Email
 (setq user-mail-address "jsoo1@asu.edu"
-      user-full-name "John Soo")
+      user-full-name "John Soo"
+      mml-secure-openpgp-sign-with-sender t)
 
 ;; Erc
 (setq erc-autojoin-channels-alist nil)
