@@ -108,6 +108,7 @@
    "idris"
    "kmscon"
    "libffi"
+   "libnotify"
    "lzlib"
    "make"
    "mesa-utils"
