@@ -111,8 +111,9 @@
       mml-secure-openpgp-sign-with-sender t)
 
 ;; Erc
-(setq erc-autojoin-channels-alist nil)
-(setq erc-hide-list '("JOIN" "PART" "QUIT"))
+(setq erc-autojoin-channels-alist nil
+      erc-hide-list '("JOIN" "PART" "QUIT"))
+
 (defun my-erc ()
   (interactive)
   (let ((erc-prompt-for-password nil))
@@ -120,6 +121,8 @@
      :server "irc.refl.club"
      :port 5555
      :nick "jsoo")))
+
+(add-hook 'erc-mode-hook #'erc-notifications-mode)
 
 ;; Shell
 (setq shell-file-name "bash")
