@@ -524,7 +524,6 @@
     :underline nil
     :background "#073642")))
 
-(my-package-install 'company-coq)
 (add-hook 'coq-mode-hook #'company-coq-mode)
 (setq proof-three-window-mode-policy 'hybrid
       proof-script-fly-past-comments t
@@ -532,7 +531,6 @@
       company-coq-disabled-features '(hello))
 
 ;; Haskell mode
-(my-package-install 'haskell-snippets)
 (require 'haskell-interactive-mode)
 (require 'haskell-process)
 (require 'haskell-snippets)
@@ -575,7 +573,6 @@
 (require 'metal-mercury-mode)
 
 ;; Ocaml
-(my-package-install 'merlin)
 (let ((opam-share (ignore-errors (car (process-lines "opam" "config" "var" "share")))))
   (when (and opam-share (file-directory-p opam-share))
     ;; Register Merlin
@@ -592,7 +589,6 @@
 (require 'purescript-mode-autoloads)
 (add-to-list 'Info-default-directory-list "~/.emacs.d/private/purescript-mode/")
 (add-to-list 'auto-mode-alist '("\\.purs\\'" . purescript-mode))
-(my-package-install 'psc-ide)
 (require 'psc-ide)
 (add-hook 'purescript-mode-hook
           (lambda ()
@@ -630,8 +626,6 @@
        (add-to-list 'geiser-guile-load-path "~/projects/guix"))
 
 ;; Rust
-(my-package-install 'racer)
-(my-package-install 'flycheck-rust)
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 (add-hook 'rust-mode-hook #'racer-mode)
 (add-hook 'racer-mode-hook #'eldoc-mode)
@@ -698,7 +692,6 @@
 (add-to-list 'auto-mode-alist '("\\.plist\\'" . xml-mode))
 
 ;; Dhall
-(my-package-install 'dhall-mode)
 (add-to-list 'auto-mode-alist '("\\.dhall\\'" . dhall-mode))
 
 ;; Markdown
@@ -729,7 +722,6 @@
 (require 'cmake-mode)
 
 ;; ELF
-(my-package-install 'elf-mode)
 (add-to-list 'auto-mode-alist '("\\.\\(?:a\\|so\\)\\'" . elf-mode))
 
 ;; Web mode
