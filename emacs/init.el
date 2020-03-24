@@ -354,11 +354,6 @@
 (which-key-mode)
 (setq which-key-idle-delay 0.1)
 
-;; Clipboard
-(pcase system-type
-  ('darwin (progn (my-package-install 'osx-clipboard)
-                  (osx-clipboard-mode +1))))
-
 ;; GNUTLS issues
 ;; Skip v1.3 per https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341#19
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
