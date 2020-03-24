@@ -639,7 +639,6 @@
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 ;; SQL
-(my-package-install 'sql)
 (setq
  sql-product 'postgres
  sql-connection-alist
