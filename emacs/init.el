@@ -84,7 +84,6 @@
 
 ;; Package
 (require 'package)
-(add-to-list 'load-path "~/.emacs.d/private/evil-tmux-navigator")
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-refresh-contents t)
 (package-initialize)
@@ -447,12 +446,6 @@
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
 ;; Idris mode
-(add-to-listq load-path "~/.emacs.d/private/idris-mode")
-
-(byte-compile-file "~/.emacs.d/private/idris-mode/idris-mode.el")
-(byte-compile-file "~/.emacs.d/private/idris-mode/idris-ipkg-mode.el")
-(byte-compile-file "~/.emacs.d/private/idris-mode/inferior-idris.el")
-
 (require 'idris-mode)
 (require 'inferior-idris)
 (require 'idris-ipkg-mode)

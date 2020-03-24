@@ -56,6 +56,7 @@
    "emacs-haskell-mode"
    "emacs-haskell-snippets"
    "emacs-ibuffer-projectile"
+   "emacs-idris-mode"
    "emacs-ivy"
    "emacs-let-alist"
    "emacs-magit"
