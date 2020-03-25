@@ -9,6 +9,7 @@ DIRS = \
 	$(XDG_HOME)/git \
 	$(XDG_HOME)/lynx \
 	$(XDG_HOME)/karabiner \
+	$(XDG_HOME)/nixpkgs \
 	$(HOME)/.tmux \
 	$(XDG_HOME)/zathura
 
@@ -28,6 +29,7 @@ SOFTLINKS = \
 	$(XDG_HOME)/git/config \
 	$(XDG_HOME)/karabiner/karabiner.json \
 	$(XDG_HOME)/lynx/lynx.cfg \
+	$(XDG_HOME)/nixpkgs/config.nix \
 	$(HOME)/.psqlrc \
 	$(HOME)/.inputrc \
 	$(HOME)/.tmux.conf \
@@ -92,6 +94,9 @@ $(XDG_HOME)/karabiner/karabiner.json: | $(XDG_HOME)/karabiner ## Karabiner keybo
 
 $(XDG_HOME)/lynx/lynx.cfg: | $(XDG_HOME)/lynx ## Lynx configuration
 	$(call softlink,$(PWD)/lynx/lynx.cfg,$@)
+
+$(XDG_HOME)/nixpkgs/config.nix: | $(XDG_HOME)/nixpkgs ## Nix packages configuration
+	$(call softlink,$(PWD)/nix/config.nix,$@)
 
 $(HOME)/.psqlrc: | $(HOME) ## psql configuration
 	$(call softlink,$(PWD)/psql/.psqlrc,$@)
