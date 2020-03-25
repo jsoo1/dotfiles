@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: Html
-# key: Html.
-# --
-Html.$1 [$2]
-$>[ $0
-$>]
