@@ -3,6 +3,7 @@ let
   haskellPkgs = import <haskellPackages> { };
 
 in [
+  haskellPkgs.hoogle
   pkgs.alacritty
   pkgs.bashInteractive
   pkgs.bash-completion
@@ -17,7 +18,6 @@ in [
   pkgs.ghcid
   pkgs.global
   pkgs.hlint
-  haskellPkgs.hoogle
   pkgs.htop
   pkgs.jq
   pkgs.ngrok
@@ -31,6 +31,7 @@ in [
   pkgs.qemu
   pkgs.racket-minimal
   pkgs.rage
+  pkgs.reattach-to-user-namespace
   pkgs.ripgrep
   pkgs.rustfmt
   pkgs.spago
