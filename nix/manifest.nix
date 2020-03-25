@@ -3,6 +3,7 @@ let
   haskellPkgs = import <haskellPackages> { };
 
 in [
+  pkgs.alacritty
   pkgs.bashInteractive
   pkgs.bash-completion
   pkgs.cabal-install
