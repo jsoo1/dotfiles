@@ -1,0 +1,22 @@
+* Dotfiles
+  Emphasis on a daemon emacs in terminal with tmux workflow and vim keybindings.
+  Solarized themes only.
+  Xmonad and xmobar work ok together.
+  Shell support mostly for fish unless bash is required.
+  A minimal configuration is available if on a tty or ssh'd to a minimal system.
+  Mostly for the guix system and a branch for macos support at work.
+* Things here
+  - alacritty - solarized. Nothing to write home about.
+  - emacs - spacemacs-lite, mostly managed by guix.
+  - guix - basic system config, manifest, channels.
+  - bash - close to nothing. enough to get by when fish is unavailable.
+  - compton - picked up long ago and served for a long time with little modification.
+  - minimal - clone and use on the tty.
+  - fish - slim prompt and some shortcuts, nothing interesting.
+  - lynx - for when you want to search from terminal and get tired of endless prompts.
+  - ghc - some abbreviations i really enjoy and haskeline support to smooth edges.
+  - psql - nicer prompt and just smoothing out the experience.
+* Now with installer!
+  #+begin_src sh
+  make
+  #+end_src
