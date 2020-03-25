@@ -1,8 +1,11 @@
-let pkgs = import <nixpkgs> { };
+let
+  pkgs = import <nixpkgs> { };
+  haskellPkgs = import <haskellPackages> { };
 
 in [
   pkgs.bash
   pkgs.bash-completion
+  pkgs.cabal-install
   pkgs.checkmake
   pkgs.coq
   pkgs.direnv
@@ -13,7 +16,7 @@ in [
   pkgs.ghcid
   pkgs.global
   pkgs.hlint
-  pkgs.hoogle
+  haskellPkgs.hoogle
   pkgs.htop
   pkgs.jq
   pkgs.ngrok
@@ -23,10 +26,13 @@ in [
   pkgs.ormolu
   pkgs.pijul
   pkgs.postgresql_11
+  pkgs.purescript
   pkgs.qemu
   pkgs.racket-minimal
+  pkgs.rage
   pkgs.ripgrep
   pkgs.rustfmt
+  pkgs.spago
   pkgs.stylish-haskell
   pkgs.tmux
   pkgs.watch
