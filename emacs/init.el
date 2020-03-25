@@ -125,6 +125,8 @@
      :port 5555
      :nick "jsoo")))
 
+(add-hook 'erc-mode-hook (lambda () (toggle-truncate-lines 1)))
+
 ;; Shell
 (my-package-install 'multi-term)
 (setq shell-file-name "bash")
@@ -247,6 +249,7 @@
 (evil-set-initial-state 'comint-mode 'normal)
 (evil-set-initial-state 'org-agenda-mode 'normal)
 (evil-set-initial-state 'erc-mode 'normal)
+(evil-set-initial-state 'Man-mode 'normal)
 
 (evil-declare-not-repeat #'flycheck-next-error)
 (evil-declare-not-repeat #'flycheck-previous-error)
@@ -704,7 +707,15 @@
 
 ;; Nix
 (my-package-install 'nix-mode)
+(require 'nix-mode)
 (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
+(define-key nix-mode-map (kbd "C-c C-f") 'nix-format-buffer)
+(defvar nix-format-on-save t
+  "Format the nix buffer with nixfmt before saving.")
+(add-hook 'before-save-hook
+          (lambda ()
+            (when (and nix-format-on-save (eq major-mode 'nix-mode))
+              (nix-format-buffer))))
 
 ;; Common Lisp
 (my-package-install 'slime)
@@ -1125,7 +1136,7 @@
   "d" counsel-projectile-find-dir
   "D" (lambda () (interactive) (dired (projectile-project-root)))
   "e" projectile-edit-dir-locals
-  "f" counsel-projectile
+  "f" counsel-projectile-find-file
   "I" projectile-invalidate-cache
   "l" switch-project-workspace
   "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
