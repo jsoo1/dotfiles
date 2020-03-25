@@ -1,9 +1,8 @@
-let
-  pkgs = import <nixpkgs> { };
-  haskellPkgs = import <haskellPackages> { };
+let pkgs = import <nixpkgs> { };
 
 in [
-  haskellPkgs.hoogle
+  pkgs.haskellPackages.hoogle
+  pkgs.haskellPackages.idris
   pkgs.alacritty
   pkgs.bashInteractive
   pkgs.bash-completion
