@@ -5,7 +5,7 @@ set -gx PATH $PATH /Users/john/projects/client-browser/.bin /Users/john/.cabal/b
 set -gx PKG_CONFIG_PATH $PKG_CONFIG_PATH '/usr/local/Cellar/libffi/3.2.1/lib/pkgconfig/'
 
 # Emacsclient for EDITOR
-set -xg EDITOR '/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=term'
+set -xg EDITOR 'emacsclient -t --socket-name=term'
 set -xg ALTERNATE_EDITOR 'vim'
 
 # i3 Sensible Terminal
