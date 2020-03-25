@@ -2,7 +2,8 @@ let pkgs = import <nixpkgs> { };
 
 in [
   pkgs.haskellPackages.hoogle
-  pkgs.haskellPackages.idris
+  # broken for now
+  # pkgs.haskellPackages.idris
   pkgs.alacritty
   pkgs.bashInteractive
   pkgs.bash-completion
