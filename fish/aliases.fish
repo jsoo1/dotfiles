@@ -28,8 +28,8 @@ abbr --add -U -- rest "pmset sleepnow"
 function em -d "Start an emacsclient -t" -a file
     emacsclient -t --socket-name=term $file
 end
-abbr ed "emacs --daemon=term"
-abbr ec  "emacs --daemon=frame"
+abbr ed "emacs --bg-daemon=term"
+abbr ec  "emacs --bg-daemon=frame"
 
 # Tmux
 abbr tma "tmux attach -t "
