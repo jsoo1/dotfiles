@@ -3,7 +3,7 @@ let
   haskellPkgs = import <haskellPackages> { };
 
 in [
-  pkgs.bash
+  pkgs.bashInteractive
   pkgs.bash-completion
   pkgs.cabal-install
   pkgs.checkmake
