@@ -30,6 +30,7 @@ SOFTLINKS = \
 	$(XDG_HOME)/karabiner/karabiner.json \
 	$(XDG_HOME)/lynx/lynx.cfg \
 	$(XDG_HOME)/nixpkgs/config.nix \
+	$(XDG_HOME)/nixpkgs/overlays.nix \
 	$(HOME)/.psqlrc \
 	$(HOME)/.inputrc \
 	$(HOME)/.tmux.conf \
@@ -97,6 +98,9 @@ $(XDG_HOME)/lynx/lynx.cfg: | $(XDG_HOME)/lynx ## Lynx configuration
 
 $(XDG_HOME)/nixpkgs/config.nix: | $(XDG_HOME)/nixpkgs ## Nix packages configuration
 	$(call softlink,$(PWD)/nix/config.nix,$@)
+
+$(XDG_HOME)/nixpkgs/overlays.nix: | $(XDG_HOME)/nixpkgs
+	$(call softlink,$(PWD)/nix/overlays.nix,$@)
 
 $(HOME)/.psqlrc: | $(HOME) ## psql configuration
 	$(call softlink,$(PWD)/psql/.psqlrc,$@)
