@@ -1,7 +1,6 @@
 let pkgs = import <nixpkgs> { };
 
 in [
-  pkgs.haskellPackages.hoogle
   # broken for now
   # pkgs.haskellPackages.idris
   pkgs.alacritty
@@ -11,6 +10,7 @@ in [
   pkgs.checkmake
   pkgs.coq
   pkgs.direnv
+  pkgs.emacsGit-nox
   pkgs.exa
   pkgs.fd
   pkgs.fish
@@ -18,14 +18,14 @@ in [
   pkgs.ghcid
   pkgs.global
   pkgs.hlint
+  pkgs.haskellPackages.hoogle
   pkgs.htop
-  pkgs.jq
   pkgs.ngrok
   pkgs.nixfmt
   pkgs.nodejs-10_x
+  pkgs.ocaml
   pkgs.openvpn
   pkgs.ormolu
-  pkgs.pijul
   pkgs.postgresql_11
   pkgs.purescript
   pkgs.qemu
