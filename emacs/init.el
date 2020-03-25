@@ -25,16 +25,26 @@
         (cons (if docstring `(defvar ,name ,docstring (make-sparse-keymap))
                 `(defvar ,name (make-sparse-keymap)))
               (cons `(define-prefix-command (quote ,name))
-                    (seq-reduce (lambda (bindings key-fn)
-                                  (cons `(define-key (quote ,name) ,(car key-fn) (function ,(cadr key-fn)))
-                                        bindings))
-                                (seq-partition bindings 2)
-                                `(,name))))))
+                    (seq-reduce
+                     (lambda (bindings key-fn)
+                       (cons
+                        `(define-key (quote ,name) ,(car key-fn)
+                           (function ,(pcase (cadr key-fn)
+                                        ((pred symbolp) (cadr key-fn))
+                                        ((pred (lambda (fn) (symbolp (eval fn)))) (eval (cadr key-fn)))
+                                        (_ (cadr key-fn)))))
+                        bindings))
+                     (seq-partition bindings 2)
+                     `(,name))))))
 
 (defun my-package-install (package)
   "Install `PACKAGE' unless already installed."
   (unless (package-installed-p package)
     (package-install package)))
+
+(defun make-standard-paragraph-rules ()
+   (setq-local paragraph-separate "[ \t\f]*$"
+               paragraph-start "\f\\|[ \t]*$"))
 
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
@@ -125,7 +135,9 @@
      :port 5555
      :nick "jsoo")))
 
-(add-hook 'erc-mode-hook (lambda () (toggle-truncate-lines 1)))
+(add-hook 'erc-mode-hook
+          (defun toggle-truncate-lines-on ()
+            (toggle-truncate-lines 1)))
 
 ;; Shell
 (my-package-install 'multi-term)
@@ -133,9 +145,10 @@
 
 ;; EShell
 (add-hook 'emacs-startup-hook
-          (lambda ()
+          (defun eshell-in-current-directory ()
             (when (not (display-graphic-p)) (cd default-directory))
             (eshell)))
+
 (setq initial-buffer-choice (lambda () (get-buffer-create "*eshell*"))
       eshell-highlight-prompt nil
       eshell-prompt-function
@@ -162,9 +175,10 @@
   (pop-to-buffer eshell-buffer-name))
 
 ;; Dired
-(add-hook 'dired-mode-hook (lambda ()
-                             (auto-revert-mode)
-                             (dired-hide-details-mode)))
+(add-hook 'dired-mode-hook
+          (defun my-dired-hook ()
+            (auto-revert-mode)
+            (dired-hide-details-mode)))
 
 ;; Dired-git-info
 (my-package-install 'dired-git-info)
@@ -309,7 +323,7 @@
 
 (defun my-switch-to-compile-buffer (kind)
   "Switch to compile buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'."
-  (switch-to-buffer (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
+  (switch-to-buffer-other-window (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
 
 ;; Dir Locals -- see https://emacs.stackexchange.com/questions/13080/reloading-directory-local-variables
 (defun my-projectile-reload-dir-locals ()
@@ -372,10 +386,7 @@
  org-html-validation-link nil)
 
 ;; LaTex
-(add-hook
- 'latex-mode-hook (lambda ()
-                    (setq-local paragraph-separate "[ \t\f]*$"
-                                paragraph-start "\f\\|[ \t]*$")))
+(add-hook 'latex-mode-hook #'make-standard-paragraph-rules)
 
 ;; Anzu
 (my-package-install 'anzu)
@@ -438,7 +449,7 @@
 (define-key comint-mode-map (kbd "C-d") nil)
 
 ;; Vinegar
-(define-key evil-normal-state-map "-" #'(lambda () (interactive) (dired ".")))
+(define-key evil-normal-state-map "-" (defun dired-dot () (interactive) (dired ".")))
 (define-key dired-mode-map "-" #'dired-up-directory)
 
 ;; Swiper
@@ -458,7 +469,7 @@
 (require 'xterm-color)
 (setq compilation-environment '("TERM=xterm-256color"))
 (add-hook 'compilation-start-hook
-          (lambda (proc)
+          (defun do-xterm-color-filter (proc)
             ;; We need to differentiate between compilation-mode buffers
             ;; and running as part of comint (which at this point we assume
             ;; has been configured separately for xterm-color)
@@ -547,6 +558,7 @@
 
 ;; Emacs Lisp Mode
 (with-eval-after-load 'company (add-hook 'emacs-lisp-mode-hook #'company-mode 't))
+(define-key emacs-lisp-mode-map (kbd "C-c C-e") #'edebug-defun)
 
 ;; Elm mode
 (my-package-install 'flycheck-elm)
@@ -582,14 +594,14 @@
 (require 'nodejs-repl)
 (add-hook
  'js-mode-hook
- (lambda nil
+ (defun make-js-mode-keys nil
    (progn
      (define-key js-mode-map (kbd "C-c C-s") 'nodejs-repl)
      (define-key js-mode-map (kbd "C-c C-c") 'nodejs-repl-send-last-expression)
      (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
      (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
      (define-key js-mode-map (kbd "C-c C-l") 'nodejs-repl-load-file)
-     (define-key js-mode-map (kbd "C-c C-k") (lambda () (interactive) (with-current-buffer "*nodejs*" (comint-clear-buffer))))
+     (define-key js-mode-map (kbd "C-c C-k") (defun clear-nodejs-buffer () (interactive) (with-current-buffer "*nodejs*" (comint-clear-buffer))))
      (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl))))
 (setq js-indent-level 4)
 
@@ -599,7 +611,7 @@
 ;; Coq
 (add-hook
  'coq-mode-hook
- (lambda ()
+ (defun set-coq-mode-faces ()
    (set-face-attribute
     'proof-locked-face nil
     :underline nil
@@ -641,8 +653,7 @@
 (add-hook 'haskell-mode-hook #'yas-minor-mode-on)
 (define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
 
-(add-hook 'haskell-mode-hook (lambda () (setq-local paragraph-separate "[ \t\f]*$"
-                                                    paragraph-start "\f\\|[ \t]*$")))
+(add-hook 'haskell-mode-hook #'make-standard-paragraph-rules)
 
 ;; Agda mode
 (load-library (let ((coding-system-for-read 'utf-8))
@@ -673,18 +684,12 @@
 (my-package-install 'psc-ide)
 (require 'psc-ide)
 (add-hook 'purescript-mode-hook
-          (lambda ()
+          (defun my-purescript-hook ()
             (psc-ide-mode)
             (company-mode)
             (flycheck-mode)))
 (define-key purescript-mode-map (kbd "C-c C-s") 'psc-ide-server-start)
 (define-key purescript-mode-map (kbd "C-c C-q") 'psc-ide-server-quit)
-(add-hook
- 'purescript-mode-hook
- (lambda ()
-   (setq-local company-backends
-              (append '((company-math-symbols-latex company-latex-commands))
-                      company-backends))))
 
 ;; Guix
 (add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
@@ -702,7 +707,7 @@
   "Imenu generic expression for Guile modes.  See `imenu-generic-expression'.")
 (add-hook
  'scheme-mode-hook
- (lambda ()
+ (defun set-better-guile-imenu ()
    (setq-local imenu-generic-expression guile-imenu-generic-expression)))
 
 ;; Nix
@@ -713,7 +718,7 @@
 (defvar nix-format-on-save t
   "Format the nix buffer with nixfmt before saving.")
 (add-hook 'before-save-hook
-          (lambda ()
+          (defun my-nix-format-buffer ()
             (when (and nix-format-on-save (eq major-mode 'nix-mode))
               (nix-format-buffer))))
 
@@ -769,8 +774,10 @@
     (sql-set-product-feature
      'postgres :prompt-regexp "^.* λ ")
     (define-key sql-mode-map (kbd "C-c C-i") #'sql-connect)
-    (define-key sql-mode-map (kbd "C-c C-k") #'(lambda () (interactive)
-                                                 (with-current-buffer sql-buffer (comint-clear-buffer))))))
+    (define-key sql-mode-map (kbd "C-c C-k")
+      (defun clear-sql-buffer ()
+        (interactive)
+        (with-current-buffer sql-buffer (comint-clear-buffer))))))
 
 ;; Math/TeX
 (add-to-list 'load-path "~/.emacs.d/private/company-math")
@@ -783,12 +790,6 @@
 (define-key cedille-mode-map (kbd "C-c C-l") #'cedille-start-navigation)
 (evil-define-key 'normal cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
 (evil-define-key 'insert cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
-(add-hook
- 'cedille-mode-hook
- (lambda ()
-   (setq-local company-backends
-              (append '((company-math-symbols-latex company-latex-commands))
-                      company-backends))))
 
 ;; Dot/Graphviz
 (my-package-install 'graphviz-dot-mode)
@@ -1030,18 +1031,28 @@
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
   "b" ivy-switch-buffer
-  "c" (lambda () (interactive) (my-switch-to-compile-buffer "compile"))
-  "d" (lambda () (interactive) (kill-buffer (current-buffer)))
+  "c" (defun switch-to-compile-buffer ()
+        (interactive) (my-switch-to-compile-buffer "compile"))
+  "d" kill-current-buffer
   "i" ibuffer
-  "m" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Messages*")))
-  "r" (lambda () (interactive) (my-switch-to-compile-buffer "run"))
+  "m" (defun switch-to-messages-buffer ()
+        (interactive)
+        (switch-to-buffer-other-window (get-buffer-create "*Messages*")))
+  "r" (defun switch-to-run-buffer ()
+        (interactive)
+        (my-switch-to-compile-buffer "run"))
   "R" revert-buffer
-  "s" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Scratch*")))
-  "t" (lambda () (interactive) (my-switch-to-compile-buffer "test")))
+  "s" (defun switch-to-scratch-buffer ()
+        (interactive)
+        (switch-to-buffer-other-window (get-buffer-create "*Scratch*")))
+  "t" (defun switch-to-test-buffer ()
+        (interactive)
+        (my-switch-to-compile-buffer "test")))
 
 (define-prefix-keymap my-compile-map
   "my keybindings for compiling"
-  "b" (lambda () (interactive) (pop-to-buffer (get-buffer-create "*compilation*")))
+  "b" (defun pop-to-compilation-buffer ()
+        (interactive) (pop-to-buffer (get-buffer-create "*compilation*")))
   "c" counsel-compile)
 
 (define-prefix-keymap my-counsel-map
@@ -1088,7 +1099,8 @@
   "l" find-file-literally
   "r" counsel-buffer-or-recentf
   "s" save-buffer
-  "y" (lambda () (interactive) (kill-new (buffer-file-name (current-buffer)))))
+  "y" (defun kill-file-name
+          () (interactive) (kill-new (buffer-file-name (current-buffer)))))
 
 (define-prefix-keymap my-git-map
   "my git keybindings"
@@ -1131,19 +1143,25 @@
   "my projectile keybindings"
   "a" counsel-projectile-org-agenda
   "b" counsel-projectile-switch-to-buffer
-  "c" (lambda () (interactive) (my-projectile-command "compile"))
+  "c" (defun projectile-compile ()
+        (interactive) (my-projectile-command "compile"))
   "C" counsel-projectile-org-capture
   "d" counsel-projectile-find-dir
-  "D" (lambda () (interactive) (dired (projectile-project-root)))
+  "D" (defun switch-to-projectile-project-root
+          () (interactive) (dired (projectile-project-root)))
   "e" projectile-edit-dir-locals
   "f" counsel-projectile-find-file
   "I" projectile-invalidate-cache
   "l" switch-project-workspace
-  "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
+  "o" (defun switch-to-projectile-todos ()
+        (interactive)
+        (find-file (format "%sTODOs.org" (projectile-project-root))))
   "p" counsel-projectile-switch-project
-  "r" (lambda () (interactive) (my-projectile-command "run"))
+  "r" (defun projectile-run ()
+        (interactive) (my-projectile-command "run"))
   "R" my-projectile-reload-dir-locals
-  "t" (lambda () (interactive) (my-projectile-command "test"))
+  "t" (defun projectile-test ()
+        (interactive) (my-projectile-command "test"))
   "'" projectile-run-eshell
   "]" projectile-find-tag)
 
@@ -1161,29 +1179,39 @@
 
 (define-prefix-keymap my-toggle-map
   "my toggles"
-  "c" (lambda nil () (interactive) (fci-mode (if (bound-and-true-p fci-mode) -1 1)))
+  "c" (defun toggle-fill-column ()
+        (interactive) (fci-mode (if (bound-and-true-p fci-mode) -1 1)))
   "d" toggle-debug-on-error
   "D" toggle-debug-on-quit
   "f" toggle-frame-fullscreen
   "i" imenu-list-smart-toggle
   "l" toggle-truncate-lines
   "m" toggle-mode-line
-  "n" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
+  "n" (defun cycle-line-numbers ()
+        (interactive)
+        (setq display-line-numbers (next-line-number display-line-numbers)))
   "t" counsel-load-theme
   "w" whitespace-mode)
 
 (define-prefix-keymap my-window-map
   "my window keybindings"
-  "/" (lambda nil () (interactive) (progn (split-window-horizontally) (balance-windows-area)))
-  "-" (lambda nil () (interactive) (progn (split-window-vertically) (balance-windows-area)))
-  "'" (lambda nil () (interactive) (my-side-eshell '((side . right) (slot . 1))) (balance-windows-area))
+  "/" (defun my-vsplit ()
+        (interactive)
+        (progn (split-window-horizontally) (balance-windows-area)))
+  "-" (defun my-split ()
+        (interactive)
+        (progn (split-window-vertically) (balance-windows-area)))
+  "'" (defun pop-to-eshell ()
+        (interactive)
+        (my-side-eshell '((side . right) (slot . 1))) (balance-windows-area))
   "c" make-frame
-  "d" (lambda nil () (interactive) (progn (delete-window) (balance-windows-area)))
+  "d" (defun my-delete-window ()
+        (interactive) (progn (delete-window) (balance-windows-area)))
   "D" delete-frame
-  "h" (lambda nil () (interactive) (tmux-navigate "left"))
-  "j" (lambda nil () (interactive) (tmux-navigate "down"))
-  "k" (lambda nil () (interactive) (tmux-navigate "up"))
-  "l" (lambda nil () (interactive) (tmux-navigate "right"))
+  "h" (defun tmux-left () (interactive) (tmux-navigate "left"))
+  "j" (defun tmux-down () (interactive) (tmux-navigate "down"))
+  "k" (defun tmux-up () (interactive) (tmux-navigate "up"))
+  "l" (defun tmux-right () (interactive) (tmux-navigate "right"))
   "H" evil-window-move-far-left
   "J" evil-window-move-very-bottom
   "K" evil-window-move-very-top
