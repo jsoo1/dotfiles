@@ -4,6 +4,7 @@
 	autocrlf = input
 	safecrlf = true
         editor = vim
+        signingKey = 00D4DC311CBEFF8559407BCD973B1C8DE7AE926E
 [branch]
 	autoSetupMerge = false
 	autoSetupRebase = never
@@ -12,7 +13,5 @@
 [user]
 	email = jsoo@panosoft.com
 	name = John Soo
-[alias]
-	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
 [credential]
 	helper = cache
