@@ -14,6 +14,7 @@ in [
   pkgs.exa
   pkgs.fd
   pkgs.fish
+  pkgs.iosevka
   pkgs.fzy
   pkgs.ghcid
   pkgs.global
