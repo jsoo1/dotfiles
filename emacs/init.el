@@ -209,6 +209,9 @@
     (elm-format-elm-version . "0.18")
     (elm-format-elm-version . "0.19")
     (flycheck-elm-executable . "npx elm")
+    (projectile-project-compilation-cmd . "make PARCEL_FLAGS='--no-minify --no-source-maps'")
+    (projectile-project-test-cmd . "make test-user-interface")
+    (projectile-project-run-cmd . "make start")
     (haskell-process-wrapper-function
      . (lambda (argv)
          (append (list "env" "NO_COLOR=true") argv))))
@@ -264,6 +267,7 @@
 (evil-set-initial-state 'org-agenda-mode 'normal)
 (evil-set-initial-state 'erc-mode 'normal)
 (evil-set-initial-state 'Man-mode 'normal)
+(evil-set-initial-state 'eshell-mode 'normal)
 
 (evil-declare-not-repeat #'flycheck-next-error)
 (evil-declare-not-repeat #'flycheck-previous-error)
@@ -1230,5 +1234,9 @@
   "+" text-scale-increase
   "=" text-scale-increase
   "-" text-scale-decrease)
+
+;; Reset these to have all the configuration we just did
+(with-current-buffer (get-buffer "*Messages*") (normal-mode))
+(with-current-buffer (get-buffer "*Compile-Log*") (normal-mode))
 
 ;;; init.el ends here
