@@ -648,7 +648,8 @@
       haskell-process-args-cabal-repl
       '(; "all"
         "--ghc-option=-ferror-spans")
-      haskell-mode-stylish-haskell-path "/Users/john/.cabal/bin/ormolu"
+      haskell-mode-stylish-haskell-path "~/.nix-profile/bin/ormolu"
+      flycheck-haskell-ghc-cache-directory "~/.cache/flycheck-haskell"
       haskell-stylish-on-save 't
       flycheck-haskell-hpack-preference 'prefer-cabal
       haskell-process-log 't
