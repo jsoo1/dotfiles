@@ -212,6 +212,10 @@
     (projectile-project-compilation-cmd . "make PARCEL_FLAGS='--no-minify --no-source-maps'")
     (projectile-project-test-cmd . "make test-user-interface")
     (projectile-project-run-cmd . "make start")
+    (haskell-stylish-on-save . nil)
+    (haskell-process-type . 'stack-ghci)
+    (haskell-mode-stylish-haskell-args . "--ghc-opt TypeApplications")
+    (js-indent-level . 2)
     (haskell-process-wrapper-function
      . (lambda (argv)
          (append (list "env" "NO_COLOR=true") argv))))
