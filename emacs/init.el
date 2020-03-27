@@ -77,12 +77,6 @@
 ;; GC Threshold
 (setq gc-cons-threshold 200000000)
 
-;; Package
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(package-refresh-contents t)
-(package-initialize)
-
 ;; Path
 (setq exec-path '("~/.local/.bin"
                   "/run/setuid-programs"
