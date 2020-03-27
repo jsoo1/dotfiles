@@ -577,12 +577,6 @@
             (turn-on-purescript-indentation)))
 (define-key purescript-mode-map (kbd "C-c C-s") 'psc-ide-server-start)
 (define-key purescript-mode-map (kbd "C-c C-q") 'psc-ide-server-quit)
-(add-hook
- 'purescript-mode-hook
- (lambda ()
-   (setq-local company-backends
-              (append '((company-math-symbols-latex company-latex-commands))
-                      company-backends))))
 
 ;; Guix
 (add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
@@ -647,20 +641,10 @@
     (define-key sql-mode-map (kbd "C-c C-k") #'(lambda () (interactive)
                                                  (with-current-buffer sql-buffer (comint-clear-buffer))))))
 
-;; Math/TeX
-(add-to-list 'load-path "~/.emacs.d/private/company-math")
-(require 'company-math)
-
 ;; Cedille
 (require 'cedille-mode)
 (define-key cedille-mode-map (kbd "C-c C-l") #'cedille-start-navigation)
 (evil-define-key 'normal cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
-(add-hook
- 'cedille-mode-hook
- (lambda ()
-   (setq-local company-backends
-              (append '((company-math-symbols-latex company-latex-commands))
-                      company-backends))))
 
 ;; YAML
 (require 'yaml-mode)
@@ -727,6 +711,10 @@
 ;; Theme
 (require 'solarized)
 (require 'solarized-dark-theme)
+(setq
+ custom-safe-themes
+ '("0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f" default))
+(load-theme 'solarized-dark)
 
 ;; Transparency in terminal
 (defun my-make-frame-transparent (frame)
