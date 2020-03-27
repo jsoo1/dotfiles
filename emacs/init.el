@@ -31,11 +31,6 @@
                                 (seq-partition bindings 2)
                                 `(,name))))))
 
-(defun my-package-install (package)
-  "Install `PACKAGE' unless already installed."
-  (unless (package-installed-p package)
-    (package-install package)))
-
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
       initial-scratch-message ""
@@ -174,7 +169,6 @@
  enable-local-eval t)
 
 ;; Imenu List
-(require 'imenu-list)
 (setq imenu-list-size 0.2)
 
 ;; Winner
@@ -499,9 +493,6 @@
      (define-key js-mode-map (kbd "C-c C-k") (lambda () (interactive) (with-current-buffer "*nodejs*" (comint-clear-buffer))))
      (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl))))
 (setq js-indent-level 4)
-
-;; Proof General
-(my-package-install 'proof-general)
 
 ;; Coq
 (add-hook

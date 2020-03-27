@@ -127,6 +127,7 @@
    "pijul"
    "pinentry"
    "powertop"
+   "proof-general-next"
    "pulseaudio"
    "racer"
    "ripgrep"
