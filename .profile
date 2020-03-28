@@ -1,6 +1,5 @@
 #! /run/current-system/profile/bin/env fish
 
-set -Ux MY_SHEP_SOCK "$HOME/var/run/shepherd/socket"
 set -l pidfile "$HOME/var/run/shepherd/pid"
 set -l logfile "$HOME/var/log/shepherd.log"
 set -l conf "$HOME/.config/shepherd/init.scm"

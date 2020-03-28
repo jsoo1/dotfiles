@@ -11,6 +11,7 @@
     #:start (make-forkexec-constructor
              '("/home/john/.guix-profile/bin/emacs" "--fg-daemon=term")
              #:user "john"
+             #:environment-variables '("TERM=xterm-24bits")
              #:log-file "/home/john/var/log/emacs-term.log")
     #:stop (make-kill-destructor)
     #:actions (make-actions)))

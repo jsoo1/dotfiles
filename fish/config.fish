@@ -1,3 +1,5 @@
+set -Ux MY_SHEP_SOCK "$HOME/var/run/shepherd/socket"
+
 source "$HOME/.profile";
 
 set -gx PATH $PATH /home/john/.cargo/bin /home/john/.local/bin
