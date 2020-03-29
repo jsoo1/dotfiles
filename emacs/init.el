@@ -13,12 +13,6 @@
                     (seq-partition xs 2)
                     nil)))
 
-(defmacro ->> (&rest body)
-  "Thrush combinator for `BODY'."
-  (let ((result (pop body)))
-    (dolist (form body result)
-      (setq result (append form (list result))))))
-
 (defmacro define-prefix-keymap (name &optional docstring &rest bindings)
   "Define a keymap named `NAME' and docstring `DOCSTRING' with many `BINDINGS' at once using `define-key'."
   (cons #'progn
@@ -433,6 +427,12 @@
 ;; Restclient
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
+;; Proof General
+(load-file "~/.guix-profile/share/emacs/site-lisp/site-start.d/pg-init.el")
+
+;; Coq
+(define-key coq-mode-map (kbd "C-c RET") #'proof-goto-point)
+
 ;; Idris mode
 (require 'idris-mode)
 (require 'inferior-idris)
@@ -639,6 +639,22 @@
 (require 'cedille-mode)
 (define-key cedille-mode-map (kbd "C-c C-l") #'cedille-start-navigation)
 (evil-define-key 'normal cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
+(set-face-attribute
+ 'cedille-type-face-df nil
+ :foreground "#268bd2")
+(set-face-attribute
+ 'cedille-constructor-face-df nil
+ :foreground "unspecified")
+(set-face-attribute
+ 'cedille-kind-face-df nil
+ :foreground "red"
+ :weight 'bold)
+(set-face-attribute
+ 'cedille-datatype-face-df nil
+ :foreground "#268bd2")
+(set-face-attribute
+ 'cedille-keyword-face-df nil
+ :foreground "#b58900")
 
 ;; YAML
 (require 'yaml-mode)
