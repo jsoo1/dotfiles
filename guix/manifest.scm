@@ -85,7 +85,6 @@
    "emacs-yasnippet"
    "exa"
    "fd"
-   "feh"
    "fish"
    "font-dejavu"
    "font-iosevka"
@@ -160,6 +159,7 @@
    "xmonad"
    "xrandr"
    "xsetroot"
+   "xwallpaper"
    "zathura"
    "zathura-pdf-mupdf"
    "zlib"))

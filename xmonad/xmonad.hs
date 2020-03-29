@@ -65,7 +65,7 @@ main = do
           \ --output eDP-1-1"
         <+> spawn "light -S 30.0"
         <+> spawn "compton --config ~/.config/compton/compton.conf"
-        <+> spawn "feh --bg-fill ~/Downloads/richter-lucerne.jpg"
+        <+> spawn "xwallpaper --zoom ~/Downloads/richter-lucerne.jpg"
         <+> spawn "xcape -e 'Control_L=Escape'"
     }
     `additionalKeys` myCommands
