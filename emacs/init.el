@@ -886,6 +886,9 @@
                       default))
 (load-theme 'solarized-dark)
 
+;; Coffeescript
+(my-package-install 'coffee-mode)
+
 ;; Transparency in terminal
 (defun my-make-frame-transparent (frame)
   "Make `FRAME' transparent'."
