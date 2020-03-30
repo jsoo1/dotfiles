@@ -122,11 +122,13 @@
 
 ;; Email
 (setq user-mail-address "jsoo1@asu.edu"
-      user-full-name "John Soo")
+      user-full-name "John Soo"
+      mml-secure-openpgp-sign-with-sender t)
 
 ;; Erc
-(setq erc-autojoin-channels-alist nil)
-(setq erc-hide-list '("JOIN" "PART" "QUIT"))
+(setq erc-autojoin-channels-alist nil
+      erc-hide-list '("JOIN" "PART" "QUIT"))
+
 (defun my-erc ()
   (interactive)
   (let ((erc-prompt-for-password nil))
@@ -138,6 +140,7 @@
 (add-hook 'erc-mode-hook
           (defun toggle-truncate-lines-on ()
             (toggle-truncate-lines 1)))
+(add-hook 'erc-mode-hook #'erc-notifications-mode)
 
 ;; Shell
 (my-package-install 'multi-term)
@@ -343,6 +346,7 @@
 
 ;; Org
 (my-package-install 'evil-org)
+(require 'org-tempo)
 (require 'evil-org)
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
@@ -799,6 +803,23 @@
 (define-key cedille-mode-map (kbd "C-c C-l") #'cedille-start-navigation)
 (evil-define-key 'normal cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
 (evil-define-key 'insert cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
+
+(set-face-attribute
+ 'cedille-type-face-df nil
+ :foreground "#268bd2")
+(set-face-attribute
+ 'cedille-constructor-face-df nil
+ :foreground "unspecified")
+(set-face-attribute
+ 'cedille-kind-face-df nil
+ :foreground "red"
+ :weight 'bold)
+(set-face-attribute
+ 'cedille-datatype-face-df nil
+ :foreground "#268bd2")
+(set-face-attribute
+ 'cedille-keyword-face-df nil
+ :foreground "#b58900")
 
 ;; Dot/Graphviz
 (my-package-install 'graphviz-dot-mode)
