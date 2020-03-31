@@ -651,7 +651,7 @@
  :foreground "#268bd2")
 (set-face-attribute
  'cedille-keyword-face-df nil
- :foreground "#b58900")
+ :foreground "#859900")
 
 ;; YAML
 (require 'yaml-mode)
