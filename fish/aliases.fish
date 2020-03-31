@@ -25,7 +25,9 @@ abbr --add -U -- psg 'ps -e --format pid,command | rg -i'
 abbr --add -U -- rest "loginctl suspend"
 abbr --add -U -- bat "upower -I (upower -e | rg BAT)"
 abbr --add -U -- awk "gawk"
-abbr --add -U -- shep 'herd -s $MY_SHEP_SOCK'
+function shep
+    herd -s $MY_SHEP_SOCK $argv
+end
 
 # Emacs
 abbr --add -U -- ed "emacs --bg-daemon=term"
