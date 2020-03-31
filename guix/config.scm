@@ -12,7 +12,6 @@
              ((gnu packages fontutils) #:select (fontconfig))
              ((gnu packages gnupg) #:select (gnupg))
              ((gnu packages linux) #:select (bluez light))
-             ((gnu packages lsof) #:select (lsof))
              ((gnu packages ncurses) #:select (ncurses))
              ((gnu packages shells) #:select (fish))
              ((gnu packages shellutils) #:select (fzy))
@@ -22,20 +21,32 @@
              ((gnu packages vim) #:select (vim))
              ((gnu packages web-browsers) #:select (lynx))
              ((gnu packages xdisorg) #:select (xcape))
-             ((gnu packages wm) #:select (xmonad ghc-xmonad-contrib xmobar))
+             ((gnu packages xorg) #:select (xinit))
+             ((gnu services)
+              #:select (special-files-service-type))
              ((gnu services base)
               #:select (gpm-service-type
                         gpm-configuration))
+             ((gnu services dbus)
+              #:select (dbus-service))
              ((gnu services desktop)
               #:select (bluetooth-service
-                        %desktop-services))
+                        %desktop-services
+                        fontconfig-file-system-service
+                        elogind-service-type
+                        polkit-wheel-service
+                        udisks-service
+                        x11-socket-directory-service))
              ((gnu services dns)
               #:select (dnsmasq-service-type
                         dnsmasq-configuration))
              (gnu services docker)
              ((gnu services networking)
               #:select (network-manager-service-type
-                        network-manager-configuration))
+                        network-manager-configuration
+                        ntp-service-type
+                        usb-modeswitch-service-type
+                        wpa-supplicant-service-type))
              ((gnu services pm)
               #:select (thermald-configuration
                         thermald-service-type
@@ -50,6 +61,8 @@
              ;; ((gnu services xdisorg)
              ;;  #:select (xcape-configuration
              ;;            xcape-service-type))
+             ((gnu services sound)
+              #:select (alsa-service-type))
              ((gnu services virtualization)
               #:select (qemu-binfmt-service-type
                         qemu-binfmt-configuration
@@ -57,9 +70,10 @@
              ((gnu services xorg)
               #:select (gdm-service-type
                         gdm-configuration
-                        xorg-configuration))
+                        xorg-configuration
+                        xorg-start-command))
              (guix gexp)
-             ((dmenu) #:select (my-dmenu))
+             (ice-9 match)
              ((yaft) #:select (yaft)))
 
 (define cst-trackball
@@ -116,7 +130,12 @@ EndSection\n")
           (comment "idiot man")
           (group "users")
           (supplementary-groups
-           '("wheel" "netdev" "audio" "video" "lp"))
+           '("wheel"
+             "netdev"
+             "audio"
+             "video"
+             "tty"
+             "lp"))
           (home-directory "/home/john")
           (shell #~(string-append #$fish "/bin/fish")))
          %base-user-accounts))
@@ -126,14 +145,12 @@ EndSection\n")
     font-tamzen
     ;; kmscon fonts
     fontconfig font-iosevka
-    ;; window manager related
-    xmonad ghc-xmonad-contrib xmobar my-dmenu
     ;; backlight config
     light
     ;;for HTTPS access
     curl nss-certs
     ;; essentials
-    lsof inetutils git fish openssh gnupg htop ncurses tmux fzy lynx
+    inetutils git fish openssh gnupg htop ncurses tmux fzy lynx
     tree yaft glibc-utf8-locales
     ;; text editors
     vim emacs-next-no-x
@@ -141,8 +158,9 @@ EndSection\n")
     bluez
     %base-packages))
   (setuid-programs
-   (cons
+   (cons*
     #~(string-append #$docker-cli "/bin/docker")
+    "/home/john/.xserverrc"
     %setuid-programs))
   (services
    (cons*
@@ -150,10 +168,14 @@ EndSection\n")
                     udev-service-type `(,light))
     ;; TODO: Add service for modprobe.d modules?
     (bluetooth-service #:auto-enable? #t)
+    (service alsa-service-type)
     (service dnsmasq-service-type
              (dnsmasq-configuration
               (servers '("1.1.1.1"))))
     (service docker-service-type)
+    (dbus-service)
+    (service elogind-service-type)
+    fontconfig-file-system-service
     (service kmscon-service-type
              (kmscon-configuration
               (virtual-terminal "tty8")
@@ -164,10 +186,15 @@ EndSection\n")
               ;; (xkb-variant "")
               ;; (xkb-options "ctrl:nocaps")
               ))
+    (service mingetty-service-type (mingetty-configuration
+                                    (tty "tty7")))
+    (service network-manager-service-type)
+    (service ntp-service-type)
     (service openssh-service-type
              (openssh-configuration
               (challenge-response-authentication? #f)
               (password-authentication? #f)))
+    polkit-wheel-service
     (service thermald-service-type
              (thermald-configuration))
     (service tlp-service-type
@@ -179,22 +206,26 @@ EndSection\n")
              (qemu-binfmt-configuration
               (platforms (lookup-qemu-platforms "arm" "aarch64" "mips64el"))
               (guix-support? #t)))
-    (modify-services %desktop-services
+    (udisks-service)
+    (service usb-modeswitch-service-type)
+    (service wpa-supplicant-service-type)
+    x11-socket-directory-service
+    (modify-services %base-services
+      (special-files-service-type
+       files =>
+       `(("/home/john/.xserverrc"
+          ,(xorg-start-command
+            (xorg-configuration
+             (keyboard-layout ctrl-nocaps)
+             (extra-config `(,cst-trackball ,touchscreen-disable)))))
+         ,@files))
       (console-font-service-type
        s =>
-       `(("tty1" . "LatGrkCyr-8x16")
-         ("tty2" . ,tamzen-psf-font)
-         ("tty3" . ,tamzen-psf-font)
-         ("tty4" . ,tamzen-psf-font)
-         ("tty5" . ,tamzen-psf-font)
-         ("tty6" . ,tamzen-psf-font)))
-      (gdm-service-type
-       c =>
-       (gdm-configuration
-        (inherit c)
-        (xorg-configuration
-         (xorg-configuration
-          (keyboard-layout ctrl-nocaps)
-          (extra-config `(,cst-trackball ,touchscreen-disable)))))))))
+       (cons
+        `("tty7" . ,tamzen-psf-font)
+        (map
+         (match-lambda
+           ((tty . font) `(,tty . ,tamzen-psf-font)))
+         s))))))
   ;; Allow resolution of '.local' host names with mDNS.
   (name-service-switch %mdns-host-lookup-nss))

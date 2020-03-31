@@ -75,3 +75,5 @@ if test "Darwin" = (uname)
 end
 
 # eval (opam env)
+
+test (tty) = /dev/tty1; and xinit ~/.xsession
