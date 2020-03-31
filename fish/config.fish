@@ -24,42 +24,32 @@ set -x fish_color_cwd yellow
 set fish_greeting ""
 
 # solarized
-if test -e ~/.config/fish/colors.fish
-    source ~/.config/fish/colors.fish
-end
+test -e ~/.config/fish/colors.fish;
+and source ~/.config/fish/colors.fish
 
 # prompt :)
-if test -e ~/.config/fish/fish_prompt.fish
-    source ~/.config/fish/fish_prompt.fish
-end
+test -e ~/.config/fish/fish_prompt.fish;
+and source ~/.config/fish/fish_prompt.fish
 
 # keybindings
-if test -e ~/.config/fish/keybindings.fish
-    source ~/.config/fish/keybindings.fish
-end
+test -e ~/.config/fish/keybindings.fish;
+and source ~/.config/fish/keybindings.fish
 
 # fixes for emacs
 # emacs ansi-term support
-if test -n "$INSIDE_EMACS"
-  set -x TERM eterm-color
-end
+test -n "$INSIDE_EMACS"; and set -x TERM eterm-color
 
 # hopeful fix for no binding error messages
 # See issue 1907:
 # https://github.com/fish-shell/fish-shell/issues/1907
-if test "$TERM" = "dumb"
-  function fish_title; end
-end
+test -n "$INSIDE_EMACS"; and function fish_title; end
 
 # aliases
-if test -e ~/.config/fish/aliases.fish
-  source ~/.config/fish/aliases.fish
-end
+test -e ~/.config/fish/aliases.fish;
+and source ~/.config/fish/aliases.fish
 
-# private
-if test -e ~/.config/fish/private.fish
-    source ~/.config/fish/private.fish
-end
+test -e ~/.config/fish/private.fish;
+and source ~/.config/fish/private.fish
 
 # pretty vi mode
 function fish_mode_prompt; end
@@ -70,9 +60,8 @@ set fish_cursor_replace_one underscore
 set fish_cursor_visual      block
 
 # python direnv package
-if test "Darwin" = (uname)
-    eval (direnv hook fish)
-end
+test "Darwin" = (uname);
+and eval (direnv hook fish)
 
 # eval (opam env)
 
