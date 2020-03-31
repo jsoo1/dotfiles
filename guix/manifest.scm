@@ -44,7 +44,6 @@
    "emacs-evil-org"
    "emacs-evil-surround"
    "emacs-evil-tmux-navigator"
-   "emacs-exec-path-from-shell"
    "emacs-f"
    "emacs-fill-column-indicator"
    "emacs-fish-mode"

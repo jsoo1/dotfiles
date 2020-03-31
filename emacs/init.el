@@ -81,9 +81,6 @@
                   "/run/current-system/profile/sbin"
                   "~/dotfiles/emacs/"))
 
-(require 'exec-path-from-shell)
-(exec-path-from-shell-initialize)
-
 ;; Pinentry
 (setf epa-pinentry-mode 'loopback)
 
