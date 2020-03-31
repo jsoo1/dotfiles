@@ -427,9 +427,6 @@
 ;; Proof General
 (load-file "~/.guix-profile/share/emacs/site-lisp/site-start.d/pg-init.el")
 
-;; Coq
-(define-key coq-mode-map (kbd "C-c RET") #'proof-goto-point)
-
 ;; Idris mode
 (require 'idris-mode)
 (require 'inferior-idris)
@@ -486,19 +483,22 @@
 (setq js-indent-level 4)
 
 ;; Coq
-(add-hook
- 'coq-mode-hook
- (lambda ()
-   (set-face-attribute
-    'proof-locked-face nil
-    :underline nil
-    :background "#073642")))
-
-(add-hook 'coq-mode-hook #'company-coq-mode)
 (setq proof-three-window-mode-policy 'hybrid
       proof-script-fly-past-comments t
       proof-splash-seen t
       company-coq-disabled-features '(hello))
+
+(with-eval-after-load 'coq
+  (progn
+    (set-face-attribute
+    'proof-locked-face nil
+    :underline nil
+    :background "#073642")
+
+    (add-hook 'coq-mode-hook #'company-coq-mode)
+
+    (define-key coq-mode-map (kbd "C-c RET") #'proof-goto-point)))
+
 
 ;; Haskell mode
 (require 'haskell-interactive-mode)
