@@ -12,7 +12,7 @@ set -xg ALTERNATE_EDITOR 'vim'
 set -xg GIT_EXEC_PATH /run/current-system/profile/libexec/git-core
 
 # Or this
-set -xg GUILE_LOAD_PATH $GUILE_LOAD_PATH /home/john/.guix-profile/share/guile/site/2.2
+set -xg GUILE_LOAD_PATH $GUILE_LOAD_PATH /home/john/.guix-profile/share/guile/site/3.0
 
 # cargo
 set -x CARGO_HOME "~/.cargo"
