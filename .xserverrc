@@ -1,3 +1,0 @@
-#! /run/current-system/profile/bin/env fish
-
-sudo /usr/bin/startx "$argv"

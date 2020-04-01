@@ -10,6 +10,7 @@
                         font-iosevka
                         font-tamzen))
              ((gnu packages fontutils) #:select (fontconfig))
+             ((gnu packages gl) #:select (mesa))
              ((gnu packages gnupg) #:select (gnupg))
              ((gnu packages linux) #:select (bluez light))
              ((gnu packages ncurses) #:select (ncurses))
@@ -21,9 +22,11 @@
              ((gnu packages vim) #:select (vim))
              ((gnu packages web-browsers) #:select (lynx))
              ((gnu packages xdisorg) #:select (xcape))
-             ((gnu packages xorg) #:select (xinit))
-             ((gnu services)
-              #:select (special-files-service-type))
+             ((gnu packages xorg)
+              #:select (xkbcomp
+                        xinit
+                        xorg-server
+                        xkeyboard-config))
              ((gnu services base)
               #:select (gpm-service-type
                         gpm-configuration))
@@ -67,11 +70,7 @@
               #:select (qemu-binfmt-service-type
                         qemu-binfmt-configuration
                         lookup-qemu-platforms))
-             ((gnu services xorg)
-              #:select (gdm-service-type
-                        gdm-configuration
-                        xorg-configuration
-                        xorg-start-command))
+             (gnu services xorg)
              (guix gexp)
              (ice-9 match)
              ((yaft) #:select (yaft)))
@@ -95,6 +94,31 @@ EndSection\n")
 ;; Workaround for https://github.com/alols/xcape/issues/62
 ;; I would prefer nocaps
 (define ctrl-nocaps (keyboard-layout "us" #:options '("ctrl:nocaps")))
+
+(define (x-wrapper config)
+  (define exp
+    #~(begin
+        (setenv "XORG_DRI_DRIVER_PATH" (string-append #$mesa "/lib/dri"))
+        (setenv "XKB_BINDIR" (string-append #$xkbcomp "/bin"))
+
+        (apply execl "/run/setuid-programs/X" "/run/setuid-programs/X"
+               "-xkbdir" (string-append #$xkeyboard-config "/share/X11/xkb")
+               "-config" #$(xorg-configuration->file config)
+               "-configdir" #$(xorg-configuration-directory
+                               (xorg-configuration-modules config))
+               (cdr (command-line)))))
+
+  (program-file "X-wrapper" exp))
+
+(define (make-startx config)
+  (define X (x-wrapper config))
+  (define exp
+    #~(apply execl #$X #$X
+             "-logverbose" "-verbose" "-terminate"
+             #$@(xorg-configuration-server-arguments config)
+             (cdr (command-line))))
+
+  (program-file "startx" exp))
 
 (define tamzen-psf-font
   (file-append
@@ -130,14 +154,9 @@ EndSection\n")
           (comment "idiot man")
           (group "users")
           (supplementary-groups
-           '("wheel"
-             "netdev"
-             "audio"
-             "video"
-             "tty"
-             "lp"))
+           '("wheel" "netdev" "audio" "video" "lp"))
           (home-directory "/home/john")
-          (shell #~(string-append #$fish "/bin/fish")))
+          (shell (file-append fish "/bin/fish")))
          %base-user-accounts))
   (packages
    (cons*
@@ -159,8 +178,12 @@ EndSection\n")
     %base-packages))
   (setuid-programs
    (cons*
-    #~(string-append #$docker-cli "/bin/docker")
-    "/home/john/.xserverrc"
+    (file-append docker-cli "/bin/docker")
+    (file-append xorg-server "/bin/X")
+    (make-startx
+     (xorg-configuration
+      (keyboard-layout ctrl-nocaps)
+      (extra-config `(,cst-trackball))))
     %setuid-programs))
   (services
    (cons*
@@ -211,14 +234,6 @@ EndSection\n")
     (service wpa-supplicant-service-type)
     x11-socket-directory-service
     (modify-services %base-services
-      (special-files-service-type
-       files =>
-       `(("/home/john/.xserverrc"
-          ,(xorg-start-command
-            (xorg-configuration
-             (keyboard-layout ctrl-nocaps)
-             (extra-config `(,cst-trackball ,touchscreen-disable)))))
-         ,@files))
       (console-font-service-type
        s =>
        (cons

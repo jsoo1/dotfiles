@@ -1,4 +1,4 @@
-DG_HOME ?= $(HOME)/.config
+XDG_HOME ?= $(HOME)/.config
 MODPROBE = /run/modprobe.d
 
 DIRS = \
@@ -43,7 +43,6 @@ SOFTLINKS = \
 	$(HOME)/.tmux.conf \
 	$(HOME)/.tmux/tmuxline.conf \
 	$(XDG_HOME)/xmobar/xmobar.hs \
-	$(HOME)/.xserverrc \
 	$(HOME)/.xsession \
 	$(HOME)/.xmonad/xmonad.hs \
 	$(XDG_HOME)/zathura/zathurarc
@@ -150,9 +149,6 @@ $(HOME)/.tmux/tmuxline.conf: | $(HOME)/.tmux ## Tmux status line configuration
 
 $(XDG_HOME)/xmobar/xmobar.hs: | $(XDG_HOME)/xmobar ## Xmobar configuration
 	$(call softlink,$(PWD)/xmobar/xmobar.hs,$@)
-
-$(HOME)/.xserverrc: | $(HOME) ## Startx
-	$(call softlink,$(PWD)/.xserverrc,$@)
 
 $(HOME)/.xsession: | $(HOME) ## Loaded by gdm and other DMs on login
 	$(call softlink,$(PWD)/xmonad/.xsession,$@)
