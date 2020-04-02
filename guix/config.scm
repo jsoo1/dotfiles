@@ -93,30 +93,27 @@ EndSection\n")
 
 (define ctrl-nocaps (keyboard-layout "us" #:options '("ctrl:nocaps")))
 
-(define (x-wrapper config)
-  (define exp
-    #~(begin
-        (setenv "XORG_DRI_DRIVER_PATH" (string-append #$mesa "/lib/dri"))
-        (setenv "XKB_BINDIR" (string-append #$xkbcomp "/bin"))
+(define startx
+  (program-file
+   "startx"
+   #~(begin
+       (setenv "XORG_DRI_DRIVER_PATH" (string-append #$mesa "/lib/dri"))
+       (setenv "XKB_BINDIR" (string-append #$xkbcomp "/bin"))
 
-        (apply execl "/run/setuid-programs/X" "/run/setuid-programs/X"
-               "-xkbdir" (string-append #$xkeyboard-config "/share/X11/xkb")
-               "-config" #$(xorg-configuration->file config)
-               "-configdir" #$(xorg-configuration-directory
-                               (xorg-configuration-modules config))
-               (cdr (command-line)))))
+       ;; X doesn't accept absolute paths when run with suid
+       (apply execl "/run/setuid-programs/X" "/run/setuid-programs/X"
+              ;; These two are skeletons below
+              "-config" ".config/X/xorg.conf"
+              "-configdir" ".config/X/modules"
+              "-logverbose" "-verbose" "-terminate"
+              (cdr (command-line))))))
 
-  (program-file "X-wrapper" exp))
-
-(define (make-startx config)
-  (define X (x-wrapper config))
-  (define exp
-    #~(apply execl #$X #$X
-             "-logverbose" "-verbose" "-terminate"
-             #$@(xorg-configuration-server-arguments config)
-             (cdr (command-line))))
-
-  (program-file "startx" exp))
+(define xorg-conf
+  (xorg-configuration
+   (keyboard-layout ctrl-nocaps)
+   (extra-config `(,cst-trackball))
+   (server-arguments
+    `("-keeptty" ,@%default-xorg-server-arguments))))
 
 (define tamzen-psf-font
   (file-append font-tamzen "/share/kbd/consolefonts/TamzenForPowerline10x20.psf"))
@@ -153,7 +150,11 @@ EndSection\n")
           (supplementary-groups
            '("wheel" "netdev" "audio" "video" "lp"))
           (home-directory "/home/john")
-          (shell (file-append fish "/bin/fish")))
+          (shell (file-append fish "/bin/fish"))
+          (skeletons
+           `(("/home/john/.config/X/xorg.conf" ,(xorg-configuration->file xorg-conf))
+             ("/home/john/.config/X/modules" ,(xorg-configuration-directory
+                                               (xorg-configuration-modules xorg-conf))))))
          %base-user-accounts))
   (packages
    (cons*
@@ -175,10 +176,7 @@ EndSection\n")
    (cons*
     (file-append docker-cli "/bin/docker")
     (file-append xorg-server "/bin/X")
-    (make-startx
-     (xorg-configuration
-      (keyboard-layout ctrl-nocaps)
-      (extra-config `(,cst-trackball))))
+    startx
     %setuid-programs))
   (services
    (cons*
