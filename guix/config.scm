@@ -8,7 +8,7 @@
              ((gnu packages fonts)
               #:select (font-adobe-source-code-pro
                         font-iosevka
-                        font-tamzen))
+                        font-terminus))
              ((gnu packages fontutils) #:select (fontconfig))
              ((gnu packages gl) #:select (mesa))
              ((gnu packages gnupg) #:select (gnupg))
@@ -91,8 +91,6 @@ EndSection\n")
     Option \"ignore\" \"on\"
 EndSection\n")
 
-;; Workaround for https://github.com/alols/xcape/issues/62
-;; I would prefer nocaps
 (define ctrl-nocaps (keyboard-layout "us" #:options '("ctrl:nocaps")))
 
 (define (x-wrapper config)
@@ -120,9 +118,8 @@ EndSection\n")
 
   (program-file "startx" exp))
 
-(define tamzen-psf-font
-  (file-append
-   font-tamzen "/share/kbd/consolefonts/TamzenForPowerline10x20.psf"))
+(define terminus-psf-font
+  (file-append font-terminus "/share/consolefonts/term-132n"))
 
 (operating-system
   (host-name "ecenter")
@@ -160,8 +157,6 @@ EndSection\n")
          %base-user-accounts))
   (packages
    (cons*
-    ;; nice tty font
-    font-tamzen
     ;; kmscon fonts
     fontconfig font-iosevka
     ;; backlight config
@@ -237,10 +232,10 @@ EndSection\n")
       (console-font-service-type
        s =>
        (cons
-        `("tty7" . ,tamzen-psf-font)
+        `("tty7" . ,terminus-psf-font)
         (map
          (match-lambda
-           ((tty . font) `(,tty . ,tamzen-psf-font)))
+           ((tty . font) `(,tty . ,terminus-psf-font)))
          s))))))
   ;; Allow resolution of '.local' host names with mDNS.
   (name-service-switch %mdns-host-lookup-nss))
