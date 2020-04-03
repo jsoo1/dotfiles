@@ -14,6 +14,7 @@ in [
   pkgs.exa
   pkgs.fd
   pkgs.fish
+  pkgs.gnumake
   pkgs.iosevka
   pkgs.fzy
   pkgs.ghcid
@@ -36,6 +37,7 @@ in [
   pkgs.ripgrep
   pkgs.rustfmt
   pkgs.spago
+  pkgs.openssh
   pkgs.stylish-haskell
   pkgs.tmux
   pkgs.watch
