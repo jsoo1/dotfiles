@@ -41,11 +41,15 @@ abbr tmux "tmux new-session -A -n 'emacs' -s (basename (pwd))"
 abbr dockerpurge 'docker rmi (docker images -a --filter=dangling=true -q)'
 
 # VPN
+function curr_vpn -d 'which is the current vpn'
+    launchctl list | rg -o '(pano|vetpro)\.de-tunnel' | sed 's/\.de-tunnel//' | sort -u
+end
+
 function vpin -d 'Get on a vpn' -a vpn
-    set -l curr_vpn (launchctl list | rg -o 'pano|vetpro')
-    if test -z $curr_vpn
+    set -l curr (curr_vpn)
+    if test -z $curr
         launchctl bootstrap gui/(id -u) /Users/john/Library/LaunchAgents/com.$vpn.de-tunnel.plist
-    else if test $curr_vpn != $vpn
+    else if test $curr != $vpn
         launchctl bootout gui/(id -u)/com.$curr_vpn.de-tunnel
         launchctl bootstrap gui/(id -u) /Users/john/Library/LaunchAgents/com.$vpn.de-tunnel.plist
     end
@@ -55,11 +59,11 @@ complete -c vpin -a 'vetpro' -d 'get on vetpro' --no-files
 complete -c vpin -a 'pano' -d 'get on gateway 2' --no-files
 
 function vpout -d 'Get off the vpn' -a vpn
-    set -l curr_vpn (launchctl list | rg --color=never -o 'pano|vetpro')
-    if test $vpn
-        launchctl bootout gui/(id -u)/com.$vpn.de-tunnel
-    else if test $curr_vpn
-        launchctl bootout gui/(id -u)/com.$curr_vpn.de-tunnel
+    set -l curr (curr_vpn)
+    if test -n "$vpn"
+        launchctl bootout gui/(id -u)/com."$vpn".de-tunnel
+    else if test '' != "$curr"
+        launchctl bootout gui/(id -u)/com.(curr_vpn).de-tunnel
     end
 end
 
