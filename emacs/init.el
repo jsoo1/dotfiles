@@ -217,7 +217,7 @@
     (projectile-project-run-cmd . "make start")
     (haskell-stylish-on-save . nil)
     (haskell-process-type . 'stack-ghci)
-    (haskell-mode-stylish-haskell-args . "--ghc-opt TypeApplications")
+    (haskell-mode-stylish-haskell-args . '("--ghc-opt TypeApplications"))
     (js-indent-level . 2)
     (haskell-process-wrapper-function
      . (lambda (argv)
