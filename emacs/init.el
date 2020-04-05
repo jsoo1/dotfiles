@@ -579,7 +579,9 @@
 (require 'scheme)
 (defvar guile-imenu-generic-expression
   (append '(("Public" "^(define-public\\s-+(?\\(\\sw+\\)" 1)
-            ("Functions*" "^(define\\*\\s-+(?\\(\\sw+\\)" 1))
+            ("Function*" "^(define\\*\\s-+(?\\(\\sw+\\)" 1)
+            ("Syntax Rule" "^(define-syntax-rule\\s-+(?\\(\\sw+\\" 1)
+            ("Record" "^(define-record-type\\*?\\s-+<\\(\\sw+\\)>" 1))
         scheme-imenu-generic-expression)
   "Imenu generic expression for Guile modes.  See `imenu-generic-expression'.")
 (add-hook
