@@ -27,6 +27,7 @@
                         xinit
                         xorg-server
                         xkeyboard-config))
+             (gnu services)
              ((gnu services base)
               #:select (gpm-service-type
                         gpm-configuration))
@@ -118,6 +119,18 @@ EndSection\n")
 (define tamzen-psf-font
   (file-append font-tamzen "/share/kbd/consolefonts/TamzenForPowerline10x20.psf"))
 
+(define chown-setuid-program-service-type
+  (service-type
+   (name 'chown-setuid-program-service-type)
+   (extensions
+    (list
+     (service-extension
+      setuid-program-service-type
+      (lambda (args)
+        (chown "/run/setuid-programs/Xorg" "root" "input")))))
+   (description
+    "Chown some setuid programs")))
+
 (operating-system
   (host-name "ecenter")
   (timezone "America/Los_Angeles")
@@ -150,11 +163,7 @@ EndSection\n")
           (supplementary-groups
            '("wheel" "netdev" "audio" "video" "lp"))
           (home-directory "/home/john")
-          (shell (file-append fish "/bin/fish"))
-          (skeletons
-           `(("/home/john/.config/X/xorg.conf" ,(xorg-configuration->file xorg-conf))
-             ("/home/john/.config/X/modules" ,(xorg-configuration-directory
-                                               (xorg-configuration-modules xorg-conf))))))
+          (shell (file-append fish "/bin/fish")))
          %base-user-accounts))
   (packages
    (cons*
@@ -180,8 +189,6 @@ EndSection\n")
     %setuid-programs))
   (services
    (cons*
-    (simple-service 'light-udev-rules
-                    udev-service-type `(,light))
     ;; TODO: Add service for modprobe.d modules?
     (bluetooth-service #:auto-enable? #t)
     (service alsa-service-type)
@@ -226,7 +233,18 @@ EndSection\n")
     (service usb-modeswitch-service-type)
     (service wpa-supplicant-service-type)
     x11-socket-directory-service
+    (service chown-setuid-program-service-type)
     (modify-services %base-services
+      (udev-service-type
+       c =>
+       (udev-configuration
+        (inherit c)
+        (rules
+         `(,light
+           ,(udev-rule
+             "99-dev-input-group.rules"
+             "SUBSYSTEM==\"input\", ACTION==\"add\", GROUP=\"input\"" )
+           ,@(udev-configuration-rules c)))))
       (console-font-service-type
        s =>
        (cons
