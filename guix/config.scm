@@ -94,6 +94,13 @@ EndSection\n")
 
 (define ctrl-nocaps (keyboard-layout "us" #:options '("ctrl:nocaps")))
 
+(define xorg-conf
+  (xorg-configuration
+   (keyboard-layout ctrl-nocaps)
+   (extra-config `(,cst-trackball))
+   (server-arguments
+    `("-keeptty" ,@%default-xorg-server-arguments))))
+
 (define startx
   (program-file
    "startx"
@@ -104,32 +111,40 @@ EndSection\n")
        ;; X doesn't accept absolute paths when run with suid
        (apply execl "/run/setuid-programs/X" "/run/setuid-programs/X"
               ;; These two are skeletons below
-              "-config" ".config/X/xorg.conf"
-              "-configdir" ".config/X/modules"
+              "-config" #$(xorg-configuration->file xorg-conf)
+              "-configdir" #$(xorg-configuration-directory
+                              (xorg-configuration-modules xorg-conf))
               "-logverbose" "-verbose" "-terminate"
-              (cdr (command-line))))))
-
-(define xorg-conf
-  (xorg-configuration
-   (keyboard-layout ctrl-nocaps)
-   (extra-config `(,cst-trackball))
-   (server-arguments
-    `("-keeptty" ,@%default-xorg-server-arguments))))
+              (append '#$(xorg-configuration-server-arguments xorg-conf)
+                      (cdr (command-line)))))))
 
 (define tamzen-psf-font
   (file-append font-tamzen "/share/kbd/consolefonts/TamzenForPowerline10x20.psf"))
 
-(define chown-setuid-program-service-type
+(define chown-program-service-type
   (service-type
-   (name 'chown-setuid-program-service-type)
+   (name 'chown-program-service-type)
    (extensions
     (list
+     (service-extension setuid-program-service-type (const '()))
      (service-extension
-      setuid-program-service-type
-      (lambda (args)
-        (chown "/run/setuid-programs/Xorg" "root" "input")))))
+      activation-service-type
+      (lambda (params)
+        (with-imported-modules '((ice-9 match))
+          #~(begin
+              (use-modules (ice-9 match))
+              (for-each
+               (match-lambda
+                 ((prog user group perm)
+                  (let ((uid (passwd:uid (getpw user)))
+                        (gid (group:gid (getgr group))))
+                    (format
+                     #t "setting ownership of ~A to ~A:~A~%" prog user group)
+                    (chown prog uid gid)
+                    (chmod prog perm))))
+               '#$params)))))))
    (description
-    "Chown some setuid programs")))
+    "Chown some programs.")))
 
 (operating-system
   (host-name "ecenter")
@@ -232,9 +247,16 @@ EndSection\n")
     (udisks-service)
     (service usb-modeswitch-service-type)
     (service wpa-supplicant-service-type)
-    x11-socket-directory-service
-    (service chown-setuid-program-service-type)
+    ;; x11-socket-directory-service
+    (service chown-program-service-type
+             '(("/run/setuid-programs/X" "root" "input" #o6555)))
     (modify-services %base-services
+      (special-files-service-type
+       files =>
+       `(("/home/john/.config/X/xorg.conf" ,(xorg-configuration->file xorg-conf))
+         ("/home/john/.config/X/modules" ,(xorg-configuration-directory
+                                           (xorg-configuration-modules xorg-conf)))
+         ,@files))
       (udev-service-type
        c =>
        (udev-configuration
