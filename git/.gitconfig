@@ -3,14 +3,14 @@
 [core]
 	autocrlf = input
 	safecrlf = true
-[push]
-	default = upstream
 [merge]
 	conflictstyle = diff3
 [user]
 	email = jsoo1@asu.edu
 	name = John Soo
         signingKey = 5A158FAF406A748A81A9DC4E4F437A76B448A23B
+[log]
+        showSignature = true
 [alias]
 	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
 [credential]
