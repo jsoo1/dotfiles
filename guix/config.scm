@@ -111,9 +111,8 @@ EndSection\n")
        ;; X doesn't accept absolute paths when run with suid
        (apply execl "/run/setuid-programs/X" "/run/setuid-programs/X"
               ;; These two are skeletons below
-              "-config" #$(xorg-configuration->file xorg-conf)
-              "-configdir" #$(xorg-configuration-directory
-                              (xorg-configuration-modules xorg-conf))
+              ;; "-config" ".config/X/xorg.conf"
+              ;; "-configdir" ".config/X/modules"
               "-logverbose" "-verbose" "-terminate"
               (append '#$(xorg-configuration-server-arguments xorg-conf)
                       (cdr (command-line)))))))
