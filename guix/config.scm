@@ -274,11 +274,8 @@ EndSection\n")
            ,@(udev-configuration-rules c)))))
       (console-font-service-type
        s =>
-       (cons
-        `("tty7" . ,tamzen-psf-font)
-        (map
-         (match-lambda
-           ((tty . font) `(,tty . ,tamzen-psf-font)))
-         s))))))
+       (map
+        (match-lambda ((tty . font) `(,tty . ,tamzen-psf-font)))
+        s)))))
   ;; Allow resolution of '.local' host names with mDNS.
   (name-service-switch %mdns-host-lookup-nss))
