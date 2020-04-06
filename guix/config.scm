@@ -109,7 +109,7 @@ EndSection\n")
        (setenv "XKB_BINDIR" (string-append #$xkbcomp "/bin"))
 
        ;; X doesn't accept absolute paths when run with suid
-       (apply execl "/usr/bin/X" "/usr/bin/X"
+       (apply execl (string-append #$xorg-server "/bin/X") (string-append #$xorg-server "/bin/X")
               "-config" #$(xorg-configuration->file xorg-conf)
               "-configdir" #$(xorg-configuration-directory
                               (xorg-configuration-modules xorg-conf))
@@ -247,7 +247,7 @@ EndSection\n")
     (udisks-service)
     (service usb-modeswitch-service-type)
     (service wpa-supplicant-service-type)
-    ;; x11-socket-directory-service
+    x11-socket-directory-service
     (service
      chown-program-service-type
      #~(list
