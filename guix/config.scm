@@ -109,10 +109,10 @@ EndSection\n")
        (setenv "XKB_BINDIR" (string-append #$xkbcomp "/bin"))
 
        ;; X doesn't accept absolute paths when run with suid
-       (apply execl "/run/setuid-programs/X" "/run/setuid-programs/X"
-              ;; These two are skeletons below
-              ;; "-config" ".config/X/xorg.conf"
-              ;; "-configdir" ".config/X/modules"
+       (apply execl "/usr/bin/X" "/usr/bin/X"
+              "-config" #$(xorg-configuration->file xorg-conf)
+              "-configdir" #$(xorg-configuration-directory
+                              (xorg-configuration-modules xorg-conf))
               "-logverbose" "-verbose" "-terminate"
               (append '#$(xorg-configuration-server-arguments xorg-conf)
                       (cdr (command-line)))))))
@@ -131,17 +131,17 @@ EndSection\n")
       (lambda (params)
         (with-imported-modules '((ice-9 match))
           #~(begin
+              (define (chownership prog user group perm)
+                (let ((uid (passwd:uid (getpw user)))
+                      (gid (group:gid (getgr group))))
+                  (chown prog uid gid)
+                  (chmod prog perm)))
               (use-modules (ice-9 match))
               (for-each
                (match-lambda
                  ((prog user group perm)
-                  (let ((uid (passwd:uid (getpw user)))
-                        (gid (group:gid (getgr group))))
-                    (format
-                     #t "setting ownership of ~A to ~A:~A~%" prog user group)
-                    (chown prog uid gid)
-                    (chmod prog perm))))
-               '#$params)))))))
+                  (chownership prog user group perm)))
+               #$params)))))))
    (description
     "Chown some programs.")))
 
@@ -198,6 +198,7 @@ EndSection\n")
   (setuid-programs
    (cons*
     (file-append docker-cli "/bin/docker")
+    ;; Stuff for xorg
     (file-append xorg-server "/bin/X")
     startx
     %setuid-programs))
@@ -247,15 +248,13 @@ EndSection\n")
     (service usb-modeswitch-service-type)
     (service wpa-supplicant-service-type)
     ;; x11-socket-directory-service
-    (service chown-program-service-type
-             '(("/run/setuid-programs/X" "root" "input" #o6555)))
+    (service
+     chown-program-service-type
+     #~(list
+        (list (string-append "/run/setuid-programs/" (basename #$startx))
+              "john" "input" #o2755)
+        '("/run/setuid-programs/X" "john" "input" #o2755)))
     (modify-services %base-services
-      (special-files-service-type
-       files =>
-       `(("/home/john/.config/X/xorg.conf" ,(xorg-configuration->file xorg-conf))
-         ("/home/john/.config/X/modules" ,(xorg-configuration-directory
-                                           (xorg-configuration-modules xorg-conf)))
-         ,@files))
       (udev-service-type
        c =>
        (udev-configuration
