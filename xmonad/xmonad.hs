@@ -60,15 +60,13 @@ main = do
         $ smartBorders
         $ layoutHook def
     , logHook = traverse_ myXmobar xmobarPipes
-    , startupHook =
-        spawn
-          "xrandr\
-          \ --output HDMI-1 --left-of eDP-1-1\
-          \ --output eDP-1-1"
-        <+> spawn "light -S 30.0"
-        <+> spawn "compton --config ~/.config/compton/compton.conf"
-        <+> spawn "xwallpaper --zoom ~/Downloads/richter-lucerne.jpg"
-        <+> spawn "xcape -e 'Control_L=Escape'"
+    , startupHook = traverse_ spawn
+        [ "xrandr --output HDMI-1 --left-of eDP-1-1 --output eDP-1-1"
+        , "light -S 30.0"
+        , "compton --config ~/.config/compton/compton.conf"
+        , "xwallpaper --zoom ~/Downloads/richter-lucerne.jpg"
+        , "xcape -e 'Control_L=Escape'"
+        ]
     }
     `additionalKeys` myCommands
 
