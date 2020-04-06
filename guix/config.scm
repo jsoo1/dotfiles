@@ -105,20 +105,26 @@ EndSection\n")
   (program-file
    "startx"
    #~(begin
-       (setenv "XORG_DRI_DRIVER_PATH" (string-append #$mesa "/lib/dri"))
-       (setenv "XKB_BINDIR" (string-append #$xkbcomp "/bin"))
+       (setenv
+        "XORG_DRI_DRIVER_PATH" (string-append #$mesa "/lib/dri"))
+       (setenv
+        "XKB_BINDIR" (string-append #$xkbcomp "/bin"))
 
        ;; X doesn't accept absolute paths when run with suid
-       (apply execl (string-append #$xorg-server "/bin/X") (string-append #$xorg-server "/bin/X")
-              "-config" #$(xorg-configuration->file xorg-conf)
-              "-configdir" #$(xorg-configuration-directory
-                              (xorg-configuration-modules xorg-conf))
-              "-logverbose" "-verbose" "-terminate"
-              (append '#$(xorg-configuration-server-arguments xorg-conf)
-                      (cdr (command-line)))))))
+       (apply
+        execl
+        (string-append #$xorg-server "/bin/X")
+        (string-append #$xorg-server "/bin/X")
+        "-config" #$(xorg-configuration->file xorg-conf)
+        "-configdir" #$(xorg-configuration-directory
+                        (xorg-configuration-modules xorg-conf))
+        "-logverbose" "-verbose" "-terminate"
+        (append '#$(xorg-configuration-server-arguments xorg-conf)
+                (cdr (command-line)))))))
 
 (define tamzen-psf-font
-  (file-append font-tamzen "/share/kbd/consolefonts/TamzenForPowerline10x20.psf"))
+  (file-append
+   font-tamzen "/share/kbd/consolefonts/TamzenForPowerline10x20.psf"))
 
 (define chown-program-service-type
   (service-type
@@ -236,7 +242,8 @@ EndSection\n")
     (service gpm-service-type (gpm-configuration))
     (service qemu-binfmt-service-type
              (qemu-binfmt-configuration
-              (platforms (lookup-qemu-platforms "arm" "aarch64" "mips64el"))
+              (platforms
+               (lookup-qemu-platforms "arm" "aarch64" "mips64el"))
               (guix-support? #t)))
     (udisks-service)
     (service usb-modeswitch-service-type)
@@ -250,8 +257,9 @@ EndSection\n")
     (service
      chown-program-service-type
      #~(list
-        (list (string-append "/run/setuid-programs/" (basename #$startx))
-              "john" "input" #o2755)
+        (list
+         (string-append "/run/setuid-programs/" (basename #$startx))
+         "john" "input" #o2755)
         '("/run/setuid-programs/X" "john" "input" #o2755)))
     (modify-services %base-services
       (udev-service-type
@@ -260,9 +268,9 @@ EndSection\n")
         (inherit c)
         (rules
          `(,light ; Use light without sudo
-           ,(udev-rule ; For xorg without display manager (see gentoo wiki)
+           ,(udev-rule ; For xorg sans display manager (gentoo wiki)
              "99-dev-input-group.rules"
-             "SUBSYSTEM==\"input\", ACTION==\"add\", GROUP=\"input\"" )
+             "SUBSYSTEM==\"input\", ACTION==\"add\", GROUP=\"input\"")
            ,@(udev-configuration-rules c)))))
       (console-font-service-type
        s =>
