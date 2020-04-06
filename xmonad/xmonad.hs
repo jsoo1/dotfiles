@@ -6,13 +6,15 @@ module Main where
 
 
 import           Control.Applicative              (liftA2)
-import           Control.Monad                    (join, unless)
+import           Control.Monad                    (join, unless, void)
 import           Data.Coerce                      (coerce)
 import           Data.Foldable                    (traverse_)
 import           Data.Function                    (on)
 import           Data.List                        (intercalate)
 import qualified Data.Map.Strict                  as Map
 import           Data.Maybe                       (listToMaybe)
+import qualified DBus
+import qualified DBus.Client as DBus
 
 
 import           Graphics.X11.ExtraTypes.XF86
@@ -75,23 +77,14 @@ main = do
 myModMask :: KeyMask
 myModMask = mod4Mask
 
+
 myCommands :: [((KeyMask, KeySym), X ())]
 myCommands =
-  [ ( ( myModMask, xK_space ), spawn "dmenu_run -F" )
+  [ ( ( myModMask, xK_i ), spawn "dmenu_run -F -p open" )
   , ( ( myModMask .|. controlMask, xK_f)
-    , broadcastMessage ToggleStruts
-      <+> spawn "dbus-send \
-                \--session \
-                \--dest=org.Xmobar.Control \
-                \--type=method_call \
-                \--print-reply \
-                \'/org/Xmobar/Control' \
-                \org.Xmobar.Control.SendSignal \
-                \\"string:Toggle 0\""
-      <+> refresh
+    , void toggleXmobar <+> broadcastMessage ToggleStruts <+> refresh
     )
   , ( ( myModMask .|. shiftMask, xK_x ), spawn "xlock -mode rain" )
-  , ( ( myModMask .|. shiftMask, xK_s ), spawn "loginctl suspend" )
   , ( ( myModMask, xK_Tab )
     , gotoMenuConfig $ def
       { menuCommand = "dmenu"
@@ -170,6 +163,26 @@ xmobarCmd nScreens screen = do
   pure ( screen, xmobarPipe )
   where
     cmd = "xmobar ~/.config/xmobar/xmobar.hs --screen=" <> show (succ nScreens - screen)
+
+
+xmobarMethod :: DBus.MethodCall
+xmobarMethod =
+  method {DBus.methodCallDestination = Just busName}
+  where
+    busName = DBus.busName_ "org.Xmobar.Control"
+    objectPath = DBus.objectPath_ "/org/Xmobar/Control"
+    interfaceName = DBus.interfaceName_ "org.Xmobar.Control"
+    memberName = DBus.memberName_ "SendSignal"
+    method = DBus.methodCall objectPath interfaceName memberName
+
+
+toggleXmobar :: X DBus.MethodReturn
+toggleXmobar = do
+  client <- liftIO DBus.connectSession
+  liftIO $
+    DBus.call_
+      client
+      (xmobarMethod {DBus.methodCallBody = [DBus.toVariant "Toggle 0"]})
 
 
 myXmobar :: (Int, Handle) -> X ()
