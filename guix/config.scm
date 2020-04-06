@@ -129,21 +129,14 @@ EndSection\n")
      (service-extension
       activation-service-type
       (lambda (params)
-        (with-imported-modules '((ice-9 match))
-          #~(begin
-              (define (chownership prog user group perm)
-                (let ((uid (passwd:uid (getpw user)))
-                      (gid (group:gid (getgr group))))
-                  (chown prog uid gid)
-                  (chmod prog perm)))
-              (use-modules (ice-9 match))
-              (for-each
-               (match-lambda
-                 ((prog user group perm)
-                  (chownership prog user group perm)))
-               #$params)))))))
-   (description
-    "Chown some programs.")))
+        #~(begin
+            (define (chownership prog user group perm)
+              (let ((uid (passwd:uid (getpw user)))
+                    (gid (group:gid (getgr group))))
+                (chown prog uid gid)
+                (chmod prog perm)))
+            (for-each (lambda (x) (apply chownership x)) #$params))))))
+   (description "Modify permissions and ownership of programs.")))
 
 (operating-system
   (host-name "ecenter")
@@ -249,7 +242,6 @@ EndSection\n")
     (service usb-modeswitch-service-type)
     (service wpa-supplicant-service-type)
 
-    ;; Screen lockers are a pretty useful thing and these are small.
     (screen-locker-service slock)
     (screen-locker-service xlockmore "xlock")
 
