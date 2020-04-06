@@ -99,6 +99,7 @@
    "gettext"
    "ghc"
    "ghc-aws-lambda-haskell-runtime"
+   "ghc-dbus"
    "ghc-xmonad-contrib"
    "git"
    "glib-networking"
