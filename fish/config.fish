@@ -66,6 +66,6 @@ and eval (direnv hook fish)
 # eval (opam env)
 
 if test (tty) = /dev/tty1 && status is-login
-    xinit ~/.xsession -- /run/setuid-programs/X vt1
+    xinit ~/.xsession -- /run/setuid-programs/*startx vt1
     loginctl terminate-session (loginctl list-sessions | gawk '/tty1/ { print $1 }')
 end
