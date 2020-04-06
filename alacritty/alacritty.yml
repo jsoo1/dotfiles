@@ -355,7 +355,7 @@ live_config_reload: true
 #   - (Linux) user login shell
 #   - (Windows) powershell
 shell:
-  program: /run/current-system/profile/bin/fish
+  program: /home/john/.guix-profile/bin/fish
   args:
     - --login
 

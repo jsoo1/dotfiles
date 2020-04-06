@@ -12,16 +12,17 @@
              ((gnu packages fontutils) #:select (fontconfig))
              ((gnu packages gl) #:select (mesa))
              ((gnu packages gnupg) #:select (gnupg))
-             ((gnu packages linux) #:select (bluez light))
+             ((gnu packages linux) #:select (bluez iproute light))
              ((gnu packages ncurses) #:select (ncurses))
              ((gnu packages shells) #:select (fish))
              ((gnu packages shellutils) #:select (fzy))
              ((gnu packages ssh) #:select (openssh))
+             ((gnu packages suckless) #:select (slock))
              ((gnu packages tmux) #:select (tmux))
              ((gnu packages version-control) #:select (git))
              ((gnu packages vim) #:select (vim))
              ((gnu packages web-browsers) #:select (lynx))
-             ((gnu packages xdisorg) #:select (xcape))
+             ((gnu packages xdisorg) #:select (xcape xlockmore))
              ((gnu packages xorg)
               #:select (xkbcomp
                         xinit
@@ -73,8 +74,7 @@
                         lookup-qemu-platforms))
              (gnu services xorg)
              (guix gexp)
-             (ice-9 match)
-             ((yaft) #:select (yaft)))
+             (ice-9 match))
 
 (define cst-trackball
   "Section \"InputClass\"
@@ -181,15 +181,14 @@ EndSection\n")
          %base-user-accounts))
   (packages
    (cons*
-    ;; kmscon fonts
-    fontconfig font-iosevka
     ;; backlight config
     light
-    ;;for HTTPS access
+    ;; for HTTPS access
     curl nss-certs
     ;; essentials
-    inetutils git fish openssh gnupg htop ncurses tmux fzy lynx
-    tree yaft glibc-utf8-locales
+    iproute git openssh gnupg ncurses
+    ;; ???
+    glibc-utf8-locales
     ;; text editors
     vim emacs-next-no-x
     ;; for keyboards
@@ -198,7 +197,9 @@ EndSection\n")
   (setuid-programs
    (cons*
     (file-append docker-cli "/bin/docker")
-    ;; Stuff for xorg
+    ;; Stuff for xorg without display manager.
+    ;; startx and X need to be in setuid-programs.
+    ;; They also need extra tweaks in the chown-file service below.
     (file-append xorg-server "/bin/X")
     startx
     %setuid-programs))
@@ -247,6 +248,12 @@ EndSection\n")
     (udisks-service)
     (service usb-modeswitch-service-type)
     (service wpa-supplicant-service-type)
+
+    ;; Screen lockers are a pretty useful thing and these are small.
+    (screen-locker-service slock)
+    (screen-locker-service xlockmore "xlock")
+
+    ;; The following two are for xorg without display manager
     x11-socket-directory-service
     (service
      chown-program-service-type
@@ -260,8 +267,8 @@ EndSection\n")
        (udev-configuration
         (inherit c)
         (rules
-         `(,light
-           ,(udev-rule
+         `(,light ; Use light without sudo
+           ,(udev-rule ; For xorg without display manager (see gentoo wiki)
              "99-dev-input-group.rules"
              "SUBSYSTEM==\"input\", ACTION==\"add\", GROUP=\"input\"" )
            ,@(udev-configuration-rules c)))))
