@@ -82,7 +82,7 @@ myCommands :: [((KeyMask, KeySym), X ())]
 myCommands =
   [ ( ( myModMask, xK_i ), spawn "dmenu_run -F -p open" )
   , ( ( myModMask .|. controlMask, xK_f)
-    , void toggleXmobar <+> broadcastMessage ToggleStruts <+> refresh
+    , void (sendXmobar "Toggle 0") <+> broadcastMessage ToggleStruts <+> refresh
     )
   , ( ( myModMask .|. shiftMask, xK_x ), spawn "xlock -mode rain" )
   , ( ( myModMask, xK_Tab )
@@ -176,13 +176,10 @@ xmobarMethod =
     method = DBus.methodCall objectPath interfaceName memberName
 
 
-toggleXmobar :: X DBus.MethodReturn
-toggleXmobar = do
-  client <- liftIO DBus.connectSession
-  liftIO $
-    DBus.call_
-      client
-      (xmobarMethod {DBus.methodCallBody = [DBus.toVariant "Toggle 0"]})
+sendXmobar :: String -> X DBus.MethodReturn
+sendXmobar cmd = liftIO $ do
+  client <- DBus.connectSession
+  DBus.call_ client (xmobarMethod {DBus.methodCallBody = [DBus.toVariant cmd]})
 
 
 myXmobar :: (Int, Handle) -> X ()
