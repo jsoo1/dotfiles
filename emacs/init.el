@@ -38,7 +38,6 @@
 
 (toggle-frame-fullscreen)
 (menu-bar-mode -1)
-(tool-bar-mode -1)
 
 ;; No tabs
 (setq-default indent-tabs-mode nil)
@@ -158,9 +157,6 @@
 
 ;; Winner
 (winner-mode t)
-
-;; Fill column indicator
-(require 'fill-column-indicator)
 
 ;; Evil
 (setq evil-want-C-u-scroll t
@@ -580,7 +576,7 @@
 (defvar guile-imenu-generic-expression
   (append '(("Public" "^(define-public\\s-+(?\\(\\sw+\\)" 1)
             ("Function*" "^(define\\*\\s-+(?\\(\\sw+\\)" 1)
-            ("Syntax Rule" "^(define-syntax-rule\\s-+(?\\(\\sw+\\" 1)
+            ("Syntax Rule" "^(define-syntax-rule\\s-+(?\\(\\sw+\\)" 1)
             ("Record" "^(define-record-type\\*?\\s-+<\\(\\sw+\\)>" 1))
         scheme-imenu-generic-expression)
   "Imenu generic expression for Guile modes.  See `imenu-generic-expression'.")
@@ -1051,4 +1047,4 @@
   "-" text-scale-decrease)
 
 ;;; init.el ends here
-(put 'proof-frob-locked-end 'disabled nil)
+(with-current-buffer (get-buffer "*Messages*") (normal-mode))
