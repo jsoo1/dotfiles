@@ -4,7 +4,6 @@
 
 module Main where
 
-
 import           Control.Applicative              (liftA2)
 import           Control.Monad                    (join, unless, void)
 import           Data.Coerce                      (coerce)
@@ -14,9 +13,7 @@ import           Data.List                        (intercalate)
 import qualified Data.Map.Strict                  as Map
 import           Data.Maybe                       (listToMaybe)
 import qualified DBus
-import qualified DBus.Client as DBus
-
-
+import qualified DBus.Client                      as DBus
 import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
 import           XMonad
@@ -35,7 +32,6 @@ import           XMonad.Util.Replace
 import           XMonad.Util.Run                  (runInTerm,
                                                    runProcessWithInput,
                                                    spawnPipe)
-
 
 main :: IO ()
 main = do
