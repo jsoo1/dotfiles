@@ -22,9 +22,11 @@ in [
   pkgs.hlint
   pkgs.haskellPackages.hoogle
   pkgs.htop
+  pkgs.imagemagick
   pkgs.ngrok
   pkgs.nixfmt
   pkgs.nodejs-10_x
+  pkgs.oathToolkit
   pkgs.ocaml
   pkgs.openvpn
   pkgs.ormolu
@@ -33,6 +35,7 @@ in [
   pkgs.qemu
   pkgs.racket-minimal
   pkgs.rage
+  pkgs.readline
   pkgs.reattach-to-user-namespace
   pkgs.ripgrep
   pkgs.rustfmt
@@ -41,4 +44,8 @@ in [
   pkgs.stylish-haskell
   pkgs.tmux
   pkgs.watch
+  pkgs.ocamlPackages.num
+  # "unsupported" on macos
+  # pkgs.libreoffice
+  # pkgs.s3fs
 ]
