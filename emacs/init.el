@@ -153,10 +153,12 @@
             (dired-hide-details-mode)))
 
 ;; Dired-git-info
-(define-key dired-mode-map ")" #'dired-git-info-mode)
+(with-eval-after-load 'dired
+  (define-key dired-mode-map ")" #'dired-git-info-mode))
 
 ;; Diredfl from mr. purcell
-(diredfl-global-mode -1)
+(with-eval-after-load 'dired
+  (diredfl-global-mode -1))
 
 ;; Byte compile
 (require 'bytecomp)
@@ -621,7 +623,8 @@
 
 ;; Nix
 (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
-(define-key nix-mode-map (kbd "C-c C-f") 'nix-format-buffer)
+(with-eval-after-load 'nix-mode
+    (define-key nix-mode-map (kbd "C-c C-f") 'nix-format-buffer))
 (defvar nix-format-on-save t
   "Format the nix buffer with nixfmt before saving.")
 (add-hook 'before-save-hook
