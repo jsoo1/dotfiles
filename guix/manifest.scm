@@ -52,6 +52,7 @@
 (define fonts
   '("mkfontdir"
     "mkfontscale"
+    "font-dejavu"
     "font-iosevka"
     "font-iosevka-term"
     "font-iosevka-term-slab"))
