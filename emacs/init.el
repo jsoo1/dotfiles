@@ -19,15 +19,22 @@
         (cons (if docstring `(defvar ,name ,docstring (make-sparse-keymap))
                 `(defvar ,name (make-sparse-keymap)))
               (cons `(define-prefix-command (quote ,name))
-                    (seq-reduce (lambda (bindings key-fn)
-                                  (cons `(define-key (quote ,name) ,(car key-fn) (function ,(cadr key-fn)))
-                                        bindings))
-                                (seq-partition bindings 2)
-                                `(,name))))))
+                    (seq-reduce
+                     (lambda (bindings key-fn)
+                       (cons
+                        `(define-key (quote ,name) ,(car key-fn)
+                           (function ,(pcase (cadr key-fn)
+                                        ((pred symbolp) (cadr key-fn))
+                                        ((pred (lambda (fn) (symbolp (eval fn)))) (eval (cadr key-fn)))
+                                        (_ (cadr key-fn)))))
+                        bindings))
+                     (seq-partition bindings 2)
+                     `(,name))))))
 
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
       initial-scratch-message ""
+      focus-follows-mouse t
       vc-follow-symlinks 't)
 (setq-default truncate-lines 't)
 (add-to-listq
@@ -100,6 +107,9 @@
      :port 5555
      :nick "jsoo")))
 
+(add-hook 'erc-mode-hook
+          (defun toggle-truncate-lines-on ()
+            (toggle-truncate-lines 1)))
 (add-hook 'erc-mode-hook #'erc-notifications-mode)
 
 ;; Shell
@@ -107,9 +117,10 @@
 
 ;; EShell
 (add-hook 'emacs-startup-hook
-          (lambda ()
+          (defun eshell-in-current-directory ()
             (when (not (display-graphic-p)) (cd default-directory))
             (eshell)))
+
 (setq initial-buffer-choice (lambda () (get-buffer-create "*eshell*"))
       eshell-highlight-prompt nil
       eshell-prompt-function
@@ -117,7 +128,8 @@
         (concat
          (propertize (eshell/whoami) 'face `(:foreground "#93a1a1"))
          " "
-         (propertize (eshell/pwd) 'face `(:foreground "#268bd2"))
+         (propertize (replace-regexp-in-string (concat "^" (getenv "HOME")) "~" (eshell/pwd))
+                     'face `(:foreground "#268bd2"))
          " "
          (propertize (or (magit-get-current-branch) "") 'face `(:foreground "#859900"))
          " "
@@ -135,9 +147,16 @@
   (pop-to-buffer eshell-buffer-name))
 
 ;; Dired
-(add-hook 'dired-mode-hook (lambda ()
-                             (auto-revert-mode)
-                             (dired-hide-details-mode)))
+(add-hook 'dired-mode-hook
+          (defun my-dired-hook ()
+            (auto-revert-mode)
+            (dired-hide-details-mode)))
+
+;; Dired-git-info
+(define-key dired-mode-map ")" #'dired-git-info-mode)
+
+;; Diredfl from mr. purcell
+(diredfl-global-mode -1)
 
 ;; Byte compile
 (require 'bytecomp)
@@ -150,7 +169,17 @@
  delete-old-versions nil
  create-lockfiles nil
  auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t))
- enable-local-eval t)
+ enable-local-eval t
+ safe-local-variable-values
+ (append
+  '((haskell-stylish-on-save . nil)
+    (haskell-process-type . 'stack-ghci)
+    (haskell-mode-stylish-haskell-args . '("--ghc-opt TypeApplications"))
+    (js-indent-level . 2)
+    (haskell-process-wrapper-function
+     . (lambda (argv)
+         (append (list "env" "NO_COLOR=true") argv))))
+  safe-local-variable-values))
 
 ;; Imenu List
 (setq imenu-list-size 0.2)
@@ -189,6 +218,11 @@
 (evil-set-initial-state 'comint-mode 'normal)
 (evil-set-initial-state 'org-agenda-mode 'normal)
 (evil-set-initial-state 'erc-mode 'normal)
+(evil-set-initial-state 'Man-mode 'normal)
+(evil-set-initial-state 'eshell-mode 'normal)
+
+(evil-declare-not-repeat #'flycheck-next-error)
+(evil-declare-not-repeat #'flycheck-previous-error)
 
 ;; Magit
 (require 'evil-magit)
@@ -241,7 +275,7 @@
 
 (defun my-switch-to-compile-buffer (kind)
   "Switch to compile buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'."
-  (switch-to-buffer (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
+  (switch-to-buffer-other-window (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
 
 ;; Dir Locals -- see https://emacs.stackexchange.com/questions/13080/reloading-directory-local-variables
 (defun my-projectile-reload-dir-locals ()
@@ -294,10 +328,7 @@
  org-html-validation-link nil)
 
 ;; LaTex
-(add-hook
- 'latex-mode-hook (lambda ()
-                    (setq-local paragraph-separate "[ \t\f]*$"
-                                paragraph-start "\f\\|[ \t]*$")))
+(add-hook 'latex-mode-hook #'make-standard-paragraph-rules)
 
 ;; Anzu
 (global-anzu-mode)
@@ -340,7 +371,7 @@
 (define-key comint-mode-map (kbd "C-d") nil)
 
 ;; Vinegar
-(define-key evil-normal-state-map "-" #'(lambda () (interactive) (dired ".")))
+(define-key evil-normal-state-map "-" (defun dired-dot () (interactive) (dired ".")))
 (define-key dired-mode-map "-" #'dired-up-directory)
 
 ;; Swiper
@@ -359,7 +390,7 @@
 (require 'xterm-color)
 (setq compilation-environment '("TERM=xterm-256color"))
 (add-hook 'compilation-start-hook
-          (lambda (proc)
+          (defun do-xterm-color-filter (proc)
             ;; We need to differentiate between compilation-mode buffers
             ;; and running as part of comint (which at this point we assume
             ;; has been configured separately for xterm-color)
@@ -441,6 +472,7 @@
 
 ;; Emacs Lisp Mode
 (with-eval-after-load 'company (add-hook 'emacs-lisp-mode-hook #'company-mode 't))
+(define-key emacs-lisp-mode-map (kbd "C-c C-e") #'edebug-defun)
 
 ;; Elm mode
 (require 'flycheck-elm)
@@ -448,8 +480,7 @@
 (setq elm-format-on-save 't
       elm-format-elm-version "0.18"
       elm-package-catalog-root "http://package.elm-lang.org/")
-(eval-after-load 'flycheck
-  '(add-hook 'flycheck-mode-hook #'flycheck-elm-setup))
+(add-hook 'flycheck-mode-hook #'flycheck-elm-setup)
 (with-eval-after-load 'company-mode (add-to-list 'company-backends 'company-elm))
 ;; Can't get only elm 18 packages without this hack
 (defun elm-package-refresh-contents ()
@@ -467,14 +498,14 @@
 (require 'nodejs-repl)
 (add-hook
  'js-mode-hook
- (lambda nil
+ (defun make-js-mode-keys nil
    (progn
      (define-key js-mode-map (kbd "C-c C-s") 'nodejs-repl)
      (define-key js-mode-map (kbd "C-c C-c") 'nodejs-repl-send-last-expression)
      (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
      (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
      (define-key js-mode-map (kbd "C-c C-l") 'nodejs-repl-load-file)
-     (define-key js-mode-map (kbd "C-c C-k") (lambda () (interactive) (with-current-buffer "*nodejs*" (comint-clear-buffer))))
+     (define-key js-mode-map (kbd "C-c C-k") (defun clear-nodejs-buffer () (interactive) (with-current-buffer "*nodejs*" (comint-clear-buffer))))
      (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl))))
 (setq js-indent-level 4)
 
@@ -528,7 +559,10 @@
             (flycheck-mode)
             (flycheck-disable-checker 'haskell-ghc)))
 
+(add-hook 'haskell-mode-hook #'yas-minor-mode-on)
 (define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
+
+(add-hook 'haskell-mode-hook #'make-standard-paragraph-rules)
 
 ;; Agda mode
 (load-library (let ((coding-system-for-read 'utf-8))
@@ -557,7 +591,7 @@
 (add-to-list 'auto-mode-alist '("\\.purs\\'" . purescript-mode))
 (require 'psc-ide)
 (add-hook 'purescript-mode-hook
-          (lambda ()
+          (defun my-purescript-hook ()
             (psc-ide-mode)
             (company-mode)
             (flycheck-mode)
@@ -584,6 +618,18 @@
  'scheme-mode-hook
  (lambda ()
    (setq-local imenu-generic-expression guile-imenu-generic-expression)))
+
+;; Nix
+(add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
+(define-key nix-mode-map (kbd "C-c C-f") 'nix-format-buffer)
+(defvar nix-format-on-save t
+  "Format the nix buffer with nixfmt before saving.")
+(add-hook 'before-save-hook
+          (defun my-nix-format-buffer ()
+            (when (and nix-format-on-save (eq major-mode 'nix-mode))
+              (nix-format-buffer))))
+
+;; Common Lisp
 (with-eval-after-load 'geiser-guile
        (add-to-list 'geiser-guile-load-path "~/projects/guix"))
 
@@ -627,13 +673,18 @@
     (sql-set-product-feature
      'postgres :prompt-regexp "^.* λ ")
     (define-key sql-mode-map (kbd "C-c C-i") #'sql-connect)
-    (define-key sql-mode-map (kbd "C-c C-k") #'(lambda () (interactive)
-                                                 (with-current-buffer sql-buffer (comint-clear-buffer))))))
+    (define-key sql-mode-map (kbd "C-c C-k")
+      (defun clear-sql-buffer ()
+        (interactive)
+        (with-current-buffer sql-buffer (comint-clear-buffer))))))
+
 
 ;; Cedille
 (require 'cedille-mode)
 (define-key cedille-mode-map (kbd "C-c C-l") #'cedille-start-navigation)
 (evil-define-key 'normal cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
+(evil-define-key 'insert cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
+
 (set-face-attribute
  'cedille-type-face-df nil
  :foreground "#268bd2")
@@ -649,7 +700,8 @@
  :foreground "#268bd2")
 (set-face-attribute
  'cedille-keyword-face-df nil
- :foreground "#859900")
+ :foreground "#b58900")
+
 
 ;; YAML
 (require 'yaml-mode)
@@ -875,18 +927,28 @@
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
   "b" ivy-switch-buffer
-  "c" (lambda () (interactive) (my-switch-to-compile-buffer "compile"))
-  "d" (lambda () (interactive) (kill-buffer (current-buffer)))
+  "c" (defun switch-to-compile-buffer ()
+        (interactive) (my-switch-to-compile-buffer "compile"))
+  "d" kill-current-buffer
   "i" ibuffer
-  "m" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Messages*")))
-  "r" (lambda () (interactive) (my-switch-to-compile-buffer "run"))
+  "m" (defun switch-to-messages-buffer ()
+        (interactive)
+        (switch-to-buffer-other-window (get-buffer-create "*Messages*")))
+  "r" (defun switch-to-run-buffer ()
+        (interactive)
+        (my-switch-to-compile-buffer "run"))
   "R" revert-buffer
-  "s" (lambda () (interactive) (switch-to-buffer (get-buffer-create "*Scratch*")))
-  "t" (lambda () (interactive) (my-switch-to-compile-buffer "test")))
+  "s" (defun switch-to-scratch-buffer ()
+        (interactive)
+        (switch-to-buffer-other-window (get-buffer-create "*Scratch*")))
+  "t" (defun switch-to-test-buffer ()
+        (interactive)
+        (my-switch-to-compile-buffer "test")))
 
 (define-prefix-keymap my-compile-map
   "my keybindings for compiling"
-  "b" (lambda () (interactive) (pop-to-buffer (get-buffer-create "*compilation*")))
+  "b" (defun pop-to-compilation-buffer ()
+        (interactive) (pop-to-buffer (get-buffer-create "*compilation*")))
   "c" counsel-compile)
 
 (define-prefix-keymap my-counsel-map
@@ -917,6 +979,7 @@
   "s" describe-symbol
   "t" describe-theme
   "w" woman
+  "W" man
   "v" describe-variable)
 
 (define-prefix-keymap my-error-map
@@ -932,12 +995,14 @@
   "l" find-file-literally
   "r" counsel-buffer-or-recentf
   "s" save-buffer
-  "y" (lambda () (interactive) (kill-new (buffer-file-name (current-buffer)))))
+  "y" (defun kill-file-name
+          () (interactive) (kill-new (buffer-file-name (current-buffer)))))
 
 (define-prefix-keymap my-git-map
   "my git keybindings"
   "b" magit-blame
   "c" counsel-git-checkout
+  "g" magit-file-dispatch
   "r" magit-refresh-all
   "s" magit-status
   "l" magit-log-buffer-file)
@@ -973,20 +1038,26 @@
 (define-prefix-keymap my-projectile-map
   "my projectile keybindings"
   "a" counsel-projectile-org-agenda
-  "b" counsel-projectile
-  "c" (lambda () (interactive) (my-projectile-command "compile"))
+  "b" counsel-projectile-switch-to-buffer
+  "c" (defun projectile-compile ()
+        (interactive) (my-projectile-command "compile"))
   "C" counsel-projectile-org-capture
   "d" counsel-projectile-find-dir
-  "D" (lambda () (interactive) (dired (projectile-project-root)))
+  "D" (defun switch-to-projectile-project-root
+          () (interactive) (dired (projectile-project-root)))
   "e" projectile-edit-dir-locals
   "f" counsel-projectile-find-file
   "I" projectile-invalidate-cache
   "l" switch-project-workspace
-  "o" (lambda () (interactive) (find-file (format "%sTODOs.org" (projectile-project-root))))
+  "o" (defun switch-to-projectile-todos ()
+        (interactive)
+        (find-file (format "%sTODOs.org" (projectile-project-root))))
   "p" counsel-projectile-switch-project
-  "r" (lambda () (interactive) (my-projectile-command "run"))
+  "r" (defun projectile-run ()
+        (interactive) (my-projectile-command "run"))
   "R" my-projectile-reload-dir-locals
-  "t" (lambda () (interactive) (my-projectile-command "test"))
+  "t" (defun projectile-test ()
+        (interactive) (my-projectile-command "test"))
   "'" projectile-run-eshell
   "]" projectile-find-tag)
 
@@ -1004,29 +1075,39 @@
 
 (define-prefix-keymap my-toggle-map
   "my toggles"
-  "c" (lambda nil () (interactive) (fci-mode (if (bound-and-true-p fci-mode) -1 1)))
+  "c" (defun toggle-fill-column ()
+        (interactive) (fci-mode (if (bound-and-true-p fci-mode) -1 1)))
   "d" toggle-debug-on-error
   "D" toggle-debug-on-quit
   "f" toggle-frame-fullscreen
   "i" imenu-list-smart-toggle
   "l" toggle-truncate-lines
   "m" toggle-mode-line
-  "n" (lambda nil () (interactive) (setq display-line-numbers (next-line-number display-line-numbers)))
+  "n" (defun cycle-line-numbers ()
+        (interactive)
+        (setq display-line-numbers (next-line-number display-line-numbers)))
   "t" counsel-load-theme
   "w" whitespace-mode)
 
 (define-prefix-keymap my-window-map
   "my window keybindings"
-  "/" (lambda nil () (interactive) (progn (split-window-horizontally) (balance-windows-area)))
-  "-" (lambda nil () (interactive) (progn (split-window-vertically) (balance-windows-area)))
-  "'" (lambda nil () (interactive) (my-side-eshell '((side . right) (slot . 1))) (balance-windows-area))
+  "/" (defun my-vsplit ()
+        (interactive)
+        (progn (split-window-horizontally) (balance-windows-area)))
+  "-" (defun my-split ()
+        (interactive)
+        (progn (split-window-vertically) (balance-windows-area)))
+  "'" (defun pop-to-eshell ()
+        (interactive)
+        (my-side-eshell '((side . right) (slot . 1))) (balance-windows-area))
   "c" make-frame
-  "d" (lambda nil () (interactive) (progn (delete-window) (balance-windows-area)))
+  "d" (defun my-delete-window ()
+        (interactive) (progn (delete-window) (balance-windows-area)))
   "D" delete-frame
-  "h" (lambda nil () (interactive) (tmux-navigate "left"))
-  "j" (lambda nil () (interactive) (tmux-navigate "down"))
-  "k" (lambda nil () (interactive) (tmux-navigate "up"))
-  "l" (lambda nil () (interactive) (tmux-navigate "right"))
+  "h" (defun tmux-left () (interactive) (tmux-navigate "left"))
+  "j" (defun tmux-down () (interactive) (tmux-navigate "down"))
+  "k" (defun tmux-up () (interactive) (tmux-navigate "up"))
+  "l" (defun tmux-right () (interactive) (tmux-navigate "right"))
   "H" evil-window-move-far-left
   "J" evil-window-move-very-bottom
   "K" evil-window-move-very-top
@@ -1046,5 +1127,7 @@
   "=" text-scale-increase
   "-" text-scale-decrease)
 
-;;; init.el ends here
+;; Reset these to have all the configuration we just did
 (with-current-buffer (get-buffer "*Messages*") (normal-mode))
+
+;;; init.el ends here
