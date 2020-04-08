@@ -919,6 +919,7 @@
 
 (define-prefix-keymap my-process-map
   "my process keybindings"
+  "b" debbugs-gnu
   "d" docker
   "e" gnus
   "g" guix
@@ -1032,6 +1033,7 @@
   "g" counsel-org-goto
   "i" counsel-org-entity
   "t" counsel-org-tag)
+
 (defun switch-project-workspace ()
   "Switch to a known projectile project in a new workspace."
   (interactive)
