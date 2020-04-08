@@ -1,9 +1,21 @@
 [global]
     browser = /home/john/.guix-profile/bin/icecat
-    dmenu = /run/current-system/profile/bin/dmenu -p dunst:
-    font = Iosevka Term Slab 15
+    dmenu = /home/john/.guix-profile/bin/dmenu -p dunst:
+    # Fixme
+    # icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
+    font = Iosevka Term Slab 16
+    geometry = "300x5-30+30"
+    indicate_hidden = yes
     padding = 8
-    transparency = 20
+    horizontal_padding = 8
+    transparency = 10
+    idle_threshold = 120
+    show_age_threshold = 60
+    ignore_newline = no
+    stack_duplicates = true
+    show_indicators = yes
+    sticky_history = yes
+    history_length = 20
 
 [urgency_low]
     background =  "#586e75"
@@ -14,3 +26,8 @@
     background = "#002b36"
     foreground = "#586e75"
     timeout = 10
+
+[urgency_critical]
+    background = "#b58900"
+    foreground = "#002b36"
+    timeout = 0
