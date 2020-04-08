@@ -1029,6 +1029,7 @@
 (define-prefix-keymap my-org-map
   "my org bindings"
   "a" counsel-projectile-org-agenda
+  "b" debbugs-org
   "c" counsel-projectile-org-capture
   "g" counsel-org-goto
   "i" counsel-org-entity
