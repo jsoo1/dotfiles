@@ -152,13 +152,75 @@
             (auto-revert-mode)
             (dired-hide-details-mode)))
 
-;; Dired-git-info
 (with-eval-after-load 'dired
   (define-key dired-mode-map ")" #'dired-git-info-mode))
 
-;; Diredfl from mr. purcell
-(with-eval-after-load 'dired
-  (diredfl-global-mode -1))
+(with-eval-after-load 'diredfl
+  (diredfl-global-mode 1)
+  (set-face-attribute
+   diredfl-dir-heading nil
+   :foreground "#268bd2"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-number nil
+   :foreground "#268bd2"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-date-time nil
+   :foreground "#b58900"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-file-name nil
+   :foreground "#839496"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-file-suffix nil
+   :foreground "#859900"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-dir-name nil
+   :foreground "#268bd2"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-symlink nil
+   :foreground "#2aa198"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-no-priv nil
+   :foreground "#839496"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-dir-priv nil
+   :foreground "#dc322f"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-read-priv nil
+   :foreground "#2aa198"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-write-priv nil
+   :foreground "#d33682"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-exec-priv nil
+   :foreground "#268bd2"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-rare-priv nil
+   :foreground "#d33682"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-other-priv nil
+   :foreground "#cb4b16"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-deletion nil
+   :foreground "#dc322f"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-deletion-file-name nil
+   :foreground "#dc322f"
+   :background "unspecified"))
 
 ;; Byte compile
 (require 'bytecomp)
