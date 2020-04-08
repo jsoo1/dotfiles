@@ -16,44 +16,25 @@ Config
   , hideOnStart = False
   , iconRoot = "."
   , commands =
-    [ Run Wireless
-      "wlp9s0"
-      [ "-t"
-      , "wifi <quality>%"
-      ]
-      200
+    [ Run Wireless "wlp9s0" [ "-t" , "wifi <quality>%"] 200
     , Run Battery
-        [ "-t"
-        , "<left>%"
+        [ "-t" , "<left>%"
         , "--"
-        , "-O"
-        , "AC"
-        , "-o"
-        , "Bat"
-        , "-h"
-        , "#859900"
-        , "-l"
-        , "#dc322f"
+        , "-O" , "AC"
+        , "-o" , "Bat"
+        , "-h" , "#859900"
+        , "-l" , "#dc322f"
         ]
         200
-    , Run Alsa
-      "default"
-      "Master"
-      [ "-t"
-      , "<status> <volume>%"
+    , Run Alsa "default" "Master"
+      [ "-t" , "<status> <volume>%"
       , "--"
-      , "--on"
-      , "vol"
-      , "--onc"
-      , "#586e75,#002b36"
-      , "-o"
-      , "vol"
-      , "--offc"
-      , "#dc322f,#002b36"
+      , "--on", "vol", "--onc" , "#586e75,#002b36"
+      , "-o", "vol", "--offc" , "#dc322f,#002b36"
       ]
     , Run Date "%Y-%m-%d | %l:%M %p " "date" 600
-    , Run UnsafeStdinReader
     , Run Com "light" [] "light" 2
+    , Run UnsafeStdinReader
     ]
   , sepChar = "%"
   , alignSep = "}{"
