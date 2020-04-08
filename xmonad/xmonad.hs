@@ -4,12 +4,10 @@
 
 module Main where
 
-import           Control.Applicative              (liftA2)
 import           Control.Monad                    (join, unless, void)
 import           Data.Coerce                      (coerce)
 import           Data.Foldable                    (traverse_)
 import           Data.Function                    (on)
-import           Data.List                        (intercalate)
 import qualified Data.Map.Strict                  as Map
 import           Data.Maybe                       (listToMaybe)
 import qualified DBus
@@ -18,7 +16,6 @@ import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
 import           XMonad
 import           XMonad.Actions.CycleWS           (WSType (..), moveTo, shiftTo)
-import           XMonad.Actions.PhysicalScreens   (getScreen)
 import           XMonad.Actions.WindowBringer
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
