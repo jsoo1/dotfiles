@@ -19,7 +19,7 @@ Config
     [ Run Wireless
       "wlp9s0"
       [ "-t"
-      , "<essid> <quality>%"
+      , "wifi <quality>%"
       ]
       200
     , Run Battery
@@ -40,16 +40,16 @@ Config
       "default"
       "Master"
       [ "-t"
-      , "<volume>% | <status> | vol"
+      , "<status> <volume>%"
       , "--"
       , "--on"
-      , "on"
+      , "vol"
       , "--onc"
       , "#586e75,#002b36"
       , "-o"
-      , "off"
+      , "vol"
       , "--offc"
-      , "#002b36,#dc322f"
+      , "#dc322f,#002b36"
       ]
     , Run Date "%Y-%m-%d | %l:%M %p " "date" 600
     , Run UnsafeStdinReader
