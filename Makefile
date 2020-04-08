@@ -18,7 +18,7 @@ DIRS = \
 	$(HOME)/.xmonad \
 	$(XDG_HOME)/zathura
 
-SOFTLINKS = \
+SYMLINKS = \
 	$(HOME)/.profile \
 	$(HOME)/.emacs.d/init.el \
 	$(XDG_HOME)/alacritty/alacritty.yml \
@@ -33,6 +33,7 @@ SOFTLINKS = \
 	$(XDG_HOME)/fish/keybindings.fish \
 	$(HOME)/.ghci \
 	$(HOME)/.gnupg/gnupg.conf \
+	$(HOME)/.gnus \
 	$(HOME)/.haskeline \
 	$(XDG_HOME)/git/config \
 	$(XDG_HOME)/guix/channels.scm \
@@ -52,11 +53,11 @@ MODULES = \
 	$(MODPROBE)/blacklist.conf \
 	$(MODPROBE)/default.conf
 
-softlink = ln -s $(1) $(2)
+ln = ln -s
 
 # ----------- top level commands -------------
 .PHONY: install
-install: | $(SOFTLINKS) ## Install $(SOFTLINKS) to $HOME (default)
+install: | $(SYMLINKS) ## Install $(SYMLINKS) to $HOME (default)
 
 .PHONY: modules
 modules: $(MODPROBE) ## Install $(MODULES) to $(MODPROBE). Probably don't apply to you.
@@ -67,58 +68,61 @@ help:
 
 # ------------ softlinks -------------
 $(HOME)/.profile: | $(HOME) ## The profile for session initialization. Not posix compliant.
-	$(call softlink,$(PWD)/.profile,$@)
+	$(ln) $(PWD)/.profile $@
 
 $(HOME)/.emacs.d/init.el: | $(HOME)/.emacs.d ## Emacs initialization file
-	$(call softlink,$(PWD)/emacs/init.el,$@)
+	$(ln) $(PWD)/emacs/init.el $@
 
 $(XDG_HOME)/alacritty/alacritty.yml: | $(XDG_HOME)/alacritty ## Alacritty configuration
-	$(call softlink,$(PWD)/alacritty/alacritty.yml,$@)
+	$(ln) $(PWD)/alacritty/alacritty.yml $@
 
 $(HOME)/.bashrc: | $(HOME) ## Bash configuration (per shell)
-	$(call softlink,$(PWD)/bash/.bashrc,$@)
+	$(ln) $(PWD)/bash/.bashrc $@
 
 $(HOME)/.bash_profile: | $(HOME) ## Bash configuration (per session)
-	$(call softlink,$(PWD)/bash/.bash_profile,$@)
+	$(ln) $(PWD)/bash/.bash_profile $@
 
 $(XDG_HOME)/compton/compton.conf: | $(XDG_HOME)/compton ## Compton configuration
-	$(call softlink,$(PWD)/compton/compton.conf,$@)
+	$(ln) $(PWD)/compton/compton.conf $@
 
 $(XDG_HOME)/dunst/dunstrc: | $(XDG_HOME)/dunst ## Dunst configuration
-	$(call softlink,$(PWD)/dunst/dunstrc,$@)
+	$(ln) $(PWD)/dunst/dunstrc $@
 
 $(XDG_HOME)/fish/aliases.fish: | $(XDG_HOME)/fish ## Fish aliases, abbreviations, and functions
-	$(call softlink,$(PWD)/fish/aliases.fish,$@)
+	$(ln) $(PWD)/fish/aliases.fish $@
 
 $(XDG_HOME)/fish/colors.fish: | $(XDG_HOME)/fish ## Fish color definitions
-	$(call softlink,$(PWD)/fish/colors.fish,$@)
+	$(ln) $(PWD)/fish/colors.fish $@
 
 $(XDG_HOME)/fish/config.fish: | $(XDG_HOME)/fish ## Fish initialization
-	$(call softlink,$(PWD)/fish/config.fish,$@)
+	$(ln) $(PWD)/fish/config.fish $@
 
 $(XDG_HOME)/fish/fish_prompt.fish: | $(XDG_HOME)/fish ## Fish prompt
-	$(call softlink,$(PWD)/fish/fish_prompt.fish,$@)
+	$(ln) $(PWD)/fish/fish_prompt.fish $@
 
 $(XDG_HOME)/fish/keybindings.fish: | $(XDG_HOME)/fish ## Fish keybindings
-	$(call softlink,$(PWD)/fish/keybindings.fish,$@)
+	$(ln) $(PWD)/fish/keybindings.fish $@
 
 $(HOME)/.ghci: | $(HOME) ## ghci configuration
-	$(call softlink,$(PWD)/ghci/.ghci,$@)
+	$(ln) $(PWD)/ghci/.ghci $@
 
 $(HOME)/.gnupg/gnupg.conf: | $(HOME)/.gnupg ## gnupg configuration
-	$(call softlink,$(PWD)/gnupg/gnupg.conf,$@)
+	$(ln) $(PWD)/gnupg/gnupg.conf $@
+
+$(HOME)/.gnus: | $(HOME) ## Gnus configuration
+	$(ln) $(PWD)/emacs/.gnus $@
 
 $(HOME)/.haskeline: | $(HOME) ## haskeline configuration (for ghci)
-	$(call softlink,$(PWD)/ghci/.haskeline,$@)
+	$(ln) $(PWD)/ghci/.haskeline $@
 
 $(XDG_HOME)/git/config: | $(XDG_HOME)/git ## Git configuration
-	$(call softlink,$(PWD)/git/.gitconfig,$@)
+	$(ln) $(PWD)/git/.gitconfig $@
 
 $(XDG_HOME)/guix/channels.scm: | $(XDG_HOME)/guix ## Guix channel specification
-	$(call softlink,$(PWD)/guix/channels.scm,$@)
+	$(ln) $(PWD)/guix/channels.scm $@
 
 $(XDG_HOME)/lynx/lynx.cfg: | $(XDG_HOME)/lynx ## Lynx configuration
-	$(call softlink,$(PWD)/lynx/lynx.cfg,$@)
+	$(ln) $(PWD)/lynx/lynx.cfg $@
 
 $(MODPROBE)/ath9k.conf: $(PWD)/modprobe.d/ath9k.conf | $(MODPROBE) ## Module for ath9k wireless card
 	sudo cp $< $@
@@ -133,31 +137,31 @@ $(MODPROBE)/default.conf: $(PWD)/modprobe.d/default.conf | $(MODPROBE) ## Module
 	sudo chown root $@
 
 $(HOME)/.psqlrc: | $(HOME) ## psql configuration
-	$(call softlink,$(PWD)/psql/.psqlrc,$@)
+	$(ln) $(PWD)/psql/.psqlrc $@
 
 $(HOME)/.inputrc: | $(HOME) ## readline configuration
-	$(call softlink,$(PWD)/readline/.inputrc,$@)
+	$(ln) $(PWD)/readline/.inputrc $@
 
 $(XDG_HOME)/shepherd/init.scm: | $(XDG_HOME)/shepherd ## User shepherd configuration and services
-	$(call softlink,$(PWD)/shepherd/init.scm,$@)
+	$(ln) $(PWD)/shepherd/init.scm $@
 
 $(HOME)/.tmux.conf: | $(HOME) ## Tmux configuration
-	$(call softlink,$(PWD)/tmux/.tmux.conf,$@)
+	$(ln) $(PWD)/tmux/.tmux.conf $@
 
 $(HOME)/.tmux/tmuxline.conf: | $(HOME)/.tmux ## Tmux status line configuration
-	$(call softlink,$(PWD)/tmux/tmuxline.conf,$@)
+	$(ln) $(PWD)/tmux/tmuxline.conf $@
 
 $(XDG_HOME)/xmobar/xmobar.hs: | $(XDG_HOME)/xmobar ## Xmobar configuration
-	$(call softlink,$(PWD)/xmobar/xmobar.hs,$@)
+	$(ln) $(PWD)/xmobar/xmobar.hs $@
 
 $(HOME)/.xsession: | $(HOME) ## Loaded by gdm and other DMs on login
-	$(call softlink,$(PWD)/xmonad/.xsession,$@)
+	$(ln) $(PWD)/xmonad/.xsession $@
 
 $(HOME)/.xmonad/xmonad.hs: | $(HOME)/.xmonad ## XMonad configuration
-	$(call softlink,$(PWD)/xmonad/xmonad.hs,$@)
+	$(ln) $(PWD)/xmonad/xmonad.hs $@
 
 $(XDG_HOME)/zathura/zathurarc: | $(XDG_HOME)/zathura ## Zathura configuration
-	$(call softlink,$(PWD)/zathura/zathurarc,$@)
+	$(ln) $(PWD)/zathura/zathurarc $@
 
 $(DIRS): ## Make sure containing directories exist
 	mkdir -p $@
