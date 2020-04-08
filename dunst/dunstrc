@@ -4,11 +4,11 @@
     # Fixme
     # icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
     font = Iosevka Term Slab 16
-    geometry = "300x5-30+30"
+    geometry = "300x5-7+37"
     indicate_hidden = yes
     padding = 8
     horizontal_padding = 8
-    transparency = 10
+    transparency = 0
     idle_threshold = 120
     show_age_threshold = 60
     ignore_newline = no
@@ -16,6 +16,12 @@
     show_indicators = yes
     sticky_history = yes
     history_length = 20
+
+[shortcuts]
+    close = ctrl+space
+    close_all = ctrl+shift+space
+    history = ctrl+grave
+    context = ctrl+shift+period
 
 [urgency_low]
     background =  "#586e75"
