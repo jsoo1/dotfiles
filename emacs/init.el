@@ -220,6 +220,10 @@
   (set-face-attribute
    diredfl-deletion-file-name nil
    :foreground "#dc322f"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-ignored-file-name nil
+   :foreground "#586e75"
    :background "unspecified"))
 
 ;; Byte compile
