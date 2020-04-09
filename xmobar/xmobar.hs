@@ -17,14 +17,14 @@ Config
   , commands =
     [ Run Wireless "wlp9s0" [ "-t" , "wifi <quality>%"] 200
     , Run Battery
-        [ "-t" , "<left>%"
-        , "--"
-        , "-O" , "AC"
-        , "-o" , "Bat"
-        , "-h" , "#859900"
-        , "-l" , "#dc322f"
-        ]
-        200
+      [ "-t" , "<acstatus> <left>%"
+      , "--"
+      , "-O" , "ac"
+      , "-o" , "bat"
+      , "-h" , "#859900"
+      , "-l" , "#dc322f"
+      ]
+      20
     , Run Alsa "default" "Master"
       [ "-t" , "<status> <volume>%"
       , "--"
@@ -39,5 +39,5 @@ Config
     " λ %UnsafeStdinReader% \
     \}{ light %light%\
     \ | <action=`amixer -q set Master toggle`>%alsa:default:Master%</action>\
-    \ | %wlp9s0wi% | bat %battery% | %date%  "
+    \ | %wlp9s0wi% | %battery% | %date%  "
   }
