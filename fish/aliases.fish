@@ -47,11 +47,14 @@ end
 
 function vpin -d 'Get on a vpn' -a vpn
     set -l curr (curr_vpn)
-    if test -z $curr
-        launchctl bootstrap gui/(id -u) /Users/john/Library/LaunchAgents/com.$vpn.de-tunnel.plist
-    else if test $curr != $vpn
-        launchctl bootout gui/(id -u)/com.$curr_vpn.de-tunnel
-        launchctl bootstrap gui/(id -u) /Users/john/Library/LaunchAgents/com.$vpn.de-tunnel.plist
+    if test -z "$vpn"
+        echo 'provide a vpn' && false
+    else
+        if test -z $curr
+            launchctl bootstrap gui/(id -u) /Users/john/Library/LaunchAgents/com.$vpn.de-tunnel.plist
+        else if test $curr
+            echo "already on $curr"
+        end
     end
 end
 
