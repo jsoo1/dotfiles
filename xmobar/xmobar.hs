@@ -31,14 +31,13 @@ Config
       , "--on", "vol", "--onc" , "#839496"
       , "-o", "vol", "--offc" , "#dc322f"
       ]
-    , Run Date "%Y-%m-%d | %l:%M %p" "date" 600
+    , Run Date "%Y-%m-%d | %I:%M %p" "date" 600
     , Run UnsafeStdinReader
     ]
   , alignSep = "}{"
   , template =
-    " λ %UnsafeStdinReader% }{ light %light% \
-      \<action=`amixer -q set Master toggle`>\
-      \| %alsa:default:Master%\
-      \</action>\
-      \ | %wlp9s0wi% | bat %battery% | %date%  "
+    " λ %UnsafeStdinReader% \
+    \}{ light %light%\
+    \ | <action=`amixer -q set Master toggle`>%alsa:default:Master%</action>\
+    \ | %wlp9s0wi% | bat %battery% | %date%  "
   }
