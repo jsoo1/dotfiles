@@ -1,2 +1,10 @@
 * Todos
+** TODO Replace brew's fish with Nix's
+   - Figure out why chsh to nix's fish doesn't work on macos
+** TODO Nix s3fs macos support (with osx-fuse)
+** TODO Nix libreoffice macos support
+** TODO Test the avr toolchain and dfu bootloader from nix
+** TODO Nix fonts macos support
+** TODO Nix Firefox dev edition macos support
+** TODO Fix nix idris
 * Notes
