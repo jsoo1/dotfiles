@@ -44,7 +44,7 @@ main = do
     , borderWidth = 2
     , modMask = myModMask
     , normalBorderColor = coerce base03
-    , focusedBorderColor = coerce base03
+    , focusedBorderColor = coerce base0
     , handleEventHook = handleEventHook def <+> docksEventHook
     , manageHook = manageDocks <+> manageHook def
     , layoutHook =
@@ -184,10 +184,10 @@ myXmobar (screenId, xmobarPipe) = do
   dynamicLogWithPP $ xmobarPP
     { ppOutput =
         hPutStrLn xmobarPipe
-        . (xmobarColor' base03 green (show screenId ++ ". ") ++)
+        . (xmobarColor' base0 green (show screenId ++ ". ") ++)
     , ppCurrent =
         \wsId ->
-          xmobarColor' base03 base01
+          xmobarColor' base0 base01
           $ wsPrefix wsId ++ titleFormat current
     , ppHidden =
         \wsId ->

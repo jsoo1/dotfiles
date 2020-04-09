@@ -1,12 +1,11 @@
 Config
-  { font =
-    "xft:Iosevka Term Slab:size=15:light:antialias=true"
+  { font = "xft:Iosevka Term Slab:size=15:light:antialias=true"
   , additionalFonts = []
   , borderColor = "#002b36"
-  , border = TopB
-  , bgColor = "#002b36"
+  , border = BottomB
+  , bgColor = "#00362b"
   , fgColor = "#839496"
-  , alpha = 255
+  , alpha = 204
   , position = Top
   , textOffset = -1
   , iconOffset = -1
@@ -29,21 +28,17 @@ Config
     , Run Alsa "default" "Master"
       [ "-t" , "<status> <volume>%"
       , "--"
-      , "--on", "vol", "--onc" , "#586e75,#002b36"
-      , "-o", "vol", "--offc" , "#dc322f,#002b36"
+      , "--on", "vol", "--onc" , "#839496"
+      , "-o", "vol", "--offc" , "#dc322f"
       ]
-    , Run Date "%Y-%m-%d | %l:%M %p " "date" 600
-    , Run Com "light" [] "light" 2
+    , Run Date "%Y-%m-%d | %l:%M %p" "date" 600
     , Run UnsafeStdinReader
     ]
-  , sepChar = "%"
   , alignSep = "}{"
   , template =
-    "<fc=#002b36,#859900> λ</fc>%UnsafeStdinReader%\
-      \}{\
-      \<fc=#002b36,#586e75> light %light% </fc>\
-      \<action=`amixer -q set Master toggle`><fc=#586e75,#002b36> %alsa:default:Master% </fc></action>\
-      \<fc=#002b36,#586e75> %wlp9s0wi% </fc>\
-      \<fc=#002b36,#586e75>| bat %battery% </fc>\
-      \<fc=#586e75,#002b36> %date% </fc>"
+    " λ %UnsafeStdinReader% }{ light %light% \
+      \<action=`amixer -q set Master toggle`>\
+      \| %alsa:default:Master%\
+      \</action>\
+      \ | %wlp9s0wi% | bat %battery% | %date%  "
   }
