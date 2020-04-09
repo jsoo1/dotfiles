@@ -23,9 +23,9 @@ set -x fish_color_cwd yellow
 set fish_greeting ""
 
 # solarized
-if test -e ~/.config/fish/colors.fish
-    source ~/.config/fish/colors.fish
-end
+# if test -e ~/.config/fish/colors.fish
+#     source ~/.config/fish/colors.fish
+# end
 
 # prompt :)
 if test -e ~/.config/fish/fish_prompt.fish
