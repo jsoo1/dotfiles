@@ -163,7 +163,7 @@
    :background "unspecified")
   (set-face-attribute
    diredfl-number nil
-   :foreground "#268bd2"
+   :foreground "#859900"
    :background "unspecified")
   (set-face-attribute
    diredfl-date-time nil
@@ -191,7 +191,7 @@
    :background "unspecified")
   (set-face-attribute
    diredfl-dir-priv nil
-   :foreground "#dc322f"
+   :foreground "#268bd2"
    :background "unspecified")
   (set-face-attribute
    diredfl-read-priv nil
@@ -203,7 +203,7 @@
    :background "unspecified")
   (set-face-attribute
    diredfl-exec-priv nil
-   :foreground "#268bd2"
+   :foreground  "#dc322f"
    :background "unspecified")
   (set-face-attribute
    diredfl-rare-priv nil
