@@ -861,9 +861,7 @@
 
 (defun on-after-init ()
   "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
-  (unless (or (display-graphic-p (selected-frame))
-              (not (string= 'base (daemonp)))
-              (not (string= 'term (daemonp))))
+  (unless (display-graphic-p (selected-frame))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
            (set-face-background 'line-number "#073642" (selected-frame)))))
 
