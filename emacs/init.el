@@ -423,6 +423,10 @@
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (setq-default display-line-numbers-type 'relative)
 (global-hl-line-mode +1)
+(defun toggle-global-hl-line ()
+  "Toggle function `global-hl-line-mode'."
+  (interactive)
+  (global-hl-line-mode (if global-hl-line-mode -1 1)))
 
 (defun next-line-number (curr)
   "Get the next line number after `CURR'."
@@ -1159,6 +1163,7 @@
   "d" toggle-debug-on-error
   "D" toggle-debug-on-quit
   "f" toggle-frame-fullscreen
+  "h" toggle-global-hl-line
   "i" imenu-list-smart-toggle
   "l" toggle-truncate-lines
   "m" toggle-mode-line
