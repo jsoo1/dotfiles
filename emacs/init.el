@@ -149,6 +149,7 @@
 ;; Dired
 (add-hook 'dired-mode-hook
           (defun my-dired-hook ()
+            (turn-on-gnus-dired-mode)
             (auto-revert-mode)
             (dired-hide-details-mode)))
 
@@ -220,6 +221,14 @@
   (set-face-attribute
    diredfl-deletion-file-name nil
    :foreground "#dc322f"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-flag-mark nil
+   :foreground "#6c71c4"
+   :background "unspecified")
+  (set-face-attribute
+   diredfl-flag-mark-line nil
+   :foreground "#6c71c4"
    :background "unspecified")
   (set-face-attribute
    diredfl-ignored-file-name nil
