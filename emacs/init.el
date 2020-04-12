@@ -297,6 +297,7 @@
 (evil-set-initial-state 'erc-mode 'normal)
 (evil-set-initial-state 'Man-mode 'normal)
 (evil-set-initial-state 'eshell-mode 'normal)
+(evil-set-initial-state 'debbugs-gnu-mode 'normal)
 
 (evil-declare-not-repeat #'flycheck-next-error)
 (evil-declare-not-repeat #'flycheck-previous-error)
@@ -526,8 +527,10 @@
 (setq debbugs-gnu-all-packages '("emacs" "guix" "guix-patches"))
 (setq debbugs-gnu-default-packages '("guix" "guix-patches"))
 ;; Slightly broken, but hey
-(setq debbugs-gnu-mode-map (make-sparse-keymap))
-(define-key debbugs-gnu-mode-map (kbd "C-c") debbugs-gnu-mode-map)
+(add-hook
+ 'debbugs-gnu-mode-hook
+ (defun make-debbugs-gnu-ctrl-c-map ()
+   (local-set-key (kbd "C-c") debbugs-gnu-mode-map)))
 
 ;; Restclient
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
@@ -996,7 +999,7 @@
 
 (define-prefix-keymap my-process-map
   "my process keybindings"
-  "b" debbugs-gnu
+  "b" my-debbugs-modes-map
   "d" docker
   "e" gnus
   "g" guix
@@ -1004,6 +1007,11 @@
   "l" list-processes
   "o" org-agenda
   "p" proced)
+
+(define-prefix-keymap my-debbugs-modes-map
+  "my debbugs modes."
+  "o" debbugs-org
+  "g" debbugs-gnu)
 
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
@@ -1106,7 +1114,6 @@
 (define-prefix-keymap my-org-map
   "my org bindings"
   "a" counsel-projectile-org-agenda
-  "b" debbugs-org
   "c" counsel-projectile-org-capture
   "g" counsel-org-goto
   "i" counsel-org-entity
