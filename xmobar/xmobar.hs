@@ -20,6 +20,7 @@ Config
       [ "-t" , "<acstatus> <left>%"
       , "--"
       , "-O" , "ac"
+      , "-i", "full"
       , "-o" , "bat"
       , "-h" , "#859900"
       , "-l" , "#dc322f"
