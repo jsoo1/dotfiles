@@ -147,6 +147,7 @@
     "emacs-haskell-snippets"
     "emacs-ibuffer-projectile"
     "emacs-idris-mode"
+    "emacs-imenu-list"
     "emacs-ivy"
     "emacs-let-alist"
     "emacs-magit"
