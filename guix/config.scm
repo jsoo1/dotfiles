@@ -2,6 +2,7 @@
              ((gnu packages admin) #:select (htop inetutils tree))
              ((gnu packages base) #:select (glibc-utf8-locales))
              ((gnu packages certs) #:select (nss-certs))
+             ((gnu packages cups) #:select (cups-filters hplip-minimal))
              ((gnu packages curl) #:select (curl))
              ((gnu packages docker) #:select (docker-cli))
              ((gnu packages emacs) #:select (emacs-next-no-x))
@@ -32,6 +33,9 @@
              ((gnu services base)
               #:select (gpm-service-type
                         gpm-configuration))
+             ((gnu services cups)
+              #:select (cups-service-type
+                        cups-configuration))
              ((gnu services dbus)
               #:select (dbus-service))
              ((gnu services desktop)
@@ -40,6 +44,7 @@
                         fontconfig-file-system-service
                         elogind-service-type
                         polkit-wheel-service
+                        cups-pk-helper-service-type
                         udisks-service
                         x11-socket-directory-service))
              ((gnu services dns)
@@ -157,16 +162,16 @@ EndSection\n")
     (target "/boot/efi")
     (keyboard-layout ctrl-nocaps)))
   (file-systems
-   (cons* (file-system
-            (device
-             (uuid "462563db-3f82-44d2-829c-eb2bce9fd0e0" 'ext4))
-            (mount-point "/")
-            (type "ext4"))
-          (file-system
-            (device (uuid "60E8-6B6F" 'fat))
-            (mount-point "/boot/efi")
-            (type "vfat"))
-          %base-file-systems))
+   `(,(file-system
+        (device
+         (uuid "462563db-3f82-44d2-829c-eb2bce9fd0e0" 'ext4))
+        (mount-point "/")
+        (type "ext4"))
+     ,(file-system
+        (device (uuid "60E8-6B6F" 'fat))
+        (mount-point "/boot/efi")
+        (type "vfat"))
+     ,@%base-file-systems))
   (swap-devices '("/dev/sda7"))
   (users
    (cons (user-account
@@ -194,19 +199,25 @@ EndSection\n")
     bluez
     %base-packages))
   (setuid-programs
-   (cons*
-    (file-append docker-cli "/bin/docker")
-    ;; Stuff for xorg without display manager.
-    ;; startx and X need to be in setuid-programs.
-    ;; They also need extra tweaks in the chown-file service below.
-    (file-append xorg-server "/bin/X")
-    startx
-    %setuid-programs))
+   `(,(file-append docker-cli "/bin/docker")
+     ;; Stuff for xorg without display manager.
+     ;; startx and X need to be in setuid-programs.
+     ;; They also need extra tweaks in the chown-file service below.
+     ,(file-append xorg-server "/bin/X")
+     ,startx
+     ,@%setuid-programs))
   (services
    (cons*
     ;; TODO: Add service for modprobe.d modules?
     (bluetooth-service #:auto-enable? #t)
     (service alsa-service-type)
+    (service cups-pk-helper-service-type)
+    (service cups-service-type
+             (cups-configuration
+              (web-interface? #t)
+              (extensions
+               `(,cups-filters ,hplip-minimal))
+              (browsing? #t)))
     (service dnsmasq-service-type
              (dnsmasq-configuration
               (servers '("1.1.1.1"))))
