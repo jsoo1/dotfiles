@@ -442,6 +442,11 @@
  org-export-time-stamp-file nil
  org-html-validation-link nil)
 
+;; Ediff
+(setq
+ ediff-split-window-function #'split-window-horizontally
+ ediff-make-buffers-readonly-at-startup t)
+
 ;; LaTex
 (add-hook 'latex-mode-hook #'make-standard-paragraph-rules)
 
