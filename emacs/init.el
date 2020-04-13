@@ -72,6 +72,7 @@
       erc-hide-list '("JOIN" "PART" "QUIT"))
 
 (defun my-erc ()
+  "Open erc with my configuration."
   (interactive)
   (let ((erc-prompt-for-password nil))
     (erc-tls
