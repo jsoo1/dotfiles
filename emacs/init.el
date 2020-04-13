@@ -1161,7 +1161,15 @@
 
 (define-prefix-keymap my-text-map
   "my text keybindings"
-  "d" delete-trailing-whitespace)
+  "d" delete-trailing-whitespace
+  "p" my-print-map)
+
+(define-prefix-keymap my-print-map
+  "printing buffers"
+  "p" print-buffer
+  "P" lpr-buffer
+  "r" print-region
+  "R" lpr-region)
 
 (define-prefix-keymap my-toggle-map
   "my toggles"
