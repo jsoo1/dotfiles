@@ -527,8 +527,15 @@
 (define-key idris-mode-map (kbd "C-c C-k") #'idris-repl-clear-buffer)
 
 ;; Emacs Lisp Mode
-(with-eval-after-load 'company (add-hook 'emacs-lisp-mode-hook #'company-mode 't))
+(with-eval-after-load 'company
+  (add-hook 'emacs-lisp-mode-hook #'company-mode 't))
 (define-key emacs-lisp-mode-map (kbd "C-c C-e") #'edebug-defun)
+(add-hook 'emacs-lisp-mode-hook
+          (defun setup-elisp-imenu ()
+            (setq-local
+             imenu-generic-expression
+             (cons '("Keymap" "^(define-prefix-keymap\\s-+\\([a-z-]+\\)" 1)
+              imenu-generic-expression))))
 
 ;; Elm mode
 (require 'flycheck-elm)
