@@ -4,42 +4,14 @@
 ;;; use like any ol init.el
 ;;; Code:
 
-(require 'seq)
-(defmacro add-to-listq (&rest xs)
-  "Add `XS' to `LIST'."
-  (cons #'progn
-        (seq-reduce (lambda (expr list-val-pair)
-                      (cons `(add-to-list (quote ,(car list-val-pair)) ,(cadr list-val-pair)) expr))
-                    (seq-partition xs 2)
-                    nil)))
-
-(defmacro define-prefix-keymap (name &optional docstring &rest bindings)
-  "Define a keymap named `NAME' and docstring `DOCSTRING' with many `BINDINGS' at once using `define-key'."
-  (cons #'progn
-        (cons (if docstring `(defvar ,name ,docstring (make-sparse-keymap))
-                `(defvar ,name (make-sparse-keymap)))
-              (cons `(define-prefix-command (quote ,name))
-                    (seq-reduce
-                     (lambda (bindings key-fn)
-                       (cons
-                        `(define-key (quote ,name) ,(car key-fn)
-                           (function ,(pcase (cadr key-fn)
-                                        ((pred symbolp) (cadr key-fn))
-                                        ((pred (lambda (fn) (symbolp (eval fn)))) (eval (cadr key-fn)))
-                                        (_ (cadr key-fn)))))
-                        bindings))
-                     (seq-partition bindings 2)
-                     `(,name))))))
-
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
       initial-scratch-message ""
       focus-follows-mouse t
       vc-follow-symlinks 't)
 (setq-default truncate-lines 't)
-(add-to-listq
- default-frame-alist '(ns-transparent-titlebar . t)
- default-frame-alist '(font . "Iosevka 18"))
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(font . "Iosevka 18"))
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -969,6 +941,24 @@
     (force-mode-line-update t)))
 
 ;; Keybindings
+(require 'seq)
+(defmacro define-prefix-keymap (name &optional docstring &rest bindings)
+  "Define a keymap named `NAME' and docstring `DOCSTRING' with many `BINDINGS' at once using `define-key'."
+  `(,#'progn
+     (defvar ,name ,docstring (make-sparse-keymap))
+     (define-prefix-command (quote ,name))
+     ,@(seq-reduce
+        (lambda (bindings key-fn)
+          `((define-key (quote ,name) ,(car key-fn)
+              (function
+               ,(pcase (cadr key-fn)
+                  ((pred symbolp) (cadr key-fn))
+                  ((pred (lambda (fn) (symbolp (eval fn)))) (eval (cadr key-fn)))
+                  (_ (cadr key-fn)))))
+            ,@bindings))
+        (seq-partition bindings 2)
+        `(,name))))
+
 (evil-leader/set-leader "<SPC>")
 
 (evil-leader/set-key
