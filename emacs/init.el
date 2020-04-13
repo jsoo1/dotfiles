@@ -4,39 +4,6 @@
 ;;; use like any ol init.el
 ;;; Code:
 
-(require 'seq)
-(defmacro add-to-listq (&rest xs)
-  "Add `XS' to `LIST'."
-  (cons #'progn
-        (seq-reduce (lambda (expr list-val-pair)
-                      (cons `(add-to-list (quote ,(car list-val-pair)) ,(cadr list-val-pair)) expr))
-                    (seq-partition xs 2)
-                    nil)))
-
-(defmacro ->> (&rest body)
-  "Thrush combinator for `BODY'."
-  (let ((result (pop body)))
-    (dolist (form body result)
-      (setq result (append form (list result))))))
-
-(defmacro define-prefix-keymap (name &optional docstring &rest bindings)
-  "Define a keymap named `NAME' and docstring `DOCSTRING' with many `BINDINGS' at once using `define-key'."
-  (cons #'progn
-        (cons (if docstring `(defvar ,name ,docstring (make-sparse-keymap))
-                `(defvar ,name (make-sparse-keymap)))
-              (cons `(define-prefix-command (quote ,name))
-                    (seq-reduce
-                     (lambda (bindings key-fn)
-                       (cons
-                        `(define-key (quote ,name) ,(car key-fn)
-                           (function ,(pcase (cadr key-fn)
-                                        ((pred symbolp) (cadr key-fn))
-                                        ((pred (lambda (fn) (symbolp (eval fn)))) (eval (cadr key-fn)))
-                                        (_ (cadr key-fn)))))
-                        bindings))
-                     (seq-partition bindings 2)
-                     `(,name))))))
-
 (defun my-package-install (package)
   "Install `PACKAGE' unless already installed."
   (unless (package-installed-p package)
@@ -52,18 +19,14 @@
       focus-follows-mouse t
       vc-follow-symlinks 't)
 (setq-default truncate-lines 't)
-(add-to-listq
- default-frame-alist '(ns-transparent-titlebar . t)
- default-frame-alist '(font . "Iosevka 18"))
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+(add-to-list 'default-frame-alist '(font . "Iosevka 18"))
 (set-fontset-font "fontset-default" 'unicode "DejaVu Math Tex Gyre")
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (toggle-frame-fullscreen)
 (menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(horizontal-scroll-bar-mode -1)
 
 ;; No tabs
 (setq-default indent-tabs-mode nil)
@@ -130,6 +93,7 @@
       erc-hide-list '("JOIN" "PART" "QUIT"))
 
 (defun my-erc ()
+  "Open erc with my configuration."
   (interactive)
   (let ((erc-prompt-for-password nil))
     (erc-tls
@@ -180,6 +144,7 @@
 ;; Dired
 (add-hook 'dired-mode-hook
           (defun my-dired-hook ()
+            (turn-on-gnus-dired-mode)
             (auto-revert-mode)
             (dired-hide-details-mode)))
 
@@ -226,7 +191,7 @@
  :background "unspecified")
 (set-face-attribute
  diredfl-dir-priv nil
- :foreground "#dc322f"
+ :foreground "#268bd2"
  :background "unspecified")
 (set-face-attribute
  diredfl-read-priv nil
@@ -238,7 +203,7 @@
  :background "unspecified")
 (set-face-attribute
  diredfl-exec-priv nil
- :foreground "#268bd2"
+ :foreground  "#dc322f"
  :background "unspecified")
 (set-face-attribute
  diredfl-rare-priv nil
@@ -255,6 +220,14 @@
 (set-face-attribute
  diredfl-deletion-file-name nil
  :foreground "#dc322f"
+ :background "unspecified")
+(set-face-attribute
+ diredfl-flag-mark nil
+ :foreground "#6c71c4"
+ :background "unspecified")
+(set-face-attribute
+ diredfl-flag-mark-line nil
+ :foreground "#6c71c4"
  :background "unspecified")
 (set-face-attribute
  diredfl-ignored-file-name nil
@@ -346,6 +319,7 @@
 (evil-set-initial-state 'erc-mode 'normal)
 (evil-set-initial-state 'Man-mode 'normal)
 (evil-set-initial-state 'eshell-mode 'normal)
+(evil-set-initial-state 'debbugs-gnu-mode 'normal)
 
 (evil-declare-not-repeat #'flycheck-next-error)
 (evil-declare-not-repeat #'flycheck-previous-error)
@@ -494,6 +468,10 @@
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (setq-default display-line-numbers-type 'relative)
 (global-hl-line-mode +1)
+(defun toggle-global-hl-line ()
+  "Toggle function `global-hl-line-mode'."
+  (interactive)
+  (global-hl-line-mode (if global-hl-line-mode -1 1)))
 
 (defun next-line-number (curr)
   "Get the next line number after `CURR'."
@@ -610,15 +588,17 @@
 (setq debbugs-gnu-all-packages '("emacs" "guix" "guix-patches"))
 (setq debbugs-gnu-default-packages '("guix" "guix-patches"))
 ;; Slightly broken, but hey
-(setq debbugs-gnu-mode-map (make-sparse-keymap))
-(define-key debbugs-gnu-mode-map (kbd "C-c") debbugs-gnu-mode-map)
+(add-hook
+ 'debbugs-gnu-mode-hook
+ (defun make-debbugs-gnu-ctrl-c-map ()
+   (local-set-key (kbd "C-c") debbugs-gnu-mode-map)))
 
 ;; Restclient
 (my-package-install 'restclient)
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
 ;; Idris mode
-(add-to-listq load-path "~/.emacs.d/private/idris-mode")
+(add-to-list 'load-path "~/.emacs.d/private/idris-mode")
 
 (byte-compile-file "~/.emacs.d/private/idris-mode/idris-mode.el")
 (byte-compile-file "~/.emacs.d/private/idris-mode/idris-ipkg-mode.el")
@@ -640,8 +620,15 @@
 (define-key idris-mode-map (kbd "C-c C-k") #'idris-repl-clear-buffer)
 
 ;; Emacs Lisp Mode
-(with-eval-after-load 'company (add-hook 'emacs-lisp-mode-hook #'company-mode 't))
+(with-eval-after-load 'company
+  (add-hook 'emacs-lisp-mode-hook #'company-mode 't))
 (define-key emacs-lisp-mode-map (kbd "C-c C-e") #'edebug-defun)
+(add-hook 'emacs-lisp-mode-hook
+          (defun setup-elisp-imenu ()
+            (setq-local
+             imenu-generic-expression
+             (cons '("Keymap" "^(define-prefix-keymap\\s-+\\([a-z-]+\\)" 1)
+              imenu-generic-expression))))
 
 ;; Elm mode
 (my-package-install 'flycheck-elm)
@@ -692,20 +679,22 @@
 (my-package-install 'proof-general)
 
 ;; Coq
-(add-hook
- 'coq-mode-hook
- (defun set-coq-mode-faces ()
-   (set-face-attribute
-    'proof-locked-face nil
-    :underline nil
-    :background "#073642")))
-
 (my-package-install 'company-coq)
-(add-hook 'coq-mode-hook #'company-coq-mode)
-(setq proof-three-window-mode-policy 'hybrid
+(with-eval-after-load 'coq
+  (progn
+    (setq proof-three-window-mode-policy 'hybrid
       proof-script-fly-past-comments t
       proof-splash-seen t
       company-coq-disabled-features '(hello))
+
+    (set-face-attribute
+    'proof-locked-face nil
+    :underline nil
+    :background "#073642")
+
+    (add-hook 'coq-mode-hook #'company-coq-mode)
+
+    (define-key coq-mode-map (kbd "C-c RET") #'proof-goto-point)))
 
 ;; Haskell mode
 (my-package-install 'haskell-mode)
@@ -786,7 +775,9 @@
 (require 'scheme)
 (defvar guile-imenu-generic-expression
   (append '(("Public" "^(define-public\\s-+(?\\(\\sw+\\)" 1)
-            ("Functions*" "^(define\\*\\s-+(?\\(\\sw+\\)" 1))
+            ("Function*" "^(define\\*\\s-+(?\\(\\sw+\\)" 1)
+            ("Syntax Rule" "^(define-syntax-rule\\s-+(?\\(\\sw+\\)" 1)
+            ("Record" "^(define-record-type\\*?\\s-+<\\(\\sw+\\)>" 1))
         scheme-imenu-generic-expression)
   "Imenu generic expression for Guile modes.  See `imenu-generic-expression'.")
 (add-hook
@@ -798,7 +789,8 @@
 (my-package-install 'nix-mode)
 (require 'nix-mode)
 (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
-(define-key nix-mode-map (kbd "C-c C-f") 'nix-format-buffer)
+(with-eval-after-load 'nix-mode
+    (define-key nix-mode-map (kbd "C-c C-f") 'nix-format-buffer))
 (defvar nix-format-on-save t
   "Format the nix buffer with nixfmt before saving.")
 (add-hook 'before-save-hook
@@ -1000,9 +992,7 @@
 
 (defun on-after-init ()
   "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
-  (unless (or (display-graphic-p (selected-frame))
-              (not (string= 'base (daemonp)))
-              (not (string= 'term (daemonp))))
+  (unless (display-graphic-p (selected-frame))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
            (set-face-background 'line-number "#073642" (selected-frame)))))
 
@@ -1094,6 +1084,24 @@
     (force-mode-line-update t)))
 
 ;; Keybindings
+(require 'seq)
+(defmacro define-prefix-keymap (name &optional docstring &rest bindings)
+  "Define a keymap named `NAME' and docstring `DOCSTRING' with many `BINDINGS' at once using `define-key'."
+  `(,#'progn
+     (defvar ,name ,docstring (make-sparse-keymap))
+     (define-prefix-command (quote ,name))
+     ,@(seq-reduce
+        (lambda (bindings key-fn)
+          `((define-key (quote ,name) ,(car key-fn)
+              (function
+               ,(pcase (cadr key-fn)
+                  ((pred symbolp) (cadr key-fn))
+                  ((pred (lambda (fn) (symbolp (eval fn)))) (eval (cadr key-fn)))
+                  (_ (cadr key-fn)))))
+            ,@bindings))
+        (seq-partition bindings 2)
+        `(,name))))
+
 (evil-leader/set-leader "<SPC>")
 
 (evil-leader/set-key
@@ -1124,7 +1132,7 @@
 
 (define-prefix-keymap my-process-map
   "my process keybindings"
-  "b" debbugs-gnu
+  "b" my-debbugs-modes-map
   "d" docker
   "e" gnus
   "g" guix
@@ -1132,6 +1140,11 @@
   "l" list-processes
   "o" org-agenda
   "p" proced)
+
+(define-prefix-keymap my-debbugs-modes-map
+  "my debbugs modes."
+  "o" debbugs-org
+  "g" debbugs-gnu)
 
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
@@ -1234,7 +1247,6 @@
 (define-prefix-keymap my-org-map
   "my org bindings"
   "a" counsel-projectile-org-agenda
-  "b" debbugs-org
   "c" counsel-projectile-org-capture
   "g" counsel-org-goto
   "i" counsel-org-entity
@@ -1282,7 +1294,15 @@
 
 (define-prefix-keymap my-text-map
   "my text keybindings"
-  "d" delete-trailing-whitespace)
+  "d" delete-trailing-whitespace
+  "p" my-print-map)
+
+(define-prefix-keymap my-print-map
+  "printing buffers"
+  "p" print-buffer
+  "P" lpr-buffer
+  "r" print-region
+  "R" lpr-region)
 
 (define-prefix-keymap my-toggle-map
   "my toggles"
@@ -1291,6 +1311,7 @@
   "d" toggle-debug-on-error
   "D" toggle-debug-on-quit
   "f" toggle-frame-fullscreen
+  "h" toggle-global-hl-line
   "i" imenu-list-smart-toggle
   "l" toggle-truncate-lines
   "m" toggle-mode-line
