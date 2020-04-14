@@ -62,10 +62,14 @@
 ;; Pinentry
 (setf epa-pinentry-mode 'loopback)
 
-;; Email
-(setq user-mail-address "jsoo1@asu.edu"
-      user-full-name "John Soo"
-      mml-secure-openpgp-sign-with-sender t)
+;; Gnus
+;; set-face-attribute does not work here, why?
+;; even with with-eval-after-load 'mm-uu
+;; or in a hook
+(defface mm-uu-extract
+  '((t . (:foreground "#268bd2" :background "unspecified")))
+  "Face for extracted buffers."
+  :group 'gnus-article-mime)
 
 ;; Erc
 (setq erc-autojoin-channels-alist nil
