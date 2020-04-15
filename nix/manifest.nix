@@ -1,17 +1,24 @@
 let
   pkgs = import <nixpkgs> { };
   panoSpecific = [
-    pkgs.elmPackages.elm
-    pkgs.elmPackages.elm-oracle
+    pkgs.bashInteractive
+    pkgs.bash-completion
+    # Conflicts with hoogle, take the work requirement over hoogle
+    (pkgs.lib.setPrio 4 pkgs.elmPackages.elm)
     pkgs.elmPackages.elm-format
+    pkgs.elmPackages.elm-language-server
+    pkgs.ngrok # Unfree
+    pkgs.nodejs-10_x
+    pkgs.stack
+    # "unsupported" on macos
+    # pkgs.libreoffice
+    # pkgs.s3fs
   ];
 
 in panoSpecific ++ [
   # broken for now
   # pkgs.haskellPackages.idris
   pkgs.alacritty
-  pkgs.bashInteractive
-  pkgs.bash-completion
   pkgs.cabal-install
   pkgs.checkmake
   pkgs.coq
@@ -27,11 +34,8 @@ in panoSpecific ++ [
   pkgs.global
   pkgs.hlint
   pkgs.haskellPackages.hoogle
-  pkgs.htop
   pkgs.imagemagick
-  pkgs.ngrok
   pkgs.nixfmt
-  pkgs.nodejs-10_x
   pkgs.oathToolkit
   pkgs.ocaml
   pkgs.openvpn
@@ -51,7 +55,4 @@ in panoSpecific ++ [
   pkgs.tmux
   pkgs.watch
   pkgs.ocamlPackages.num
-  # "unsupported" on macos
-  # pkgs.libreoffice
-  # pkgs.s3fs
 ]
