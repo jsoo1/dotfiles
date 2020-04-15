@@ -16,8 +16,9 @@ let
   ];
 
 in panoSpecific ++ [
-  # broken for now
-  # pkgs.haskellPackages.idris
+  # broken for now (but only in the manifest file?)
+  # Also conflicts with hoogle.
+  # (pkgs.lib.setPrio 4 pkgs.idris)
   pkgs.alacritty
   pkgs.cabal-install
   pkgs.checkmake
@@ -52,6 +53,7 @@ in panoSpecific ++ [
   pkgs.spago
   pkgs.openssh
   pkgs.stylish-haskell
+  pkgs.texlive
   pkgs.tmux
   pkgs.watch
   pkgs.ocamlPackages.num
