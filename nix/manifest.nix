@@ -9,10 +9,10 @@ let
     pkgs.elmPackages.elm-language-server
     pkgs.ngrok # Unfree
     pkgs.nodejs-10_x
+    pkgs.s3fs
     pkgs.stack
     # "unsupported" on macos
     # pkgs.libreoffice
-    # pkgs.s3fs
   ];
 
 in panoSpecific ++ [
