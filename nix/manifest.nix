@@ -1,6 +1,12 @@
-let pkgs = import <nixpkgs> { };
+let
+  pkgs = import <nixpkgs> { };
+  panoSpecific = [
+    pkgs.elmPackages.elm
+    pkgs.elmPackages.elm-oracle
+    pkgs.elmPackages.elm-format
+  ];
 
-in [
+in panoSpecific ++ [
   # broken for now
   # pkgs.haskellPackages.idris
   pkgs.alacritty
