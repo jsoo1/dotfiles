@@ -31,10 +31,24 @@
 
 (register-services dunst)
 
+(define clipmenud
+  (make <service>
+    #:provides '(clipmenud)
+    #:docstring "Clipboard manager daemon"
+    #:respawn #f
+    #:start (make-forkexec-constructor
+             `("/home/john/.guix-profile/bin/clipmenud"
+               #:user "john"
+               #:log-file "/home/john/var/log/clipmenud.log"))
+    #:stop (make-kill-destructor)
+    #:actions (make-actions)))
+
+(register-services clipmenud)
+
 ;; Send shepherd into the background
 (action 'shepherd 'daemonize)
 
 ;; Services to start when shepherd starts:
 ;; Add the name of each service that should be started to the list
 ;; below passed to 'for-each'.
-(for-each start '(dunst emacs-term))
+(for-each start '(dunst clipmenud emacs-term))
