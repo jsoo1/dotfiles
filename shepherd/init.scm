@@ -51,4 +51,4 @@
 ;; Services to start when shepherd starts:
 ;; Add the name of each service that should be started to the list
 ;; below passed to 'for-each'.
-(for-each start '(dunst clipmenud emacs-term))
+(for-each start '(dunst emacs-term))
