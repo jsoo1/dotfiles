@@ -142,6 +142,7 @@
     "emacs-flycheck-elm"
     "emacs-flycheck-rust"
     "emacs-geiser"
+    "emacs-goto-chg"
     "emacs-graphviz-dot-mode"
     "emacs-guix"
     "emacs-haskell-mode"
