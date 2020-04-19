@@ -5,8 +5,9 @@
 ;;; Code:
 
 (defun make-standard-paragraph-rules ()
-   (setq-local paragraph-separate "[ \t\f]*$"
-               paragraph-start "\f\\|[ \t]*$"))
+  "Return `paragraph-separate' and `paragraph-start' to normal."
+  (setq-local paragraph-separate "[ \t\f]*$")
+  (setq-local paragraph-start "\f\\|[ \t]*$"))
 
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
@@ -638,17 +639,11 @@
       my-old-haskell-mode-hook haskell-mode-hook)
 
 (add-hook 'haskell-mode-hook
-          (lambda ()
-            (setq-local paragraph-separate "[ \t\f]*$"
-                        paragraph-start "\f\\|[ \t]*$")
-            (interactive-haskell-mode)
-            (yas-minor-mode-on)
+          (defun setup-haskell-flycheck ()
             (flycheck-mode)
             (flycheck-disable-checker 'haskell-ghc)))
-
 (add-hook 'haskell-mode-hook #'yas-minor-mode-on)
 (define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
-
 (add-hook 'haskell-mode-hook #'make-standard-paragraph-rules)
 
 ;; Agda mode
