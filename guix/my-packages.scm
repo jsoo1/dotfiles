@@ -41,6 +41,7 @@
 (define-public desktop-tools
   '("alacritty"
     "alsa-utils"
+    "clipmenu"
     "compton"
     "dbus"
     "dunst"
@@ -90,7 +91,6 @@
     "ghc-xmonad-contrib"
     "setxkbmap"
     "xcape"
-    "xclip"
     "xdg-utils"
     "xdotool"
     "xev"
@@ -102,6 +102,7 @@
     "xmobar"
     "xmonad"
     "xrandr"
+    "xsel"
     "xsetroot"
     "xwallpaper"))
 
@@ -153,7 +154,7 @@
     "emacs-magit"
     "emacs-markdown-mode"
     "emacs-multi-term"
-    "emacs-next-no-x"
+    "emacs-no-x"
     "emacs-nix-mode"
     "emacs-nodejs-repl"
     "emacs-projectile"
@@ -177,4 +178,4 @@
     "emacs-yaml-mode"
     "emacs-yasnippet"
     "ocaml4.07-merlin"
-    "proof-general-next"))
+    "proof-general"))

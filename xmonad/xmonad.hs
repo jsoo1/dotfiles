@@ -72,6 +72,10 @@ myModMask = mod4Mask
 myCommands :: [((KeyMask, KeySym), X ())]
 myCommands =
   [ ( ( myModMask, xK_i ), spawn "dmenu_run -F -p open" )
+  , ( ( myModMask,  xK_o )
+    , dmenuGitDirs >>= \dir -> unless (null dir) $ tmuxNewSession dir
+    )
+  , ( ( myModMask, xK_u ) , spawn "/home/john/.local/bin/clipmenu -p clipboard" )
   , ( ( myModMask .|. controlMask, xK_f)
     , void (sendXmobar "Toggle 0") <+> broadcastMessage ToggleStruts <+> refresh
     )
@@ -81,9 +85,6 @@ myCommands =
       { menuCommand = "dmenu"
       , menuArgs = [ "-f", "-F", "-p", "workspace" ]
       }
-    )
-  , ( ( myModMask,  xK_o )
-    , dmenuGitDirs >>= \dir -> unless (null dir) $ tmuxNewSession dir
     )
   , ( ( 0, xF86XK_AudioLowerVolume )
     , spawn "amixer -q set Master 2%-"

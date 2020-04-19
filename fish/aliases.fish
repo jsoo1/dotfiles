@@ -24,7 +24,6 @@ abbr --add -U -- tree "exa -T"
 abbr --add -U -- psg 'ps -e --format pid,command | rg -i'
 abbr --add -U -- rest "loginctl suspend"
 abbr --add -U -- bat "upower -I (upower -e | rg BAT)"
-abbr --add -U -- awk "gawk"
 function shep
     herd -s $MY_SHEP_SOCK $argv
 end
@@ -43,7 +42,6 @@ function tm
 end
 abbr --add -U -- tma "tmux attach -t"
 abbr --add -U -- tml "tmux list-sessions"
-abbr --add -U -- tm "tmux new-session -A -s (basename (pwd)) -n emacs"
 
 # Lynx
 abbr --add -U -- lynx lynx -cfg=~/.config/lynx/lynx.cfg
