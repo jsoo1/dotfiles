@@ -4,6 +4,10 @@
 ;;; use like any ol init.el
 ;;; Code:
 
+(defun make-standard-paragraph-rules ()
+   (setq-local paragraph-separate "[ \t\f]*$"
+               paragraph-start "\f\\|[ \t]*$"))
+
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
       initial-scratch-message ""
@@ -235,16 +239,6 @@
          (append (list "env" "NO_COLOR=true") argv))))
   safe-local-variable-values))
 
-;; Clipboard
-(xclip-mode 1)
-(setq
- xclip-method 'xsel
- xclip-program "xsel")
-(defun toggle-xclip-mode ()
-  "Toggle `xclip-mode'."
-  (interactive)
-  (xclip-mode (if xclip-mode -1 1)))
-
 ;; Imenu List
 (setq imenu-list-size 0.2)
 
@@ -392,6 +386,11 @@
  org-export-time-stamp-file nil
  org-html-validation-link nil)
 
+;; Ediff
+(setq
+ ediff-split-window-function #'split-window-horizontally
+ ediff-make-buffers-readonly-at-startup t)
+
 ;; LaTex
 (add-hook 'latex-mode-hook #'make-standard-paragraph-rules)
 
@@ -427,6 +426,16 @@
 (require 'which-key)
 (which-key-mode)
 (setq which-key-idle-delay 0.1)
+
+;; Clipboard
+(xclip-mode 1)
+(setq
+ xclip-method 'xsel
+ xclip-program "xsel")
+(defun toggle-xclip-mode ()
+  "Toggle `xclip-mode'."
+  (interactive)
+  (xclip-mode (if xclip-mode -1 1)))
 
 ;; GNUTLS issues
 ;; Skip v1.3 per https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341#19
