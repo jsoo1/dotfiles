@@ -172,6 +172,7 @@
     "emacs-web-mode"
     "emacs-wgrep"
     "emacs-which-key"
+    "emacs-xclip"
     "emacs-xterm-color"
     "emacs-yaml-mode"
     "emacs-yasnippet"

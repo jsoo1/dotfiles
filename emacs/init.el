@@ -235,6 +235,13 @@
          (append (list "env" "NO_COLOR=true") argv))))
   safe-local-variable-values))
 
+;; Clipboard
+(xclip-mode 1)
+(defun toggle-xclip-mode ()
+  "Toggle `xclip-mode'."
+  (interactive)
+  (xclip-mode (if xclip-mode -1 1)))
+
 ;; Imenu List
 (setq imenu-list-size 0.2)
 
@@ -1188,7 +1195,8 @@
         (interactive)
         (setq display-line-numbers (next-line-number display-line-numbers)))
   "t" counsel-load-theme
-  "w" whitespace-mode)
+  "w" whitespace-mode
+  "x" toggle-xclip-mode)
 
 (define-prefix-keymap my-window-map
   "my window keybindings"
