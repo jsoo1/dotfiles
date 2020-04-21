@@ -5,6 +5,7 @@ DIRS = \
 	$(HOME) \
 	$(HOME)/.emacs.d \
 	$(HOME)/.gnupg \
+	$(HOME)/.local/share/applications \
 	$(XDG_HOME)/alacritty \
 	$(XDG_HOME)/compton \
 	$(XDG_HOME)/dunst \
@@ -21,6 +22,7 @@ DIRS = \
 SYMLINKS = \
 	$(HOME)/.profile \
 	$(HOME)/.emacs.d/init.el \
+	$(HOME)/.local/share/applications/defaults.list \
 	$(XDG_HOME)/alacritty/alacritty.yml \
 	$(HOME)/.bashrc \
 	$(HOME)/.bash_profile \
@@ -72,6 +74,9 @@ $(HOME)/.profile: | $(HOME) ## The profile for session initialization. Not posix
 
 $(HOME)/.emacs.d/init.el: | $(HOME)/.emacs.d ## Emacs initialization file
 	$(ln) $(PWD)/emacs/init.el $@
+
+$(HOME)/.local/share/applications/defaults.list: | $(HOME)/.local/share/applications ## Default mime handlers
+	$(ln) $(PWD)/xdg/defaults.list $@
 
 $(XDG_HOME)/alacritty/alacritty.yml: | $(XDG_HOME)/alacritty ## Alacritty configuration
 	$(ln) $(PWD)/alacritty/alacritty.yml $@

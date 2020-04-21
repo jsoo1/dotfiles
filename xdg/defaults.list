@@ -1,0 +1,7 @@
+[Default Applications]
+application/pdf=org.pwmt.zathura.desktop
+application/oxps=org.pwmt.zathura.desktop
+application/epub+zip=org.pwmt.zathura.desktop
+application/xml=icecat.desktop
+application/html=icecat.desktop
+application/json=emacs.desktop
