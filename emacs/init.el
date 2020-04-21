@@ -636,6 +636,7 @@
        '((haskell-stylish-on-save . t)
          (haskell-mode-stylish-haskell-path . "ormolu")
          (haskell-mode-stylish-haskell-args . ("--ghc-opt TypeApplications"))
+         (haskell-process-type . cabal-repl)
          (haskell-process-type . cabal-new-repl))
        safe-local-variable-values)
       my-old-haskell-mode-hook haskell-mode-hook)
