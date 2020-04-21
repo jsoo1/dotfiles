@@ -8,6 +8,9 @@ set -gx PATH /home/john/.cargo/bin /home/john/.local/bin $PATH
 set -xg EDITOR 'emacsclient -t --socket-name=term'
 set -xg ALTERNATE_EDITOR 'vim'
 
+# Icecat for BROWSER
+set -xg BROWSER /home/john/.guix-profile/bin/icecat
+
 # Something weird happens without this
 set -xg GIT_EXEC_PATH /run/current-system/profile/libexec/git-core
 
