@@ -10,7 +10,7 @@ let
     pkgs.ngrok # Unfree
     pkgs.nodejs-10_x
     pkgs.s3fs
-    pkgs.stack
+    # pkgs.stack
     # "unsupported" on macos
     # pkgs.libreoffice
   ];
@@ -53,7 +53,7 @@ in panoSpecific ++ [
   pkgs.spago
   pkgs.openssh
   pkgs.stylish-haskell
-  pkgs.texlive
+  pkgs.texlive.combined.scheme-full
   pkgs.tmux
   pkgs.watch
   pkgs.ocamlPackages.num

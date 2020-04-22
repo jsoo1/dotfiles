@@ -2,6 +2,7 @@ osx-cross/avr/avr-gcc@7
 avrdude
 dfu-programmer
 fish
+haskell-stack
 px4/px4/gcc-arm-none-eabi
 idris
 pinentry-mac
