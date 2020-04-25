@@ -236,7 +236,8 @@
     (js-indent-level . 2)
     (haskell-process-wrapper-function
      . (lambda (argv)
-         (append (list "env" "NO_COLOR=true") argv))))
+         (append (list "env" "NO_COLOR=true") argv)))
+    (projectile-compilation-command . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix "))
   safe-local-variable-values))
 
 ;; Imenu List
@@ -622,30 +623,17 @@
 (require 'haskell-process)
 (require 'haskell-snippets)
 ;; See https://github.com/haskell/haskell-mode/issues/1553#issuecomment-358373643
-(setq haskell-process-args-ghci '("-ferror-spans")
-      haskell-process-args-cabal-repl '("--ghc-options=-ferror-spans")
-      haskell-process-args-stack-ghci
-      '("--ghci-options=-ferror-spans" "--no-build" "--no-load")
-      haskell-process-args-cabal-new-repl '("--ghc-options=-ferror-spans")
-      haskell-process-type 'auto
+(setq haskell-process-type 'auto
       haskell-process-log 't
       haskell-interactive-popup-errors nil
-      flycheck-haskell-hpack-preference 'prefer-cabal
-      safe-local-variable-values
-      (append
-       '((haskell-stylish-on-save . t)
-         (haskell-mode-stylish-haskell-path . "ormolu")
-         (haskell-mode-stylish-haskell-args . ("--ghc-opt TypeApplications"))
-         (haskell-process-type . cabal-repl)
-         (haskell-process-type . cabal-new-repl))
-       safe-local-variable-values)
-      my-old-haskell-mode-hook haskell-mode-hook)
+      flycheck-haskell-hpack-preference 'prefer-cabal)
 
 (add-hook 'haskell-mode-hook
           (defun setup-haskell-flycheck ()
             (flycheck-mode)
             (flycheck-disable-checker 'haskell-ghc)))
 (add-hook 'haskell-mode-hook #'yas-minor-mode-on)
+;; (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
 (define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
 (add-hook 'haskell-mode-hook #'make-standard-paragraph-rules)
 
