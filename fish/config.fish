@@ -63,8 +63,7 @@ set fish_cursor_replace_one underscore
 set fish_cursor_visual      block
 
 # python direnv package
-test "Darwin" = (uname);
-and eval (direnv hook fish)
+eval (direnv hook fish)
 
 # eval (opam env)
 
