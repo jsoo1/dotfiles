@@ -62,7 +62,7 @@
 (define-public haskell-tools
   '("cabal-install"
     "ghc"
-    "ghc-aws-lambda-haskell-runtime"
+    "ghcid"
     "hlint"
     "hoogle"
     "ormolu"
