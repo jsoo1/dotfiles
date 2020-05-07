@@ -105,6 +105,8 @@
 
 (setq initial-buffer-choice (lambda () (get-buffer-create "*eshell*"))
       eshell-highlight-prompt nil
+      eshell-prompt-regexp "^[^λ]* [λ] "
+      eshell-banner-message ""
       eshell-prompt-function
       (lambda ()
         (concat
@@ -113,12 +115,11 @@
          (propertize (replace-regexp-in-string (concat "^" (getenv "HOME")) "~" (eshell/pwd))
                      'face `(:foreground "#268bd2"))
          " "
-         (propertize (or (magit-get-current-branch) "") 'face `(:foreground "#859900"))
+         (propertize (condition-case nil (magit-get-current-branch) (error ""))
+                     'face `(:foreground "#859900"))
          " "
          (propertize "λ" 'face `(:foreground "#b58900" :weight normal))
-         " "))
-      eshell-prompt-regexp "^[^λ]* [λ] "
-      eshell-banner-message "")
+         " ")))
 
 (defun my-side-eshell (props)
   "Pop Eshell in a buffer using window `PROPS'."
@@ -346,8 +347,8 @@
       (hack-dir-local-variables-non-file-buffer))))
 
 ;; Org
-(require 'org-tempo)
 (require 'evil-org)
+(evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading))
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
                                (haskell . t)

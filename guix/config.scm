@@ -5,7 +5,7 @@
              ((gnu packages cups) #:select (cups-filters hplip-minimal))
              ((gnu packages curl) #:select (curl))
              ((gnu packages docker) #:select (docker-cli))
-             ((gnu packages emacs) #:select (emacs-next-no-x))
+             ((gnu packages emacs) #:select (emacs-no-x))
              ((gnu packages fonts)
               #:select (font-adobe-source-code-pro
                         font-iosevka
@@ -193,7 +193,7 @@ EndSection\n")
     ;; ???
     glibc-utf8-locales
     ;; text editors
-    vim emacs-next-no-x
+    vim emacs-no-x
     ;; for keyboards
     bluez
     %base-packages))
