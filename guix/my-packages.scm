@@ -4,7 +4,8 @@
   '("agda"
     "cedille"
     "coq"
-    "idris"))
+    "idris"
+    "purescript"))
 
 (define-public utilities
   '("aspell"
@@ -20,7 +21,6 @@
     "fzy"
     "gdb"
     "global"
-    "gnutls"
     "make"
     "pijul"
     "pinentry"
@@ -46,7 +46,9 @@
     "compton"
     "dbus"
     "dunst"
-    "freecad"
+    ;; Broken by python 3.8
+    ;; Waiting for https://forum.freecadweb.org/viewtopic.php?t=38982
+    ;; "freecad"
     "garcon"
     "libnotify"
     "my-dmenu"
@@ -76,10 +78,10 @@
     "rustfmt"))
 
 (define-public guile-tools
-  '("guile-next"
-    "guile3.0-colorized"
-    "guile3.0-readline"
-    "guile3.0-syntax-highlight"))
+  '("guile"
+    "guile-colorized"
+    "guile-readline"
+    "guile-syntax-highlight"))
 
 (define-public pdf-tools
   '("texlive"
