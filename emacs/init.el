@@ -348,6 +348,7 @@
 
 ;; Org
 (require 'evil-org)
+(add-hook 'org-mode-hook #'evil-org-mode)
 (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading))
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
