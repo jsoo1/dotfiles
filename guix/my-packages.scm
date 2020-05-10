@@ -158,7 +158,8 @@
     "emacs-magit"
     "emacs-markdown-mode"
     "emacs-multi-term"
-    "emacs-nix-mode"
+    ;; mmm-mode broken
+    ;; "emacs-nix-mode"
     "emacs-nodejs-repl"
     "emacs-projectile"
     "emacs-psc-ide"
