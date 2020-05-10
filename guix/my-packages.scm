@@ -126,6 +126,7 @@
     "emacs-docker"
     "emacs-dockerfile-mode"
     "emacs-ediprolog"
+    "emacs-elfeed"
     "emacs-elf-mode"
     "emacs-elm-mode"
     "emacs-emmet-mode"

@@ -94,6 +94,22 @@
             (toggle-truncate-lines 1)))
 (add-hook 'erc-mode-hook #'erc-notifications-mode)
 
+;; Elfeed
+(add-hook
+ 'elfeed-search-mode-hook
+ (defun make-elfeed-search-ctrl-c-map ()
+   (local-set-key (kbd "C-c") elfeed-search-mode-map)))
+(add-hook
+ 'elfeed-show-mode-hook
+ (defun make-elfeed-show-ctrl-c-map ()
+   (local-set-key (kbd "C-c") elfeed-show-mode-map)))
+(define-prefix-keymap elfeed-load-map
+  "Various ways of loading feeds"
+  "o" elfeed-load-opml
+  (kbd "C-o") elfeed-load-opml)
+(define-key elfeed-search-mode-map (kbd "C-l") elfeed-load-map)
+(define-key elfeed-search-mode-map "l" elfeed-load-map)
+
 ;; Shell
 (setq shell-file-name "bash")
 
@@ -1021,6 +1037,7 @@
   "b" my-debbugs-modes-map
   "d" docker
   "e" gnus
+  "f" elfeed
   "g" guix
   "i" my-erc
   "l" list-processes
