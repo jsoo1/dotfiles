@@ -959,6 +959,21 @@
     (setq-default mode-line-format ml)
     (force-mode-line-update t)))
 
+;; ISO 8601
+(defun iso-8601-string (&optional time zone)
+  "Make an ISO 8601 formatted date string for `TIME' and `ZONE'."
+  (let ((time* (or time (current-time)))
+        (zone* (or zone (current-time-zone))))
+    (concat
+     (format-time-string "%Y-%m-%dT%T" time* zone*)
+     ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
+      (format-time-string "%z" time* zone*)))))
+
+(defun insert-iso-8601-string ()
+  "Insert an the current time as `iso-8601-string' at point."
+  (interactive)
+  (insert (iso-8601-string)))
+
 ;; Keybindings
 (require 'seq)
 (defmacro define-prefix-keymap (name &optional docstring &rest bindings)
@@ -1108,6 +1123,7 @@
 (define-prefix-keymap my-insert-map
   "my insertion keybindings"
   "c" insert-char
+  "t" insert-iso-8601-string
   "u" counsel-unicode-char)
 
 (define-prefix-keymap my-jump-map
