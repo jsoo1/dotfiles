@@ -1,60 +1,82 @@
 let
-  pkgs = import <nixpkgs> { };
-  panoSpecific = [
-    pkgs.bashInteractive
-    pkgs.bash-completion
+  # Channels not working!
+  pkgs = import <nixpkgs-unstable> { };
+
+  shells = [ pkgs.fish ];
+
+  shell-utils = [
+    pkgs.direnv
+    pkgs.exa
+    pkgs.fd
+    pkgs.checkmake
+    pkgs.gnumake
+    pkgs.fzy
+    pkgs.global
+    pkgs.imagemagick
+    pkgs.qemu
+    pkgs.rage
+    pkgs.readline
+    pkgs.ripgrep
+    pkgs.openssh
+    pkgs.tmux
+    pkgs.watch
+  ];
+
+  embedded = [ pkgs.avrdude pkgs.dfu-programmer ];
+
+  desktop-utils = [ pkgs.alacritty ];
+
+  editors = [ pkgs.emacsGit-nox ];
+
+  fonts = [ pkgs.iosevka ];
+
+  latex = [ pkgs.texlive.combined.scheme-full ];
+
+  unfree = [ pkgs.ngrok ];
+
+  haskell-utils = [
+    pkgs.cabal-install
+    pkgs.ghcid
+    pkgs.hlint
+    pkgs.haskellPackages.hoogle
+    pkgs.ormolu
+    pkgs.stylish-haskell
+  ];
+
+  nix-utils = [ pkgs.nixfmt ];
+
+  purescript-utils = [ pkgs.purescript pkgs.spago ];
+
+  fun-langs = [
+    pkgs.coq
+    # conflicts with hoogle.
+    (pkgs.lib.setPrio 6 pkgs.idris)
+    pkgs.racket-minimal
+    pkgs.swiProlog
+    pkgs.ocaml
+    pkgs.urweb
+  ];
+
+  rust-utils = [ pkgs.rustfmt ];
+
+  macos-utils = [ pkgs.reattach-to-user-namespace ];
+
+  pano-specific = [
     # Conflicts with hoogle, take the work requirement over hoogle
     (pkgs.lib.setPrio 4 pkgs.elmPackages.elm)
     pkgs.elmPackages.elm-format
     pkgs.elmPackages.elm-language-server
-    pkgs.ngrok # Unfree
     pkgs.nodejs-10_x
     pkgs.s3fs
+    # stack doesn't work the way I need
     # pkgs.stack
-    # "unsupported" on macos
-    # pkgs.libreoffice
+    # libreoffic "unsupported" on macos
+    # pkgs.libreoffice-unwrapped
+    pkgs.oathToolkit
+    pkgs.openvpn
+    pkgs.postgresql_11
   ];
 
-in panoSpecific ++ [
-  # broken for now (but only in the manifest file?)
-  # Also conflicts with hoogle.
-  # (pkgs.lib.setPrio 4 pkgs.idris)
-  pkgs.alacritty
-  pkgs.cabal-install
-  pkgs.checkmake
-  pkgs.coq
-  pkgs.direnv
-  pkgs.emacsGit-nox
-  pkgs.exa
-  pkgs.fd
-  pkgs.fish
-  pkgs.gnumake
-  pkgs.iosevka
-  pkgs.fzy
-  pkgs.ghcid
-  pkgs.global
-  pkgs.hlint
-  pkgs.haskellPackages.hoogle
-  pkgs.imagemagick
-  pkgs.nixfmt
-  pkgs.oathToolkit
-  pkgs.ocaml
-  pkgs.openvpn
-  pkgs.ormolu
-  pkgs.postgresql_11
-  pkgs.purescript
-  pkgs.qemu
-  pkgs.racket-minimal
-  pkgs.rage
-  pkgs.readline
-  pkgs.reattach-to-user-namespace
-  pkgs.ripgrep
-  pkgs.rustfmt
-  pkgs.spago
-  pkgs.openssh
-  pkgs.stylish-haskell
-  pkgs.texlive.combined.scheme-full
-  pkgs.tmux
-  pkgs.watch
-  pkgs.ocamlPackages.num
-]
+in (shells ++ shell-utils ++ desktop-utils ++ editors ++ fonts ++ latex
+  ++ unfree ++ haskell-utils ++ nix-utils ++ purescript-utils ++ fun-langs
+  ++ rust-utils ++ macos-utils ++ pano-specific)
