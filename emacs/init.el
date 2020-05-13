@@ -50,9 +50,6 @@
 ;; Custom
 (setq custom-file "/dev/null")
 
-;; Tab width
-(setq tab-width 4)
-
 ;; Trailing whitespace
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
@@ -271,6 +268,7 @@
     (haskell-stylish-on-save . nil)
     (haskell-process-type . 'stack-ghci)
     (haskell-mode-stylish-haskell-args . '("--ghc-opt TypeApplications"))
+    (tab-width . 4)
     (js-indent-level . 2)
     (haskell-process-wrapper-function
      . (lambda (argv)
