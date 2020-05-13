@@ -16,6 +16,8 @@ if test -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
   fenv source '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
 end
 
+set -gx NIX_PATH $HOME/.nix-defexpr/channels $NIX_PATH
+
 # fish cwd color
 set -x fish_color_cwd yellow
 
