@@ -658,6 +658,71 @@
 ;; Agda mode
 (load-library (let ((coding-system-for-read 'utf-8))
                 (shell-command-to-string "agda-mode locate")))
+(define-key agda2-mode-map (kbd "C-c C-SPC") #'agda2-give)
+(define-key agda2-mode-map (kbd "C-c C-u") #'counsel-unicode-char)
+(define-key agda2-mode-map (kbd "C-c ,") #'agda2-goal-and-context)
+(define-key agda2-mode-map (kbd "C-c .") #'agda2-goal-and-context-and-inferred)
+(define-key agda2-mode-map (kbd "C-c ;") #'agda2-goal-and-context-and-checked)
+(set-face-attribute
+ 'agda2-highlight-function-face nil
+ :inherit 'default
+ :foreground 'unspecified)
+(set-face-attribute
+ 'agda2-highlight-datatype-face nil
+ :inherit 'font-lock-type-face
+ :foreground 'unspecified)
+(set-face-attribute
+ 'agda2-highlight-primitive-face nil
+ :inherit 'font-lock-variable-name-face
+ :foreground 'unspecified)
+(set-face-attribute
+ 'agda2-highlight-primitive-type-face nil
+ :inherit 'font-lock-type-face
+ :foreground 'unspecified)
+(set-face-attribute
+ 'agda2-highlight-inductive-constructor-face nil
+ :inherit 'font-lock-type-face
+ :foreground 'unspecified)
+(set-face-attribute
+ 'agda2-highlight-postulate-face nil
+ :inherit 'font-lock-type-face
+ :foreground 'unspecified)
+(set-face-attribute
+ 'agda2-highlight-keyword-face nil
+ :inherit 'font-lock-keyword-face
+ :foreground 'unspecified)
+(set-face-attribute
+ 'agda2-highlight-module-face nil
+ :inherit 'font-lock-type-face
+ :foreground 'unspecified)
+(set-face-attribute
+ 'agda2-highlight-symbol-face nil
+ :inherit 'font-lock-variable-name-face
+ :foreground 'unspecified)
+(set-face-attribute
+ 'agda2-highlight-primitive-face nil
+ :inherit 'default
+ :foreground 'unspecified)
+(set-face-attribute
+ 'agda2-highlight-number-face nil
+ :inherit 'default
+ :foreground 'unspecified)
+(set-face-attribute
+ 'agda2-highlight-string-face nil
+ :inherit 'font-lock-string-face
+ :foreground 'unspecified)
+(set-face-attribute
+ 'agda2-highlight-catchall-clause-face nil
+ :background 'unspecified)
+(set-face-attribute
+ 'agda2-highlight-error-face nil
+ :inherit 'default
+ :background 'unspecified)
+(set-face-attribute
+ 'agda2-highlight-unsolved-meta-face nil
+ :inherit 'default
+ :background 'unspecified
+ :foreground "red")
 
 ;; Mercury
 (add-to-list 'load-path "~/.emacs.d/private/metal-mercury-mode/")
