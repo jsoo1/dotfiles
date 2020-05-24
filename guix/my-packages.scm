@@ -2,6 +2,7 @@
 
 (define-public languages
   '("agda"
+    "agda-ial"
     "cedille"
     "coq"
     "idris"
@@ -13,6 +14,7 @@
     "cups"
     "direnv"
     "docker-cli"
+    "docker-compose"
     "emacs-no-x"
     "exa"
     "fd"
