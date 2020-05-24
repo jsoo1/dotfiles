@@ -4,7 +4,8 @@
 ;;; Code:
 
 (setq user-mail-address "jsoo1@asu.edu"
-      user-full-name "John Soo")
+      user-full-name "John Soo"
+      mml-secure-openpgp-sign-with-sender t)
 
 (with-eval-after-load 'gnus
   (progn

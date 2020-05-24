@@ -254,6 +254,7 @@
     (haskell-stylish-on-save . t)
     (haskell-stylish-on-save . nil)
     (haskell-mode-stylish-haskell-args . '("--ghc-opt TypeApplications"))
+    (tab-width . 4)
     (js-indent-level . 2)
     (haskell-process-wrapper-function
      . (lambda (argv)
@@ -776,7 +777,7 @@
   "Imenu generic expression for Guile modes.  See `imenu-generic-expression'.")
 (add-hook
  'scheme-mode-hook
- (lambda ()
+ (defun set-better-guile-imenu ()
    (setq-local imenu-generic-expression guile-imenu-generic-expression)))
 
 ;; Nix
@@ -1189,8 +1190,8 @@
   "l" find-file-literally
   "r" counsel-buffer-or-recentf
   "s" save-buffer
-  "y" (defun kill-file-name ()
-        (interactive) (kill-new (buffer-file-name (current-buffer)))))
+  "y" (defun kill-file-name
+          () (interactive) (kill-new (buffer-file-name (current-buffer)))))
 
 (define-prefix-keymap my-git-map
   "my git keybindings"
