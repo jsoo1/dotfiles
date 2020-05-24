@@ -248,7 +248,11 @@
  safe-local-variable-values
  (append
   '((haskell-stylish-on-save . nil)
-    (haskell-process-type . 'stack-ghci)
+    (haskell-process-type . stack-ghci)
+    (haskell-process-type . cabal-repl)
+    (haskell-mode-stylish-haskell-path . "ormolu")
+    (haskell-stylish-on-save . t)
+    (haskell-stylish-on-save . nil)
     (haskell-mode-stylish-haskell-args . '("--ghc-opt TypeApplications"))
     (js-indent-level . 2)
     (haskell-process-wrapper-function
