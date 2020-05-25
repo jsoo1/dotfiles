@@ -393,11 +393,30 @@
          "* %?
   %t")))
 
+(setq org-directory "~")
 (with-eval-after-load 'org-agenda-mode
   (progn
     (define-key org-agenda-mode-map (kbd "C-c") org-agenda-mode-map)
     (define-key org-agenda-mode-map (kbd "C-m") #'org-agenda-month-view)
     (define-key org-agenda-mode-map "m" #'org-agenda-month-view)))
+
+;; Set org-agenda files
+(let ((default-directory "~"))
+      (make-process
+       :name "list-tracked-org-files"
+       :command `("git" "ls-tree" "--name-only" "-r" "master")
+       :buffer (current-buffer)
+       :filter (lambda (proc string)
+                 (let ((org-files
+                        (seq-filter
+                         (lambda (file) (string-match "\\.org$" file))
+                         (split-string string "[\n\r]+"))))
+                   (setq
+                    org-agenda-files
+                    (seq-map
+                     (lambda (x) (concat "~/" (or (file-name-directory x) "")))
+                     org-files))))
+       :sentinel (lambda (proc event) nil)))
 
 (set-face-attribute
  'variable-pitch nil
