@@ -400,23 +400,64 @@
     (define-key org-agenda-mode-map (kbd "C-m") #'org-agenda-month-view)
     (define-key org-agenda-mode-map "m" #'org-agenda-month-view)))
 
-;; Set org-agenda files
+(defun str-to-org-dirs (repo-dir string)
+  "Take newline delimited `STRING' and return list of all directories with org files in `REPO-DIR'."
+  (seq-map
+   (lambda (x) (concat repo-dir "/" (or (file-name-directory x) "")))
+   (seq-filter
+    (lambda (file) (string-match "\\.org$" file))
+    (split-string string "[\n\r]+"))))
+
+;; Set org-agenda-files
+;; Right now, very not thread safe.
+(defvar home-org-dirs '())
+(defvar on-my-org-callback nil)
+(defvar on-my-org-repo-dir nil)
+(defun on-my-org-repo (repo-dir ref cb)
+  "Perform `CB' on the org directories of `REPO-DIR' at git `REF'."
+  (assert (stringp repo-dir))
+  (assert (stringp ref))
+  (assert (functionp cb))
+  (setq on-my-org-callback cb)
+  (setq on-my-org-repo-dir repo-dir)
+  (let ((default-directory repo-dir))
+    (make-process
+     :name "list-tracked-org-files"
+     :command `("git" "ls-tree" "--name-only" "-r" ,ref)
+     :buffer (current-buffer)
+     :filter
+     (lambda (proc string)
+       (funcall on-my-org-callback (str-to-org-dirs on-my-org-repo-dir string)))
+     :sentinel (lambda (proc event) nil))))
+
+(on-my-org-repo
+ "~" "master"
+ (lambda (home-dirs)
+   (setq home-org-dirs home-dirs)
+   (on-my-org-repo
+    "~/projects/work" "consumable"
+    (lambda (work-dirs)
+      (setq org-agenda-files (append home-org-dirs work-dirs))))))
+
 (let ((default-directory "~"))
-      (make-process
-       :name "list-tracked-org-files"
-       :command `("git" "ls-tree" "--name-only" "-r" "master")
-       :buffer (current-buffer)
-       :filter (lambda (proc string)
-                 (let ((org-files
-                        (seq-filter
-                         (lambda (file) (string-match "\\.org$" file))
-                         (split-string string "[\n\r]+"))))
-                   (setq
-                    org-agenda-files
-                    (seq-map
-                     (lambda (x) (concat "~/" (or (file-name-directory x) "")))
-                     org-files))))
-       :sentinel (lambda (proc event) nil)))
+  (make-process
+   :name "list-tracked-org-files"
+   :command `("git" "ls-tree" "--name-only" "-r" "master")
+   :buffer (current-buffer)
+   :filter
+   (lambda (proc string)
+     (let ((default-directory "~/projects/work"))
+       (setq home-org-dirs (str-to-org-dirs "~/" string))
+       (make-process
+        :name "list-tracked-org-files"
+        :command `("git" "ls-tree" "--name-only" "-r" "consumable")
+        :buffer (current-buffer)
+        :filter
+        (lambda (proc string)
+          (setq work-org-dirs (str-to-org-dirs "~/projects/work" string))
+          (setq org-agenda-files (append home-org-dirs work-org-dirs)))
+        :sentinel (lambda (proc event) nil))))
+   :sentinel (lambda (proc event) nil)))
 
 (set-face-attribute
  'variable-pitch nil
