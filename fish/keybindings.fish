@@ -108,7 +108,7 @@ function __fzy_history -d "Find in history"
 end
 
 function __ls_git_repos -d "List git repos"
-    fd '\.git' /Users/john/{projects,vpn,.emacs.d,dotfiles} -t d -H -I \
+    fd '\.git' /Users/john/{projects,vpn,.emacs.d,dotfiles} -H -I \
         -E '\.gitlab' \
         -E '\.github' \
         -E '\.cache' \
@@ -116,7 +116,13 @@ function __ls_git_repos -d "List git repos"
         -E '\.cargo' \
         -E '\.git-credential-cache' \
         -E '\.spago' \
-        -x dirname
+        -E 'elpa' \
+        -E 'node_modules' \
+        -E 'elm-stuff' \
+        -E 'vendor' \
+        -E 'dist-newstyle' \
+        -x dirname \
+        | sort -u
 end
 
 function __fzy_git_repos -d "Find a git repo"
