@@ -1,6 +1,7 @@
 let abbr cmd arg = return $ ":! " ++ cmd ++ " " ++ arg
 
-:set prompt "λ> "
+:set prompt "λ "
+:set prompt-cont "... λ "
 
 -- hoogle
 :def! haddocks (\arg -> return $ ":! hoogle --color --info \'" ++ arg ++ "\'")
@@ -10,15 +11,18 @@ let abbr cmd arg = return $ ":! " ++ cmd ++ " " ++ arg
 :def! rest (abbr "pmset sleepnow")
 
 -- emacsclient
-:def! em (abbr "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient -t --socket-name=term")
+:def! em (abbr "emacsclient -t --socket-name=term")
 
 -- vim
 :def! vim (abbr "vim")
 
 -- standards
+:def! fd (abbr "fd")
+:def! less (abbr "less")
 :def! pwd (abbr "pwd")
-:def! lsa (abbr "ls -lsa")
-:def! ls (abbr "ls")
+:def! lsa (abbr "exa -la")
+:def! ls (abbr "exa")
+:def! tree (abbr "exa -Ta")
 :def! clear (abbr "clear")
 :def! ssh (abbr "ssh")
 
