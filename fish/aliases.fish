@@ -11,8 +11,8 @@ abbr --add -U -- gp 'git push'
 abbr --add -U -- gd 'git diff'
 abbr --add -U -- gm 'git merge'
 abbr --add -U -- gco 'git checkout'
-function gitpurge
-    git branch --merged | rg -v "\*" | rg -v "master" | xargs -n 1 git branch -d
+function gitpurge -a ref
+    git branch --merged | rg -v "\*" | rg -v "$ref" | xargs -n 1 git branch -d
 end
 
 # System Utils
