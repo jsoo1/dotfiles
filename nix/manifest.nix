@@ -8,6 +8,7 @@ let
     pkgs.direnv
     pkgs.exa
     pkgs.fd
+    pkgs.git
     pkgs.checkmake
     pkgs.gnumake
     pkgs.fzy
