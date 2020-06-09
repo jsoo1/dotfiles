@@ -1346,11 +1346,15 @@
   "c" make-frame
   "d" (defun my-delete-window ()
         (interactive) (progn (delete-window) (balance-windows-area)))
+  "h" (defun tmux-left ()
+        (interactive) (tmux-navigate "left"))
+  "j" (defun tmux-down ()
+        (interactive) (tmux-navigate "down"))
+  "k" (defun tmux-up ()
+        (interactive) (tmux-navigate "up"))
+  "l" (defun tmux-right ()
+        (interactive) (tmux-navigate "right"))
   "D" delete-frame
-  "h" (defun tmux-left () (interactive) (tmux-navigate "left"))
-  "j" (defun tmux-down () (interactive) (tmux-navigate "down"))
-  "k" (defun tmux-up () (interactive) (tmux-navigate "up"))
-  "l" (defun tmux-right () (interactive) (tmux-navigate "right"))
   "H" evil-window-move-far-left
   "J" evil-window-move-very-bottom
   "K" evil-window-move-very-top
