@@ -58,7 +58,6 @@
 
 ;; Package
 (require 'package)
-(add-to-list 'load-path "~/.emacs.d/private/evil-tmux-navigator")
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-refresh-contents t)
 (package-initialize)
@@ -301,9 +300,6 @@
 (require 'evil-leader)
 (my-package-install 'evil-escape)
 (require 'evil-escape)
-(my-package-install 'smartparens)
-(require 'smartparens-config)
-(require 'navigate)
 
 (evil-mode 1)
 (global-evil-surround-mode 1)
@@ -330,6 +326,10 @@
 
 (evil-declare-not-repeat #'flycheck-next-error)
 (evil-declare-not-repeat #'flycheck-previous-error)
+
+;; Tmux-navigator
+(add-to-list 'load-path "~/.emacs.d/private/evil-tmux-navigator")
+(require 'navigate)
 
 ;; Magit
 (my-package-install 'magit)
