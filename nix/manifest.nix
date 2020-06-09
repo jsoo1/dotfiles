@@ -76,6 +76,7 @@ let
     pkgs.oathToolkit
     pkgs.openvpn
     pkgs.postgresql_11
+    pkgs.yarn
   ];
 
 in (shells ++ shell-utils ++ desktop-utils ++ editors ++ fonts ++ latex
