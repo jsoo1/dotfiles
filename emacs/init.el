@@ -542,6 +542,9 @@
 
 ;; Compilation
 (define-key compilation-mode-map (kbd "C-c C-l") #'recompile)
+(add-hook 'compilation-mode-hook
+          (defun toggle-truncate-lines-off ()
+               (toggle-truncate-lines -1)))
 
 ;; Keybindings
 (define-key comint-mode-map (kbd "C-c C-k" ) #'comint-clear-buffer)
