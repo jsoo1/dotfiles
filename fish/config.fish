@@ -8,6 +8,8 @@ set -gx PATH /home/john/.cargo/bin /home/john/.local/bin $PATH
 set -xg EDITOR 'emacsclient -t --socket-name=term'
 set -xg ALTERNATE_EDITOR 'vim'
 
+set -xg PAGER 'less'
+
 # Icecat for BROWSER
 set -xg BROWSER /home/john/.guix-profile/bin/icecat
 
@@ -18,7 +20,7 @@ set -xg GIT_EXEC_PATH /run/current-system/profile/libexec/git-core
 set -xg GUILE_LOAD_PATH $GUILE_LOAD_PATH /home/john/.guix-profile/share/guile/site/3.0
 
 # cargo
-set -x CARGO_HOME "~/.cargo"
+set -x CARGO_HOME "$HOME/.cargo"
 
 # fish cwd color
 set -x fish_color_cwd yellow
