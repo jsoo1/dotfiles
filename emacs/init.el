@@ -249,8 +249,18 @@
     (haskell-process-type . stack-ghci)
     (haskell-process-type . cabal-repl)
     (haskell-mode-stylish-haskell-path . "ormolu")
+    (projectile-compilation-command . "cargo build")
+    (projectile-run-command . "cargo run")
     (haskell-stylish-on-save . t)
     (haskell-stylish-on-save . nil)
+    (projectile-compilation-command
+     . "docker run --rm --volume /home/john/.cargo:/home/john/.cargo --volume /home/john/projects/work/projects/vast:/home/john/projects/work/projects/vast --network host --env CARGO_HOME=/home/john/.cargo --workdir /home/john/projects/work/projects/vast rust:john cargo build")
+    (projectile-run-command
+     . "docker run --rm --volume /home/john/.cargo:/home/john/.cargo --volume /home/john/projects/work/projects/vast:/home/john/projects/work/projects/vast --network host --env CARGO_HOME=/home/john/.cargo --workdir /home/john/projects/work/projects/vast rust:john cargo run")
+    (flycheck-rust-cargo-executable
+     .  "docker run --rm --volume /home/john/.cargo:/home/john/.cargo --volume /home/john/projects/work/projects/vast:/home/john/projects/work/projects/vast --network host --env CARGO_HOME=/home/john/.cargo --workdir /home/john/projects/work/projects/vast rust:john cargo")
+    (rust-rustfmt-bin
+                . "docker run --rm --volume /home/john/.cargo:/home/john/.cargo --volume /home/john/projects/work/projects/vast:/home/john/projects/work/projects/vast --network host --env CARGO_HOME=/home/john/.cargo --workdir /home/john/projects/work/projects/vast rust:john rustfmt")
     (haskell-mode-stylish-haskell-args . '("--ghc-opt TypeApplications"))
     (tab-width . 4)
     (js-indent-level . 2)
