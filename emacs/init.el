@@ -1236,6 +1236,7 @@
   "g" counsel-git
   "h" counsel-command-history
   "i" counsel-ibuffer
+  "I" counsel-info-lookup-symbol
   "m" counsel-minor
   "M" counsel-major
   "p" counsel-projectile
