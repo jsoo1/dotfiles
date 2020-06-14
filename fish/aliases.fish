@@ -11,8 +11,8 @@ abbr --add -U -- gp 'git push'
 abbr --add -U -- gd 'git diff'
 abbr --add -U -- gm 'git merge'
 abbr --add -U -- gco 'git checkout'
-function gitpurge
-    git branch --merged | rg -v "\*" | rg -v "master" | xargs -n 1 git branch -d
+function gitpurge -a ref
+    git branch --merged | rg -v "\*" | rg -v "$ref" | xargs -n 1 git branch -d
 end
 
 # System Utils
@@ -52,3 +52,9 @@ end
 function pursuit -a query
     lynx -cfg=~/.config/lynx/lynx.cfg "pursuit.purescript.org/search?q="$query
 end
+
+function pidof -d 'select a pid via fzy'
+    ps waux | fzy | sed -E 's/[[:space:]]+/ /g' | cut -d ' ' -f 2
+end
+
+complete -c pidof --no-files

@@ -81,20 +81,9 @@ end
 
 function __fzy_files -d "List files and folders"
     set -l commandline (__fzf_parse_commandline)
-    set -l dir $commandline[1]
-    set -l fzy_query $commandline[2]
-
-    # "-path \$dir'*/\\.*'" matches hidden files/folders inside $dir but not
-    # $dir itself, even if hidden.
-    set -l cmd "
-    command find -L \$dir -mindepth 1 \\( -path \$dir'*/\\.*' -o -fstype 'sysfs' -o -fstype 'devfs' -o -fstype 'devtmpfs' \\) -prune \
-    -o -type f -print \
-    -o -type d -print \
-    -o -type l -print 2> /dev/null | sed 's@^\./@@'"
 
     begin
-        set -lx FZF_DEFAULT_OPTS "--height $FZF_TMUX_HEIGHT --reverse $FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS"
-        eval "$cmd" | fzy | while read -l r; set result $result $r; end
+        fd '.*' '.' | fzy | while read -l r; set result $result $r; end
     end
     if [ -z "$result" ]
         commandline -f repaint
@@ -133,6 +122,13 @@ end
 function __fzy_git_repos -d "Find a git repo"
     begin
         __ls_git_repos | fzy | read -l result
-        and commandline -- "tmux new-session -A -s (basename $result | tr '.' '-') -c $result -n emacs '$EDITOR $result'"
+        and commandline -it -- "tmux new-session -A -s (basename $result | tr '.' '-') -c $result -n emacs 'exec $EDITOR $result'"
+    end
+end
+
+function fzy_docker_images -d "Find a docker image"
+    begin
+        docker images | awk '{ print $1 ":" $2 " " $3 }' | rg -v 'REPOSITORY:TAG' | column -t | fzy | awk '{ print $1 }' | read -l result
+        and commandline -it -- $result
     end
 end

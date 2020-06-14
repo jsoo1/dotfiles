@@ -29,16 +29,19 @@ set -x fish_color_cwd yellow
 set fish_greeting ""
 
 # solarized
-# test -e ~/.config/fish/colors.fish;
-# and source ~/.config/fish/colors.fish
+# if test -e ~/.config/fish/colors.fish
+#     source ~/.config/fish/colors.fish
+# end
 
 # prompt :)
-test -e ~/.config/fish/fish_prompt.fish;
-and source ~/.config/fish/fish_prompt.fish
+if test -e ~/.config/fish/fish_prompt.fish
+    source ~/.config/fish/fish_prompt.fish
+end
 
 # keybindings
-test -e ~/.config/fish/keybindings.fish;
-and source ~/.config/fish/keybindings.fish
+if test -e ~/.config/fish/keybindings.fish
+    source ~/.config/fish/keybindings.fish
+end
 
 # fixes for emacs
 # emacs ansi-term support
