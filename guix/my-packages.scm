@@ -75,8 +75,8 @@
 
 (define-public rust-tools
   '("racer"
-    "rust"
-    "rust:cargo"
+    "rust@1.44"
+    "rust@1.44:cargo"
     "rustfmt"))
 
 (define-public guile-tools
@@ -158,11 +158,12 @@
     "emacs-imenu-list"
     "emacs-ivy"
     "emacs-let-alist"
+    "emacs-lsp-mode"
+    "emacs-lsp-ivy"
     "emacs-magit"
     "emacs-markdown-mode"
     "emacs-multi-term"
-    ;; mmm-mode broken
-    ;; "emacs-nix-mode"
+    "emacs-nix-mode"
     "emacs-nodejs-repl"
     "emacs-projectile"
     "emacs-psc-ide"
