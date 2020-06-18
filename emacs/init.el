@@ -1160,7 +1160,7 @@
   "b" 'my-buffer-map
   "c" 'my-compile-map
   "C" 'my-counsel-map
-  "d" 'dired
+  "d" 'my-directory-map
   "e" 'my-error-map
   "f" 'my-file-map
   "g" 'my-git-map
@@ -1178,6 +1178,11 @@
   "z" 'my-zoom-map
   "'" 'eshell
   "/" 'counsel-projectile-rg)
+
+(define-prefix-keymap my-directory-map
+  "my directory commands"
+  "d" dired
+  "/" dired-other-window)
 
 (define-prefix-keymap elfeed-load-map
   "Various ways of loading feeds"
