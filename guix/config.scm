@@ -13,7 +13,8 @@
              ((gnu packages fontutils) #:select (fontconfig))
              ((gnu packages gl) #:select (mesa))
              ((gnu packages gnupg) #:select (gnupg))
-             ((gnu packages linux) #:select (bluez iproute light))
+             ((gnu packages linux)
+              #:select (bluez iproute light linux-libre-with-bpf))
              ((gnu packages ncurses) #:select (ncurses))
              ((gnu packages shells) #:select (fish))
              ((gnu packages shellutils) #:select (fzy))
@@ -160,6 +161,7 @@ EndSection\n")
     (bootloader grub-efi-bootloader)
     (target "/boot/efi")
     (keyboard-layout ctrl-nocaps)))
+  (kernel linux-libre-with-bpf)
   (file-systems
    `(,(file-system
         (device
