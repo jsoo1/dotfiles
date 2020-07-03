@@ -262,15 +262,12 @@
     (projectile-run-command . "cargo run")
     (haskell-stylish-on-save . t)
     (haskell-stylish-on-save . nil)
-    (projectile-compilation-command
-     . "docker run --rm --volume /home/john/.cargo:/home/john/.cargo --volume /home/john/projects/work/projects/vast:/home/john/projects/work/projects/vast --network host --env CARGO_HOME=/home/john/.cargo --workdir /home/john/projects/work/projects/vast rust:john cargo build")
-    (projectile-run-command
-     . "docker run --rm --volume /home/john/.cargo:/home/john/.cargo --volume /home/john/projects/work/projects/vast:/home/john/projects/work/projects/vast --network host --env CARGO_HOME=/home/john/.cargo --workdir /home/john/projects/work/projects/vast rust:john cargo run")
-    (flycheck-rust-cargo-executable
-     .  "docker run --rm --volume /home/john/.cargo:/home/john/.cargo --volume /home/john/projects/work/projects/vast:/home/john/projects/work/projects/vast --network host --env CARGO_HOME=/home/john/.cargo --workdir /home/john/projects/work/projects/vast rust:john cargo")
-    (rust-rustfmt-bin
-                . "docker run --rm --volume /home/john/.cargo:/home/john/.cargo --volume /home/john/projects/work/projects/vast:/home/john/projects/work/projects/vast --network host --env CARGO_HOME=/home/john/.cargo --workdir /home/john/projects/work/projects/vast rust:john rustfmt")
+    (projectile-project-root . "/home/john/projects/guix/")
+    (projectile-project-root . "/home/john/projects/work/projects/vast/")
+    (projectile-project-root . "/home/john/projects/work/projects/bid-server/")
     (haskell-mode-stylish-haskell-args . '("--ghc-opt TypeApplications"))
+    (projectile-compilation-command . "guix environment --ad-hoc openssl libuv mysql cassandra-cpp postgresql pkg-config gcc-toolchain -- env CC=gcc cargo build")
+    (projectile-test-command . "guix environment --ad-hoc openssl libuv mysql cassandra-cpp postgresql pkg-config gcc-toolchain -- env CC=gcc cargo test")
     (tab-width . 4)
     (js-indent-level . 2)
     (haskell-process-wrapper-function
