@@ -353,7 +353,7 @@
     (ibuffer-do-sort-by-alphabetic))
   (ibuffer-update nil t))
 
-(add-hook 'ibuffer-hook #'ibuffer-auto-mode)
+;; (add-hook 'ibuffer-hook #'ibuffer-auto-mode)
 (add-hook 'ibuffer-hook #'my-set-ibuffer-filter-groups)
 (setq ibuffer-show-empty-filter-groups nil)
 
