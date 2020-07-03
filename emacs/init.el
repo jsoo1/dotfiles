@@ -950,6 +950,8 @@
  'cedille-keyword-face-df nil
  :foreground "#b58900")
 
+;; Xml
+(add-hook 'nxml-mode-hook #'origami-mode)
 
 ;; YAML
 (require 'yaml-mode)

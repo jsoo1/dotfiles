@@ -165,6 +165,7 @@
     "emacs-multi-term"
     "emacs-nix-mode"
     "emacs-nodejs-repl"
+    "emacs-origami-el"
     "emacs-projectile"
     "emacs-psc-ide"
     "emacs-racer"
