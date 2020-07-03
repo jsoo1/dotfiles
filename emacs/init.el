@@ -80,13 +80,22 @@
 (setq erc-autojoin-channels-alist nil
       erc-hide-list '("JOIN" "PART" "QUIT"))
 
-(defun my-erc ()
-  "Open erc with my configuration."
+(defun my-erc-freenode ()
+  "Open erc with my configuration for freenode."
   (interactive)
   (let ((erc-prompt-for-password nil))
     (erc-tls
      :server "irc.refl.club"
      :port 5555
+     :nick "jsoo")))
+
+(defun my-erc-oftc ()
+  "Open erc with my configuration for oftc."
+  (interactive)
+  (let ((erc-prompt-for-password nil))
+    (erc-tls
+     :server "irc.oftc.net"
+     :port 6697
      :nick "jsoo")))
 
 (add-hook 'erc-mode-hook
@@ -1196,7 +1205,7 @@
   "e" gnus
   "f" elfeed
   "g" guix
-  "i" my-erc
+  "i" my-erc-map
   "l" list-processes
   "o" org-agenda
   "p" proced)
@@ -1205,6 +1214,11 @@
   "my debbugs modes."
   "o" debbugs-org
   "g" debbugs-gnu)
+
+(define-prefix-keymap my-erc-map
+  "my erc keybindings"
+  "f" my-erc-freenode
+  "o" my-erc-oftc)
 
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
