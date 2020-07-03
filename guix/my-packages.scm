@@ -11,6 +11,7 @@
 (define-public utilities
   '("aspell"
     "aspell-dict-en"
+    "bpftrace"
     "cups"
     "direnv"
     "docker-cli"
@@ -29,7 +30,6 @@
     "ripgrep"
     "rlwrap"
     "shellcheck"
-    "strace"
     "time"
     "tlsdate"
     "tokei"
@@ -75,9 +75,11 @@
 
 (define-public rust-tools
   '("racer"
+    ;; TODO
+    ;; "rls"
     "rust@1.44"
     "rust@1.44:cargo"
-    "rustfmt"))
+    "rustfmt-nightly"))
 
 (define-public guile-tools
   '("guile"
