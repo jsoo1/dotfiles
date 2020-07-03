@@ -1392,9 +1392,14 @@
   "n" (defun cycle-line-numbers ()
         (interactive)
         (setq display-line-numbers (next-line-number display-line-numbers)))
+  "o" my-org-toggle-map
   "t" counsel-load-theme
   "w" whitespace-mode
   "x" toggle-xclip-mode)
+
+(define-prefix-keymap my-org-toggle-map
+  "org specific toggles"
+  "l" org-toggle-link-display)
 
 (define-prefix-keymap my-window-map
   "my window keybindings"
