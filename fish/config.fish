@@ -8,7 +8,7 @@ set -gx PATH /home/john/.cargo/bin /home/john/.local/bin $PATH
 set -xg EDITOR 'emacsclient -t --socket-name=term'
 set -xg ALTERNATE_EDITOR 'vim'
 
-set -xg PAGER 'less'
+set -xg PAGER 'cat'
 
 # Icecat for BROWSER
 set -xg BROWSER /home/john/.guix-profile/bin/icecat
