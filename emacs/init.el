@@ -1279,6 +1279,7 @@
 (define-prefix-keymap my-error-map
   "my flycheck keybindings"
   "b" flycheck-buffer
+  "e" flycheck-mode
   "n" flycheck-next-error
   "l" flycheck-list-errors
   "p" flycheck-previous-error)
