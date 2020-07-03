@@ -885,9 +885,7 @@
 (add-hook 'racer-mode-hook #'company-mode)
 (require 'rust-mode)
 (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
-(setq
- racer-rust-src-path "~/.guix-profile/lib/rustlib/src/rust/src"
- rust-format-on-save t)
+(setq rust-format-on-save t)
 (with-eval-after-load 'rust-mode
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
