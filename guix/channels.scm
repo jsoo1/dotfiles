@@ -6,4 +6,4 @@
  (channel
   (name 'private)
   (url "file:///home/john/projects/guix-channel/.git")
-  (branch "upstream-pijul")))
+  (branch "upstream-rustfmt")))
