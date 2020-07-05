@@ -14,7 +14,11 @@
              ((gnu packages gl) #:select (mesa))
              ((gnu packages gnupg) #:select (gnupg))
              ((gnu packages linux)
-              #:select (bluez iproute light linux-libre-with-bpf))
+              #:select (bluez
+                        iproute
+                        light
+                        linux-libre-headers
+                        linux-libre-with-bpf))
              ((gnu packages ncurses) #:select (ncurses))
              ((gnu packages shells) #:select (fish))
              ((gnu packages shellutils) #:select (fzy))
@@ -150,65 +154,8 @@ EndSection\n")
             (for-each (lambda (x) (apply chownership x)) #$params))))))
    (description "Modify permissions and ownership of programs.")))
 
-(operating-system
-  (host-name "ecenter")
-  (timezone "America/Los_Angeles")
-  (locale "en_US.utf8")
-  (keyboard-layout ctrl-nocaps)
-  (initrd-modules %base-initrd-modules)
-  (bootloader
-   (bootloader-configuration
-    (bootloader grub-efi-bootloader)
-    (target "/boot/efi")
-    (keyboard-layout ctrl-nocaps)))
-  (kernel linux-libre-with-bpf)
-  (file-systems
-   `(,(file-system
-        (device
-         (uuid "462563db-3f82-44d2-829c-eb2bce9fd0e0" 'ext4))
-        (mount-point "/")
-        (type "ext4"))
-     ,(file-system
-        (device (uuid "60E8-6B6F" 'fat))
-        (mount-point "/boot/efi")
-        (type "vfat"))
-     ,@%base-file-systems))
-  (swap-devices '("/dev/sda7"))
-  (users
-   (cons (user-account
-          (name "john")
-          (comment "idiot man")
-          (group "users")
-          (supplementary-groups
-           '("wheel" "netdev" "audio" "video" "lp"))
-          (home-directory "/home/john")
-          (shell (file-append fish "/bin/fish")))
-         %base-user-accounts))
-  (packages
-   (cons*
-    ;; backlight config
-    light
-    ;; for HTTPS access
-    curl nss-certs
-    ;; essentials
-    iproute git openssh gnupg ncurses
-    ;; ???
-    glibc-utf8-locales
-    ;; text editors
-    vim emacs-no-x
-    ;; for keyboards
-    bluez
-    %base-packages))
-  (setuid-programs
-   `(,(file-append docker-cli "/bin/docker")
-     ;; Stuff for xorg without display manager.
-     ;; startx and X need to be in setuid-programs.
-     ;; They also need extra tweaks in the chown-file service below.
-     ,(file-append xorg-server "/bin/X")
-     ,startx
-     ,@%setuid-programs))
-  (services
-   (cons*
+(define my-services
+  (cons*
     ;; TODO: Add service for modprobe.d modules?
     (bluetooth-service #:auto-enable? #t)
     (service alsa-service-type)
@@ -289,5 +236,65 @@ EndSection\n")
        (map
         (match-lambda ((tty . font) `(,tty . ,tamzen-psf-font)))
         s)))))
+
+(operating-system
+  (host-name "ecenter")
+  (timezone "America/Los_Angeles")
+  (locale "en_US.utf8")
+  (keyboard-layout ctrl-nocaps)
+  (initrd-modules %base-initrd-modules)
+  (bootloader
+   (bootloader-configuration
+    (bootloader grub-efi-bootloader)
+    (target "/boot/efi")
+    (keyboard-layout ctrl-nocaps)))
+  (kernel linux-libre-with-bpf)
+  ;; (kernel-loadable-modules
+  ;;  `(,linux-libre-headers))
+  (file-systems
+   `(,(file-system
+        (device
+         (uuid "462563db-3f82-44d2-829c-eb2bce9fd0e0" 'ext4))
+        (mount-point "/")
+        (type "ext4"))
+     ,(file-system
+        (device (uuid "60E8-6B6F" 'fat))
+        (mount-point "/boot/efi")
+        (type "vfat"))
+     ,@%base-file-systems))
+  (swap-devices '("/dev/sda7"))
+  (users
+   `(,(user-account
+       (name "john")
+       (comment "idiot man")
+       (group "users")
+       (supplementary-groups
+        '("wheel" "netdev" "audio" "video" "lp"))
+       (home-directory "/home/john")
+       (shell (file-append fish "/bin/fish")))
+     ,@%base-user-accounts))
+  (packages
+   `(;; backlight config
+     ,light
+     ;; for HTTPS access
+     ,curl ,nss-certs
+     ;; essentials
+     ,iproute ,git ,openssh ,gnupg ,ncurses
+     ;; ???
+     ,glibc-utf8-locales
+     ;; text editors
+     ,vim ,emacs-no-x
+     ;; for keyboards
+     ,bluez
+     ,@%base-packages))
+  (setuid-programs
+   `(,(file-append docker-cli "/bin/docker")
+     ;; Stuff for xorg without display manager.
+     ;; startx and X need to be in setuid-programs.
+     ;; They also need extra tweaks in the chown-file service below.
+     ,(file-append xorg-server "/bin/X")
+     ,startx
+     ,@%setuid-programs))
+  (services my-services)
   ;; Allow resolution of '.local' host names with mDNS.
   (name-service-switch %mdns-host-lookup-nss))
