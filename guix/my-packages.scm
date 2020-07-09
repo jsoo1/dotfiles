@@ -61,7 +61,6 @@
     "mkfontscale"
     "font-dejavu"
     "font-iosevka"
-    "font-iosevka-term"
     "font-iosevka-term-slab"))
 
 (define-public haskell-tools
