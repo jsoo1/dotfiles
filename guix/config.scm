@@ -261,7 +261,7 @@ EndSection\n")
         (device (uuid "60E8-6B6F" 'fat))
         (mount-point "/boot/efi")
         (type "vfat"))
-     ,@%base-file-systems))
+     ,@%bpf-file-systems))
   (swap-devices '("/dev/sda7"))
   (users
    `(,(user-account
