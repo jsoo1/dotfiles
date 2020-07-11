@@ -1188,7 +1188,8 @@
 (define-prefix-keymap my-directory-map
   "my directory commands"
   "d" dired
-  "/" dired-other-window)
+  "/" (defun dired-dot-other-window ()
+        (interactive) (dired-other-window ".")))
 
 (define-prefix-keymap elfeed-load-map
   "Various ways of loading feeds"
