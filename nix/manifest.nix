@@ -1,6 +1,7 @@
 let
-  # Channels not working!
-  pkgs = import <nixpkgs-unstable> { };
+  pkgs = import "/Users/john/projects/nixpkgs/default.nix" {
+    overlays = import "/Users/john/dotfiles/nix/overlays.nix";
+  };
 
   shells = [ pkgs.fish ];
 
@@ -50,6 +51,7 @@ let
 
   fun-langs = [
     pkgs.coq
+    pkgs.dhall
     # conflicts with hoogle.
     (pkgs.lib.setPrio 6 pkgs.idris)
     pkgs.racket-minimal
@@ -61,6 +63,8 @@ let
   rust-utils = [ pkgs.rustfmt ];
 
   macos-utils = [ pkgs.reattach-to-user-namespace ];
+
+  kubernetes-utils = [ pkgs.minikube pkgs.kind pkgs.kubectl ];
 
   pano-specific = [
     # Conflicts with hoogle, take the work requirement over hoogle
@@ -79,6 +83,7 @@ let
     pkgs.yarn
   ];
 
-in (shells ++ shell-utils ++ desktop-utils ++ editors ++ fonts ++ latex
-  ++ unfree ++ haskell-utils ++ nix-utils ++ purescript-utils ++ fun-langs
-  ++ rust-utils ++ macos-utils ++ pano-specific)
+in (shells ++ shell-utils ++ desktop-utils ++ editors ++ embedded ++ fonts
+  ++ latex ++ unfree ++ haskell-utils ++ nix-utils ++ purescript-utils
+  ++ fun-langs ++ rust-utils ++ macos-utils ++ kubernetes-utils
+  ++ pano-specific)
