@@ -24,6 +24,9 @@ abbr --add -U -- tree "exa -T"
 abbr --add -U -- psg 'ps -e -o pid,command | rg -i'
 abbr --add -U -- rest "pmset sleepnow"
 
+# K8s
+abbr --add -g k kubectl
+
 # Emacs
 function em -d "Start an emacsclient -t" -a file
     emacsclient -t --socket-name=term $file
