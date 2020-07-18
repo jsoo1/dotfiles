@@ -2,7 +2,7 @@ set -Ux MY_SHEP_SOCK "$HOME/var/run/shepherd/socket"
 
 source "$HOME/.profile";
 
-set -gx PATH /home/john/.cargo/bin /home/john/.local/bin $PATH
+set -gx PATH "$HOME/.cargo/bin" "$HOME/.local/bin" $PATH
 
 # Emacsclient for EDITOR
 set -xg EDITOR 'emacsclient -t --socket-name=term'
