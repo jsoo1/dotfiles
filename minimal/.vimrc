@@ -11,7 +11,7 @@ set ls=2
 set backspace=indent,eol,start
 set bg=dark
 set number
-set ruler
+set noruler
 syntax enable
 set tabstop=4
 set softtabstop=4
