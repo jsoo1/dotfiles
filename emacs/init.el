@@ -1211,7 +1211,7 @@
 (define-prefix-keymap my-debbugs-modes-map
   "my debbugs modes."
   "o" debbugs-org
-  "g" debbugs-gnu)
+  "b" debbugs-gnu)
 
 (define-prefix-keymap my-erc-map
   "my erc keybindings"
