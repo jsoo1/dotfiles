@@ -91,6 +91,9 @@
     "zathura"
     "zathura-pdf-mupdf"))
 
+(define-public kubernetes-tools
+  '("kind"))
+
 (define-public xorg-tools
   '("gcc-toolchain" ;; needed by xmonad
     "ghc-dbus"
@@ -178,6 +181,7 @@
     "emacs-slime-company"
     "emacs-smartparens"
     "emacs-solarized-theme"
+    "emacs-terraform-mode"
     "emacs-tuareg"
     "emacs-vimrc-mode"
     "emacs-web-mode"
