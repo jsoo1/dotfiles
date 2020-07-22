@@ -12,5 +12,6 @@
   rust-tools
   guile-tools
   pdf-tools
+  kubernetes-tools
   xorg-tools
   emacs-packages))
