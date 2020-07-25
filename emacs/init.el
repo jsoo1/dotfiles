@@ -685,6 +685,8 @@
      (define-key js-mode-map (kbd "C-c C-k") (defun clear-nodejs-buffer () (interactive) (with-current-buffer "*nodejs*" (comint-clear-buffer))))
      (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl))))
 (setq js-indent-level 4)
+(my-package-install 'js2-mode)
+(add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
 
 ;; Proof General
 (my-package-install 'proof-general)
@@ -983,6 +985,13 @@
 
 ;; Coffeescript
 (my-package-install 'coffee-mode)
+
+;; TypeScript
+(my-package-install 'typescript-mode)
+(my-package-install 'tide)
+(add-hook 'typescript-mode #'tide-setup)
+(add-hook 'typescript-mode #'tide-hl-identifier-mode)
+(setq tide-imenu-flatten 't)
 
 ;; Transparency in terminal
 (defun my-make-frame-transparent (frame)
