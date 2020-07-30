@@ -332,10 +332,10 @@
       projectile-indexing-method 'hybrid
       projectile-enable-caching 't
       projectile-project-search-path "~/projects/"
-      projectile-project-root-files-functions '(projectile-root-local
+      projectile-project-root-files-functions '(projectile-root-top-down-recurring
                                                 projectile-root-top-down
-                                                projectile-root-top-down-recurring
-                                                projectile-root-bottom-up))
+                                                projectile-root-bottom-up
+                                                projectile-root-local))
 
 ;; IBuffer
 (defun my-set-ibuffer-filter-groups ()
