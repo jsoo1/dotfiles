@@ -262,6 +262,8 @@
     (projectile-run-command . "cargo run")
     (haskell-stylish-on-save . t)
     (haskell-stylish-on-save . nil)
+    (projectile-project-root . "/home/john/projects/work/")
+    (projectile-project-root . "/home/john/projects/feed-xmlbf/")
     (projectile-project-root . "/home/john/projects/guix/")
     (projectile-project-root . "/home/john/projects/work/projects/vast/")
     (projectile-project-root . "/home/john/projects/work/projects/bid-server/")
