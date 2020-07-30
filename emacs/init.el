@@ -278,6 +278,9 @@
     (projectile-compilation-command . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix "))
   safe-local-variable-values))
 
+;; Direnv
+(direnv-mode)
+
 ;; Imenu List
 (setq imenu-list-size 0.2)
 

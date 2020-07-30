@@ -127,6 +127,7 @@
     "emacs-dash"
     "emacs-debbugs"
     "emacs-dhall-mode"
+    "emacs-direnv"
     "emacs-dired-git-info"
     "emacs-diredfl"
     "emacs-docker"
