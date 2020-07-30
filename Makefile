@@ -36,6 +36,7 @@ SYMLINKS = \
 	$(HOME)/.ghci \
 	$(HOME)/.gnupg/gnupg.conf \
 	$(HOME)/.gnus \
+	$(HOME)/.guile \
 	$(HOME)/.haskeline \
 	$(XDG_HOME)/git/config \
 	$(XDG_HOME)/guix/channels.scm \
@@ -116,6 +117,9 @@ $(HOME)/.gnupg/gnupg.conf: | $(HOME)/.gnupg ## gnupg configuration
 
 $(HOME)/.gnus: | $(HOME) ## Gnus configuration
 	$(ln) $(PWD)/emacs/.gnus $@
+
+$(HOME)/.guile: | $(HOME) ## Guile configuration
+	$(ln) $(PWD)/guile/.guile $@
 
 $(HOME)/.haskeline: | $(HOME) ## haskeline configuration (for ghci)
 	$(ln) $(PWD)/ghci/.haskeline $@
