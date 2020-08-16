@@ -53,6 +53,7 @@
     ;; "freecad"
     "garcon"
     "libnotify"
+    "libreoffice"
     "my-dmenu"
     "pulseaudio"))
 
