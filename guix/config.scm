@@ -26,7 +26,7 @@
              ((gnu packages suckless) #:select (slock))
              ((gnu packages tmux) #:select (tmux))
              ((gnu packages version-control) #:select (git))
-             ((gnu packages vim) #:select (vim))
+             ((gnu packages vim) #:select (neovim))
              ((gnu packages web-browsers) #:select (lynx))
              ((gnu packages xdisorg) #:select (xcape xlockmore))
              ((gnu packages xorg)
@@ -283,7 +283,7 @@ EndSection\n")
      ;; ???
      ,glibc-utf8-locales
      ;; text editors
-     ,vim ,emacs-no-x
+     ,neovim ,emacs-no-x
      ;; for keyboards
      ,bluez
      ,@%base-packages))

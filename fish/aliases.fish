@@ -14,7 +14,7 @@ abbr --add -U -- gco 'git checkout'
 function gitpurge -a ref
     git branch --merged | rg -v "\*" | rg -v "$ref" | xargs -n 1 git branch -d
 end
-
+alias vim nvim
 # System Utils
 abbr --add -U -- ls "exa"
 abbr --add -U -- ll "exa -l"

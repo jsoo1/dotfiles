@@ -3,7 +3,7 @@
 [core]
 	autocrlf = input
 	safecrlf = true
-	editor = vim
+	editor = nvim
 [merge]
 	conflictstyle = diff3
 [user]
