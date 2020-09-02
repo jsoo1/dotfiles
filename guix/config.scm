@@ -4,7 +4,6 @@
              ((gnu packages certs) #:select (nss-certs))
              ((gnu packages cups) #:select (cups-filters hplip-minimal))
              ((gnu packages curl) #:select (curl))
-             ((gnu packages docker) #:select (docker-cli))
              ((gnu packages emacs) #:select (emacs-no-x))
              ((gnu packages fonts)
               #:select (font-adobe-source-code-pro
@@ -55,7 +54,6 @@
              ((gnu services dns)
               #:select (dnsmasq-service-type
                         dnsmasq-configuration))
-             (gnu services docker)
              ((gnu services networking)
               #:select (network-manager-service-type
                         network-manager-configuration
@@ -169,7 +167,6 @@ EndSection\n")
     (service dnsmasq-service-type
              (dnsmasq-configuration
               (servers '("1.1.1.1"))))
-    (service docker-service-type)
     (dbus-service)
     (service elogind-service-type)
     fontconfig-file-system-service
@@ -199,11 +196,6 @@ EndSection\n")
               (tlp-default-mode "BAT")
               (usb-autosuspend? #f)))
     (service gpm-service-type (gpm-configuration))
-    (service qemu-binfmt-service-type
-             (qemu-binfmt-configuration
-              (platforms
-               (lookup-qemu-platforms "arm" "aarch64" "mips64el"))
-              (guix-support? #t)))
     (udisks-service)
     (service usb-modeswitch-service-type)
     (service wpa-supplicant-service-type)
@@ -245,12 +237,9 @@ EndSection\n")
   (initrd-modules %base-initrd-modules)
   (bootloader
    (bootloader-configuration
-    (bootloader grub-efi-bootloader)
-    (target "/boot/efi")
-    (keyboard-layout ctrl-nocaps)))
-  (kernel linux-libre-with-bpf)
-  ;; (kernel-loadable-modules
-  ;;  `(,linux-libre-headers))
+    (bootloader u-boot-pinebook-pro-rk3399-bootloader)
+    (target "/boot/efi")))
+  (kernel linux-libre-arm-generic-5.4)
   (file-systems
    `(,(file-system
         (device
@@ -288,8 +277,7 @@ EndSection\n")
      ,bluez
      ,@%base-packages))
   (setuid-programs
-   `(,(file-append docker-cli "/bin/docker")
-     ;; Stuff for xorg without display manager.
+   `(;; Stuff for xorg without display manager.
      ;; startx and X need to be in setuid-programs.
      ;; They also need extra tweaks in the chown-file service below.
      ,(file-append xorg-server "/bin/X")
