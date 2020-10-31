@@ -55,7 +55,8 @@
     "libnotify"
     "libreoffice"
     "my-dmenu"
-    "pulseaudio"))
+    "pulseaudio"
+    "scrot"))
 
 (define-public fonts
   '("mkfontdir"
@@ -155,6 +156,7 @@
     "emacs-flycheck-rust"
     "emacs-geiser"
     "emacs-goto-chg"
+    "emacs-graphql-mode"
     "emacs-graphviz-dot-mode"
     "emacs-guix"
     "emacs-haskell-mode"
@@ -171,6 +173,7 @@
     "emacs-multi-term"
     "emacs-nix-mode"
     "emacs-nodejs-repl"
+    "emacs-ob-restclient"
     "emacs-origami-el"
     "emacs-projectile"
     "emacs-psc-ide"
@@ -182,6 +185,7 @@
     "emacs-slime"
     "emacs-slime-company"
     "emacs-smartparens"
+    "emacs-sml-mode"
     "emacs-solarized-theme"
     "emacs-terraform-mode"
     "emacs-tuareg"
