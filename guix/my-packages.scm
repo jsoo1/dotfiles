@@ -30,6 +30,7 @@
     "ripgrep"
     "rlwrap"
     "shellcheck"
+    "skim"
     "time"
     "tlsdate"
     "tokei"
@@ -92,9 +93,6 @@
   '("texlive"
     "zathura"
     "zathura-pdf-mupdf"))
-
-(define-public kubernetes-tools
-  '("kind"))
 
 (define-public xorg-tools
   '("gcc-toolchain" ;; needed by xmonad
@@ -178,6 +176,7 @@
     "emacs-projectile"
     "emacs-psc-ide"
     "emacs-racer"
+    "emacs-recutils"
     "emacs-reformatter"
     "emacs-restclient"
     "emacs-rust-mode"
