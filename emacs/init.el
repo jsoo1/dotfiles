@@ -299,9 +299,11 @@
 (winner-mode t)
 
 ;; Evil
+(global-set-key (kbd "<escape>") #'keyboard-escape-quit)
 (setq evil-want-C-u-scroll t
       evil-disable-insert-state-bindings t
-      evil-want-abbrev-expand-on-insert-exit nil) ; somehow needs to happen before any mention of evil mode
+      ;; somehow needs to happen before any mention of evil mode
+      evil-want-abbrev-expand-on-insert-exit nil)
 (require 'evil)
 (require 'evil-surround)
 (require 'evil-commentary)
