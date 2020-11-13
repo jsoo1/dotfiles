@@ -1244,6 +1244,7 @@
         (interactive) (my-switch-to-compile-buffer "compile"))
   "d" kill-current-buffer
   "i" ibuffer
+  "k" kill-buffer
   "m" (defun switch-to-messages-buffer ()
         (interactive)
         (switch-to-buffer-other-window (get-buffer-create "*Messages*")))
