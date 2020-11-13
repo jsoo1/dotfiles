@@ -669,8 +669,10 @@
 (dolist (f '((idris-active-term-face        "#657b83")
              (idris-semantic-type-face      "#b58900")
              (idris-semantic-data-face      "#dc322f")
-             (idris-semantic-function-face  "#859900")
-             (idris-semantic-bound-face     "#6c71c4")))
+             (idris-semantic-function-face  "unspecified")
+             (idris-semantic-bound-face     "#6c71c4")
+             (idris-semantic-module-face    "#b58900")
+             (idris-identifier-face         "#586e75")))
   (set-face-foreground (car f) (cadr f)))
 
 (define-key idris-repl-mode-map (kbd "C-c C-k" ) #'idris-repl-clear-buffer)
