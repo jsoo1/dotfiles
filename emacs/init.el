@@ -301,6 +301,7 @@
 ;; Evil
 (global-set-key (kbd "<escape>") #'keyboard-escape-quit)
 (setq evil-want-C-u-scroll t
+      evil-want-minibuffer t
       evil-disable-insert-state-bindings t
       ;; somehow needs to happen before any mention of evil mode
       evil-want-abbrev-expand-on-insert-exit nil)
