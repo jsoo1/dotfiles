@@ -1035,10 +1035,7 @@
 ;; Theme
 (require 'solarized)
 (require 'solarized-dark-theme)
-(setq
- custom-safe-themes
- '("0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f" default))
-(load-theme 'solarized-dark)
+(load-theme 'solarized-dark t)
 
 ;; Transparency in terminal
 (defun my-make-frame-transparent (frame)
