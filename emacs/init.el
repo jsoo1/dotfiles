@@ -1189,7 +1189,7 @@
   "e" 'my-error-map
   "f" 'my-file-map
   "g" 'my-git-map
-  "h" 'my-describe-map
+  "h" help-map
   "i" 'my-insert-map
   "j" 'my-jump-map
   "o" 'my-org-map
@@ -1203,6 +1203,12 @@
   "z" 'my-zoom-map
   "'" 'eshell
   "/" 'counsel-projectile-rg)
+
+(define-key help-map (kbd "D") my-describe-map)
+(define-key help-map (kbd "w") #'woman)
+(define-key help-map (kbd "W") #'man)
+(define-key help-map (kbd "i") #'counsel-info-lookup-symbol)
+(define-key help-map (kbd "I") #'info-apropos)
 
 (define-prefix-keymap my-directory-map
   "my directory commands"
@@ -1287,14 +1293,10 @@
   "c" describe-char
   "f" describe-function
   "F" counsel-describe-face
-  "i" counsel-info-lookup-symbol
-  "I" info-apropos
   "k" describe-key
   "m" describe-mode
   "s" describe-symbol
   "t" describe-theme
-  "w" woman
-  "W" man
   "v" describe-variable)
 
 (define-prefix-keymap my-error-map
