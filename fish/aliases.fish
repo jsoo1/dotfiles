@@ -24,6 +24,8 @@ abbr --add -U -- tree "exa -T"
 abbr --add -U -- psg 'ps -e --format pid,command | rg -i'
 abbr --add -U -- rest "loginctl suspend"
 abbr --add -U -- bat "upower -I (upower -e | rg BAT)"
+abbr --add -U -- apropos "man -k"
+
 function shep
     herd -s $MY_SHEP_SOCK $argv
 end
