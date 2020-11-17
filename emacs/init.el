@@ -339,6 +339,10 @@
 (evil-declare-not-repeat #'flycheck-next-error)
 (evil-declare-not-repeat #'flycheck-previous-error)
 
+;; Vinegar
+(define-key evil-normal-state-map "-" (defun dired-dot () (interactive) (dired ".")))
+(define-key dired-mode-map "-" #'dired-up-directory)
+
 ;; Magit
 (require 'evil-magit)
 (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
@@ -573,13 +577,9 @@
           (defun toggle-truncate-lines-off ()
                (toggle-truncate-lines -1)))
 
-;; Keybindings
+;; Comint
 (define-key comint-mode-map (kbd "C-c C-k" ) #'comint-clear-buffer)
 (define-key comint-mode-map (kbd "C-d") nil)
-
-;; Vinegar
-(define-key evil-normal-state-map "-" (defun dired-dot () (interactive) (dired ".")))
-(define-key dired-mode-map "-" #'dired-up-directory)
 
 ;; Swiper
 (define-key evil-normal-state-map (kbd "C-s") #'swiper)
@@ -1180,7 +1180,7 @@
 
 (evil-leader/set-key
   "<SPC>" 'counsel-M-x
-  "TAB"'evil-switch-to-windows-last-buffer
+  "TAB" 'evil-switch-to-windows-last-buffer
   "a" 'my-process-map
   "b" 'my-buffer-map
   "c" 'my-compile-map
@@ -1204,7 +1204,6 @@
   "'" 'eshell
   "/" 'counsel-projectile-rg)
 
-(define-key help-map (kbd "D") my-describe-map)
 (define-key help-map (kbd "w") #'woman)
 (define-key help-map (kbd "W") #'man)
 (define-key help-map (kbd "i") #'counsel-info-lookup-symbol)
@@ -1298,6 +1297,8 @@
   "s" describe-symbol
   "t" describe-theme
   "v" describe-variable)
+
+(define-key help-map (kbd "D") my-describe-map)
 
 (define-prefix-keymap my-error-map
   "my flycheck keybindings"
