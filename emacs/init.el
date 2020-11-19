@@ -259,6 +259,8 @@
     (haskell-process-type . cabal-repl)
     (haskell-mode-stylish-haskell-path . "ormolu")
     (haskell-mode-stylish-haskell-args . ("--ghc-opt TypeApplications"))
+    (flycheck-rust-cargo-executable . "/home/john/projects/work/projects/bid-server/.bin/cargo")
+    (flycheck-rust-clippy-executable . "/home/john/projects/work/projects/bid-server/.bin/cargo")
     (projectile-compilation-command . "cargo build")
     (projectile-test-command . "cargo test")
     (projectile-compilation-command . "./.bin/cargo build")
@@ -917,6 +919,14 @@
   '("Async Fn" "^[[:space:]]*\\(?:\\<pub\\>[[:space:]]+\\)?\\(?:\\<default\\>[[:space:]]+\\)?\\(?:\\<unsafe\\>[[:space:]]+\\)?\\(?:\\<extern\\>[[:space:]]+\\(?:\"[^\"]+\"[[:space:]]+\\)?\\)?\\<async\\>[[:space:]]+\\<fn\\>[[:space:]]+\\([[:word:][:multibyte:]_][[:word:][:multibyte:]_[:digit:]]*\\)" 1)
   rust-imenu-generic-expression))
 
+(defun flycheck-rust-cargo-has-command-p (command)
+  "Whether Cargo has COMMAND in its list of commands.
+
+Execute `cargo --list' to find out whether COMMAND is present."
+  (let ((cargo (or flycheck-rust-cargo-executable
+                   (funcall flycheck-executable-find "cargo"))))
+    (member command (mapcar #'string-trim-left
+                            (ignore-errors (process-lines cargo "--list"))))))
 ;; SQL
 (setq
  sql-product 'postgres
@@ -1303,10 +1313,12 @@
 (define-prefix-keymap my-error-map
   "my flycheck keybindings"
   "b" flycheck-buffer
+  "d" flycheck-describe-checker
   "e" flycheck-mode
   "n" flycheck-next-error
   "l" flycheck-list-errors
-  "p" flycheck-previous-error)
+  "p" flycheck-previous-error
+  "s" flycheck-select-checker)
 
 (define-prefix-keymap my-file-map
   "my file keybindings"
