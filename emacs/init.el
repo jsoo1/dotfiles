@@ -126,6 +126,10 @@
             (when (not (display-graphic-p)) (cd default-directory))
             (eshell)))
 
+(when (and (executable-find "fish")
+           (require 'fish-completion nil t))
+  (global-fish-completion-mode))
+
 (setq initial-buffer-choice (lambda () (get-buffer-create "*eshell*"))
       eshell-highlight-prompt nil
       eshell-prompt-regexp "^[^λ]* [λ] "
@@ -411,6 +415,7 @@
       (hack-dir-local-variables-non-file-buffer))))
 
 ;; Org
+(require 'org-tempo)
 (require 'evil-org)
 (add-hook 'org-mode-hook #'evil-org-mode)
 (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading))
