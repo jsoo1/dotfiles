@@ -1422,8 +1422,7 @@ Execute `cargo --list' to find out whether COMMAND is present."
 
 (define-prefix-keymap my-toggle-map
   "my toggles"
-  "c" (defun toggle-fill-column ()
-        (interactive) (fci-mode (if (bound-and-true-p fci-mode) -1 1)))
+  "c" display-fill-column-indicator-mode
   "d" toggle-debug-on-error
   "D" toggle-debug-on-quit
   "f" toggle-frame-fullscreen
