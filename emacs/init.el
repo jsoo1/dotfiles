@@ -299,6 +299,9 @@
 ;; Direnv
 (direnv-mode)
 
+;; Info
+(define-key Info-mode-map (kbd "C-c") Info-mode-map)
+
 ;; Imenu List
 (setq imenu-list-size 0.2)
 
