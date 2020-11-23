@@ -265,6 +265,7 @@
     (haskell-mode-stylish-haskell-args . ("--ghc-opt TypeApplications"))
     (flycheck-rust-cargo-executable . "/home/john/projects/work/projects/bid-server/.bin/cargo")
     (flycheck-rust-clippy-executable . "/home/john/projects/work/projects/bid-server/.bin/cargo")
+    (projectile-compilation-command . "guix build -f guix.scm")
     (projectile-compilation-command . "cargo build")
     (projectile-test-command . "cargo test")
     (projectile-compilation-command . "./.bin/cargo build")
