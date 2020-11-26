@@ -914,7 +914,14 @@
        (add-to-list 'geiser-guile-load-path "~/projects/guix"))
 
 ;; Rust
+(setq lsp-rust-server 'rls)
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
+(require 'eglot)
+(setf
+ (alist-get 'rust-mode eglot-server-programs)
+ '(eglot-rls "/home/john/projects/work/projects/bid-server/.bin/rls" "--cli"))
+(evil-define-key 'normal rust-mode-map (kbd ",") 'elgot-mode-map)
+;; (add-hook 'rust-mode-hook #'eglot-ensure)
 (add-hook 'rust-mode-hook #'racer-mode)
 (add-hook 'racer-mode-hook #'eldoc-mode)
 (add-hook 'racer-mode-hook #'company-mode)

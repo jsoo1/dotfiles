@@ -169,7 +169,7 @@
     "emacs-imenu-list"
     "emacs-ivy"
     "emacs-let-alist"
-    "emacs-lsp-mode"
+    "emacs-eglot"
     "emacs-lsp-ivy"
     "emacs-magit"
     "emacs-markdown-mode"
