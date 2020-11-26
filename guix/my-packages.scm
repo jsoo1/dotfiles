@@ -80,11 +80,10 @@
 
 (define-public rust-tools
   '("racer"
-    ;; TODO
-    ;; "rls"
-    "rust@1.44"
-    "rust@1.44:cargo"
-    "rustfmt-nightly"))
+    "rust"
+    "rust:cargo"
+    "rust:rls"
+    "rust:rustfmt"))
 
 (define-public guile-tools
   '("guile"
