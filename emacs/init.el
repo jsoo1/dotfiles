@@ -944,15 +944,44 @@ Execute `cargo --list' to find out whether COMMAND is present."
                    (funcall flycheck-executable-find "cargo"))))
     (member command (mapcar #'string-trim-left
                             (ignore-errors (process-lines cargo "--list"))))))
+
 ;; SQL
+;; Inspired by:
+;; https://github.com/alezost/emacs-config/blob/master/utils/al-sql.el#L47
+(defun my-sql-password-from-auth-source (_ _ user server _ _)
+  "Return sql password from auth-sources for SERVER and USER.
+Return nil if credentials not found."
+  (let ((auth (car (auth-source-search :host server :user user))))
+    (require 'auth-source)
+    (when auth
+      (let* ((secret (plist-get auth :secret))
+             (password (if (functionp secret)
+                           (funcall secret)
+                         secret)))
+        password))))
+
 (setq
- sql-product 'postgres
+ sql-password-wallet auth-sources
+ sql-password-search-wallet-function #'my-sql-password-from-auth-source
  sql-connection-alist
- '((scratch (sql-product 'postgres)
-           (sql-port 5432)
-           (sql-server "localhost")
-           (sql-database "impression")
-           (sql-user "john")))
+ `((impressions
+    (sql-product 'postgres)
+    (sql-port 5432)
+    (sql-server "localhost")
+    (sql-database "impression")
+    (sql-user "john"))
+   (serverbid
+    (sql-product 'postgres)
+    (sql-database "serverbid")
+    (sql-user "p4N1IhpmSYV9")
+    (sql-server "localhost")
+    (sql-port 54320))
+   (kitchen
+    (sql-product 'mysql)
+    (sql-user "justin")
+    (sql-database "ad_stats")
+    (sql-port 33060)
+    (sql-server "127.0.0.1")))
  sql-postgres-login-params
  '((user :default "john")
    (server :default "localhost")
