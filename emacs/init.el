@@ -98,6 +98,15 @@
      :port 6697
      :nick "jsoo")))
 
+(defun my-erc-brettgilio ()
+  "Open erc with my configuration for oftc."
+  (interactive)
+  (let ((erc-prompt-for-password nil))
+    (erc-tls
+     :server "irc.brettgilio.com"
+     :port 7097
+     :nick "jsoo")))
+
 (add-hook 'erc-mode-hook
           (defun toggle-truncate-lines-on ()
             (toggle-truncate-lines 1)))
@@ -1295,6 +1304,7 @@ Return nil if credentials not found."
 
 (define-prefix-keymap my-erc-map
   "my erc keybindings"
+  "b" my-erc-brettgilio
   "f" my-erc-freenode
   "o" my-erc-oftc)
 
