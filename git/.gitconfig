@@ -4,8 +4,12 @@
 	autocrlf = input
 	safecrlf = true
 	editor = nvim
+[diff]
+        renames = true
 [merge]
 	conflictstyle = diff3
+[push]
+        default = current
 [user]
 	email = jsoo1@asu.edu
 	name = John Soo
