@@ -11,6 +11,8 @@ set -xg ALTERNATE_EDITOR 'neovim'
 # Icecat for BROWSER
 set -xg BROWSER /home/john/.guix-profile/bin/icecat
 
+set -xg GUIX_PROFILE /home/john/.guix-profile
+
 # Something weird happens without this
 set -xg GIT_EXEC_PATH /run/current-system/profile/libexec/git-core
 
