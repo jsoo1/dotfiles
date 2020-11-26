@@ -257,14 +257,14 @@
  auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t))
  enable-local-eval t
  safe-local-variable-values
- (append
-  '((haskell-stylish-on-save . nil)
+ '((haskell-stylish-on-save . nil)
     (haskell-process-type . stack-ghci)
     (haskell-process-type . cabal-repl)
     (haskell-mode-stylish-haskell-path . "ormolu")
     (haskell-mode-stylish-haskell-args . ("--ghc-opt TypeApplications"))
     (flycheck-rust-cargo-executable . "/home/john/projects/work/projects/bid-server/.bin/cargo")
     (flycheck-rust-clippy-executable . "/home/john/projects/work/projects/bid-server/.bin/cargo")
+    (lsp-rust-rls-server-command . "/home/john/projects/work/projects/bid-server/.bin/rls")
     (projectile-compilation-command . "guix build -f guix.scm")
     (projectile-compilation-command . "cargo build")
     (projectile-test-command . "cargo test")
@@ -277,6 +277,7 @@
     (projectile-run-command . "cabal new-run exe:refl-club -- .static")
     (haskell-stylish-on-save . t)
     (haskell-stylish-on-save . nil)
+    (projectile-project-root . "/home/john/projects/sqlx/")
     (projectile-project-root . "/home/john/projects/xml-types-xmlbf/")
     (projectile-project-root . "/home/john/projects/work/")
     (projectile-project-root . "/home/john/projects/feed-xmlbf/")
@@ -293,14 +294,14 @@
     (haskell-process-wrapper-function
      . (lambda (argv)
          (append (list "env" "NO_COLOR=true") argv)))
-    (projectile-compilation-command . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix "))
-  safe-local-variable-values))
+    (projectile-compilation-command . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix ")))
 
 ;; Direnv
 (direnv-mode)
 
 ;; Info
-(define-key Info-mode-map (kbd "C-c") Info-mode-map)
+(with-eval-after-load 'Info-mode
+  (define-key Info-mode-map (kbd "C-c") Info-mode-map))
 
 ;; Imenu List
 (setq imenu-list-size 0.2)
