@@ -22,3 +22,5 @@
 	decorate = true
 [gpg]
         program = gpg
+[github]
+	user = jsoo1
