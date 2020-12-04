@@ -22,6 +22,10 @@
 
 (toggle-frame-fullscreen)
 (menu-bar-mode -1)
+(when (fboundp #'tool-bar-mode)
+  (tool-bar-mode -1))
+(when (fboundp #'toggle-scroll-bar)
+  (toggle-scroll-bar -1))
 
 ;; No tabs
 (setq-default indent-tabs-mode nil)

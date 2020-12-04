@@ -274,18 +274,18 @@ EndSection\n")
        (shell (file-append fish "/bin/fish")))
      ,@%base-user-accounts))
   (packages
-   `(;; backlight config
-     ,light
-     ;; for HTTPS access
+   `(;; for HTTPS access
      ,curl ,nss-certs
      ;; essentials
      ,iproute ,git ,openssh ,gnupg ,ncurses
      ;; ???
      ,glibc-utf8-locales
      ;; text editors
-     ,neovim ,emacs-no-x
+     ,neovim ,gccemacs
      ;; for keyboards
      ,bluez
+     ;; backlight config
+     ,light
      ,@%base-packages))
   (setuid-programs
    `(,(file-append docker-cli "/bin/docker")
