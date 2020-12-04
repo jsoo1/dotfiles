@@ -6,6 +6,7 @@
     "cedille"
     "coq"
     "idris"
+    "ocaml"
     "purescript"))
 
 (define-public utilities
@@ -58,6 +59,7 @@
     "garcon"
     "libnotify"
     "libreoffice"
+    "mpv"
     "my-dmenu"
     "pulseaudio"
     "scrot"))
