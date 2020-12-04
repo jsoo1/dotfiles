@@ -189,6 +189,7 @@
     "emacs-smartparens"
     "emacs-sml-mode"
     "emacs-solarized-theme"
+    "emacs-systemd-mode"
     "emacs-terraform-mode"
     "emacs-tuareg"
     "emacs-vimrc-mode"

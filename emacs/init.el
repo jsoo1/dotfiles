@@ -1060,6 +1060,10 @@ Return nil if credentials not found."
   "Major mode for editing GitHub Flavored Markdown files" t)
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
+;; Systemd
+(add-to-list 'auto-mode-alist '("\\.timer\\'" . systemd-mode))
+(add-to-list 'auto-mode-alist '("\\.service\\'" . systemd-mode))
+
 ;; Docker
 ;; dockerfile
 (require 'dockerfile-mode)
