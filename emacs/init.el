@@ -169,6 +169,7 @@
   (pop-to-buffer eshell-buffer-name))
 
 ;; Dired
+(setq dired-listing-switches "-al --group-directories-first")
 (add-hook 'dired-mode-hook
           (defun my-dired-hook ()
             (turn-on-gnus-dired-mode)
