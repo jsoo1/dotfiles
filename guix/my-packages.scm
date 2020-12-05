@@ -16,7 +16,6 @@
     "cups"
     "direnv"
     "docker-cli"
-    "docker-compose"
     "dog"
     "emacs-no-x"
     "exa"
