@@ -282,7 +282,7 @@ EndSection\n")
      ;; ???
      ,glibc-utf8-locales
      ;; text editors
-     ,neovim ,gccemacs
+     ,neovim ,emacs-no-x
      ;; for keyboards
      ,bluez
      ;; backlight config
