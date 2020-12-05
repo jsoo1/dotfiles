@@ -1,0 +1,6 @@
+alias lsa ls -lsaH $*
+alias dfh df -H
+alias clear clear t
+alias gst git status
+alias gb git branch $*
+alias gco git checkout $*

@@ -4,6 +4,7 @@ MODPROBE = /run/modprobe.d
 DIRS = \
 	$(HOME) \
 	$(HOME)/.emacs.d \
+	$(HOME)/.emacs.d/eshell \
 	$(HOME)/.gnupg \
 	$(HOME)/.local/share/applications \
 	$(XDG_HOME)/alacritty \
@@ -22,6 +23,7 @@ DIRS = \
 SYMLINKS = \
 	$(HOME)/.profile \
 	$(HOME)/.emacs.d/init.el \
+	$(HOME)/.emacs.d/eshell/alias \
 	$(HOME)/.local/share/applications/defaults.list \
 	$(XDG_HOME)/alacritty/alacritty.yml \
 	$(HOME)/.bashrc \
@@ -75,6 +77,9 @@ $(HOME)/.profile: | $(HOME) ## The profile for session initialization. Not posix
 
 $(HOME)/.emacs.d/init.el: | $(HOME)/.emacs.d ## Emacs initialization file
 	$(ln) $(PWD)/emacs/init.el $@
+
+$(HOME)/.emacs.d/eshell/alias: | $(HOME)/.emacs.d/eshell
+	$(ln) $(PWD)/emacs/eshell/alias $@
 
 $(HOME)/.local/share/applications/defaults.list: | $(HOME)/.local/share/applications ## Default mime handlers
 	$(ln) $(PWD)/xdg/defaults.list $@
