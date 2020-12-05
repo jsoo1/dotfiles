@@ -9,6 +9,24 @@
   (setq-local paragraph-separate "[ \t\f]*$")
   (setq-local paragraph-start "\f\\|[ \t]*$"))
 
+(require 'seq)
+(defmacro define-prefix-keymap (name &optional docstring &rest bindings)
+  "Define a keymap named `NAME' and docstring `DOCSTRING' with many `BINDINGS' at once using `define-key'."
+  `(,#'progn
+     (defvar ,name ,docstring (make-sparse-keymap))
+     (define-prefix-command (quote ,name))
+     ,@(seq-reduce
+        (lambda (bindings key-fn)
+          `((define-key (quote ,name) ,(car key-fn)
+              (function
+               ,(pcase (cadr key-fn)
+                  ((pred symbolp) (cadr key-fn))
+                  ((pred (lambda (fn) (symbolp (eval fn)))) (eval (cadr key-fn)))
+                  (_ (cadr key-fn)))))
+            ,@bindings))
+        (seq-partition bindings 2)
+        `(,name))))
+
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
       initial-scratch-message ""
@@ -1233,24 +1251,6 @@ Return nil if credentials not found."
       (format-time-string "%z" time* zone*)))))
 
 ;; Keybindings
-(require 'seq)
-(defmacro define-prefix-keymap (name &optional docstring &rest bindings)
-  "Define a keymap named `NAME' and docstring `DOCSTRING' with many `BINDINGS' at once using `define-key'."
-  `(,#'progn
-     (defvar ,name ,docstring (make-sparse-keymap))
-     (define-prefix-command (quote ,name))
-     ,@(seq-reduce
-        (lambda (bindings key-fn)
-          `((define-key (quote ,name) ,(car key-fn)
-              (function
-               ,(pcase (cadr key-fn)
-                  ((pred symbolp) (cadr key-fn))
-                  ((pred (lambda (fn) (symbolp (eval fn)))) (eval (cadr key-fn)))
-                  (_ (cadr key-fn)))))
-            ,@bindings))
-        (seq-partition bindings 2)
-        `(,name))))
-
 (evil-leader/set-leader "<SPC>")
 
 (evil-leader/set-key
