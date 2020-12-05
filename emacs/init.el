@@ -676,28 +676,6 @@
 
 ;; Eglot
 (require 'eglot)
-(define-prefix-keymap eglot-mode-map
-  "My eglot bindings"
-  "a" eglot-code-actions
-  (kbd "C-a") eglot-code-actions
-  "D" eglot-stderr-buffer
-  (kbd "C-D") eglot-stderr-buffer
-  "e" eglot
-  (kbd "C-e") eglot
-  "E" eglot-events-buffer
-  (kbd "C-E") eglot-events-buffer
-  "f" eglot-format
-  (kbd "C-f") eglot-format
-  "h" eglot-help-at-point
-  (kbd "C-h") eglot-help-at-point
-  "r" eglot-rename
-  (kbd "C-r") eglot-rename
-  "R" eglot-reconnect
-  (kbd "C-R") eglot-reconnect
-  "x" eglot-shutdown
-  (kbd "C-x") eglot-shutdown
-  "X" eglot-signal-didChangeConfiguration
-  (kbd "C-X") eglot-signal-didChangeConfiguration)
 
 ;; Indentation
 ;; Per http://emacsredux.com/blog/2013/03/27/indent-region-or-buffer/
@@ -977,9 +955,9 @@
 (setf
  (alist-get 'rust-mode eglot-server-programs)
  '(eglot-rls "/home/john/.guix-profile/bin/rls"))
-(evil-define-key 'normal rust-mode-map (kbd ",") 'eglot-mode-map)
-(define-key rust-mode-map (kbd "C-c C-e") 'eglot-mode-map)
-(define-key rust-mode-map (kbd "C-c e") 'eglot-mode-map)
+(evil-define-key 'normal rust-mode-map (kbd ",") 'my-eglot-mode-map)
+(define-key rust-mode-map (kbd "C-c C-e") 'my-eglot-mode-map)
+(define-key rust-mode-map (kbd "C-c e") 'my-eglot-mode-map)
 (add-hook 'rust-mode-hook #'eglot-ensure)
 (add-hook 'rust-mode-hook #'eldoc-mode)
 (add-hook 'rust-mode-hook #'company-mode)
@@ -1254,9 +1232,6 @@ Return nil if credentials not found."
     "  %b "
     (:eval vc-mode)
     "  "
-    (:eval (if (and (featurep 'eglot) eglot--managed-mode)
-               "eglot" ""))
-    " "
     (:eval (if (and (featurep 'flycheck) flycheck-mode)
                (my-flycheck-mode-line-status-text)
              ""))
@@ -1328,6 +1303,43 @@ Return nil if credentials not found."
   "Various ways of loading feeds"
   "o" elfeed-load-opml
   (kbd "C-o") elfeed-load-opml)
+
+(define-prefix-keymap my-eglot-find-map
+  "Find things with eglot"
+  "d" xref-find-definitions
+  (kbd "C -d") xref-find-definitions
+  "r" xref-find-references
+  (kbd "C-r") xref-find-references)
+
+(define-prefix-keymap my-eglot-buffer-map
+  "Goto eglot buffers"
+  "e" eglot-events-buffer
+  (kbd "C-e") eglot-events-buffer
+  "d" eglot-stderr-buffer
+  (kbd "C-d") eglot-stderr-buffer)
+
+(define-prefix-keymap my-eglot-mode-map
+  "My eglot bindings"
+  "a" eglot-code-actions
+  (kbd "C-a") eglot-code-actions
+  "e" eglot
+  (kbd "C-e") eglot
+  "b" my-eglot-buffer-map
+  (kbd "C-b") my-eglot-buffer-map
+  "f" my-eglot-find-map
+  (kbd "C-f") my-eglot-find-map
+  "F" eglot-format
+  (kbd "C-F") eglot-format
+  "h" eglot-help-at-point
+  (kbd "C-h") eglot-help-at-point
+  "r" eglot-rename
+  (kbd "C-r") eglot-rename
+  "R" eglot-reconnect
+  (kbd "C-R") eglot-reconnect
+  "x" eglot-shutdown
+  (kbd "C-x") eglot-shutdown
+  "X" eglot-signal-didChangeConfiguration
+  (kbd "C-X") eglot-signal-didChangeConfiguration)
 
 (define-prefix-keymap my-process-map
   "my process keybindings"
