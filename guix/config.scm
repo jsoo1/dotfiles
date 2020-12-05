@@ -1,90 +1,91 @@
-(use-modules (gnu)
-             ((gnu packages admin) #:select (htop inetutils tree))
-             ((gnu packages base) #:select (glibc-utf8-locales))
-             ((gnu packages certs) #:select (nss-certs))
-             ((gnu packages cups) #:select (cups-filters hplip-minimal))
-             ((gnu packages curl) #:select (curl))
-             ((gnu packages docker) #:select (docker-cli))
-             ((gnu packages emacs) #:select (emacs-no-x))
-             ((gnu packages fonts)
-              #:select (font-adobe-source-code-pro
-                        font-iosevka
-                        font-tamzen))
-             ((gnu packages fontutils) #:select (fontconfig))
-             ((gnu packages gl) #:select (mesa))
-             ((gnu packages gnupg) #:select (gnupg))
-             ((gnu packages linux)
-              #:select (bluez
-                        iproute
-                        light
-                        linux-libre-headers
-                        linux-libre-with-bpf))
-             ((gnu packages ncurses) #:select (ncurses))
-             ((gnu packages shells) #:select (fish))
-             ((gnu packages shellutils) #:select (fzy))
-             ((gnu packages ssh) #:select (openssh))
-             ((gnu packages suckless) #:select (slock))
-             ((gnu packages tmux) #:select (tmux))
-             ((gnu packages version-control) #:select (git))
-             ((gnu packages vim) #:select (neovim))
-             ((gnu packages web-browsers) #:select (lynx))
-             ((gnu packages xdisorg) #:select (xcape xlockmore))
-             ((gnu packages xorg)
-              #:select (xkbcomp
-                        xinit
-                        xorg-server
-                        xkeyboard-config))
-             (gnu services)
-             ((gnu services base)
-              #:select (gpm-service-type
-                        gpm-configuration))
-             ((gnu services cups)
-              #:select (cups-service-type
-                        cups-configuration))
-             ((gnu services dbus)
-              #:select (dbus-service))
-             ((gnu services desktop)
-              #:select (bluetooth-service
-                        %desktop-services
-                        fontconfig-file-system-service
-                        elogind-service-type
-                        polkit-wheel-service
-                        cups-pk-helper-service-type
-                        udisks-service
-                        x11-socket-directory-service))
-             ((gnu services dns)
-              #:select (dnsmasq-service-type
-                        dnsmasq-configuration))
-             (gnu services docker)
-             ((gnu services networking)
-              #:select (network-manager-service-type
-                        network-manager-configuration
-                        ntp-service-type
-                        usb-modeswitch-service-type
-                        wpa-supplicant-service-type))
-             ((gnu services pm)
-              #:select (thermald-configuration
-                        thermald-service-type
-                        tlp-configuration
-                        tlp-service-type))
-             ((gnu services shepherd)
-              #:select (shepherd-service
-                        shepherd-service-type))
-             ((gnu services ssh)
-              #:select (openssh-service-type
-                        openssh-configuration))
-             ;; ((gnu services xdisorg)
-             ;;  #:select (xcape-configuration
-             ;;            xcape-service-type))
-             ((gnu services sound)
-              #:select (alsa-service-type))
-             ((gnu services virtualization)
-              #:select (qemu-binfmt-service-type
-                        qemu-binfmt-configuration
-                        lookup-qemu-platforms))
-             (gnu services xorg)
-             (guix gexp)
-             (ice-9 match))
+(use-modules
+ (gnu)
+ ((gnu packages admin) #:select (htop inetutils tree))
+ ((gnu packages base) #:select (glibc-utf8-locales))
+ ((gnu packages certs) #:select (nss-certs))
+ ((gnu packages cups) #:select (cups-filters hplip-minimal))
+ ((gnu packages curl) #:select (curl))
+ ((gnu packages docker) #:select (docker-cli))
+ ((gnu packages emacs) #:select (emacs-no-x))
+ ((gnu packages fonts)
+  #:select (font-adobe-source-code-pro
+            font-iosevka
+            font-tamzen))
+ ((gnu packages fontutils) #:select (fontconfig))
+ ((gnu packages gl) #:select (mesa))
+ ((gnu packages gnupg) #:select (gnupg))
+ ((gnu packages linux)
+  #:select (bluez
+            iproute
+            light
+            linux-libre-headers
+            linux-libre-with-bpf))
+ ((gnu packages ncurses) #:select (ncurses))
+ ((gnu packages shells) #:select (fish))
+ ((gnu packages shellutils) #:select (fzy))
+ ((gnu packages ssh) #:select (openssh))
+ ((gnu packages suckless) #:select (slock))
+ ((gnu packages tmux) #:select (tmux))
+ ((gnu packages version-control) #:select (git))
+ ((gnu packages vim) #:select (neovim))
+ ((gnu packages web-browsers) #:select (lynx))
+ ((gnu packages xdisorg) #:select (xcape xlockmore))
+ ((gnu packages xorg)
+  #:select (xkbcomp
+            xinit
+            xorg-server
+            xkeyboard-config))
+ (gnu services)
+ ((gnu services base)
+  #:select (gpm-service-type
+            gpm-configuration))
+ ((gnu services cups)
+  #:select (cups-service-type
+            cups-configuration))
+ ((gnu services dbus)
+  #:select (dbus-service))
+ ((gnu services desktop)
+  #:select (bluetooth-service
+            %desktop-services
+            fontconfig-file-system-service
+            elogind-service-type
+            polkit-wheel-service
+            cups-pk-helper-service-type
+            udisks-service
+            x11-socket-directory-service))
+ ((gnu services dns)
+  #:select (dnsmasq-service-type
+            dnsmasq-configuration))
+ (gnu services docker)
+ ((gnu services networking)
+  #:select (network-manager-service-type
+            network-manager-configuration
+            ntp-service-type
+            usb-modeswitch-service-type
+            wpa-supplicant-service-type))
+ ((gnu services pm)
+  #:select (thermald-configuration
+            thermald-service-type
+            tlp-configuration
+            tlp-service-type))
+ ((gnu services shepherd)
+  #:select (shepherd-service
+            shepherd-service-type))
+ ((gnu services ssh)
+  #:select (openssh-service-type
+            openssh-configuration))
+ ;; ((gnu services xdisorg)
+ ;;  #:select (xcape-configuration
+ ;;            xcape-service-type))
+ ((gnu services sound)
+  #:select (alsa-service-type))
+ ((gnu services virtualization)
+  #:select (qemu-binfmt-service-type
+            qemu-binfmt-configuration
+            lookup-qemu-platforms))
+ (gnu services xorg)
+ (guix gexp)
+ (ice-9 match))
 
 (define cst-trackball
   "Section \"InputClass\"
