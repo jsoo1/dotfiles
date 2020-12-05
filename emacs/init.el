@@ -674,6 +674,31 @@
     (define-key company-search-map (kbd "C-n") 'company-select-next)
     (define-key company-search-map (kbd "C-p") 'company-select-previous)))
 
+;; Eglot
+(require 'eglot)
+(define-prefix-keymap eglot-mode-map
+  "My eglot bindings"
+  "a" eglot-code-actions
+  (kbd "C-a") eglot-code-actions
+  "D" eglot-stderr-buffer
+  (kbd "C-D") eglot-stderr-buffer
+  "e" eglot
+  (kbd "C-e") eglot
+  "E" eglot-events-buffer
+  (kbd "C-E") eglot-events-buffer
+  "f" eglot-format
+  (kbd "C-f") eglot-format
+  "h" eglot-help-at-point
+  (kbd "C-h") eglot-help-at-point
+  "r" eglot-rename
+  (kbd "C-r") eglot-rename
+  "R" eglot-reconnect
+  (kbd "C-R") eglot-reconnect
+  "x" eglot-shutdown
+  (kbd "C-x") eglot-shutdown
+  "X" eglot-signal-didChangeConfiguration
+  (kbd "C-X") eglot-signal-didChangeConfiguration)
+
 ;; Indentation
 ;; Per http://emacsredux.com/blog/2013/03/27/indent-region-or-buffer/
 (defun indent-buffer ()
