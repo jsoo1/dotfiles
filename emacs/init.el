@@ -972,27 +972,32 @@
        (add-to-list 'geiser-guile-load-path "~/projects/guix"))
 
 ;; Rust
-(setq lsp-rust-server 'rls)
+(require 'rust-mode)
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
-(require 'eglot)
 (setf
  (alist-get 'rust-mode eglot-server-programs)
- '(eglot-rls "/home/john/projects/work/projects/bid-server/.bin/rls" "--cli"))
-(evil-define-key 'normal rust-mode-map (kbd ",") 'elgot-mode-map)
-;; (add-hook 'rust-mode-hook #'eglot-ensure)
-(add-hook 'rust-mode-hook #'racer-mode)
-(add-hook 'racer-mode-hook #'eldoc-mode)
-(add-hook 'racer-mode-hook #'company-mode)
-(require 'rust-mode)
+ '(eglot-rls "/home/john/.guix-profile/bin/rls"))
+(evil-define-key 'normal rust-mode-map (kbd ",") 'eglot-mode-map)
+(define-key rust-mode-map (kbd "C-c C-e") 'eglot-mode-map)
+(define-key rust-mode-map (kbd "C-c e") 'eglot-mode-map)
+(add-hook 'rust-mode-hook #'eglot-ensure)
+(add-hook 'rust-mode-hook #'eldoc-mode)
+(add-hook 'rust-mode-hook #'company-mode)
 (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
 (with-eval-after-load 'rust-mode
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+  (progn
+    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
 (setq
  rust-format-on-save t
  rust-imenu-generic-expression
  (cons
   '("Async Fn" "^[[:space:]]*\\(?:\\<pub\\>[[:space:]]+\\)?\\(?:\\<default\\>[[:space:]]+\\)?\\(?:\\<unsafe\\>[[:space:]]+\\)?\\(?:\\<extern\\>[[:space:]]+\\(?:\"[^\"]+\"[[:space:]]+\\)?\\)?\\<async\\>[[:space:]]+\\<fn\\>[[:space:]]+\\([[:word:][:multibyte:]_][[:word:][:multibyte:]_[:digit:]]*\\)" 1)
   rust-imenu-generic-expression))
+(add-hook 'rust-mode-hook
+          (defun set-rust-keymaps ()
+            (interactive)
+            (evil-local-set-key 'normal (kbd "SPC E") 'my-flymake-map)
+            (evil-local-set-key 'normal (kbd "SPC e") 'my-error-map)))
 
 (defun flycheck-rust-cargo-has-command-p (command)
   "Whether Cargo has COMMAND in its list of commands.
@@ -1249,9 +1254,13 @@ Return nil if credentials not found."
     "  %b "
     (:eval vc-mode)
     "  "
+    (:eval (if (and (featurep 'eglot) eglot--managed-mode)
+               "eglot" ""))
+    " "
     (:eval (if (and (featurep 'flycheck) flycheck-mode)
                (my-flycheck-mode-line-status-text)
              ""))
+    flymake--mode-line-format
     " "
     (:eval anzu--mode-line-format)))
 
@@ -1419,6 +1428,12 @@ Return nil if credentials not found."
   "s" save-buffer
   "y" (defun kill-file-name
           () (interactive) (kill-new (buffer-file-name (current-buffer)))))
+
+(define-prefix-keymap my-flymake-map
+  "My bindings for flymake"
+  "l" flymake-show-diagnostics-buffer
+  "n" flymake-goto-next-error
+  "p" flymake-goto-prev-error)
 
 (define-prefix-keymap my-git-map
   "my git keybindings"

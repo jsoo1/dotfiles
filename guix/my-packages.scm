@@ -77,8 +77,7 @@
     "hoogle"))
 
 (define-public rust-tools
-  '("racer"
-    "rust"
+  '("rust"
     "rust:cargo"
     "rust:rls"
     "rust:rustfmt"))
@@ -176,7 +175,6 @@
     "emacs-origami-el"
     "emacs-projectile"
     "emacs-psc-ide"
-    "emacs-racer"
     "emacs-recutils"
     "emacs-reformatter"
     "emacs-restclient"
