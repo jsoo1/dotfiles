@@ -114,7 +114,6 @@
 (add-hook 'erc-mode-hook
           (defun toggle-truncate-lines-on ()
             (toggle-truncate-lines 1)))
-(add-hook 'erc-mode-hook #'erc-notifications-mode)
 
 ; Elfeed
 (with-eval-after-load 'elfeed
