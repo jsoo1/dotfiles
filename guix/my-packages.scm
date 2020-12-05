@@ -73,11 +73,8 @@
 (define-public haskell-tools
   '("cabal-install"
     "ghc"
-    "ghcid"
     "hlint"
-    "hoogle"
-    "ormolu"
-    "stylish-haskell"))
+    "hoogle"))
 
 (define-public rust-tools
   '("racer"
