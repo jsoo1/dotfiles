@@ -1402,6 +1402,7 @@ Return nil if credentials not found."
   "m" (defun switch-to-messages-buffer ()
         (interactive)
         (switch-to-buffer-other-window (get-buffer-create "*Messages*")))
+  "n" normal-mode
   "r" (defun switch-to-run-buffer ()
         (interactive)
         (my-switch-to-compile-buffer "run"))
