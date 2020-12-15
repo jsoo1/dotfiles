@@ -1539,7 +1539,10 @@ Return nil if credentials not found."
   "R" my-projectile-reload-dir-locals
   "t" (defun projectile-test ()
         (interactive) (my-projectile-command "test"))
-  "'" projectile-run-eshell
+  "'" (defun projectle-run-eshell-other-window ()
+        (interactive)
+        (switch-to-buffer-other-window (current-buffer))
+        (projectile-run-eshell nil))
   "]" projectile-find-tag)
 
 (define-prefix-keymap my-quit-map
