@@ -317,6 +317,7 @@
    (projectile-project-root . "/home/john/projects/work/projects/bid-server/")
    (projectile-project-root . "/home/john/projects/psc-ide-emacs/")
    (projectile-project-root . "/home/john/projects/haskell-mode/")
+   (projectile-project-root . "/home/john/projects/nyacc/")
    (projectile-project-root . "/home/john/projects/work/projects/Prebid.js/")
    (haskell-mode-stylish-haskell-args . '("--ghc-opt TypeApplications"))
    (projectile-compilation-command . "guix environment --ad-hoc openssl libuv mysql cassandra-cpp postgresql pkg-config gcc-toolchain -- env CC=gcc cargo build")
