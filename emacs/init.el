@@ -1041,6 +1041,8 @@ Return nil if credentials not found."
         (interactive)
         (with-current-buffer sql-buffer (comint-clear-buffer))))))
 
+;; Cassandra/CQL
+(add-to-list 'auto-mode-alist '("\\.schema\\'" . cql-mode))
 
 ;; Cedille
 (require 'cedille-mode)

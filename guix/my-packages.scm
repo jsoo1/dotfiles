@@ -123,6 +123,7 @@
     "emacs-company-math"
     "emacs-counsel-projectile"
     "emacs-csv-mode"
+    "emacs-cql-mode"
     "emacs-dash"
     "emacs-debbugs"
     "emacs-dhall-mode"
