@@ -1253,7 +1253,7 @@ Return nil if credentials not found."
     (:eval (if (and (featurep 'flycheck) flycheck-mode)
                (my-flycheck-mode-line-status-text)
              ""))
-    flymake--mode-line-format
+    (:eval (if flymake-mode flymake--mode-line-format ""))
     " "
     (:eval anzu--mode-line-format)))
 
