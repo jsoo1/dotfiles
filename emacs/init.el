@@ -580,6 +580,7 @@
 (setq ivy-use-virtual-buffers t
       ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
 (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
+(ivy-prescient-mode)
 
 ;; Line numbers
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)

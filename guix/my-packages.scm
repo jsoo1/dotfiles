@@ -173,6 +173,7 @@
     "emacs-nodejs-repl"
     "emacs-ob-restclient"
     "emacs-origami-el"
+    "emacs-prescient"
     "emacs-projectile"
     "emacs-psc-ide"
     "emacs-recutils"
