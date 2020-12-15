@@ -1562,16 +1562,16 @@ Return nil if credentials not found."
   "my window keybindings"
   "/" (defun my-vsplit ()
         (interactive)
-        (progn (split-window-horizontally) (balance-windows-area)))
+        (progn (split-window-horizontally) (balance-windows)))
   "-" (defun my-split ()
         (interactive)
-        (progn (split-window-vertically) (balance-windows-area)))
+        (progn (split-window-vertically) (balance-windows)))
   "'" (defun pop-to-eshell ()
         (interactive)
-        (my-side-eshell '((side . right) (slot . 1))) (balance-windows-area))
+        (my-side-eshell '((side . right) (slot . 1))) (balance-windows))
   "c" make-frame
   "d" (defun my-delete-window ()
-        (interactive) (progn (delete-window) (balance-windows-area)))
+        (interactive) (progn (delete-window) (balance-windows)))
   "D" delete-frame
   "h" (defun tmux-left () (interactive) (tmux-navigate "left"))
   "j" (defun tmux-down () (interactive) (tmux-navigate "down"))
@@ -1584,7 +1584,7 @@ Return nil if credentials not found."
   "m" delete-other-windows
   "r" winner-redo
   "u" winner-undo
-  "=" balance-windows-area)
+  "=" balance-windows)
 
 (define-prefix-keymap my-yank-map
   "my yanking keybindings"
