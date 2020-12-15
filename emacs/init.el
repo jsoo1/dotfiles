@@ -1174,6 +1174,20 @@ Return nil if credentials not found."
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
            (set-face-background 'line-number "#073642" (selected-frame))))
 
+;; Tab-bar
+(set-face-attribute
+ 'tab-bar nil
+ :foreground "#586e75"
+ :background "unspecified")
+(set-face-attribute
+ 'tab-bar-tab nil
+ :foreground "#839496"
+ :background "unspecified")
+(set-face-attribute
+ 'tab-bar-tab-inactive nil
+ :foreground "#586e75"
+ :background "unspecified")
+
 ;; Mode Line
 (set-face-attribute
  'mode-line nil
@@ -1551,7 +1565,8 @@ Return nil if credentials not found."
         (interactive)
         (setq display-line-numbers (next-line-number display-line-numbers)))
   "o" my-org-toggle-map
-  "t" counsel-load-theme
+  "t" tab-bar-mode
+  "T" counsel-load-theme
   "w" whitespace-mode
   "x" toggle-xclip-mode)
 
