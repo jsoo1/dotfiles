@@ -963,10 +963,10 @@
 (add-hook 'rust-mode-hook #'eglot-ensure)
 (add-hook 'rust-mode-hook #'eldoc-mode)
 (add-hook 'rust-mode-hook #'company-mode)
+(add-hook 'rust-mode-hook
+          (defun disable-rust-flycheck ()
+            (flycheck-mode -1)))
 (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
-(with-eval-after-load 'rust-mode
-  (progn
-    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
 (setq
  rust-format-on-save t
  rust-imenu-generic-expression
