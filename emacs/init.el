@@ -1175,6 +1175,17 @@ Return nil if credentials not found."
            (set-face-background 'line-number "#073642" (selected-frame))))
 
 ;; Tab-bar
+(setq
+ tab-bar-show 1
+ tab-bar-tab-name-function
+ (defun my-window-project-name ()
+        "Projectile project name of current window"
+        (with-current-buffer (window-buffer (minibuffer-selected-window))
+          (let ((project-name (projectile-project-name)))
+            (if (string-equal "-" project-name)
+                (buffer-name (current-buffer))
+                project-name)))))
+
 (set-face-attribute
  'tab-bar nil
  :foreground "#586e75"
@@ -1243,11 +1254,9 @@ Return nil if credentials not found."
 (defvar my-mode-line-format
   `(" "
     (:eval (propertize
-            (if (string-equal "-" (projectile-project-name))
-                (format "%s" evil-state)
-              (projectile-project-name))
+            (buffer-name)
             'face `(:foreground ,(evil-state-foreground evil-state) :weight bold)))
-    "  %b "
+    "   "
     (:eval vc-mode)
     "  "
     (:eval (if (and (featurep 'flycheck) flycheck-mode)
@@ -1456,6 +1465,7 @@ Return nil if credentials not found."
   "l" find-file-literally
   "r" counsel-buffer-or-recentf
   "s" save-buffer
+  "t" find-file-other-tab
   "y" (defun kill-file-name
           () (interactive) (kill-new (buffer-file-name (current-buffer)))))
 
