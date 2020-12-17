@@ -1219,12 +1219,11 @@ Return nil if credentials not found."
 (defun counsel-switch-tab ()
   "Select a tab to switch to with ivy."
   (interactive)
-  (let* ((tabs (funcall tab-bar-tabs-function))
-         (selections (seq-map #'my-tab-bar-name tabs)))
-    (ivy-read "tab: " selections
-              :initial-input ""
-              :action #'tab-bar-select-tab-by-name
-              :require-match t)))
+  (ivy-read "tab: "
+            (seq-map #'my-tab-bar-name (funcall tab-bar-tabs-function))
+            :initial-input ""
+            :action #'tab-bar-select-tab-by-name
+            :require-match t))
 
 ;; Mode Line
 (set-face-attribute
