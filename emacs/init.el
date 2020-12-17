@@ -172,7 +172,11 @@
          (propertize (replace-regexp-in-string (concat "^" (getenv "HOME")) "~" (eshell/pwd))
                      'face `(:foreground "#268bd2"))
          " "
-         (propertize (condition-case nil (magit-get-current-branch) (error ""))
+         (propertize (condition-case nil
+                         (let ((curr-branch (magit-get-current-branch)))
+                           (if curr-branch curr-branch
+                             (substring (magit-rev-parse "HEAD") 0 7)))
+                       (error ""))
                      'face `(:foreground "#859900"))
          " "
          (propertize "λ" 'face `(:foreground "#b58900" :weight normal))
