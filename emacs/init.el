@@ -1181,7 +1181,7 @@ Return nil if credentials not found."
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
            (set-face-background 'line-number "#073642" (selected-frame))))
 
-;; Tab-bar
+;; Tab bar
 (setq
  tab-bar-show 1
  tab-bar-tab-name-function
@@ -1205,6 +1205,21 @@ Return nil if credentials not found."
  'tab-bar-tab-inactive nil
  :foreground "#586e75"
  :background "unspecified")
+
+(defun my-tab-bar-name (tab)
+  "Get `NAME' and `BUFFER' from `TAB'."
+  (pcase tab
+    (`(,tag . ,fields) (alist-get 'name fields))))
+
+(defun counsel-switch-tab ()
+  "Select a tab to switch to with ivy."
+  (interactive)
+  (let* ((tabs (funcall tab-bar-tabs-function))
+         (selections (seq-map #'my-tab-bar-name tabs)))
+    (ivy-read "tab: " selections
+              :initial-input ""
+              :action #'tab-bar-select-tab-by-name
+              :require-match t)))
 
 ;; Mode Line
 (set-face-attribute
@@ -1506,7 +1521,8 @@ Return nil if credentials not found."
   "j" avy-goto-char-2
   "l" avy-goto-line
   "o" counsel-org-goto-all
-  "t" evil-jump-to-tag
+  "t" counsel-switch-tab
+  "]" evil-jump-to-tag
   "=" indent-region-or-buffer)
 
 (define-prefix-keymap my-org-map
