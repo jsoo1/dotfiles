@@ -383,6 +383,7 @@
 (evil-set-initial-state 'Man-mode 'normal)
 (evil-set-initial-state 'eshell-mode 'normal)
 (evil-set-initial-state 'debbugs-gnu-mode 'normal)
+(evil-set-initial-state 'tab-switcher-mode 'emacs)
 
 (evil-declare-not-repeat #'flycheck-next-error)
 (evil-declare-not-repeat #'flycheck-previous-error)
