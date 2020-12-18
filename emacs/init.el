@@ -1537,10 +1537,23 @@ Return nil if credentials not found."
   "i" counsel-org-entity
   "t" counsel-org-tag)
 
+(defun get-tab-by-name-create (name)
+  "Get or create tab for `NAME'."
+  (let* ((tabs (funcall tab-bar-tabs-function))
+         (tab-names (seq-map #'my-tab-bar-name tabs)))
+    (if (seq-contains-p tab-names name #'string-equal)
+        (tab-bar-select-tab-by-name name)
+      (tab-new))))
+
 (defun switch-project-workspace ()
   "Switch to a known projectile project in a new workspace."
   (interactive)
-  (let ((projectile-switch-project-action #'projectile-find-file))
+  (let* ((old-project-name (projectile-project-name))
+         (projectile-switch-project-action
+          (lambda ()
+            (tab-rename old-project-name)
+            (get-tab-by-name-create (projectile-project-name))
+            (projectile-find-file))))
     (projectile-switch-project)))
 
 (define-prefix-keymap my-projectile-map
@@ -1556,11 +1569,10 @@ Return nil if credentials not found."
   "e" projectile-edit-dir-locals
   "f" counsel-projectile-find-file
   "I" projectile-invalidate-cache
-  "l" switch-project-workspace
   "o" (defun switch-to-projectile-todos ()
         (interactive)
         (find-file (format "%sTODOs.org" (projectile-project-root))))
-  "p" counsel-projectile-switch-project
+  "p" switch-project-workspace
   "r" (defun projectile-run ()
         (interactive) (my-projectile-command "run"))
   "R" my-projectile-reload-dir-locals
