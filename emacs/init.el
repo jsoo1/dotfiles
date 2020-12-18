@@ -190,6 +190,13 @@
     (eshell-mode))
   (pop-to-buffer eshell-buffer-name))
 
+;; Window management
+;; Split windows vertically by default, see:
+;; https://stackoverflow.com/questions/20167246/emacs-open-buffer-in-vertical-split-by-default
+(setq
+ split-height-threshold nil
+ split-width-threshold 80)
+
 ;; Dired
 (setq dired-listing-switches "-al --group-directories-first")
 (add-hook 'dired-mode-hook
