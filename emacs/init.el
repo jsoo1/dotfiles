@@ -1561,11 +1561,13 @@ Return nil if credentials not found."
   "a" counsel-projectile-org-agenda
   "b" counsel-projectile-switch-to-buffer
   "c" (defun projectile-compile ()
-        (interactive) (my-projectile-command "compile"))
+        (interactive)
+        (my-projectile-command "compile"))
   "C" counsel-projectile-org-capture
   "d" counsel-projectile-find-dir
-  "D" (defun switch-to-projectile-project-root
-          () (interactive) (dired (projectile-project-root)))
+  "D" (defun switch-to-projectile-project-root ()
+        (interactive)
+        (dired (projectile-project-root)))
   "e" projectile-edit-dir-locals
   "f" counsel-projectile-find-file
   "I" projectile-invalidate-cache
