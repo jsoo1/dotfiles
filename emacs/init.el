@@ -1434,7 +1434,7 @@ Return nil if credentials not found."
   "k" kill-buffer
   "m" (defun switch-to-messages-buffer ()
         (interactive)
-        (switch-to-buffer-other-window (get-buffer-create "*Messages*")))
+        (switch-to-buffer (get-buffer-create "*Messages*")))
   "n" normal-mode
   "r" (defun switch-to-run-buffer ()
         (interactive)
@@ -1442,7 +1442,7 @@ Return nil if credentials not found."
   "R" revert-buffer
   "s" (defun switch-to-scratch-buffer ()
         (interactive)
-        (switch-to-buffer-other-window (get-buffer-create "*Scratch*")))
+        (switch-to-buffer (get-buffer-create "*Scratch*")))
   "t" (defun switch-to-test-buffer ()
         (interactive)
         (my-switch-to-compile-buffer "test")))
