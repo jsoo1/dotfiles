@@ -1555,13 +1555,11 @@ Return nil if credentials not found."
 (defun switch-project-workspace ()
   "Switch to a known projectile project in a new workspace."
   (interactive)
-  (let* ((old-project-name (projectile-project-name))
-         (projectile-switch-project-action
-          (lambda ()
-            (tab-rename old-project-name)
-            (get-tab-by-name-create (projectile-project-name))
-            (projectile-find-file))))
-    (projectile-switch-project)))
+  (let* ((counsel-projectile-switch-project-action
+          (lambda (new-project-root)
+            (get-tab-by-name-create (file-name-base (directory-file-name new-project-root)))
+            (counsel-projectile-switch-project-action-find-file new-project-root))))
+    (counsel-projectile-switch-project)))
 
 (define-prefix-keymap my-projectile-map
   "my projectile keybindings"
