@@ -133,6 +133,9 @@
           (defun toggle-truncate-lines-on ()
             (toggle-truncate-lines 1)))
 
+;; Electric pairs
+(electric-pair-mode 1)
+
 ; Elfeed
 (with-eval-after-load 'elfeed
   (progn
@@ -365,7 +368,6 @@
 (require 'evil-commentary)
 (require 'evil-leader)
 (require 'evil-escape)
-(require 'smartparens-config)
 (require 'navigate)
 
 (evil-mode 1)
@@ -375,7 +377,6 @@
 (setq-default evil-escape-key-sequence "df")
 (setq-default evil-escape-unordered-key-sequence 't)
 (global-evil-leader-mode)
-(smartparens-global-mode 1)
 
 (evil-set-initial-state 'compilation-mode 'normal)
 (evil-set-initial-state 'ibuffer-mode 'normal)

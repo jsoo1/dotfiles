@@ -184,7 +184,6 @@
     "emacs-s"
     "emacs-slime"
     "emacs-slime-company"
-    "emacs-smartparens"
     "emacs-sml-mode"
     "emacs-solarized-theme"
     "emacs-systemd-mode"
