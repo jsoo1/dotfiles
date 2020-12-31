@@ -1553,13 +1553,15 @@ Return nil if credentials not found."
         (tab-bar-select-tab-by-name name)
       (tab-new))))
 
+(defun find-file-in-project-tab (project-root)
+  "Find file in `PROJECT-ROOT' in a new or existing tab."
+  (get-tab-by-name-create (file-name-base (directory-file-name project-root)))
+  (counsel-projectile-switch-project-action-find-file project-root))
+
 (defun switch-project-workspace ()
   "Switch to a known projectile project in a new workspace."
   (interactive)
-  (let* ((counsel-projectile-switch-project-action
-          (lambda (new-project-root)
-            (get-tab-by-name-create (file-name-base (directory-file-name new-project-root)))
-            (counsel-projectile-switch-project-action-find-file new-project-root))))
+  (let* ((counsel-projectile-switch-project-action #'find-file-in-project-tab))
     (counsel-projectile-switch-project)))
 
 (define-prefix-keymap my-projectile-map
