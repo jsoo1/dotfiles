@@ -1196,7 +1196,7 @@ Return nil if credentials not found."
 
 ;; Tab bar
 (setq
- tab-bar-show 1
+ tab-bar-show nil
  tab-bar-tab-name-function
  (defun my-window-project-name ()
         "Projectile project name of current window"
