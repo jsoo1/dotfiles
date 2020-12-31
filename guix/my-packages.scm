@@ -76,6 +76,10 @@
     "hlint"
     "hoogle"))
 
+(define-public ocaml-tools
+  '("opam"
+    "ocaml4.07-merlin"))
+
 (define-public rust-tools
   '("rust"
     "rust:cargo"
