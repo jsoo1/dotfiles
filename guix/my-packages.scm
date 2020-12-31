@@ -78,7 +78,7 @@
 
 (define-public ocaml-tools
   '("opam"
-    "ocaml4.07-merlin"))
+    "ocaml-merlin"))
 
 (define-public rust-tools
   '("rust"
@@ -201,5 +201,4 @@
     "emacs-xterm-color"
     "emacs-yaml-mode"
     "emacs-yasnippet"
-    "ocaml4.07-merlin"
     "proof-general"))
