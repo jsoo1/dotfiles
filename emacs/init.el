@@ -320,6 +320,7 @@
    (projectile-compilation-command . "cabal new-build")
    (projectile-run-command . "cargo run")
    (projectile-run-command . "cabal new-run exe:refl-club -- .static")
+   (eglot-connect-timeout . nil)
    (haskell-stylish-on-save . t)
    (haskell-stylish-on-save . nil)
    (projectile-project-root . "/home/john/projects/sqlx/")
