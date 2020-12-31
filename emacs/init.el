@@ -397,12 +397,14 @@
 (evil-declare-not-repeat #'flycheck-next-error)
 (evil-declare-not-repeat #'flycheck-previous-error)
 
-;; Evil tab motions in dired
+;; Evil tab motions
 (add-hook 'dired-mode-hook
           (defun fix-dired-tab-motions ()
             (interactive)
             (evil-local-set-key 'normal (kbd "g t") #'tab-bar-switch-to-next-tab)
             (evil-local-set-key 'normal (kbd "g T") #'tab-bar-switch-to-prev-tab)))
+
+(add-hook 'compilation-mode-hook #'fix-dired-tab-motions)
 
 ;; Vinegar
 (define-key evil-normal-state-map "-" (defun dired-dot () (interactive) (dired ".")))
