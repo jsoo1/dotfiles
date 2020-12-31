@@ -70,7 +70,9 @@ set fish_cursor_visual      block
 # python direnv package
 eval (direnv hook fish)
 
-# eval (opam env)
+# opam
+source /home/john/.opam/opam-init/init.fish > /dev/null 2> /dev/null;
+or true
 
 if test (tty) = /dev/tty1 && status is-login
     xinit ~/.xsession -- /run/setuid-programs/*startx vt1
