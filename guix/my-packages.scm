@@ -77,8 +77,7 @@
     "hoogle"))
 
 (define-public ocaml-tools
-  '("opam"
-    "ocaml-merlin"))
+  '("opam"))
 
 (define-public rust-tools
   '("rust"
@@ -173,6 +172,7 @@
     "emacs-let-alist"
     "emacs-magit"
     "emacs-markdown-mode"
+    "emacs-merlin"
     "emacs-multi-term"
     "emacs-nix-mode"
     "emacs-nodejs-repl"
