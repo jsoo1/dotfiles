@@ -5,3 +5,4 @@ alias gst git status $*
 alias gb git branch $*
 alias gco git checkout $*
 alias glg git log $*
+alias tree exa -T $*
