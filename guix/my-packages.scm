@@ -71,7 +71,7 @@
     "font-iosevka-term-slab"))
 
 (define-public haskell-tools
-  '("cabal-install"
+  '(; "cabal-install" Broken right now
     "ghc"
     "hlint"
     "hoogle"))
