@@ -913,7 +913,7 @@
 (require 'metal-mercury-mode)
 
 ;; Ocaml
-(setq merlin-command "~/.guix-profile/bin/ocamlmerlin")
+(add-hook 'tuareg-mode-hook #'merlin-mode)
 (add-to-list 'auto-mode-alist '("\\.ml\\'" . tuareg-mode))
 
 ;; Purescript
