@@ -9,6 +9,7 @@
   desktop-tools
   fonts
   haskell-tools
+  ocaml-tools
   rust-tools
   guile-tools
   pdf-tools
