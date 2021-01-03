@@ -1307,6 +1307,15 @@ Return nil if credentials not found."
     (setq-default mode-line-format ml)
     (force-mode-line-update t)))
 
+;; Window dividers
+(defun my-change-window-divider ()
+  "Configure window dividers to be pretty."
+  (let ((display-table (or buffer-display-table standard-display-table)))
+    (set-display-table-slot display-table 5 ?│)
+    (set-window-display-table (selected-window) display-table)))
+
+(add-hook 'window-configuration-change-hook 'my-change-window-divider)
+
 ;; ISO 8601
 (defun iso-8601-string (&optional time zone)
   "Make an ISO 8601 formatted date string for `TIME' and `ZONE'."
