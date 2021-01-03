@@ -18,7 +18,6 @@
   #:select (bluez
             iproute
             light
-            linux-libre-headers
             linux-libre-with-bpf))
  ((gnu packages ncurses) #:select (ncurses))
  ((gnu packages shells) #:select (fish))
@@ -250,8 +249,6 @@ EndSection\n")
     (target "/boot/efi")
     (keyboard-layout ctrl-nocaps)))
   (kernel linux-libre-with-bpf)
-  ;; (kernel-loadable-modules
-  ;;  `(,linux-libre-headers))
   (file-systems
    `(,(file-system
         (device
