@@ -163,6 +163,8 @@
            (require 'fish-completion nil t))
   (global-fish-completion-mode))
 
+(add-hook 'eshell-directory-change-hook #'direnv-update-directory-environment)
+
 (setq initial-buffer-choice (lambda () (get-buffer-create "*eshell*"))
       eshell-highlight-prompt nil
       eshell-prompt-regexp "^[^λ]* [λ] "
