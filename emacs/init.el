@@ -917,6 +917,24 @@
 ;; Ocaml
 (add-hook 'tuareg-mode-hook #'merlin-mode)
 (add-to-list 'auto-mode-alist '("\\.ml\\'" . tuareg-mode))
+(add-to-list 'auto-mode-alist '("\\.mli\\'" . tuareg-mode))
+(add-hook 'tuareg-mode-hook
+          (defun my-setup-ocaml-imenu ()
+            "Add generic imenu indexing to tuareg's."
+            (interactive)
+            (setq-local
+             imenu-create-index-function
+             (lambda ()
+               (append (tuareg-imenu-create-index)
+                       (imenu--generic-function imenu-generic-expression))))))
+(add-hook 'tuareg-mode-hook
+          (defun my-setup-ocaml-imenu-expressions ()
+            "Add module definitions to imenu expressions."
+            (interactive)
+            (setq-local
+             imenu-generic-expression
+             `(("Module" "^module\\s-+\\(type\\s-+\\)?\\([a-zA-Z0-9_]+\\)" 2)
+               ,@imenu-generic-expression))))
 
 ;; Purescript
 (add-to-list 'load-path "~/.emacs.d/private/purescript-mode")
