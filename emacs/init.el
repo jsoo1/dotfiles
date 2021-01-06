@@ -982,10 +982,6 @@
  (cons
   '("Async Fn" "^[[:space:]]*\\(?:\\<pub\\>[[:space:]]+\\)?\\(?:\\<default\\>[[:space:]]+\\)?\\(?:\\<unsafe\\>[[:space:]]+\\)?\\(?:\\<extern\\>[[:space:]]+\\(?:\"[^\"]+\"[[:space:]]+\\)?\\)?\\<async\\>[[:space:]]+\\<fn\\>[[:space:]]+\\([[:word:][:multibyte:]_][[:word:][:multibyte:]_[:digit:]]*\\)" 1)
   rust-imenu-generic-expression))
-(add-hook 'rust-mode-hook
-          (defun set-rust-keymaps ()
-            (interactive)
-            (evil-local-set-key 'normal (kbd "SPC e") 'my-flymake-map)))
 
 (defun flycheck-rust-cargo-has-command-p (command)
   "Whether Cargo has COMMAND in its list of commands.
