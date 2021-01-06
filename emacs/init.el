@@ -767,26 +767,6 @@
              (cons '("Keymap" "^(define-prefix-keymap\\s-+\\([a-z-]+\\)" 1)
               imenu-generic-expression))))
 
-;; Elm mode
-(require 'flycheck-elm)
-(require 'elm-mode)
-(setq elm-format-on-save 't
-      elm-format-elm-version "0.18"
-      elm-package-catalog-root "http://package.elm-lang.org/")
-(add-hook 'flycheck-mode-hook #'flycheck-elm-setup)
-(with-eval-after-load 'company-mode (add-to-list 'company-backends 'company-elm))
-;; Can't get only elm 18 packages without this hack
-(defun elm-package-refresh-contents ()
-  "Refresh the package list."
-  (interactive)
-  (elm--assert-dependency-file)
-  (let* ((all-packages (elm-package--build-uri "all-packages?elm-package-version=0.18")))
-    (with-current-buffer (url-retrieve-synchronously all-packages)
-      (goto-char (point-min))
-      (re-search-forward "^ *$")
-      (setq elm-package--marked-contents nil)
-      (setq elm-package--contents (append (json-read) nil)))))
-
 ;; JavaScript
 (require 'nodejs-repl)
 (add-hook
