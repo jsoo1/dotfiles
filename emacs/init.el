@@ -969,8 +969,6 @@
  (alist-get 'rust-mode eglot-server-programs)
  '(eglot-rls "/home/john/.guix-profile/bin/rls"))
 (evil-define-key 'normal rust-mode-map (kbd ",") 'my-eglot-mode-map)
-(define-key rust-mode-map (kbd "C-c C-e") 'my-eglot-mode-map)
-(define-key rust-mode-map (kbd "C-c e") 'my-eglot-mode-map)
 (add-hook 'rust-mode-hook #'eglot-ensure)
 (add-hook 'rust-mode-hook #'eldoc-mode)
 (add-hook 'rust-mode-hook #'company-mode)
@@ -1367,40 +1365,31 @@ Return nil if credentials not found."
 
 (define-prefix-keymap my-eglot-find-map
   "Find things with eglot"
-  "d" xref-find-definitions
-  (kbd "C-d") xref-find-definitions
-  "r" xref-find-references
-  (kbd "C-r") xref-find-references)
+  "g" xref-find-definitions
+  "r" xref-find-references)
 
 (define-prefix-keymap my-eglot-buffer-map
   "Goto eglot buffers"
   "e" eglot-events-buffer
-  (kbd "C-e") eglot-events-buffer
-  "d" eglot-stderr-buffer
-  (kbd "C-d") eglot-stderr-buffer)
+  "d" eglot-stderr-buffer)
+
+(define-prefix-keymap my-eglot-connection-map
+  "Manage eglot connections."
+  "e" eglot
+  "r" eglot-reconnect
+  "x" eglot-shutdown)
 
 (define-prefix-keymap my-eglot-mode-map
   "My eglot bindings"
   "a" eglot-code-actions
-  (kbd "C-a") eglot-code-actions
-  "e" eglot
-  (kbd "C-e") eglot
   "b" my-eglot-buffer-map
-  (kbd "C-b") my-eglot-buffer-map
-  "f" my-eglot-find-map
-  (kbd "C-f") my-eglot-find-map
-  "F" eglot-format
-  (kbd "C-F") eglot-format
+  "C" my-eglot-connection-map
+  "e" my-flymake-map
+  "g" my-eglot-find-map
+  "f" eglot-format
   "h" eglot-help-at-point
-  (kbd "C-h") eglot-help-at-point
   "r" eglot-rename
-  (kbd "C-r") eglot-rename
-  "R" eglot-reconnect
-  (kbd "C-R") eglot-reconnect
-  "x" eglot-shutdown
-  (kbd "C-x") eglot-shutdown
-  "X" eglot-signal-didChangeConfiguration
-  (kbd "C-X") eglot-signal-didChangeConfiguration)
+  "X" eglot-signal-didChangeConfiguration)
 
 (define-prefix-keymap my-process-map
   "my process keybindings"
