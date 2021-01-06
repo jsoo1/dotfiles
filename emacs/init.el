@@ -909,7 +909,7 @@
             (interactive)
             (setq-local
              imenu-generic-expression
-             `(("Module" "^module\\s-+\\(type\\s-+\\)?\\([a-zA-Z0-9_]+\\)" 2)
+             `(("Module" "^\\s-*module\\s-+\\(type\\s-+\\)?\\([a-zA-Z0-9_]+\\)" 2)
                ,@imenu-generic-expression))))
 
 ;; Purescript
