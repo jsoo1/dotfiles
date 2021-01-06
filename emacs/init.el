@@ -409,7 +409,7 @@
 (add-hook 'compilation-mode-hook #'fix-dired-tab-motions)
 
 ;; Vinegar
-(define-key evil-normal-state-map "-" (defun dired-dot () (interactive) (dired ".")))
+(define-key evil-normal-state-map "-" #'dired-jump)
 (define-key dired-mode-map "-" #'dired-up-directory)
 
 ;; Magit
@@ -985,8 +985,7 @@
 (add-hook 'rust-mode-hook
           (defun set-rust-keymaps ()
             (interactive)
-            (evil-local-set-key 'normal (kbd "SPC E") 'my-flymake-map)
-            (evil-local-set-key 'normal (kbd "SPC e") 'my-error-map)))
+            (evil-local-set-key 'normal (kbd "SPC e") 'my-flymake-map)))
 
 (defun flycheck-rust-cargo-has-command-p (command)
   "Whether Cargo has COMMAND in its list of commands.
@@ -1355,8 +1354,7 @@ Return nil if credentials not found."
 (define-prefix-keymap my-directory-map
   "my directory commands"
   "d" dired
-  "/" (defun dired-dot-other-window ()
-        (interactive) (dired-other-window ".")))
+  "/" dired-jump-other-window)
 
 (define-prefix-keymap elfeed-load-map
   "Various ways of loading feeds"
