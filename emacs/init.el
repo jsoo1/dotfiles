@@ -298,10 +298,10 @@
 
 ;; Backups, lockfiles, auto-saves, local variables
 (setq
- backup-directory-alist `((".*" . "~/.emacs.d/private/backups/"))
+ backup-directory-alist `((".*" . ,(expand-file-name "backups" user-emacs-directory)))
  delete-old-versions nil
  create-lockfiles nil
- auto-save-file-name-transforms `((".*" "~/.emacs.d/private/auto-saves/" t))
+ auto-save-file-name-transforms `((".*" ,(expand-file-name "auto-saves" user-emacs-directory) t))
  enable-local-eval t
  safe-local-variable-values
  '((haskell-stylish-on-save . nil)
