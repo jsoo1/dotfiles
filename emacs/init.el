@@ -890,10 +890,6 @@
      :background 'unspecified
      :foreground "red")))
 
-;; Mercury
-(add-to-list 'load-path "~/.emacs.d/private/metal-mercury-mode/")
-(require 'metal-mercury-mode)
-
 ;; Ocaml
 (add-hook 'tuareg-mode-hook #'merlin-mode)
 (add-to-list 'auto-mode-alist '("\\.ml\\'" . tuareg-mode))
