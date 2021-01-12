@@ -361,6 +361,9 @@
 ;; Winner
 (winner-mode t)
 
+;; Eshell syntax highlighting
+(eshell-syntax-highlighting-global-mode 1)
+
 ;; Evil
 (global-set-key (kbd "<escape>") #'keyboard-escape-quit)
 (setq evil-want-C-u-scroll t

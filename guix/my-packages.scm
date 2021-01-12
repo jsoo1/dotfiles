@@ -140,6 +140,7 @@
     "emacs-elfeed"
     "emacs-elf-mode"
     "emacs-emmet-mode"
+    "emacs-eshell-syntax-highlighting"
     "emacs-evil"
     "emacs-evil-anzu"
     "emacs-evil-commentary"
