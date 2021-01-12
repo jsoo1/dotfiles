@@ -483,8 +483,11 @@
 ;; Org
 (require 'org-tempo)
 (require 'evil-org)
+(require 'evil-org-agenda)
 (add-hook 'org-mode-hook #'evil-org-mode)
+(add-hook 'org-agenda-mode-hook #'evil-org-mode)
 (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading))
+(evil-org-agenda-set-keys)
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
                                (haskell . t)
