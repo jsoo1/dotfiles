@@ -99,7 +99,7 @@ Send `UNWIND' to `IVY-READ' when done."
               :caller 'my-counsel-info-node-for-manual)))
 
 (ivy-configure 'my-counsel-info-node-for-manual
-  :display-transformer-fn #'car)
+  :display-transformer-fn (lambda (x) (format "%s - %s" (car x) (cadr x))))
 
 (defun my-counsel-info-manual-apropos ()
   "Ivy complete an Info manual then nodes in that manual."
@@ -118,4 +118,5 @@ Send `UNWIND' to `IVY-READ' when done."
                     :unwind unwind))))
     (ivy-read "Manual: " manuals :action action)))
 
+(provide 'my-counsel-info-apropos)
 ;;; my-counsel-info-apropos ends here
