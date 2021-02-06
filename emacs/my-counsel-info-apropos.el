@@ -117,9 +117,12 @@ Send `UNWIND' to `IVY-READ' when done."
                 :history counsel-info-apropos-node-history
                 :action (lambda (selection)
                           (Info-find-node (Info-find-file manual)
-                                          (cadr selection))
-                          (forward-line
-                           (string-to-number (caddr selection))))
+                                          (if (listp selection)
+                                              (cadr selection)
+                                            "top"))
+                          (when (listp selection)
+                            (forward-line
+                             (string-to-number (caddr selection)))))
                 :unwind (lambda ()
                           (when unwind (funcall unwind))
                           (kill-buffer buf))
