@@ -78,15 +78,27 @@
                 (counsel-info-apropos--format-candidate node)))
 
 (defvar counsel-info-apropos-node-history '()
-  "Stores the results of my-counsel-info-node-for-manual.")
+  "Stores the history of my-counsel-info-node-for-manual.")
+
+(defstruct counsel-info-apropos-results-state
+  "Keeps track of results of searching Info buffers."
+  (nodes
+   nil
+   :documentation "List where the results accumulate.")
+  (user-typing
+   nil
+   :documentation "Whether the user is typing."))
 
 (defun my-counsel-info-node-for-manual (buf manual
                                             &key &optional unwind)
   "Ivy complete an Info node in `MANUAL' using Info buffer `BUF'.
 Send `UNWIND' to `IVY-READ' when done."
-  (let ((ivy-dynamic-exhibit-delay-ms 2)
-        (nodes '())
-        (nodes-mx (make-mutex "ivy-info-apropos-nodes")))
+  (let* ((ivy-dynamic-exhibit-delay-ms 2)
+         (state (make-counsel-info-apropos-results-state))
+         (state-mx (make-mutex "ivy-info-apropos-results"))
+         (state-cond
+          (make-condition-variable state-mx
+                                   "ivy-info-apropos-nodes-cond")))
     (cl-letf (((symbol-function 'ivy--dynamic-collection-cands)
                (lambda (input)
                  (funcall (ivy-state-collection ivy-last) input))))
@@ -97,22 +109,30 @@ Send `UNWIND' to `IVY-READ' when done."
                 (n 0))
            (iter-do (node node-iter)
              (progn
-               (with-mutex nodes-mx
-                 (setq nodes (cons node nodes))
+               (with-mutex state-mx
+                 (setf (counsel-info-apropos-result-state-nodes state)
+                       (cons node
+                             (counsel-info-apropos-results-state-nodes state)))
                  (ivy--set-candidates
                   (seq-filter #'counsel-info-apropos--node-match-p
-                              nodes)))
+                              (counsel-info-apropos-results-state-nodes state))))
                (ivy--insert-minibuffer
                 (ivy--format ivy--all-candidates))
                (when (= n 0) (redisplay))
                (setq n (mod (1+ n) 50))
-               (thread-yield)))))
+               (while (counsel-info-apropos-results-state-user-typing state)
+                 (condition-wait state-cond))
+               (thread-yield)))
+           (message "finished searching manual %s" manual)))
        "invy-info-apropos-search-results")
       (ivy-read "Node: "
                 (lambda (_)
-                  (with-mutex nodes-mx
+                  (with-mutex state-mx
+                    (setf (counsel-info-apropos-results-state-user-typing state)
+                          t)
                     (seq-filter #'counsel-info-apropos--node-match-p
-                                nodes)))
+                                (counsel-info-apropos-results-state-nodes state))
+                    (condition-notify state-cond)))
                 :dynamic-collection t
                 :history counsel-info-apropos-node-history
                 :action (lambda (selection)
