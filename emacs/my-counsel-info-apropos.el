@@ -93,16 +93,19 @@ Send `UNWIND' to `IVY-READ' when done."
       (make-thread
        (lambda ()
          (let* ((node-iter
-                 (my-info-apropos-manual-matches buf manual)))
+                 (my-info-apropos-manual-matches buf manual))
+                (n 0))
            (iter-do (node node-iter)
              (progn
                (with-mutex nodes-mx
-                 (setq nodes (append nodes (list node)))
+                 (setq nodes (cons node nodes))
                  (ivy--set-candidates
                   (seq-filter #'counsel-info-apropos--node-match-p
                               nodes)))
                (ivy--insert-minibuffer
                 (ivy--format ivy--all-candidates))
+               (when (= n 0) (redisplay))
+               (setq n (mod (1+ n) 50))
                (thread-yield)))))
        "invy-info-apropos-search-results")
       (ivy-read "Node: "
