@@ -84,55 +84,101 @@
   "Keeps track of results of searching Info buffers."
   (nodes
    nil
-   :documentation "List where the results accumulate.")
+   :type #'list-p
+   :documentation "Accumulates results.")
   (user-typing
    nil
-   :documentation "Whether the user is typing."))
+   :type #'booleanp
+   :documentation "Non-nil when the user is typing."))
 
-(defun my-counsel-info-node-for-manual (buf manual
-                                            &key &optional unwind)
-  "Ivy complete an Info node in `MANUAL' using Info buffer `BUF'.
-Send `UNWIND' to `IVY-READ' when done."
-  (let* ((ivy-dynamic-exhibit-delay-ms 2)
-         (state (make-counsel-info-apropos-results-state))
-         (state-mx (make-mutex "ivy-info-apropos-results"))
-         (state-cond
-          (make-condition-variable state-mx
-                                   "ivy-info-apropos-nodes-cond")))
-    (cl-letf (((symbol-function 'ivy--dynamic-collection-cands)
-               (lambda (input)
-                 (funcall (ivy-state-collection ivy-last) input))))
-      (make-thread
-       (lambda ()
-         (let* ((node-iter
-                 (my-info-apropos-manual-matches buf manual))
-                (n 0))
-           (iter-do (node node-iter)
-             (progn
-               (with-mutex state-mx
-                 (setf (counsel-info-apropos-result-state-nodes state)
-                       (cons node
-                             (counsel-info-apropos-results-state-nodes state)))
+(define-error 'counsel-info-apropos-wait
+  "thread should wait")
+
+(defun counsel-info-node-apropos-thread (buf manual state-mx state-cond state)
+  "Prepare thread to collect info apropos results.
+
+Use buffer `BUF' and look in manual `MANUAL' with mutex
+`STATE-MX'.  Collect results and communicate using `STATE'.
+
+Stop the thread by signaling and continue by notifying
+`STATE-COND'."
+  (lambda ()
+    (let* ((node-iter (my-info-apropos-manual-matches buf manual))
+           (n 0))
+      (iter-do (node node-iter)
+        (condition-case msg
+            (progn
+              (with-mutex state-mx
+                (setf (counsel-info-apropos-results-state-nodes state)
+                      (cons node
+                            (counsel-info-apropos-results-state-nodes state)))
+                ;; Put the formatting of the minibuffer after the
+                ;; error catching and then setting candidates can be
+                ;; idempotent (and done in the signal handler)
                  (ivy--set-candidates
                   (seq-filter #'counsel-info-apropos--node-match-p
-                              (counsel-info-apropos-results-state-nodes state))))
-               (ivy--insert-minibuffer
-                (ivy--format ivy--all-candidates))
-               (when (= n 0) (redisplay))
-               (setq n (mod (1+ n) 50))
-               (while (counsel-info-apropos-results-state-user-typing state)
-                 (condition-wait state-cond))
-               (thread-yield)))
-           (message "finished searching manual %s" manual)))
-       "invy-info-apropos-search-results")
-      (ivy-read "Node: "
-                (lambda (_)
-                  (with-mutex state-mx
-                    (setf (counsel-info-apropos-results-state-user-typing state)
-                          t)
-                    (seq-filter #'counsel-info-apropos--node-match-p
-                                (counsel-info-apropos-results-state-nodes state))
-                    (condition-notify state-cond)))
+                              (counsel-info-apropos-results-state-nodes state)))
+                (ivy--insert-minibuffer
+                 (ivy--format ivy--all-candidates))
+                (when (= n 0) (redisplay))
+                (setq n (mod (1+ n) 64)))
+              (thread-yield))
+          (error
+           (pcase msg
+             (`(counsel-info-apropos-wait . ,x)
+              (progn
+                (message "pausing with data: %s" (pp x))
+                (with-mutex state-mx
+                  (while (counsel-info-apropos-results-state-user-typing state)
+                    (condition-wait state-cond))))))))))
+    (message "finished searching manual: %s" manual)))
+
+(defun counsel-info-apropos--collect-input (collection-th state-mx state-cond state)
+  "Collect and set ivy candidates as results accumulate.
+
+`COLLECTION-TH' is the result collection thread.  Signals the
+thread with `STATE-MX' and `STATE-COND' with the `STATE' so that
+input is not blocked."
+  (lambda (input)
+    (if (thread-live-p collection-th)
+        (with-mutex state-mx
+          (setf (counsel-info-apropos-results-state-user-typing state)
+                t)
+          (thread-signal collection-th 'counsel-info-apropos-wait `(,input))
+          (let ((candidates
+                 (seq-filter #'counsel-info-apropos--node-match-p
+                             (counsel-info-apropos-results-state-nodes state))))
+            (setf (counsel-info-apropos-results-state-user-typing state)
+                  nil)
+            (condition-notify state-cond)
+            candidates))
+      (seq-filter #'counsel-info-apropos--node-match-p
+                  (counsel-info-apropos-results-state-nodes state)))))
+
+;; TODO: STRONGLY consider using the cli
+;; (cl-letf (((symbol-function 'counsel-locate-cmd-default)
+;;            (lambda (input)
+;;              (format "info -k %s" input))))
+;;   (counsel-locate))
+
+(defun my-counsel-info-node-for-manual (buf manual &key &optional unwind)
+  "Ivy complete an Info node in `MANUAL' using Info buffer `BUF'.
+Send `UNWIND' to `IVY-READ' when done."
+  (cl-letf (((symbol-function 'ivy--dynamic-collection-cands)
+             (lambda (input)
+               (funcall (ivy-state-collection ivy-last) input))))
+    (let* ((ivy-dynamic-exhibit-delay-ms 2)
+           (state (make-counsel-info-apropos-results-state))
+           (state-mx (make-mutex "ivy-info-apropos-results"))
+           (state-cond
+            (make-condition-variable state-mx
+                                     "ivy-info-apropos-results"))
+           (collection-th (make-thread
+                           (counsel-info-node-apropos-thread
+                            buf manual state-mx state-cond state)
+                           "ivy-info-apropos-search-results")))
+      (ivy-read "Node: " (counsel-info-apropos--collect-input
+                          collection-th state-mx state-cond state)
                 :dynamic-collection t
                 :history counsel-info-apropos-node-history
                 :action (lambda (selection)
