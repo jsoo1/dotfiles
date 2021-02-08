@@ -116,16 +116,14 @@ Set the ivy collection accordingly."
 
 (defun counsel-info-apropos--start-timer (state node-iter)
   "Start collecting nodes from `NODE-ITER' into `STATE'."
-  (setq counsel-info-apropos-timer
-        (run-with-timer (/ 4 1000.0)
-                        nil
-                        (lambda ()
-                          (with-local-quit
-                            (progn
-                              (counsel-info-apropos--handle-nodes
-                               state node-iter 50)
-                              (counsel-info-apropos-start-timer
-                               state node-iter)))))))
+  (let ((timer-fn
+         (lambda ()
+           (with-local-quit
+             (progn
+               (counsel-info-apropos--handle-nodes state node-iter 50)
+               (counsel-info-apropos-start-timer state node-iter))))))
+    (setq counsel-info-apropos-timer
+          (run-with-timer (/ 4 1000.0) nil timer-fn))))
 
 (defun my-counsel-info-node-for-manual (buf manual &key &optional unwind)
   "Ivy complete an Info node in `MANUAL' using Info buffer `BUF'.
