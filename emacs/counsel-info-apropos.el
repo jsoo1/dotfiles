@@ -1,4 +1,4 @@
-;; my-counsel-info-apropos.el --- Info narrowing search -*- lexical-binding:t -*-
+;; counsel-info-apropos.el --- Info narrowing search -*- lexical-binding:t -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -7,7 +7,7 @@
 (require 'ivy)
 (require 'seq)
 
-(defun my-info-apropos-manuals (buf)
+(defun counsel-info-apropos--manuals (buf)
   "Calculate all known info manuals using fresh buffer `BUF'."
   (when (null Info-directory-list) (info-initialize))
   (with-current-buffer buf
@@ -21,7 +21,7 @@
         (cl-pushnew (match-string 1) manuals :test #'equal))
       manuals)))
 
-(iter-defun my-info-apropos-manual-matches (buf manual)
+(iter-defun counsel-info-apropos-manual--matches (buf manual)
   "Calculate all nodes in `MANUAL' using Info buffer `BUF'."
   (let ((pattern "\n\\* +\\([^\n]*\\(.*?\\)[^\n]*\\):[ \t]+\\([^\n]+\\)\\.\\(?:[ \t\n]*(line +\\([0-9]+\\))\\)?")
         (obuf (current-buffer))
@@ -69,16 +69,13 @@
 (defvar ivy--all-candidates)
 
 (defun counsel-info-apropos--format-candidate (node)
-  "Format `NODE' for display in `MY-COUNSEL-INFO-NODE-FOR-MANUAL'."
+  "Format `NODE' for display in `COUNSEL-INFO-NODE-FOR-MANUAL'."
   (format "%s - %s" (car node) (cadr node)))
 
 (defun counsel-info-apropos--node-match-p (node)
   "Match `NODE' with `RE' or `IVY-REGEX', predicate only."
   (string-match (ivy-re-to-str ivy-regex)
                 (counsel-info-apropos--format-candidate node)))
-
-(defvar counsel-info-apropos-node-history '()
-  "Stores the history of my-counsel-info-node-for-manual.")
 
 (defvar counsel-info-apropos-timer nil
   "A timer used to collect info nodes in the background.")
@@ -121,11 +118,11 @@ Set the ivy collection accordingly."
            (with-local-quit
              (progn
                (counsel-info-apropos--handle-nodes state node-iter 50)
-               (counsel-info-apropos-start-timer state node-iter))))))
+               (counsel-info-apropos--start-timer state node-iter))))))
     (setq counsel-info-apropos-timer
-          (run-with-timer (/ 4 1000.0) nil timer-fn))))
+          (run-at-time (/ 4 1000.0) nil timer-fn))))
 
-(defun my-counsel-info-node-for-manual (buf manual &key &optional unwind)
+(defun counsel-info-node-for-manual (buf manual &key &optional unwind)
   "Ivy complete an Info node in `MANUAL' using Info buffer `BUF'.
 Send `UNWIND' to `IVY-READ' when done."
   (cl-letf (((symbol-function 'ivy--dynamic-collection-cands)
@@ -134,44 +131,49 @@ Send `UNWIND' to `IVY-READ' when done."
     (let* ((ivy-dynamic-exhibit-delay-ms 2)
            (gc-cons-threshold (* 1000 1000 1000 8))
            (state (make-counsel-info-apropos-state))
-           (node-iter (my-info-apropos-manual-matches buf manual)))
+           (node-iter (counsel-info-apropos-manual--matches buf manual))
+           (collection
+            (lambda (_)
+              (seq-filter
+               #'counsel-info-apropos--node-match-p
+               (counsel-info-apropos-state-nodes state))))
+           (action
+            (lambda (selection)
+              (Info-find-node (Info-find-file manual)
+                              (if (listp selection)
+                                  (cadr selection)
+                                "top"))
+              (when (listp selection)
+                (forward-line
+                 (string-to-number (caddr selection))))))
+           (unwind*
+            (lambda ()
+              (when unwind (funcall unwind))
+              (when counsel-info-apropos-timer
+                (cancel-timer counsel-info-apropos-timer))
+              (kill-buffer buf))))
       (counsel-info-apropos--start-timer state node-iter)
-      (ivy-read "Node: " (lambda (_)
-                           (seq-filter
-                            #'counsel-info-apropos--node-match-p
-                            (counsel-info-apropos-state-nodes state)))
+      (ivy-read "Node: " collection
                 :dynamic-collection t
-                :history counsel-info-apropos-node-history
-                :action (lambda (selection)
-                          (Info-find-node (Info-find-file manual)
-                                          (if (listp selection)
-                                              (cadr selection)
-                                            "top"))
-                          (when (listp selection)
-                            (forward-line
-                             (string-to-number (caddr selection)))))
-                :unwind (lambda ()
-                          (when unwind (funcall unwind))
-                          (when counsel-info-apropos-timer
-                            (cancel-timer counsel-info-apropos-timer))
-                          (kill-buffer buf))
-                :caller 'my-counsel-info-node-for-manual))))
+                :action action
+                :unwind unwind*
+                :caller 'counsel-info-node-for-manual))))
 
-(ivy-configure 'my-counsel-info-node-for-manual
+(ivy-configure 'counsel-info-node-for-manual
   :display-transformer-fn #'counsel-info-apropos--format-candidate)
 
-(defun my-counsel-info-manual-apropos ()
+(defun counsel-info-manual-apropos ()
   "Ivy complete an Info manual then nodes in that manual."
   (interactive)
   (let* ((ohist Info-history)
          (ohist-list Info-history-list)
          (buf (get-buffer-create "*my-info-apropos-search*"))
-         (manuals (my-info-apropos-manuals buf))
+         (manuals (counsel-info-apropos--manuals buf))
          (unwind (lambda ()
                    (setq Info-history ohist
                          Info-history-list ohist-list)))
          (action (lambda (manual)
-                   (my-counsel-info-node-for-manual
+                   (counsel-info-node-for-manual
                     buf manual
                     :unwind unwind))))
     (ivy-read "Manual: " manuals
@@ -179,5 +181,5 @@ Send `UNWIND' to `IVY-READ' when done."
               :require-match t
               :caller 'my-counsel-info-manual-apropos)))
 
-(provide 'my-counsel-info-apropos)
-;;; my-counsel-info-apropos ends here
+(provide 'counsel-info-apropos)
+;;; counsel-info-apropos ends here
