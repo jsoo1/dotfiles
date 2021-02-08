@@ -25,11 +25,15 @@
             Info-history-list ohist-list)
       manuals)))
 
+(defun counsel-info-manual--buffer-name (manual)
+  "Name of the `COUNSEL-INFO-APROPOS-FOR-MANUAL' for `MANUAL'."
+  (format "*counsel-info-node-search-%s*" manual))
+
 (iter-defun counsel-info-manual--matches (manual)
   "Calculate all nodes in `MANUAL'."
   (let ((pattern "\n\\* +\\([^\n]*\\(.*?\\)[^\n]*\\):[ \t]+\\([^\n]+\\)\\.\\(?:[ \t\n]*(line +\\([0-9]+\\))\\)?")
         (buf (get-buffer-create
-              (format "*counsel-info-node-search-%s*" manual)))
+              (counsel-info-manual--buffer-name manual)))
         (obuf (current-buffer))
         (opoint (point))
         (ohist Info-history)
@@ -63,7 +67,7 @@
                         (setq inner-buf (current-buffer)
                               inner-point (point))
                         (set-buffer obuf)
-                        (iter-yield `(,entry ,nodename ,line))))
+                        (iter-yield (list manual entry nodename line))))
                     (setq nodes (cdr nodes) node (car nodes)))
                 (progn (Info-goto-node node)
                        (setq current-node Info-current-node
@@ -83,7 +87,9 @@
 
 (defun counsel-info-apropos--format-candidate (node)
   "Format `NODE' for display in `COUNSEL-INFO-NODE-FOR-MANUAL'."
-  (format "%s - %s" (car node) (cadr node)))
+  (pcase node
+    (`(,manual ,entry ,nodename ,_)
+     (format "(%s)%s -- %s" manual nodename entry))))
 
 (defun counsel-info-apropos--node-match-p (node)
   "Match `NODE' with `RE' or `IVY-REGEX', predicate only."
@@ -140,9 +146,6 @@ Run `K' when done."
     (setq counsel-info-apropos-timer
           (run-at-time (/ 4 1000.0) nil timer-fn))))
 
-(seq-map (lambda (m) (cons m (make-counsel-info-manual-state)))
-         (counsel-info-apropos--manuals))
-
 (defun counsel-info-apropos-for-manual (manual)
   "Search for an Info symbol in `MANUAL'."
   (interactive "sManual: ")
@@ -164,14 +167,18 @@ Run `K' when done."
                    (counsel-info-manual-state-nodes state)))
                 :dynamic-collection t
                 :action (lambda (selection)
-                          (Info-find-node (Info-find-file manual)
-                                          (if (listp selection)
-                                              (cadr selection)
-                                            "top"))
-                          (when (listp selection)
-                            (forward-line
-                             (string-to-number (caddr selection)))))
+                          (pcase selection
+                            (`(,manual ,entry ,nodename ,line)
+                             (Info-find-node (Info-find-file manual)
+                                             nodename)
+                             (forward-line (string-to-number line)))
+                            (_ (Info-find-node (Info-find-file manual)
+                                               "top"))))
                 :unwind (lambda ()
+                          (when-let ((search-buf
+                                      (get-buffer
+                                       (counsel-info-manual--buffer-name manual))))
+                            (kill-buffer search-buf))
                           (when counsel-info-apropos-timer
                             (cancel-timer counsel-info-apropos-timer)))
                 :caller 'counsel-info-apropos-for-manual))))
@@ -186,6 +193,50 @@ Run `K' when done."
             :action #'counsel-info-apropos-for-manual
             :require-match t
             :caller 'my-counsel-info-manual-apropos))
+
+(iter-defun counsel-info-apropos--matches (manuals)
+  "Generator that yields all entries in all `MANUALS'."
+  (dolist (manual manuals)
+    (iter-do (node (counsel-info-manual--matches manual))
+      (iter-yield node))
+    (message "Done searching manual: %s" manual))
+  (signal 'iter-end-of-sequence nil))
+
+(defun counsel-info-apropos ()
+  "Search for an Info symbol in all manuals.
+
+If you would rather search in one manual only, use
+`COUNSEL-INFO-MANUAL-APROPOS'."
+  (interactive)
+  (cl-letf (((symbol-function 'ivy--dynamic-collection-cands)
+             (lambda (input)
+               (funcall (ivy-state-collection ivy-last) input))))
+    (let* ((ivy-dynamic-exhibit-delay-ms 2)
+           (gc-cons-threshold (* 1000 1000 1000 8))
+           (state (make-counsel-info-manual-state
+                   :iter (counsel-info-apropos--matches
+                          (counsel-info-apropos--manuals)))))
+      (counsel-info-manual--start-timer
+       state
+       (lambda ()
+         (message "Done searching manuals.")))
+      (ivy-read "Node: "
+                (lambda (_)
+                  (seq-filter
+                   #'counsel-info-apropos--node-match-p
+                   (counsel-info-manual-state-nodes state)))
+                :dynamic-collection t
+                :require-match t
+                :action (pcase-lambda (`(,manual ,_ ,nodename ,line))
+                          (Info-find-node (Info-find-file manual) nodename)
+                          (forward-line (string-to-number line)))
+                :unwind (lambda ()
+                          (when counsel-info-apropos-timer
+                            (cancel-timer counsel-info-apropos-timer)))
+                :caller 'counsel-info-apropos))))
+
+(ivy-configure 'counsel-info-apropos
+  :display-transformer-fn #'counsel-info-apropos--format-candidate)
 
 (provide 'counsel-info-apropos)
 ;;; counsel-info-apropos ends here
