@@ -101,7 +101,7 @@
 
 (cl-defstruct counsel-info-manual-state
   "Holds the current state of `COUNSEL-INFO-APROPOS'."
-  (nodes '())
+  (nodes (make-vector 0 nil))
   iter)
 
 (defun counsel-info-apropos--set-candidates (state candidates)
@@ -109,28 +109,33 @@
 
 Setup ivy apropriately."
   (setf (counsel-info-manual-state-nodes state)
-        (append (counsel-info-manual-state-nodes state) candidates))
+        (vconcat (counsel-info-manual-state-nodes state) candidates))
   (ivy--set-candidates
    (seq-filter #'counsel-info-apropos--node-match-p
                (counsel-info-manual-state-nodes state)))
   (ivy--insert-minibuffer (ivy--format ivy--all-candidates)))
 
-(defun counsel-info-apropos--handle-nodes (state n)
-  "Collect `N' nodes or until done from `NODE-ITER' and append to `STATE' nodes.
+(defun counsel-info-apropos--collect-entries (state &key chunks-of)
+  "Collect `CHUNKS-OF' entries or until done and append to `STATE' nodes.
 
 Set the ivy collection accordingly."
   (let ((node-iter (counsel-info-manual-state-iter state))
-        (buffer '()))
+        (buffer (make-vector chunks-of nil))
+        (i 0))
     (condition-case _
         (let ((node (iter-next node-iter)))
-          (while (< (length buffer) n)
-            (setq buffer (append buffer (list node)))
-            (setq node (iter-next node-iter)))
+          (while (< i chunks-of)
+            (aset buffer i node)
+            (setq node (iter-next node-iter)
+                  i (1+ i)))
           (counsel-info-apropos--set-candidates state buffer)
           'continue)
       (iter-end-of-sequence
        (progn
-         (counsel-info-apropos--set-candidates state buffer)
+         (counsel-info-apropos--set-candidates
+          state (if (eq i chunks-of)
+                    buffer
+                  (apply #'vector (seq-filter #'identity buffer))))
          'done)))))
 
 (defun counsel-info-manual--start-timer (state k)
@@ -140,11 +145,37 @@ Run `K' when done."
   (let ((timer-fn
          (lambda ()
            (with-local-quit
-             (pcase (counsel-info-apropos--handle-nodes state 50)
+             (pcase (counsel-info-apropos--collect-entries
+                     state :chunks-of 50)
                ('continue (counsel-info-manual--start-timer state k))
                ('done (funcall k)))))))
     (setq counsel-info-apropos-timer
           (run-at-time (/ 4 1000.0) nil timer-fn))))
+
+(defun counsel-info-apropos--handle-input (state)
+  "Set ivy candidates according to `STATE'."
+  (lambda (_)
+    (or (ivy-more-chars)
+        (seq-filter #'counsel-info-apropos--node-match-p
+                    (counsel-info-manual-state-nodes state)))))
+
+(defun counsel-info-apropos--goto-selection (selection)
+  "Go to `SELECTION' from `COUNSEL-INFO-APROPOS' variants."
+  (pcase selection
+    (`(,manual ,_ ,nodename ,line)
+     (Info-find-node (Info-find-file manual) nodename)
+     (forward-line (string-to-number line)))))
+
+(defun counsel-info-apropos--cleanup-buffer-for-manual (manual)
+  "Remove search buffer for `MANUAL' if it still exists."
+  (when-let ((search-buf
+              (get-buffer (counsel-info-manual--buffer-name manual))))
+    (kill-buffer search-buf)))
+
+(defun counsel-info-apropos--cleanup-timer ()
+  "Cancels any more timers for `COUNSEL-INFO-APROPOS' variants."
+  (when counsel-info-apropos-timer
+    (cancel-timer counsel-info-apropos-timer)))
 
 (defun counsel-info-apropos-for-manual (manual)
   "Search for an Info symbol in `MANUAL'."
@@ -160,27 +191,16 @@ Run `K' when done."
                    :iter (counsel-info-manual--matches manual))))
       (counsel-info-manual--start-timer
        state (lambda () (message "Done searching manual: %s" manual)))
-      (ivy-read "Node: "
-                (lambda (_)
-                  (seq-filter
-                   #'counsel-info-apropos--node-match-p
-                   (counsel-info-manual-state-nodes state)))
+      (ivy-read "Node: " (counsel-info-apropos--handle-input state)
                 :dynamic-collection t
                 :action (lambda (selection)
                           (pcase selection
-                            (`(,manual ,entry ,nodename ,line)
-                             (Info-find-node (Info-find-file manual)
-                                             nodename)
-                             (forward-line (string-to-number line)))
-                            (_ (Info-find-node (Info-find-file manual)
-                                               "top"))))
+                            ((pred #'listp)
+                             (counsel-info-apropos--goto-selection selection))
+                            (_ (Info-find-node (Info-find-file manual) "top"))))
                 :unwind (lambda ()
-                          (when-let ((search-buf
-                                      (get-buffer
-                                       (counsel-info-manual--buffer-name manual))))
-                            (kill-buffer search-buf))
-                          (when counsel-info-apropos-timer
-                            (cancel-timer counsel-info-apropos-timer)))
+                          (counsel-info-apropos--cleanup-buffer-for-manual manual)
+                          (counsel-info-apropos--cleanup-timer))
                 :caller 'counsel-info-apropos-for-manual))))
 
 (ivy-configure 'counsel-info-apropos-for-manual
@@ -213,26 +233,18 @@ If you would rather search in one manual only, use
                (funcall (ivy-state-collection ivy-last) input))))
     (let* ((ivy-dynamic-exhibit-delay-ms 2)
            (gc-cons-threshold (* 1000 1000 1000 8))
+           (manuals (counsel-info-apropos--manuals))
            (state (make-counsel-info-manual-state
-                   :iter (counsel-info-apropos--matches
-                          (counsel-info-apropos--manuals)))))
+                   :iter (counsel-info-apropos--matches manuals))))
       (counsel-info-manual--start-timer
-       state
-       (lambda ()
-         (message "Done searching manuals.")))
-      (ivy-read "Node: "
-                (lambda (_)
-                  (seq-filter
-                   #'counsel-info-apropos--node-match-p
-                   (counsel-info-manual-state-nodes state)))
+       state (lambda () (message "Done searching manuals.")))
+      (ivy-read "Node: " (counsel-info-apropos--handle-input state)
                 :dynamic-collection t
                 :require-match t
-                :action (pcase-lambda (`(,manual ,_ ,nodename ,line))
-                          (Info-find-node (Info-find-file manual) nodename)
-                          (forward-line (string-to-number line)))
+                :action #'counsel-info-apropos--goto-selection
                 :unwind (lambda ()
-                          (when counsel-info-apropos-timer
-                            (cancel-timer counsel-info-apropos-timer)))
+                          (seq-do #'counsel-info-apropos--cleanup-buffer-for-manual manuals)
+                          (counsel-info-apropos--cleanup-timer))
                 :caller 'counsel-info-apropos))))
 
 (ivy-configure 'counsel-info-apropos
