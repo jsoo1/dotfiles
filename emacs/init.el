@@ -1483,7 +1483,12 @@ Return nil if credentials not found."
   "t" describe-theme
   "v" describe-variable)
 
+(load-file "~/dotfiles/emacs/counsel-info-apropos.el")
+(require 'counsel-info-apropos)
+
 (define-key help-map (kbd "D") my-describe-map)
+(define-key help-map (kbd "i") #'counsel-info-manual-apropos)
+(define-key help-map (kbd "I") #'counsel-info-apropos)
 
 (define-prefix-keymap my-error-map
   "my flycheck keybindings"
