@@ -6,7 +6,7 @@ set -gx PATH "$HOME/.cargo/bin" "$HOME/.local/bin" $PATH
 
 # Emacsclient for EDITOR
 set -xg EDITOR 'emacsclient -t --socket-name=term'
-set -xg ALTERNATE_EDITOR 'neovim'
+set -xg ALTERNATE_EDITOR 'nvim'
 
 # Icecat for BROWSER
 set -xg BROWSER /home/john/.guix-profile/bin/icecat
