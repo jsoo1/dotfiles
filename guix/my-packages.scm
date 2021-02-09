@@ -36,7 +36,7 @@
     "skim"
     "time"
     "tlsdate"
-    "tokei"
+    ;; "tokei"
     "tmux"
     "unzip"))
 
@@ -80,10 +80,11 @@
   '("opam"))
 
 (define-public rust-tools
-  '("rust"
-    "rust:cargo"
-    "rust:rls"
-    "rust:rustfmt"))
+  '("rust@1.46"
+    "rust@1.46:cargo"
+    "rust@1.46:rls"
+    "rust@1.46:rust-analyzer"
+    "rust@1.46:rustfmt"))
 
 (define-public guile-tools
   '("guile"
@@ -118,7 +119,8 @@
     "xwallpaper"))
 
 (define-public emacs-packages
-  '("emacs-anzu"
+  '("emacs-aio"
+    "emacs-anzu"
     "emacs-avy"
     "emacs-cmake-mode"
     "emacs-company"
@@ -140,6 +142,7 @@
     "emacs-elfeed"
     "emacs-elf-mode"
     "emacs-emmet-mode"
+    "emacs-eredis"
     "emacs-eshell-syntax-highlighting"
     "emacs-evil"
     "emacs-evil-anzu"
@@ -176,6 +179,7 @@
     "emacs-nix-mode"
     "emacs-nodejs-repl"
     "emacs-ob-restclient"
+    "emacs-org-mime"
     "emacs-origami-el"
     "emacs-prescient"
     "emacs-projectile"
