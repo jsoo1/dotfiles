@@ -20,6 +20,7 @@
             light
             linux-libre-with-bpf))
  ((gnu packages ncurses) #:select (ncurses))
+ ((gnu packages package-management) #:select (nix))
  ((gnu packages shells) #:select (fish))
  ((gnu packages shellutils) #:select (fzy))
  ((gnu packages ssh) #:select (openssh))
@@ -27,6 +28,7 @@
  ((gnu packages tmux) #:select (tmux))
  ((gnu packages version-control) #:select (git))
  ((gnu packages vim) #:select (neovim))
+ ((gnu packages vpn) #:select (wireguard-tools))
  ((gnu packages web-browsers) #:select (lynx))
  ((gnu packages xdisorg) #:select (xcape xlockmore))
  ((gnu packages xorg)
@@ -62,6 +64,8 @@
             ntp-service-type
             usb-modeswitch-service-type
             wpa-supplicant-service-type))
+ ((gnu services nix)
+  #:select (nix-service-type))
  ((gnu services pm)
   #:select (thermald-configuration
             thermald-service-type
@@ -173,6 +177,7 @@ EndSection\n")
     (dbus-service)
     (service elogind-service-type)
     fontconfig-file-system-service
+    (service nix-service-type)
     (service kmscon-service-type
              (kmscon-configuration
               (virtual-terminal "tty8")
@@ -238,6 +243,7 @@ EndSection\n")
         s)))))
 
 (operating-system
+  ;; (host-name "moon1")
   (host-name "ecenter")
   (timezone "America/Los_Angeles")
   (locale "en_US.utf8")
@@ -250,17 +256,18 @@ EndSection\n")
     (keyboard-layout ctrl-nocaps)))
   (kernel linux-libre-with-bpf)
   (file-systems
-   `(,(file-system
-        (device
-         (uuid "462563db-3f82-44d2-829c-eb2bce9fd0e0" 'ext4))
-        (mount-point "/")
-        (type "ext4"))
-     ,(file-system
-        (device (uuid "60E8-6B6F" 'fat))
-        (mount-point "/boot/efi")
-        (type "vfat"))
-     ,@%base-file-systems))
-  (swap-devices '("/dev/sda7"))
+    (cons* (file-system
+             (mount-point "/boot/efi")
+             (device (uuid "F0B3-65A1" 'fat32))
+             (type "vfat"))
+           (file-system
+             (mount-point "/")
+             (device
+               (uuid "b5fc5dff-5d24-4292-8ea7-933c2a533607"
+                     'ext4))
+             (type "ext4"))
+           %base-file-systems))
+  (swap-devices (list (uuid "7bcddb1d-889b-4cd4-8335-dc7c4a1a358d")))
   (users
    `(,(user-account
        (name "john")
@@ -276,6 +283,10 @@ EndSection\n")
      ,curl ,nss-certs
      ;; essentials
      ,iproute ,git ,openssh ,gnupg ,ncurses
+     ;; vpn
+     ,wireguard-tools
+     ;; work related
+     ,nix
      ;; ???
      ,glibc-utf8-locales
      ;; text editors
