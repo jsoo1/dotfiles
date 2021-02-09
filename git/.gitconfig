@@ -16,6 +16,8 @@
 	signingKey = 5A158FAF406A748A81A9DC4E4F437A76B448A23B
 [alias]
 	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+[init]
+        defaultBranch = release
 [credential]
 	helper = cache
 [log]
