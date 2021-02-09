@@ -133,6 +133,9 @@
           (defun toggle-truncate-lines-on ()
             (toggle-truncate-lines 1)))
 
+;; Timers
+(put 'list-timers 'disabled nil)
+
 ;; Electric pairs
 (electric-pair-mode 1)
 
