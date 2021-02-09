@@ -320,7 +320,6 @@
    (smie-indent-basic . 2)
    (flycheck-rust-cargo-executable . "/home/john/projects/work/projects/bid-server/.bin/cargo")
    (flycheck-rust-clippy-executable . "/home/john/projects/work/projects/bid-server/.bin/cargo")
-   (lsp-rust-rls-server-command . "/home/john/projects/work/projects/bid-server/.bin/rls")
    (projectile-compilation-command . "guix build -f guix.scm")
    (projectile-compilation-command . "cargo build")
    (projectile-test-command . "cargo test")
@@ -986,7 +985,7 @@
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 (setf
  (alist-get 'rust-mode eglot-server-programs)
- '(eglot-rls "/home/john/.guix-profile/bin/rls"))
+ '("/home/john/.guix-profile/bin/rust-analyzer"))
 (evil-define-key 'normal rust-mode-map (kbd ",") 'my-eglot-mode-map)
 (add-hook 'rust-mode-hook #'eglot-ensure)
 (add-hook 'rust-mode-hook #'eldoc-mode)
@@ -1378,7 +1377,7 @@ Return nil if credentials not found."
 
 (define-prefix-keymap my-eglot-find-map
   "Find things with eglot"
-  "g" xref-find-definitions
+  "d" xref-find-definitions
   "r" xref-find-references)
 
 (define-prefix-keymap my-eglot-buffer-map
