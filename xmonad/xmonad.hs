@@ -34,9 +34,7 @@ main :: IO ()
 main = do
   replace
 
-  -- TODO: Fix too many bars without external display
-  nScreens <- countScreens
-  xmobarPipes <- traverse (xmobarCmd nScreens) [1 ..nScreens]
+  xmobarPipe <- xmobarCmd 1 1
 
   xmonad $ docks def
     { terminal = "alacritty"
@@ -52,10 +50,9 @@ main = do
         $ spacingRaw True (Border 5 5 5 5) True (Border 5 5 5 5) True
         $ smartBorders
         $ layoutHook def
-    , logHook = traverse_ myXmobar xmobarPipes
+    , logHook = myXmobar xmobarPipe
     , startupHook = traverse_ spawn
-        [ "xrandr --output HDMI-1 --left-of eDP-1-1 --output eDP-1-1"
-        , "light -S 30.0"
+        [ "light -S 30.0"
         , "compton --config ~/.config/compton/compton.conf"
         , "xwallpaper --zoom ~/Downloads/richter-lucerne.jpg"
         , "xcape -e 'Control_L=Escape'"
@@ -80,6 +77,7 @@ myCommands =
     , void (sendXmobar "Toggle 0") <+> broadcastMessage ToggleStruts <+> refresh
     )
   , ( ( myModMask .|. shiftMask, xK_x ), spawn "xlock -mode rain" )
+  , ( ( myModMask .|. controlMask, xK_4 ), spawn "scrot" )
   , ( ( myModMask, xK_Tab )
     , gotoMenuConfig $ def
       { menuCommand = "dmenu"

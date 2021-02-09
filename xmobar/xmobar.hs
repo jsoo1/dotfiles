@@ -1,5 +1,5 @@
 Config
-  { font = "xft:Iosevka:size=15:light:antialias=true"
+  { font = "xft:Iosevka:size=12:light:antialias=true"
   , additionalFonts = []
   , borderColor = "#002b36"
   , border = BottomB

@@ -72,7 +72,7 @@
 
 (define-public haskell-tools
   '(; "cabal-install" Broken right now
-    "ghc"
+    "ghc@8.6"
     "hlint"
     "hoogle"))
 
