@@ -291,6 +291,14 @@
  :foreground "#586e75"
  :background "unspecified")
 
+;; World times to display
+(setq
+ display-time-world-list '(("America/Los_Angeles" "California")
+                           ("America/New_York" "New York")
+                           ("Europe/Paris" "Central Europe")
+                           ("America/Denver" "Colorado"))
+  display-time-world-time-format "%a, %d %b %I:%M %p %Z")
+
 ;; Byte compile
 (require 'bytecomp)
 (setq byte-compile-warnings t)
