@@ -1413,7 +1413,9 @@ Return nil if credentials not found."
   "i" my-erc-map
   "l" list-processes
   "o" org-agenda
-  "p" proced)
+  "p" proced
+  "t" display-time-world
+  "T" list-timers)
 
 (define-prefix-keymap my-debbugs-modes-map
   "my debbugs modes."
