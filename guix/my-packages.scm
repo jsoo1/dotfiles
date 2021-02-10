@@ -7,7 +7,8 @@
     "coq"
     "idris"
     "ocaml"
-    "purescript"))
+    "purescript"
+    "racket"))
 
 (define-public utilities
   '("aspell"
