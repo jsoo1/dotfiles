@@ -426,9 +426,11 @@
 
 (add-hook 'compilation-mode-hook #'fix-dired-tab-motions)
 
-;; Vinegar
+;; Vinegar and friends
 (define-key evil-normal-state-map "-" #'dired-jump)
 (define-key dired-mode-map "-" #'dired-up-directory)
+(evil-define-key 'normal dired-mode-map "l" #'dired-find-file)
+(evil-define-key 'normal dired-mode-map "h" #'dired-up-directory)
 
 ;; Magit
 (require 'evil-magit)
