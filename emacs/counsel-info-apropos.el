@@ -29,9 +29,10 @@
   "Name of the `COUNSEL-INFO-APROPOS-FOR-MANUAL' for `MANUAL'."
   (format "*counsel-info-node-search-%s*" manual))
 
-(iter-defun counsel-info-manual--matches (manual)
-  "Calculate all nodes in `MANUAL'."
-  (let ((pattern "\n\\* +\\([^\n]*\\(.*?\\)[^\n]*\\):[ \t]+\\([^\n]+\\)\\.\\(?:[ \t\n]*(line +\\([0-9]+\\))\\)?")
+(iter-defun counsel-info-manual--matches (manual pat)
+  "Calculate all nodes in `MANUAL' matching `PAT'."
+  (let ((pattern (format "\n\\* +\\([^\n]*\\(%s\\)[^\n]*\\):[ \t]+\\([^\n]+\\)\\.\\(?:[ \t\n]*(line +\\([0-9]+\\))\\)?"
+                         pat))
         (buf (get-buffer-create
               (counsel-info-manual--buffer-name manual)))
         (obuf (current-buffer))
@@ -138,7 +139,7 @@ Set the ivy collection accordingly."
                   (apply #'vector (seq-filter #'identity buffer))))
          'done)))))
 
-(defun counsel-info-manual--start-timer (state k)
+(defun counsel-info-apropos--start-timer (state k)
   "Start collecting nodes from `NODE-ITER' into `STATE'.
 
 Run `K' when done."
@@ -147,7 +148,7 @@ Run `K' when done."
            (with-local-quit
              (pcase (counsel-info-apropos--collect-entries
                      state :chunks-of 50)
-               ('continue (counsel-info-manual--start-timer state k))
+               ('continue (counsel-info-apropos--start-timer state k))
                ('done (funcall k)))))))
     (setq counsel-info-apropos-timer
           (run-at-time (/ 4 1000.0) nil timer-fn))))
@@ -188,14 +189,14 @@ Run `K' when done."
     (let* ((ivy-dynamic-exhibit-delay-ms 2)
            (gc-cons-threshold (* 1000 1000 1000 8))
            (state (make-counsel-info-manual-state
-                   :iter (counsel-info-manual--matches manual))))
-      (counsel-info-manual--start-timer
+                   :iter (counsel-info-manual--matches manual ".*?"))))
+      (counsel-info-apropos--start-timer
        state (lambda () (message "Done searching manual: %s" manual)))
       (ivy-read "Node: " (counsel-info-apropos--handle-input state)
                 :dynamic-collection t
                 :action (lambda (selection)
                           (pcase selection
-                            ((pred #'listp)
+                            ((pred listp)
                              (counsel-info-apropos--goto-selection selection))
                             (_ (Info-find-node (Info-find-file manual) "top"))))
                 :unwind (lambda ()
@@ -214,10 +215,10 @@ Run `K' when done."
             :require-match t
             :caller 'my-counsel-info-manual-apropos))
 
-(iter-defun counsel-info-apropos--matches (manuals)
+(iter-defun counsel-info-apropos--matches (manuals pat)
   "Generator that yields all entries in all `MANUALS'."
   (dolist (manual manuals)
-    (iter-do (node (counsel-info-manual--matches manual))
+    (iter-do (node (counsel-info-manual--matches manual pat))
       (iter-yield node))
     (message "Done searching manual: %s" manual))
   (signal 'iter-end-of-sequence nil))
@@ -233,12 +234,16 @@ If you would rather search in one manual only, use
                (funcall (ivy-state-collection ivy-last) input))))
     (let* ((ivy-dynamic-exhibit-delay-ms 2)
            (gc-cons-threshold (* 1000 1000 1000 8))
-           (manuals (counsel-info-apropos--manuals))
-           (state (make-counsel-info-manual-state
-                   :iter (counsel-info-apropos--matches manuals))))
-      (counsel-info-manual--start-timer
-       state (lambda () (message "Done searching manuals.")))
-      (ivy-read "Node: " (counsel-info-apropos--handle-input state)
+           (manuals (counsel-info-apropos--manuals)))
+      (ivy-read "Node: "
+                (lambda (in)
+                  (or (ivy-more-chars)
+                      (let ((state (make-counsel-info-manual-state
+                                    :iter (counsel-info-apropos--matches
+                                           manuals (ivy-re-to-str ivy-regex)))))
+                        (counsel-info-apropos--start-timer
+                         state (lambda () "Done searching for: %s" in))
+                        '())))
                 :dynamic-collection t
                 :require-match t
                 :action #'counsel-info-apropos--goto-selection
