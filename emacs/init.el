@@ -395,7 +395,7 @@
 (global-evil-surround-mode 1)
 (evil-commentary-mode)
 (evil-escape-mode)
-(setq-default evil-escape-key-sequence "df")
+(setq-default evil-escape-key-sequence "jk")
 (setq-default evil-escape-unordered-key-sequence 't)
 (global-evil-leader-mode)
 
