@@ -3,7 +3,7 @@
     dmenu = /home/john/.guix-profile/bin/dmenu -p dunst:
     # Fixme
     # icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
-    font = Iosevka Term Slab 16
+    font = Iosevka Term Slab 12
     geometry = "300x5-7+37"
     indicate_hidden = yes
     padding = 8
