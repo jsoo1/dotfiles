@@ -210,7 +210,7 @@ Run `K' when done."
 (defun counsel-info-manual-apropos ()
   "Ivy complete an Info manual then nodes in that manual."
   (interactive)
-  (ivy-read "Manual: " (counsel-info-apropos--manuals)
+  (ivy-read "Manual: " (sort (counsel-info-apropos--manuals) #'string<)
             :action #'counsel-info-apropos-for-manual
             :require-match t
             :caller 'my-counsel-info-manual-apropos))
@@ -234,7 +234,7 @@ If you would rather search in one manual only, use
                (funcall (ivy-state-collection ivy-last) input))))
     (let* ((ivy-dynamic-exhibit-delay-ms 2)
            (gc-cons-threshold (* 1000 1000 1000 8))
-           (manuals (counsel-info-apropos--manuals))
+           (manuals (sort (counsel-info-apropos--manuals) #'string<))
            (cleanup (lambda ()
                       (seq-do #'counsel-info-apropos--cleanup-buffer-for-manual manuals)
                       (counsel-info-apropos--cleanup-timer))))
