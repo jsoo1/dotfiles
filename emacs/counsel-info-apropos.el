@@ -234,22 +234,24 @@ If you would rather search in one manual only, use
                (funcall (ivy-state-collection ivy-last) input))))
     (let* ((ivy-dynamic-exhibit-delay-ms 2)
            (gc-cons-threshold (* 1000 1000 1000 8))
-           (manuals (counsel-info-apropos--manuals)))
+           (manuals (counsel-info-apropos--manuals))
+           (cleanup (lambda ()
+                      (seq-do #'counsel-info-apropos--cleanup-buffer-for-manual manuals)
+                      (counsel-info-apropos--cleanup-timer))))
       (ivy-read "Node: "
                 (lambda (in)
                   (or (ivy-more-chars)
                       (let ((state (make-counsel-info-manual-state
                                     :iter (counsel-info-apropos--matches
-                                           manuals (ivy-re-to-str ivy-regex)))))
+                                           manuals (regexp-quote in)))))
+                        (funcall cleanup)
                         (counsel-info-apropos--start-timer
                          state (lambda () "Done searching for: %s" in))
                         '())))
                 :dynamic-collection t
                 :require-match t
                 :action #'counsel-info-apropos--goto-selection
-                :unwind (lambda ()
-                          (seq-do #'counsel-info-apropos--cleanup-buffer-for-manual manuals)
-                          (counsel-info-apropos--cleanup-timer))
+                :unwind cleanup
                 :caller 'counsel-info-apropos))))
 
 (ivy-configure 'counsel-info-apropos
