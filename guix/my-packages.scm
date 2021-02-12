@@ -57,6 +57,7 @@
     ;; Waiting for https://forum.freecadweb.org/viewtopic.php?t=38982
     ;; "freecad"
     "garcon"
+    "ibm-capsense-usb-util"
     "libnotify"
     "libreoffice"
     "mpv"
@@ -85,7 +86,8 @@
     "rust@1.46:cargo"
     "rust@1.46:rls"
     "rust@1.46:rust-analyzer"
-    "rust@1.46:rustfmt"))
+    "rust@1.46:rustfmt"
+    "rust@1.46:src"))
 
 (define-public guile-tools
   '("guile"
