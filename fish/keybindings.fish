@@ -12,6 +12,10 @@ bind -M insert \ct __fzy_files
 bind \co __fzy_git_repos
 bind -M insert \co __fzy_git_repos
 
+# --------- Lpass ---------
+bind \el fzy_lpass
+bind -M insert \el fzy_lpass
+
 # MIT License for __fzf_parse_commandline and __fzf_get_dir
 # The MIT License (MIT)
 
@@ -134,7 +138,8 @@ function fzy_docker_images -d "Find a docker image"
 end
 
 function fzy_lpass -d "Get a password"
-    lpass ls --color=never \
+    if test (lpass status) = "Not logged in."; lpass login jsoo1@asu.edu; end
+    and lpass ls --color=never \
     | fzy \
     | read -l result
     and echo "$result" \
