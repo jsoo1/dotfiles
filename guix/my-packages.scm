@@ -83,12 +83,12 @@
   '("opam"))
 
 (define-public rust-tools
-  '("rust@1.46"
-    "rust@1.46:cargo"
-    "rust@1.46:rls"
-    "rust@1.46:rust-analyzer"
-    "rust@1.46:rustfmt"
-    "rust@1.46:src"))
+  '("rust@1.48"
+    "rust@1.48:cargo"
+    "rust@1.48:rls"
+    "rust@1.48:rust-analyzer"
+    "rust@1.48:rustfmt"
+    "rust@1.48:src"))
 
 (define-public guile-tools
   '("guile"
