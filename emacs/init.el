@@ -1062,7 +1062,7 @@ Return nil if credentials not found."
    (server :default "localhost")
    (port :default 5432))
  sql-postgres-options
- '("-P" "pager=off" "--tuples-only" "--no-align"))
+ '("-P" "pager=off" "--pset=columns=100"))
 
 (with-eval-after-load 'sql
   (progn
