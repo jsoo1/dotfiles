@@ -27,6 +27,7 @@
     "gdb"
     "global"
     "groff"
+    "lastpass-cli"
     "make"
     "pijul"
     "pinentry"
