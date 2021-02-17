@@ -487,7 +487,8 @@
     (funcall (intern (concat "projectile-" kind "-project")) nil)
     (with-current-buffer (get-buffer "*compilation*")
       (when old-cmd-buffer (kill-buffer old-cmd-buffer))
-      (rename-buffer buffer-name))))
+      (rename-buffer buffer-name))
+    (balance-windows)))
 
 (defun my-switch-to-compile-buffer (kind)
   "Switch to compile buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'."
