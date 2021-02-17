@@ -432,6 +432,9 @@
 (evil-define-key 'normal dired-mode-map "l" #'dired-find-file)
 (evil-define-key 'normal dired-mode-map "h" #'dired-up-directory)
 
+;; Xref
+(evil-define-key 'normal xref--xref-buffer-mode-map (kbd "C-c") xref--xref-buffer-mode-map)
+
 ;; Magit
 (require 'evil-magit)
 (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
