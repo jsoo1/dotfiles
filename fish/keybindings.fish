@@ -132,3 +132,13 @@ function fzy_docker_images -d "Find a docker image"
         and commandline -it -- $result
     end
 end
+
+function fzy_lpass -d "Get a password"
+    lpass ls --color=never \
+    | fzy \
+    | read -l result
+    and echo "$result" \
+    | sed -E 's/^.*id: ([0-9]+)]$/\1/' \
+    | xargs lpass show --color=never \
+    | awk '/^Password:/ { printf "%s", $2 }'
+end
