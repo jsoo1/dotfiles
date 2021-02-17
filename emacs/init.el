@@ -1553,6 +1553,8 @@ Return nil if credentials not found."
   "o" counsel-org-goto-all
   "t" counsel-switch-tab
   "]" evil-jump-to-tag
+  "'" counsel-mark-ring
+  "\"" counsel-evil-marks
   "=" indent-region-or-buffer)
 
 (define-prefix-keymap my-org-map
