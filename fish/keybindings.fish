@@ -13,8 +13,8 @@ bind \co __fzy_git_repos
 bind -M insert \co __fzy_git_repos
 
 # --------- Lpass ---------
-bind \el fzy_lpass
-bind -M insert \el fzy_lpass
+bind \el 'fzy_lpass | xsel -ib'
+bind -M insert \el 'fzy_lpass | xsel -ib'
 
 # MIT License for __fzf_parse_commandline and __fzf_get_dir
 # The MIT License (MIT)
@@ -144,6 +144,6 @@ function fzy_lpass -d "Get a password"
     | read -l result
     and echo "$result" \
     | sed -E 's/^.*id: ([0-9]+)]$/\1/' \
-    | xargs lpass show --color=never \
-    | awk '/^Password:/ { printf "%s", $2 }'
+    | xargs lpass show --color=never --password
+    commandline
 end
