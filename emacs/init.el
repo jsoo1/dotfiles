@@ -732,6 +732,7 @@
 
 ;; Eglot
 (require 'eglot)
+(add-hook 'eglot-managed-mode-hook #'eldoc-mode)
 
 ;; Indentation
 ;; Per http://emacsredux.com/blog/2013/03/27/indent-region-or-buffer/
