@@ -200,6 +200,7 @@
     "emacs-systemd-mode"
     "emacs-terraform-mode"
     "emacs-tuareg"
+    "emacs-uuidgen-el"
     "emacs-vimrc-mode"
     "emacs-web-mode"
     "emacs-wgrep"

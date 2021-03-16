@@ -1546,7 +1546,9 @@ Return nil if credentials not found."
 (define-prefix-keymap my-insert-map
   "my insertion keybindings"
   "c" insert-char
-  "t" (defun insert-iso-8601-string ()
+  "i" (defun insert-uuid-v4 ()
+        (interactive) (uuidgen nil))
+  "t" (defun insert-time-now-as-iso-8601 ()
         (interactive) (insert (iso-8601-string)))
   "u" counsel-unicode-char)
 
