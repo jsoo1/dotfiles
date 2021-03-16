@@ -433,6 +433,8 @@
 
 ;; Xref
 (evil-define-key 'normal xref--xref-buffer-mode-map (kbd "C-c") xref--xref-buffer-mode-map)
+(setq xref-show-definitions-function #'xref--show-defs-minibuffer)
+(setq xref-show-xrefs-function #'xref--show-defs-minibuffer)
 
 ;; Magit
 (require 'evil-magit)
