@@ -138,6 +138,9 @@
 ;; Electric pairs
 (electric-pair-mode 1)
 
+;; Eldoc
+(setq eldoc-echo-area-use-multiline-p t)
+
 ; Elfeed
 (with-eval-after-load 'elfeed
   (progn
