@@ -202,7 +202,7 @@
 ;; https://stackoverflow.com/questions/20167246/emacs-open-buffer-in-vertical-split-by-default
 (setq
  split-height-threshold nil
- split-width-threshold 80)
+ split-width-threshold 160)
 
 ;; Dired
 (setq dired-listing-switches "-al --group-directories-first")
