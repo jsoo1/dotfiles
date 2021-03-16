@@ -1358,7 +1358,7 @@ Return nil if credentials not found."
   "c" 'my-compile-map
   "C" 'my-counsel-map
   "d" 'my-directory-map
-  "e" 'my-error-map
+  "e" 'my-flycheck-map
   "f" 'my-file-map
   "g" 'my-git-map
   "h" help-map
@@ -1508,7 +1508,7 @@ Return nil if credentials not found."
 (define-key help-map (kbd "i") #'counsel-info-manual-apropos)
 (define-key help-map (kbd "I") #'counsel-info-apropos)
 
-(define-prefix-keymap my-error-map
+(define-prefix-keymap my-flycheck-map
   "my flycheck keybindings"
   "b" flycheck-buffer
   "d" flycheck-describe-checker
