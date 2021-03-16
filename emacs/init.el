@@ -296,6 +296,7 @@
 ;; World times to display
 (setq
  display-time-world-list '(("America/Los_Angeles" "California")
+                           ("America/Phoenix" "Phoenix")
                            ("America/New_York" "New York")
                            ("Europe/Paris" "Central Europe")
                            ("America/Denver" "Colorado"))
