@@ -1394,6 +1394,7 @@ Return nil if credentials not found."
 (define-prefix-keymap my-eglot-find-map
   "Find things with eglot"
   "d" xref-find-definitions
+  "D" xref-find-definitions-other-window
   "r" xref-find-references)
 
 (define-prefix-keymap my-eglot-buffer-map
