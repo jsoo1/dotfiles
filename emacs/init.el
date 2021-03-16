@@ -1415,7 +1415,7 @@ Return nil if credentials not found."
   "e" my-flymake-map
   "g" my-eglot-find-map
   "f" eglot-format
-  "h" eglot-help-at-point
+  "h" eldoc-doc-buffer
   "r" eglot-rename
   "X" eglot-signal-didChangeConfiguration)
 
