@@ -171,6 +171,7 @@
     "emacs-guix"
     "emacs-haskell-mode"
     "emacs-haskell-snippets"
+    "emacs-helpful"
     "emacs-ibuffer-projectile"
     "emacs-idris-mode"
     "emacs-imenu-list"

@@ -1494,13 +1494,13 @@ Return nil if credentials not found."
   "a" counsel-apropos
   "b" describe-bindings
   "c" describe-char
-  "f" describe-function
+  "f" helpful-function
   "F" counsel-describe-face
-  "k" describe-key
+  "k" helpful-key
   "m" describe-mode
   "s" describe-symbol
   "t" describe-theme
-  "v" describe-variable)
+  "v" helpful-variable)
 
 (load-file "~/dotfiles/emacs/counsel-info-apropos.el")
 (require 'counsel-info-apropos)
@@ -1508,6 +1508,9 @@ Return nil if credentials not found."
 (define-key help-map (kbd "D") my-describe-map)
 (define-key help-map (kbd "i") #'counsel-info-manual-apropos)
 (define-key help-map (kbd "I") #'counsel-info-apropos)
+(define-key help-map (kbd "f") #'helpful-function)
+(define-key help-map (kbd "v") #'helpful-variable)
+(define-key help-map (kbd "k") #'helpful-key)
 
 (define-prefix-keymap my-flycheck-map
   "my flycheck keybindings"
