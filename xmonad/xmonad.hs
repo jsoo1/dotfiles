@@ -1,13 +1,15 @@
-{-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE TupleSections   #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE RecordWildCards  #-}
+{-# LANGUAGE TupleSections    #-}
 
 
 module Main where
 
-import           Control.Monad                    (join, unless, void)
+import           Control.Monad                    (join, unless, void, when)
 import           Data.Coerce                      (coerce)
 import           Data.Foldable                    (traverse_)
 import           Data.Function                    (on)
+import           Data.List                        (isPrefixOf)
 import qualified Data.Map.Strict                  as Map
 import           Data.Maybe                       (listToMaybe)
 import qualified DBus
@@ -17,11 +19,13 @@ import           System.IO
 import           XMonad
 import           XMonad.Actions.CycleWS           (WSType (..), moveTo, shiftTo)
 import           XMonad.Actions.WindowBringer
+import           XMonad.Config.Prime              (liftIO)
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Layout.IndependentScreens (countScreens)
 import           XMonad.Layout.NoBorders          (smartBorders)
 import           XMonad.Layout.Spacing
+import           XMonad.Layout.ThreeColumns       (ThreeCol (..))
 import qualified XMonad.StackSet                  as W
 import           XMonad.Util.EZConfig             (additionalKeys)
 import           XMonad.Util.NamedWindows
@@ -46,10 +50,7 @@ main = do
     , handleEventHook = handleEventHook def <+> docksEventHook
     , manageHook = manageDocks <+> manageHook def
     , layoutHook =
-        avoidStruts
-        $ spacingRaw True (Border 5 5 5 5) True (Border 5 5 5 5) True
-        $ smartBorders
-        $ layoutHook def
+        gaps 5 5 (ThreeColMid 1 (3/100) (1/2) ||| layoutHook def)
     , logHook = myXmobar xmobarPipe
     , startupHook = traverse_ spawn
         [ "light -S 30.0"
@@ -59,6 +60,17 @@ main = do
         ]
     }
     `additionalKeys` myCommands
+
+-- ============== Layouts ==============
+
+gaps screenGap windowGap = avoidStruts
+  . spacingRaw
+      True
+      (Border screenGap screenGap screenGap screenGap)
+      True
+      (Border windowGap windowGap windowGap windowGap)
+      True
+  . smartBorders
 
 -- ============== Keybindings ==============
 
