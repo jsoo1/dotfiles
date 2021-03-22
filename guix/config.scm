@@ -207,8 +207,7 @@ EndSection\n")
     (service qemu-binfmt-service-type
              (qemu-binfmt-configuration
               (platforms
-               (lookup-qemu-platforms "arm" "aarch64" "mips64el"))
-              (guix-support? #t)))
+               (lookup-qemu-platforms "arm" "aarch64" "mips64el"))))
     (udisks-service)
     (service usb-modeswitch-service-type)
     (service wpa-supplicant-service-type)
