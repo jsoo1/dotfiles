@@ -1719,15 +1719,13 @@ Return nil if credentials not found."
           (defun envrc-reload-or-clear ()
             (interactive)
             (require 'envrc)
+            (envrc--clear (current-buffer))
             (condition-case nil
                 (envrc--with-required-current-env env-dir
                   (when (string= (envrc--find-env-dir) env-dir)
-                    (message "Refreshing %s in env %s" (buffer-name) env-dir)
-                    (envrc--update)))
+                    (envrc--update)
+                    (message "Refreshed %s in env %s" (buffer-name) env-dir)))
               (user-error
-               (progn
-                 (message "Unloading env for %s" (buffer-name))
-                 (envrc--clear (current-buffer)))))))
-
+               (message "Unloaded env for %s" (buffer-name))))))
 
 ;;; init.el ends here
