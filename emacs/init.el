@@ -168,12 +168,6 @@
            (require 'fish-completion nil t))
   (global-fish-completion-mode))
 
-(add-hook 'eshell-directory-change-hook
-          (defun envrc-reload-or-clear ()
-            (interactive)
-            (condition-case nil (envrc-reload)
-              (user-error (envrc--clear (current-buffer))))))
-
 (setq initial-buffer-choice (lambda () (get-buffer-create "*eshell*"))
       eshell-highlight-prompt nil
       eshell-prompt-regexp "^[^λ]* [λ] "
@@ -1720,5 +1714,19 @@ Return nil if credentials not found."
 ;; Envrc and Direnv
 ;; Should be setup as late as possible.
 (envrc-global-mode)
+(add-hook 'eshell-directory-change-hook
+          (defun envrc-reload-or-clear ()
+            (interactive)
+            (require 'envrc)
+            (condition-case nil
+                (envrc--with-required-current-env env-dir
+                  (when (string= (envrc--find-env-dir) env-dir)
+                    (message "Refreshing %s in env %s" (buffer-name) env-dir)
+                    (envrc--update)))
+              (user-error
+               (progn
+                 (message "Unloading env for %s" (buffer-name))
+                 (envrc--clear (current-buffer)))))))
+
 
 ;;; init.el ends here
