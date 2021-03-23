@@ -168,7 +168,11 @@
            (require 'fish-completion nil t))
   (global-fish-completion-mode))
 
-(add-hook 'eshell-directory-change-hook #'direnv-update-directory-environment)
+(add-hook 'eshell-directory-change-hook
+          (defun envrc-reload-or-clear ()
+            (interactive)
+            (condition-case nil (envrc-reload)
+              (user-error (envrc--clear (current-buffer))))))
 
 (setq initial-buffer-choice (lambda () (get-buffer-create "*eshell*"))
       eshell-highlight-prompt nil
@@ -363,9 +367,6 @@
     . (lambda (argv)
         (append (list "env" "NO_COLOR=true") argv)))
    (projectile-compilation-command . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix ")))
-
-;; Direnv
-(direnv-mode)
 
 ;; Info
 (with-eval-after-load 'Info-mode
@@ -1711,5 +1712,9 @@ Return nil if credentials not found."
 (with-current-buffer (get-buffer "*Messages*") (normal-mode))
 
 (setq gc-cons-threshold (* 2 1000 1000))
+
+;; Envrc and Direnv
+;; Should be setup as late as possible.
+(envrc-global-mode)
 
 ;;; init.el ends here
