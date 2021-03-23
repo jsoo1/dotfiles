@@ -338,6 +338,7 @@
    (haskell-stylish-on-save . t)
    (haskell-stylish-on-save . nil)
    (projectile-project-root . "/home/john/projects/work/projects/sqlx/")
+   (projectile-project-root . "/home/john/projects/work/projects/impressions-research/")
    (projectile-project-root . "/home/john/projects/work/projects/actix-slog/")
    (projectile-project-root . "/home/john/projects/work/projects/docker-rust/")
    (projectile-project-root . "/home/john/projects/xml-types-xmlbf/")
