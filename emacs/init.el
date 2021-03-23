@@ -381,6 +381,9 @@
 ;; Eshell syntax highlighting
 (eshell-syntax-highlighting-global-mode 1)
 
+;; Undo-Tree
+(global-undo-tree-mode)
+
 ;; Evil
 (global-set-key (kbd "<escape>") #'keyboard-escape-quit)
 (setq evil-want-C-u-scroll t
@@ -1565,6 +1568,7 @@ Return nil if credentials not found."
   "l" avy-goto-line
   "o" counsel-org-goto-all
   "t" counsel-switch-tab
+  "u" undo-tree-visualize
   "]" evil-jump-to-tag
   "'" counsel-mark-ring
   "\"" counsel-evil-marks
