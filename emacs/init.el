@@ -1512,7 +1512,7 @@ Return nil if credentials not found."
 (define-key help-map (kbd "D") my-describe-map)
 (define-key help-map (kbd "i") #'counsel-info-manual-apropos)
 (define-key help-map (kbd "I") #'counsel-info-apropos)
-(define-key help-map (kbd "f") #'helpful-function)
+(define-key help-map (kbd "f") #'helpful-symbol)
 (define-key help-map (kbd "v") #'helpful-variable)
 (define-key help-map (kbd "k") #'helpful-key)
 
