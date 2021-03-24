@@ -1043,25 +1043,6 @@ Return nil if credentials not found."
 (setq
  sql-password-wallet auth-sources
  sql-password-search-wallet-function #'my-sql-password-from-auth-source
- sql-connection-alist
- `((impressions
-    (sql-product 'postgres)
-    (sql-port 5432)
-    (sql-server "localhost")
-    (sql-database "impression")
-    (sql-user "john"))
-   (serverbid
-    (sql-product 'postgres)
-    (sql-database "serverbid")
-    (sql-user "p4N1IhpmSYV9")
-    (sql-server "localhost")
-    (sql-port 54320))
-   (kitchen
-    (sql-product 'mysql)
-    (sql-user "justin")
-    (sql-database "ad_stats")
-    (sql-port 33060)
-    (sql-server "127.0.0.1")))
  sql-postgres-login-params
  '((user :default "john")
    (server :default "localhost")
