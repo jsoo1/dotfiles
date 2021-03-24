@@ -85,6 +85,7 @@ myCommands =
     , dmenuGitDirs >>= \dir -> unless (null dir) $ tmuxNewSession dir
     )
   , ( ( myModMask, xK_u ) , spawn "/home/john/.local/bin/clipmenu -p clipboard" )
+  , ( ( myModMask, xK_l ) , dmenuLPass )
   , ( ( myModMask .|. controlMask, xK_f)
     , void (sendXmobar "Toggle 0") <+> broadcastMessage ToggleStruts <+> refresh
     )
@@ -141,6 +142,30 @@ dmenuGitDirs =
   ]
   ""
 
+
+dmenuLPass :: X ()
+dmenuLPass = do
+  -- login <- runProcessWithInput "bash" [ "-c", "lpass status" ] ""
+  -- when ("Not logged in." `isPrefixOf` login) $ do
+  --   runProcessWithInput "lpass" [ "login", "jsoo1@asu.edu" ] ""
+
+  -- passes <- runProcessWithInput "lpass" [ "ls" , "--color=never" ] ""
+  -- choice <- runProcessWithInput "bash"
+  --           [ "-c", "dmenu -F -p password \
+  --            \| sed -E 's/^.*id: ([0-9]+)]$/\1/'"
+  --           ]
+  --           passes
+  -- liftIO (print choice)
+  -- unless (null choice) $ void $ runProcessWithInput "bash"
+  --   [ "-c"
+  --   , "-i"
+  --   , "lpass show --color=never " <> choice
+  --     <> "| awk '/^Password:/ { printf \"%s\", $2 }' \
+  --        \| xsel -ib"
+  --   ]
+  --   ""
+  choice <- runProcessWithInput "bash" [ "-c", "lpass ls --color=never | dmenu -p password" ] ""
+  liftIO (print choice)
 
 tmuxNewSession :: String -> X ()
 tmuxNewSession fullPath = do
