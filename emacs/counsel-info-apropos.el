@@ -7,24 +7,6 @@
 (require 'ivy)
 (require 'seq)
 
-(defun counsel-info-apropos--manuals ()
-  "Calculate all known info manuals using fresh buffer `BUF'."
-  (when (null Info-directory-list) (info-initialize))
-  (with-temp-buffer
-    (let ((Info-fontify-maximum-menu-size nil)
-          (ohist Info-history)
-          (ohist-list Info-history-list)
-          (manuals '()))
-      (Info-mode)
-      (Info-find-node-2 "dir" "top")
-      (goto-char (point-min))
-      (re-search-forward "\\* Menu: *\n" nil t)
-      (while (re-search-forward "\\*.*: *(\\([^)]+\\))" nil t)
-        (cl-pushnew (match-string 1) manuals :test #'equal))
-      (setq Info-history ohist
-            Info-history-list ohist-list)
-      manuals)))
-
 (defun counsel-info-manual--buffer-name (manual)
   "Name of the `COUNSEL-INFO-APROPOS-FOR-MANUAL' for `MANUAL'."
   (format "*counsel-info-node-search-%s*" manual))
@@ -210,7 +192,7 @@ Run `K' when done."
 (defun counsel-info-manual-apropos ()
   "Ivy complete an Info manual then nodes in that manual."
   (interactive)
-  (ivy-read "Manual: " (sort (counsel-info-apropos--manuals) #'string<)
+  (ivy-read "Manual: " (sort (info--manual-names nil) #'string<)
             :action #'counsel-info-apropos-for-manual
             :require-match t
             :caller 'my-counsel-info-manual-apropos))
@@ -234,7 +216,7 @@ If you would rather search in one manual only, use
                (funcall (ivy-state-collection ivy-last) input))))
     (let* ((ivy-dynamic-exhibit-delay-ms 2)
            (gc-cons-threshold (* 1000 1000 1000 8))
-           (manuals (sort (counsel-info-apropos--manuals) #'string<))
+           (manuals (sort (info--manual-names nil) #'string<))
            (cleanup (lambda ()
                       (seq-do #'counsel-info-apropos--cleanup-buffer-for-manual manuals)
                       (counsel-info-apropos--cleanup-timer))))
