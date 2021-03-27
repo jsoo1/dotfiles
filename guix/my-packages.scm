@@ -144,6 +144,7 @@
     "emacs-eglot"
     "emacs-elfeed"
     "emacs-elf-mode"
+    "emacs-elpher"
     "emacs-emmet-mode"
     "emacs-envrc"
     "emacs-eredis"

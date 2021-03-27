@@ -758,11 +758,18 @@
 ;; Debbugs
 (setq debbugs-gnu-all-packages '("emacs" "guix" "guix-patches"))
 (setq debbugs-gnu-default-packages '("guix" "guix-patches"))
-;; Slightly broken, but hey
 (add-hook
  'debbugs-gnu-mode-hook
  (defun make-debbugs-gnu-ctrl-c-map ()
+   (evil-local-set-key 'normal (kbd ",") debbugs-gnu-mode-map)
    (local-set-key (kbd "C-c") debbugs-gnu-mode-map)))
+
+;; Elpher
+(require 'elpher)
+(add-hook 'elpher-mode-hook
+          (defun make-elpher-ctrl-c-map ()
+            (evil-local-set-key 'motion (kbd ",") elpher-mode-map)
+            (local-set-key (kbd "C-c") elpher-mode-map)))
 
 ;; Restclient
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
@@ -1407,6 +1414,7 @@ Return nil if credentials not found."
   "e" gnus
   "f" elfeed
   "g" guix
+  "G" elpher-go
   "i" my-erc-map
   "l" list-processes
   "o" org-agenda
