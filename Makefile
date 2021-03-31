@@ -1,23 +1,29 @@
 XDG_HOME ?= $(HOME)/.config
 
+HOME_DIRS = \
+	. \
+	.emacs.d \
+	.emacs.d/eshell \
+	.gnupg \
+	.local/share/applications \
+	.tmux \
+	.xmonad
+
+XDG_HOME_DIRS = \
+	alacritty \
+	compton \
+	dunst \
+	fish \
+	git \
+	guix \
+	lynx \
+	shepherd \
+	xmobar \
+	zathura
+
 DIRS = \
-	$(HOME) \
-	$(HOME)/.emacs.d \
-	$(HOME)/.emacs.d/eshell \
-	$(HOME)/.gnupg \
-	$(HOME)/.local/share/applications \
-	$(XDG_HOME)/alacritty \
-	$(XDG_HOME)/compton \
-	$(XDG_HOME)/dunst \
-	$(XDG_HOME)/fish \
-	$(XDG_HOME)/git \
-	$(XDG_HOME)/guix \
-	$(XDG_HOME)/lynx \
-	$(XDG_HOME)/shepherd \
-	$(HOME)/.tmux \
-	$(XDG_HOME)/xmobar \
-	$(HOME)/.xmonad \
-	$(XDG_HOME)/zathura
+	$(foreach dir,$(HOME_DIRS),$(HOME)/$(dir)) \
+	$(foreach dir,$(XDG_HOME_DIRS),$(XDG_HOME)/$(dir))
 
 SYMLINKS = \
 	$(HOME)/.profile \
