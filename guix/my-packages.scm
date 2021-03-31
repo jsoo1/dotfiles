@@ -99,6 +99,7 @@
 (define-public pdf-tools
   '("texlive"
     "zathura"
+    "zathura-ps"
     "zathura-pdf-mupdf"))
 
 (define-public xorg-tools
