@@ -85,7 +85,7 @@ myCommands =
     , dmenuGitDirs >>= \dir -> unless (null dir) $ tmuxNewSession dir
     )
   , ( ( myModMask, xK_u ) , spawn "/home/john/.local/bin/clipmenu -p clipboard" )
-  , ( ( myModMask, xK_l ) , dmenuLPass )
+  , ( ( myModMask .|. shiftMask , xK_l ) , dmenuLPass )
   , ( ( myModMask .|. controlMask, xK_f)
     , void (sendXmobar "Toggle 0") <+> broadcastMessage ToggleStruts <+> refresh
     )
