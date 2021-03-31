@@ -33,7 +33,7 @@
       vc-follow-symlinks 't)
 (setq-default truncate-lines 't)
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
-(add-to-list 'default-frame-alist '(font . "Iosevka 18"))
+(add-to-list 'default-frame-alist '(font . "Iosevka 12"))
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -43,6 +43,11 @@
   (tool-bar-mode -1))
 (when (fboundp #'toggle-scroll-bar)
   (toggle-scroll-bar -1))
+(defun disable-scroll-bars (frame)
+  (modify-frame-parameters frame
+                           '((vertical-scroll-bars . nil)
+                             (horizontal-scroll-bars . nil))))
+(add-hook 'after-make-frame-functions #'disable-scroll-bars)
 
 ;; No tabs
 (setq-default indent-tabs-mode nil)
@@ -61,7 +66,7 @@
   (global-set-key (kbd "<mouse-5>") 'scroll-up-line))
 
 ;; Font
-(set-face-attribute 'default t :font "Iosevka 18")
+(set-face-attribute 'default t :font "Iosevka 12")
 
 ;; Custom
 (setq custom-file "/dev/null")
@@ -1166,6 +1171,10 @@ Return nil if credentials not found."
 (require 'solarized)
 (require 'solarized-dark-theme)
 (load-theme 'solarized-dark t)
+
+;; Transparency in gui
+(set-frame-parameter (selected-frame) 'alpha '(80 . 50))
+(add-to-list 'default-frame-alist '(alpha . (80 . 50)))
 
 ;; Transparency in terminal
 (defun my-make-frame-transparent (frame)
