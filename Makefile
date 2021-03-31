@@ -1,5 +1,4 @@
 XDG_HOME ?= $(HOME)/.config
-MODPROBE = /run/modprobe.d
 
 DIRS = \
 	$(HOME) \
@@ -53,19 +52,11 @@ SYMLINKS = \
 	$(HOME)/.xmonad/xmonad.hs \
 	$(XDG_HOME)/zathura/zathurarc
 
-MODULES = \
-	$(MODPROBE)/ath9k.conf \
-	$(MODPROBE)/blacklist.conf \
-	$(MODPROBE)/default.conf
-
 ln = ln -s
 
 # ----------- top level commands -------------
 .PHONY: install
 install: | $(SYMLINKS) ## Install $(SYMLINKS) to $HOME (default)
-
-.PHONY: modules
-modules: $(MODPROBE) ## Install $(MODULES) to $(MODPROBE). Probably don't apply to you.
 
 .PHONY: help
 help:
@@ -138,18 +129,6 @@ $(XDG_HOME)/guix/channels.scm: | $(XDG_HOME)/guix ## Guix channel specification
 $(XDG_HOME)/lynx/lynx.cfg: | $(XDG_HOME)/lynx ## Lynx configuration
 	$(ln) $(PWD)/lynx/lynx.cfg $@
 
-$(MODPROBE)/ath9k.conf: $(PWD)/modprobe.d/ath9k.conf | $(MODPROBE) ## Module for ath9k wireless card
-	sudo cp $< $@
-	sudo chown root $@
-
-$(MODPROBE)/blacklist.conf: $(PWD)/modprobe.d/blacklist.conf | $(MODPROBE) ## Module to blacklist breaking hardware
-	sudo cp $< $@
-	sudo chown root $@
-
-$(MODPROBE)/default.conf: $(PWD)/modprobe.d/default.conf | $(MODPROBE) ## Modules by for audio configuration and more
-	sudo cp $< $@
-	sudo chown root $@
-
 $(HOME)/.psqlrc: | $(HOME) ## psql configuration
 	$(ln) $(PWD)/psql/.psqlrc $@
 
@@ -179,7 +158,3 @@ $(XDG_HOME)/zathura/zathurarc: | $(XDG_HOME)/zathura ## Zathura configuration
 
 $(DIRS): ## Make sure containing directories exist
 	mkdir -p $@
-
-$(MODPROBE): ## Create a modprobe directory
-	sudo mkdir -p $@
-	sudo chown root $@
