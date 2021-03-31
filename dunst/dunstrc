@@ -16,6 +16,8 @@
     show_indicators = yes
     sticky_history = yes
     history_length = 20
+    max_icon_size = 24
+
 
 [shortcuts]
     close = ctrl+space
