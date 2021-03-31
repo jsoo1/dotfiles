@@ -346,6 +346,7 @@
    (projectile-project-root . "/home/john/projects/work/projects/impressions-research/")
    (projectile-project-root . "/home/john/projects/work/projects/actix-slog/")
    (projectile-project-root . "/home/john/projects/work/projects/docker-rust/")
+   (projectile-project-root . "/home/john/projects/elpher/")
    (projectile-project-root . "/home/john/projects/xml-types-xmlbf/")
    (projectile-project-root . "/home/john/projects/work/")
    (projectile-project-root . "/home/john/projects/fish-shell/")
