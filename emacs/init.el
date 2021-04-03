@@ -294,15 +294,15 @@
 (setq
  display-time-world-list '(("America/Los_Angeles" "California")
                            ("America/Phoenix" "Phoenix")
+                           ("America/Denver" "Colorado")
                            ("America/New_York" "New York")
-                           ("Europe/Paris" "Central Europe")
-                           ("America/Denver" "Colorado"))
- display-time-world-time-format "%a, %d %b %I:%M %p %Z")
 
 ;; Byte compile
 (require 'bytecomp)
 (setq byte-compile-warnings t)
 (setq byte-compile-error-on-warn nil)
+                           ("Europe/Paris" "Central Europe"))
+ display-time-world-time-format "%a, %b %d %I:%M%p %Z")
 
 ;; Backups, lockfiles, auto-saves, local variables
 (setq
