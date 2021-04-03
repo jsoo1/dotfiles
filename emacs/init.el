@@ -619,7 +619,7 @@
   "Get the next line number after `CURR'."
   (pcase curr
     ('absolute 'relative)
-    ('relative 'nil)
+    ('relative nil)
     (_ 'absolute)))
 
 ;; Which key
