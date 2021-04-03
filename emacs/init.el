@@ -296,11 +296,6 @@
                            ("America/Phoenix" "Phoenix")
                            ("America/Denver" "Colorado")
                            ("America/New_York" "New York")
-
-;; Byte compile
-(require 'bytecomp)
-(setq byte-compile-warnings t)
-(setq byte-compile-error-on-warn nil)
                            ("Europe/Paris" "Central Europe"))
  display-time-world-time-format "%a, %b %d %I:%M%p %Z")
 
