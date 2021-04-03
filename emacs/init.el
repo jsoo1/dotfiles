@@ -251,15 +251,15 @@
  :background "unspecified")
 (set-face-attribute
  diredfl-read-priv nil
- :foreground "#2aa198"
+ :foreground "#839496"
  :background "unspecified")
 (set-face-attribute
  diredfl-write-priv nil
- :foreground "#d33682"
+ :foreground "#2aa198"
  :background "unspecified")
 (set-face-attribute
  diredfl-exec-priv nil
- :foreground  "#dc322f"
+ :foreground  "#d33682"
  :background "unspecified")
 (set-face-attribute
  diredfl-rare-priv nil
