@@ -801,11 +801,8 @@
      'proof-locked-face nil
      :underline nil
      :background "#073642")
-
     (add-hook 'coq-mode-hook #'company-coq-mode)
-
     (define-key coq-mode-map (kbd "C-c RET") #'proof-goto-point)))
-
 
 ;; Haskell mode
 (require 'haskell-interactive-mode)
