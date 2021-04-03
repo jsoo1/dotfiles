@@ -342,23 +342,6 @@
    (eglot-connect-timeout . nil)
    (haskell-stylish-on-save . t)
    (haskell-stylish-on-save . nil)
-   (projectile-project-root . "/home/john/projects/work/projects/sqlx/")
-   (projectile-project-root . "/home/john/projects/work/projects/impressions-research/")
-   (projectile-project-root . "/home/john/projects/work/projects/actix-slog/")
-   (projectile-project-root . "/home/john/projects/work/projects/docker-rust/")
-   (projectile-project-root . "/home/john/projects/elpher/")
-   (projectile-project-root . "/home/john/projects/xml-types-xmlbf/")
-   (projectile-project-root . "/home/john/projects/work/")
-   (projectile-project-root . "/home/john/projects/fish-shell/")
-   (projectile-project-root . "/home/john/projects/wlroots/")
-   (projectile-project-root . "/home/john/projects/feed-xmlbf/")
-   (projectile-project-root . "/home/john/projects/guix/")
-   (projectile-project-root . "/home/john/projects/work/projects/vast/")
-   (projectile-project-root . "/home/john/projects/work/projects/bid-server/")
-   (projectile-project-root . "/home/john/projects/psc-ide-emacs/")
-   (projectile-project-root . "/home/john/projects/haskell-mode/")
-   (projectile-project-root . "/home/john/projects/nyacc/")
-   (projectile-project-root . "/home/john/projects/work/projects/Prebid.js/")
    (haskell-mode-stylish-haskell-args . '("--ghc-opt TypeApplications"))
    (projectile-compilation-command . "guix environment --ad-hoc openssl libuv mysql cassandra-cpp postgresql pkg-config gcc-toolchain -- env CC=gcc cargo build")
    (projectile-test-command . "guix environment --ad-hoc openssl libuv mysql cassandra-cpp postgresql pkg-config gcc-toolchain -- env CC=gcc cargo test")
@@ -458,10 +441,11 @@
       projectile-indexing-method 'hybrid
       projectile-enable-caching 't
       projectile-project-search-path "~/projects/"
-      projectile-project-root-files-functions '(projectile-root-local
-                                                projectile-root-top-down-recurring
-                                                projectile-root-top-down
-                                                projectile-root-bottom-up))
+      projectile-project-root-files-functions (list #'projectile-root-local
+                                                    #'projectile-root-top-down-recurring
+                                                    #'projectile-root-top-down
+                                                    #'projectile-root-bottom-up)
+      projectile-ignored-projects '("~" "~/projects/work"))
 
 
 ;; IBuffer
