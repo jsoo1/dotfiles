@@ -415,7 +415,7 @@
 
 ;; Magit
 (require 'evil-magit)
-(setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
+(setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
 
 ;; Projectile
 (projectile-mode +1)
