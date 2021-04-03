@@ -432,6 +432,7 @@
 
 ;; IBuffer
 (defun my-set-ibuffer-filter-groups ()
+  "Create my ibuffer filter groupings."
   (ibuffer-projectile-set-filter-groups)
   (setq
    ibuffer-filter-groups
