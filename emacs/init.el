@@ -169,7 +169,7 @@
       eshell-prompt-regexp "^[^λ]* [λ] "
       eshell-banner-message ""
       eshell-prompt-function
-      (lambda ()
+      (defun make-my-eshell-prompt ()
         (concat
          (propertize (eshell/whoami) 'face `(:foreground "#93a1a1"))
          " "
