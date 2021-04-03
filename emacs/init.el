@@ -146,7 +146,7 @@
 ;; Eldoc
 (setq eldoc-echo-area-use-multiline-p t)
 
-; Elfeed
+;; Elfeed
 (with-eval-after-load 'elfeed
   (progn
     (define-key elfeed-search-mode-map (kbd "C-l") elfeed-load-map)
@@ -306,7 +306,7 @@
                            ("America/New_York" "New York")
                            ("Europe/Paris" "Central Europe")
                            ("America/Denver" "Colorado"))
-  display-time-world-time-format "%a, %d %b %I:%M %p %Z")
+ display-time-world-time-format "%a, %d %b %I:%M %p %Z")
 
 ;; Byte compile
 (require 'bytecomp)
@@ -547,9 +547,9 @@
 (defvar on-my-org-repo-dir nil)
 (defun on-my-org-repo (repo-dir ref cb)
   "Perform `CB' on the org directories of `REPO-DIR' at git `REF'."
-  ; (assert (stringp repo-dir))
-  ; (assert (stringp ref))
-  ; (assert (functionp cb))
+  ;; (assert (stringp repo-dir))
+  ;; (assert (stringp ref))
+  ;; (assert (functionp cb))
   (setq on-my-org-callback cb)
   (setq on-my-org-repo-dir repo-dir)
   (let ((default-directory repo-dir))
@@ -667,7 +667,7 @@
 (define-key compilation-mode-map (kbd "C-c C-l") #'recompile)
 (add-hook 'compilation-mode-hook
           (defun toggle-truncate-lines-off ()
-               (toggle-truncate-lines -1)))
+            (toggle-truncate-lines -1)))
 
 ;; Comint
 (define-key comint-mode-map (kbd "C-c C-k" ) #'comint-clear-buffer)
@@ -794,7 +794,7 @@
             (setq-local
              imenu-generic-expression
              (cons '("Keymap" "^(define-prefix-keymap\\s-+\\([a-z-]+\\)" 1)
-              imenu-generic-expression))))
+                   imenu-generic-expression))))
 
 ;; JavaScript
 (require 'nodejs-repl)
@@ -820,9 +820,9 @@
 (with-eval-after-load 'coq
   (progn
     (set-face-attribute
-    'proof-locked-face nil
-    :underline nil
-    :background "#073642")
+     'proof-locked-face nil
+     :underline nil
+     :background "#073642")
 
     (add-hook 'coq-mode-hook #'company-coq-mode)
 
@@ -969,7 +969,7 @@
             ("Function*" "^(define\\*\\s-+(?\\(\\sw+\\)" 1)
             ("Syntax Rule" "^(define-syntax-rule\\s-+(?\\(\\sw+\\)" 1)
             ("Record" "^(define-record-type\\*?\\s-+<\\(\\sw+\\)>" 1))
-        scheme-imenu-generic-expression)
+          scheme-imenu-generic-expression)
   "Imenu generic expression for Guile modes.  See `imenu-generic-expression'.")
 (add-hook
  'scheme-mode-hook
@@ -979,7 +979,7 @@
 ;; Nix
 (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
 (with-eval-after-load 'nix-mode
-    (define-key nix-mode-map (kbd "C-c C-f") 'nix-format-buffer))
+  (define-key nix-mode-map (kbd "C-c C-f") 'nix-format-buffer))
 (defvar nix-format-on-save t
   "Format the nix buffer with nixfmt before saving.")
 (add-hook 'before-save-hook
@@ -989,7 +989,7 @@
 
 ;; Common Lisp
 (with-eval-after-load 'geiser-guile
-       (add-to-list 'geiser-guile-load-path "~/projects/guix"))
+  (add-to-list 'geiser-guile-load-path "~/projects/guix"))
 
 ;; Rust
 (require 'rust-mode)
@@ -1164,7 +1164,7 @@ Return nil if credentials not found."
 (defun my-make-frame-transparent (frame)
   "Make `FRAME' transparent'."
   (if (or (not (display-graphic-p frame))
-	  (string= 'base (daemonp))
+          (string= 'base (daemonp))
           (string= 'term (daemonp)))
       (progn (set-face-background 'default "unspecified-bg" frame)
              (set-face-background 'line-number "#073642" frame))))
@@ -1197,12 +1197,12 @@ Return nil if credentials not found."
  tab-bar-show nil
  tab-bar-tab-name-function
  (defun my-window-project-name ()
-        "Projectile project name of current window"
-        (with-current-buffer (window-buffer (minibuffer-selected-window))
-          (let ((project-name (projectile-project-name)))
-            (if (string-equal "-" project-name)
-                (buffer-name (current-buffer))
-                project-name)))))
+   "Projectile project name of current window"
+   (with-current-buffer (window-buffer (minibuffer-selected-window))
+     (let ((project-name (projectile-project-name)))
+       (if (string-equal "-" project-name)
+           (buffer-name (current-buffer))
+         project-name)))))
 
 (set-face-attribute
  'tab-bar nil
