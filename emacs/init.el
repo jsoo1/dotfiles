@@ -1152,8 +1152,9 @@ Return nil if credentials not found."
 (my-make-frame-transparent (selected-frame))
 (add-hook 'after-make-frame-functions #'my-make-frame-transparent)
 
+;; See https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal#
 (defun on-after-init ()
-  "From https://stackoverflow.com/questions/19054228/emacs-disable-theme-background-color-in-terminal# ."
+  "Setup transparency in terminal."
   (unless (display-graphic-p (selected-frame))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
            (set-face-background 'line-number "#073642" (selected-frame)))))
