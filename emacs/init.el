@@ -1350,7 +1350,8 @@ Return nil if credentials not found."
   "Find things with eglot"
   "d" xref-find-definitions
   "D" xref-find-definitions-other-window
-  "r" xref-find-references)
+  "r" xref-find-references
+  "t" eglot-find-typeDefinition)
 
 (define-prefix-keymap my-eglot-buffer-map
   "Goto eglot buffers"
@@ -1587,7 +1588,8 @@ Return nil if credentials not found."
 
 (define-prefix-keymap my-search-map
   "my searching keybindings"
-  "s" swiper)
+  "s" swiper
+  "p" counsel-projectile-rg)
 
 (define-prefix-keymap my-text-map
   "my text keybindings"
