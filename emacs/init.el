@@ -1139,8 +1139,8 @@ Return nil if credentials not found."
 (defun my-make-frame-transparent (frame)
   "Make `FRAME' transparent'."
   (if (or (not (display-graphic-p frame))
-          (string= 'base (daemonp))
-          (string= 'term (daemonp)))
+          (string= "base" (daemonp))
+          (string= "term" (daemonp)))
       (progn (set-face-background 'default "unspecified-bg" frame)
              (set-face-background 'line-number "#073642" frame))))
 
