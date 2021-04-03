@@ -473,14 +473,6 @@
   "Switch to compile buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'."
   (switch-to-buffer-other-window (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
 
-;; Dir Locals -- see https://emacs.stackexchange.com/questions/13080/reloading-directory-local-variables
-(defun my-projectile-reload-dir-locals ()
-  "Reload each buffer with the same `default-directory` as the current buffer's."
-  (interactive)
-  (dolist (buffer (projectile-project-buffers))
-    (with-current-buffer buffer
-      (hack-dir-local-variables-non-file-buffer))))
-
 ;; Org
 (require 'org-tempo)
 (require 'evil-org)
@@ -1584,7 +1576,6 @@ Return nil if credentials not found."
   "p" switch-project-workspace
   "r" (defun projectile-run ()
         (interactive) (my-projectile-command "run"))
-  "R" my-projectile-reload-dir-locals
   "t" (defun projectile-test ()
         (interactive) (my-projectile-command "test"))
   "'" (defun projectle-run-eshell-other-window ()
