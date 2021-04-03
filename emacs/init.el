@@ -1,4 +1,4 @@
-;;; package --- Summary
+;;; package --- Summary -*- lexical-binding:t -*-
 ;;; My not minimal-ish anymore init.el
 ;;; Commentary:
 ;;; use like any ol init.el
