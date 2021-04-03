@@ -595,7 +595,7 @@
 
 ;; Anzu
 (global-anzu-mode)
-(setq anzu-cons-mode-line-p 'nil)
+(setq anzu-cons-mode-line-p nil)
 (with-eval-after-load 'evil (require 'evil-anzu))
 
 ;; Ivy
