@@ -1160,10 +1160,9 @@ Return nil if credentials not found."
 
 (add-hook 'window-setup-hook #'on-after-init)
 
-(if (or (string= 'base (daemonp))
-        (string= 'term (daemonp))
-        (not (display-graphic-p (selected-frame))))
-
+(when (or (string= "base" (daemonp))
+          (string= "term" (daemonp))
+          (not (display-graphic-p (selected-frame))))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
            (set-face-background 'line-number "#073642" (selected-frame))))
 
