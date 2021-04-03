@@ -321,36 +321,32 @@
  auto-save-file-name-transforms `((".*" ,(expand-file-name "auto-saves" user-emacs-directory) t))
  enable-local-eval t
  safe-local-variable-values
- '((haskell-stylish-on-save . nil)
+ '(;; Haskell-specific
+   (haskell-stylish-on-save . nil)
    (haskell-process-type . stack-ghci)
    (haskell-process-type . cabal-repl)
    (haskell-mode-stylish-haskell-path . "ormolu")
-   (haskell-mode-stylish-haskell-args . ("--ghc-opt TypeApplications"))
-   (smie-indent-basic . 2)
-   (flycheck-rust-cargo-executable . "/home/john/projects/work/projects/bid-server/.bin/cargo")
-   (flycheck-rust-clippy-executable . "/home/john/projects/work/projects/bid-server/.bin/cargo")
-   (projectile-compilation-command . "guix build -f guix.scm")
-   (projectile-compilation-command . "cargo build")
-   (projectile-test-command . "cargo test")
-   (projectile-compilation-command . "./.bin/cargo build")
-   (projectile-test-command . "./.bin/cargo test")
-   (projectile-compilation-command . "../.bin/wasm-pack build --target web --out-name wasm --out-dir ../frontend-server/static")
-   (projectile-compilation-dir . ".")
-   (projectile-compilation-command . "cabal new-build")
-   (projectile-run-command . "cargo run")
-   (projectile-run-command . "cabal new-run exe:refl-club -- .static")
-   (eglot-connect-timeout . nil)
+   (haskell-mode-stylish-haskell-args . ("--ghc-opt" "TypeApplications"))
    (haskell-stylish-on-save . t)
    (haskell-stylish-on-save . nil)
-   (haskell-mode-stylish-haskell-args . '("--ghc-opt TypeApplications"))
-   (projectile-compilation-command . "guix environment --ad-hoc openssl libuv mysql cassandra-cpp postgresql pkg-config gcc-toolchain -- env CC=gcc cargo build")
-   (projectile-test-command . "guix environment --ad-hoc openssl libuv mysql cassandra-cpp postgresql pkg-config gcc-toolchain -- env CC=gcc cargo test")
-   (tab-width . 4)
-   (js-indent-level . 2)
+   (projectile-compilation-command . "cabal new-build")
    (haskell-process-wrapper-function
     . (lambda (argv)
         (append (list "env" "NO_COLOR=true") argv)))
-   (projectile-compilation-command . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix ")))
+   ;; Ocaml-specific
+   (smie-indent-basic . 2)
+   ;; Rust-specific
+   (projectile-run-command . "cargo run")
+   (projectile-compilation-command . "cargo build")
+   (projectile-test-command . "cargo test")
+   ;; Guix projects
+   (projectile-compilation-command . "guix build -f guix.scm")
+   ;; Eglot-specific
+   (eglot-connect-timeout . nil)
+   ;; Javascript-specific
+   (js-indent-level . 2)
+   ;; Builtins
+   (tab-width . 4)))
 
 ;; Info
 (with-eval-after-load 'Info-mode
