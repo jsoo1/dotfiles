@@ -127,6 +127,7 @@
   '("emacs-aio"
     "emacs-anzu"
     "emacs-avy"
+    "emacs-clojure-mode"
     "emacs-cmake-mode"
     "emacs-company"
     "emacs-company-coq"
