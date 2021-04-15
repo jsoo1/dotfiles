@@ -160,6 +160,17 @@
             (when (not (display-graphic-p)) (cd default-directory))
             (eshell)))
 
+(defun my-eshell-clear-scrollback ()
+  "My version of `eshell/clear-scrollback' that is interactive."
+  (interactive)
+  (eshell/clear-scrollback)
+  (eshell-send-input nil nil t))
+
+(add-hook 'eshell-mode-hook
+            (defun my-eshell-set-keybindings ()
+              (interactive)
+              (define-key eshell-mode-map (kbd "C-l") #'my-eshell-clear-scrollback)))
+
 (when (and (executable-find "fish")
            (require 'fish-completion nil t))
   (global-fish-completion-mode))
