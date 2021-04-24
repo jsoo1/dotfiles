@@ -34,6 +34,7 @@ SYMLINKS = \
 	$(HOME)/.bashrc \
 	$(HOME)/.bash_profile \
 	$(XDG_HOME)/compton/compton.conf \
+	$(XDG_HOME)/chromium-flags.conf \
 	$(XDG_HOME)/dunst/dunstrc \
 	$(XDG_HOME)/fish/aliases.fish \
 	$(XDG_HOME)/fish/colors.fish \
@@ -89,6 +90,9 @@ $(HOME)/.bashrc: | $(HOME) ## Bash configuration (per shell)
 
 $(HOME)/.bash_profile: | $(HOME) ## Bash configuration (per session)
 	$(ln) $(PWD)/bash/.bash_profile $@
+
+$(XDG_HOME)/chromium-flags.conf: | $(XDG_HOME) ## Compton configuration
+	$(ln) $(PWD)/chromium/chromium-flags.conf $@
 
 $(XDG_HOME)/compton/compton.conf: | $(XDG_HOME)/compton ## Compton configuration
 	$(ln) $(PWD)/compton/compton.conf $@

@@ -11,6 +11,8 @@ set -xg ALTERNATE_EDITOR 'nvim'
 # Icecat for BROWSER
 set -xg BROWSER /home/john/.guix-profile/bin/icecat
 
+set -xg CHROMIUM_FLAGS /home/john/.config/chromium-flags.conf
+
 set -xg GUIX_PROFILE /home/john/.guix-profile
 
 # Something weird happens without this
