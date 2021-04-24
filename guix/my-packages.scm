@@ -29,6 +29,7 @@
     "groff"
     "lastpass-cli"
     "make"
+    "mosh"
     "pijul"
     "pinentry"
     "recutils"
