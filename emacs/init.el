@@ -367,7 +367,10 @@
       evil-want-minibuffer t
       evil-disable-insert-state-bindings t
       ;; somehow needs to happen before any mention of evil mode
-      evil-want-abbrev-expand-on-insert-exit nil)
+      evil-want-abbrev-expand-on-insert-exit nil
+      ;; For evil-collection, which is only used for evil-magit, which
+      ;; is only required because evil-magit is not maintained...
+      evil-want-keybinding nil)
 (require 'evil)
 (require 'evil-surround)
 (require 'evil-commentary)
@@ -375,7 +378,7 @@
 (require 'evil-escape)
 (require 'evil-replace-with-register)
 (require 'navigate)
-
+(require 'evil-collection)
 (evil-mode 1)
 (global-evil-surround-mode 1)
 (evil-commentary-mode)
@@ -384,6 +387,7 @@
 (evil-replace-with-register-install)
 (setq-default evil-escape-key-sequence "jk")
 (setq-default evil-escape-unordered-key-sequence 't)
+(with-eval-after-load 'magit (evil-collection-magit-setup))
 (global-evil-leader-mode)
 
 (evil-set-initial-state 'compilation-mode 'normal)
@@ -425,7 +429,6 @@
 (setq xref-show-xrefs-function #'xref--show-defs-minibuffer)
 
 ;; Magit
-(require 'evil-magit)
 (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
 
 ;; Projectile
