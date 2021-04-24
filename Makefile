@@ -17,6 +17,7 @@ XDG_HOME_DIRS = \
 	git \
 	guix \
 	lynx \
+	nix \
 	shepherd \
 	xmobar \
 	zathura
@@ -49,6 +50,7 @@ SYMLINKS = \
 	$(XDG_HOME)/git/config \
 	$(XDG_HOME)/guix/channels.scm \
 	$(XDG_HOME)/lynx/lynx.cfg \
+	$(XDG_HOME)/nix/nix.conf \
 	$(HOME)/.psqlrc \
 	$(HOME)/.inputrc \
 	$(XDG_HOME)/shepherd/init.scm \
@@ -138,6 +140,9 @@ $(XDG_HOME)/guix/channels.scm: | $(XDG_HOME)/guix ## Guix channel specification
 
 $(XDG_HOME)/lynx/lynx.cfg: | $(XDG_HOME)/lynx ## Lynx configuration
 	$(ln) $(PWD)/lynx/lynx.cfg $@
+
+$(XDG_HOME)/nix/nix.conf: | $(XDG_HOME)/nix
+	$(ln) $(PWD)/nix/nix.conf $@
 
 $(HOME)/.psqlrc: | $(HOME) ## psql configuration
 	$(ln) $(PWD)/psql/.psqlrc $@
