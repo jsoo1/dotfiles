@@ -282,8 +282,6 @@ EndSection\n")
      ,curl ,nss-certs
      ;; essentials
      ,iproute ,git ,openssh ,gnupg ,ncurses
-     ;; vpn
-     ,wireguard-tools
      ;; work related
      ,nix
      ;; ???
