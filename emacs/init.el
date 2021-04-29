@@ -388,6 +388,7 @@
 (setq-default evil-escape-key-sequence "jk")
 (setq-default evil-escape-unordered-key-sequence 't)
 (with-eval-after-load 'magit (evil-collection-magit-setup))
+(with-eval-after-load 'dired (evil-collection-dired-setup))
 (global-evil-leader-mode)
 
 (evil-set-initial-state 'compilation-mode 'normal)
