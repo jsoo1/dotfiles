@@ -510,13 +510,12 @@
       counsel-projectile-org-capture-templates
       '(("t" "[${name}] Todo" entry
          (file+headline "${root}/TODOs.org" "Todos")
-         "* TODO %?
-  %u
+         "* TODO %U %?
   %a")
         ("bt" "[${name}] Note" entry
          (file+headline "${root}/TODOs.org" "Notes")
-         "* %?
-  %t")))
+         "* %U %?
+  %a")))
 
 (setq org-directory "~")
 (with-eval-after-load 'org-agenda-mode
