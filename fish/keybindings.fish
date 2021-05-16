@@ -113,13 +113,18 @@ end
 
 function __ls_git_repos -d "List git repos"
     fd '\.git' '/' -t d -H -I \
-    -E '\.github' \
-    -E '\.cache' \
-    -E '\.tmux' \
-    -E '\.cargo' \
-    -E /gnu/store \
-    -E '\.git-credential-cache' \
-    -E '\.spago' \
+        -E '\.github' \
+        -E '\.cache' \
+        -E '\.tmux' \
+        -E '\.cargo' \
+        -E /gnu/store \
+        -E '\.git-credential-cache' \
+        -E '\.spago' \
+        -E '/nix/store' \
+        -E '/tmp' \
+        -E '\.local' \
+        -E 'dist-newstyle' \
+        -E '\.opam' \
     | sed -E 's/\/\.git$//'
 end
 

@@ -137,6 +137,11 @@ dmenuGitDirs =
     \-E /gnu/store \
     \-E '\\.git-credential-cache' \
     \-E '\\.spago' \
+    \-E '/nix/store' \
+    \-E '/tmp' \
+    \-E '\\.local' \
+    \-E 'dist-newstyle' \
+    \-E '\\.opam' \
     \| sed -E 's/\\/\\.git$//' \
     \| dmenu -f -F -p 'repository'"
   ]
