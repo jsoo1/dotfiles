@@ -600,9 +600,6 @@
 (setq
  ediff-split-window-function #'split-window-horizontally
  ediff-make-buffers-readonly-at-startup t)
-(set-face-attribute
- 'diff-context nil
- :foreground "#586e75")
 
 ;; LaTex
 (add-hook 'latex-mode-hook #'make-standard-paragraph-rules)
