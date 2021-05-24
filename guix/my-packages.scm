@@ -131,7 +131,6 @@
 (define-public emacs-packages
   '("emacs-aio"
     "emacs-anzu"
-    "emacs-avy"
     "emacs-clojure-mode"
     "emacs-cmake-mode"
     "emacs-company"

@@ -1538,10 +1538,7 @@ Return nil if credentials not found."
 
 (define-prefix-keymap my-jump-map
   "my jump keybindings"
-  "c" avy-goto-char
   "i" counsel-imenu
-  "j" avy-goto-char-2
-  "l" avy-goto-line
   "o" counsel-org-goto-all
   "t" counsel-switch-tab
   "u" undo-tree-visualize
