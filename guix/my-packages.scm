@@ -63,7 +63,6 @@
     "ibm-capsense-usb-util"
     "libnotify"
     "libreoffice"
-    "mpv"
     "my-dmenu"
     "pulseaudio"
     "scrot"))
