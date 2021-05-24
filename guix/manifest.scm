@@ -8,6 +8,7 @@
   browsers
   desktop-tools
   fonts
+  c-tools
   haskell-tools
   ocaml-tools
   rust-tools

@@ -1141,6 +1141,15 @@ Return nil if credentials not found."
 (require 'ediprolog)
 (add-to-list 'auto-mode-alist '("\\.pro\\'" . prolog-mode))
 
+;; C
+(evil-define-key 'normal c-mode-map (kbd ",") 'my-eglot-mode-map)
+(add-hook 'c-mode-hook #'eglot-ensure)
+(add-hook 'c-mode-hook #'eldoc-mode)
+(add-hook 'c-mode-hook #'company-mode)
+(add-hook 'c-mode-hook
+          (defun disable-c-flycheck ()
+            (flycheck-mode -1)))
+
 ;; Theme
 (require 'solarized)
 (require 'solarized-dark-theme)

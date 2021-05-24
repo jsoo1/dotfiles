@@ -75,6 +75,9 @@
     "font-iosevka"
     "font-iosevka-term-slab"))
 
+(define-public c-tools
+  '("ccls"))
+
 (define-public haskell-tools
   '(; "cabal-install" Broken right now
     "ghc@8.6"
