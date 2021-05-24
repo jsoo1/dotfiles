@@ -13,6 +13,7 @@
 (define-public utilities
   '("aspell"
     "aspell-dict-en"
+    "bat"
     "bpftrace"
     "cups"
     "direnv"

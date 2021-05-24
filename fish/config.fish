@@ -24,6 +24,9 @@ set -xg GUILE_LOAD_PATH $GUILE_LOAD_PATH /home/john/.guix-profile/share/guile/si
 # cargo
 set -x CARGO_HOME "$HOME/.cargo"
 
+# bat
+set -xg BAT_THEME "Solarized (dark)"
+
 # fish cwd color
 set -x fish_color_cwd yellow
 
