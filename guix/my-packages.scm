@@ -169,7 +169,6 @@
     "emacs-fish-completion"
     "emacs-fish-mode"
     "emacs-flycheck"
-    "emacs-flycheck-rust"
     "emacs-forge"
     "emacs-geiser"
     "emacs-goto-chg"

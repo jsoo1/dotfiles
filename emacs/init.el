@@ -1002,15 +1002,6 @@
   '("Async Fn" "^[[:space:]]*\\(?:\\<pub\\>[[:space:]]+\\)?\\(?:\\<default\\>[[:space:]]+\\)?\\(?:\\<unsafe\\>[[:space:]]+\\)?\\(?:\\<extern\\>[[:space:]]+\\(?:\"[^\"]+\"[[:space:]]+\\)?\\)?\\<async\\>[[:space:]]+\\<fn\\>[[:space:]]+\\([[:word:][:multibyte:]_][[:word:][:multibyte:]_[:digit:]]*\\)" 1)
   rust-imenu-generic-expression))
 
-(defun flycheck-rust-cargo-has-command-p (command)
-  "Whether Cargo has COMMAND in its list of commands.
-
-Execute `cargo --list' to find out whether COMMAND is present."
-  (let ((cargo (or flycheck-rust-cargo-executable
-                   (funcall flycheck-executable-find "cargo"))))
-    (member command (mapcar #'string-trim-left
-                            (ignore-errors (process-lines cargo "--list"))))))
-
 ;; SQL
 ;; Inspired by:
 ;; https://github.com/alezost/emacs-config/blob/master/utils/al-sql.el#L47
