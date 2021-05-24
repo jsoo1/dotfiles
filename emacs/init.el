@@ -930,6 +930,10 @@
              `(("Module" "^\\s-*module\\s-+\\(type\\s-+\\)?\\([a-zA-Z0-9_]+\\)" 2)
                ,@imenu-generic-expression))))
 
+;; TODO: Remove when these are properly packaged in guix
+(load-file "~/.guix-profile/share/emacs/site-lisp/dune.el")
+(load-file "~/.guix-profile/share/emacs/site-lisp/dune-flymake.el")
+
 ;; Purescript
 (add-to-list 'load-path "~/.emacs.d/private/purescript-mode")
 (require 'purescript-mode-autoloads)
