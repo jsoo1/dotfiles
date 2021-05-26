@@ -59,3 +59,15 @@ function pidof -d 'select a pid via fzy'
 end
 
 complete -c pidof --no-files
+
+function nth -a i -d 'Select the nth element of stdin, a file or files'
+    if test (count $argv) -le 2
+        head -n $i $argv[2] | tail -n 1
+    else
+        for file in $argv[2..-1]
+            echo $file
+            head -n $i "$file" | tail -n 1
+            echo ''
+        end
+    end
+end
