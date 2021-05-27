@@ -44,6 +44,7 @@
 (when (fboundp #'toggle-scroll-bar)
   (toggle-scroll-bar -1))
 (defun disable-scroll-bars (frame)
+  "Disable scroll bars in `FRAME'."
   (modify-frame-parameters frame
                            '((vertical-scroll-bars . nil)
                              (horizontal-scroll-bars . nil))))
