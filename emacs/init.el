@@ -1554,6 +1554,7 @@ Return nil if credentials not found."
   "c" counsel-projectile-org-capture
   "g" counsel-org-goto
   "i" counsel-org-entity
+  "l" org-store-link
   "t" counsel-org-tag)
 
 (defun get-tab-by-name-create (name)
