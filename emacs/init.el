@@ -336,6 +336,7 @@
    (haskell-stylish-on-save . t)
    (haskell-stylish-on-save . nil)
    (projectile-compilation-command . "cabal new-build")
+   (projectile-compilation-command . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix ")
    (haskell-process-wrapper-function
     . (lambda (argv)
         (append (list "env" "NO_COLOR=true") argv)))
