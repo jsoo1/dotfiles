@@ -144,7 +144,7 @@
 (electric-pair-mode 1)
 
 ;; Eldoc
-(setq eldoc-echo-area-use-multiline-p t)
+(setq eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
 
 ;; Elfeed
 (with-eval-after-load 'elfeed
