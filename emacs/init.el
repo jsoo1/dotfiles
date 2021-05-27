@@ -374,14 +374,14 @@
 
 ;; Evil
 (global-set-key (kbd "<escape>") #'keyboard-escape-quit)
-(setq evil-want-C-u-scroll t
-      evil-want-minibuffer t
-      evil-disable-insert-state-bindings t
-      ;; somehow needs to happen before any mention of evil mode
-      evil-want-abbrev-expand-on-insert-exit nil
-      ;; For evil-collection, which is only used for evil-magit, which
-      ;; is only required because evil-magit is not maintained...
-      evil-want-keybinding nil)
+;; somehow needs to happen before any mention of evil mode
+(defvar evil-want-C-u-scroll t)
+(defvar evil-want-minibuffer t)
+(defvar evil-disable-insert-state-bindings t)
+(defvar evil-want-abbrev-expand-on-insert-exit nil)
+;; For evil-collection, which is only used for evil-magit, which
+;; is only required because evil-magit is not maintained...
+(defvar evil-want-keybinding nil)
 (require 'evil)
 (require 'evil-surround)
 (require 'evil-commentary)
