@@ -84,7 +84,8 @@
     "hoogle"))
 
 (define-public ocaml-tools
-  '("opam"))
+  '("dune"
+    "opam"))
 
 (define-public rust-tools
   '("rust@1.48"
