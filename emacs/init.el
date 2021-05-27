@@ -115,6 +115,15 @@
      :port 5555
      :nick "jsoo")))
 
+(defun my-erc-libera ()
+  "Open erc with my configuration for freenode."
+  (interactive)
+  (let ((erc-prompt-for-password nil))
+    (erc-tls
+     :server "irc.libera.chat"
+     :port 6697
+     :nick "jsoo_")))
+
 (defun my-erc-oftc ()
   "Open erc with my configuration for oftc."
   (interactive)
@@ -1414,6 +1423,7 @@ Return nil if credentials not found."
 (define-prefix-keymap my-erc-map
   "my erc keybindings"
   "f" my-erc-freenode
+  "l" my-erc-libera
   "o" my-erc-oftc)
 
 (define-prefix-keymap my-buffer-map
