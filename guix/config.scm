@@ -20,7 +20,7 @@
             light
             linux-libre-with-bpf))
  ((gnu packages ncurses) #:select (ncurses))
- ((gnu packages package-management) #:select (nix))
+ ((gnu packages package-management) #:select (nix-unstable))
  ((gnu packages shells) #:select (fish))
  ((gnu packages shellutils) #:select (fzy))
  ((gnu packages ssh) #:select (openssh))
@@ -65,7 +65,7 @@
             usb-modeswitch-service-type
             wpa-supplicant-service-type))
  ((gnu services nix)
-  #:select (nix-service-type))
+  #:select (nix-service-type nix-configuration))
  ((gnu services pm)
   #:select (thermald-configuration
             thermald-service-type
@@ -177,7 +177,12 @@ EndSection\n")
     (dbus-service)
     (service elogind-service-type)
     fontconfig-file-system-service
-    (service nix-service-type)
+    (service nix-service-type
+             (nix-configuration
+              (package nix-unstable)
+              (extra-config '("experimental-features = nix-command flakes"
+                              "keep-derivations = true"
+                              "keep-outputs = true"))))
     (service kmscon-service-type
              (kmscon-configuration
               (virtual-terminal "tty8")
@@ -283,7 +288,7 @@ EndSection\n")
      ;; essentials
      ,iproute ,git ,openssh ,gnupg ,ncurses
      ;; work related
-     ,nix
+     ,nix-unstable
      ;; ???
      ,glibc-utf8-locales
      ;; text editors

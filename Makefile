@@ -12,6 +12,7 @@ HOME_DIRS = \
 XDG_HOME_DIRS = \
 	alacritty \
 	compton \
+	direnv \
 	dunst \
 	fish \
 	git \
@@ -98,6 +99,9 @@ $(XDG_HOME)/chromium-flags.conf: | $(XDG_HOME) ## Compton configuration
 
 $(XDG_HOME)/compton/compton.conf: | $(XDG_HOME)/compton ## Compton configuration
 	$(ln) $(PWD)/compton/compton.conf $@
+
+$(XDG_HOME)/direnv/direnvrc: | $(XDG_HOME)/direnv ## Direnv configuration
+	$(ln) $(PWD)/direnv/direnvrc $@
 
 $(XDG_HOME)/dunst/dunstrc: | $(XDG_HOME)/dunst ## Dunst configuration
 	$(ln) $(PWD)/dunst/dunstrc $@
