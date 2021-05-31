@@ -50,7 +50,7 @@ main = do
     , handleEventHook = handleEventHook def <+> docksEventHook
     , manageHook = manageDocks <+> manageHook def
     , layoutHook =
-        gaps 5 5 (ThreeColMid 1 (3/100) (1/2) ||| layoutHook def)
+        avoidStruts $ gaps 5 5 $ ThreeColMid 1 (3/100) (1/2) ||| layoutHook def
     , logHook = myXmobar xmobarPipe
     , startupHook = traverse_ spawn
         [ "light -S 30.0"
@@ -63,8 +63,8 @@ main = do
 
 -- ============== Layouts ==============
 
-gaps screenGap windowGap = avoidStruts
-  . spacingRaw
+gaps screenGap windowGap =
+  spacingRaw
       True
       (Border screenGap screenGap screenGap screenGap)
       True
