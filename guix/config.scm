@@ -20,7 +20,7 @@
             light
             linux-libre-with-bpf))
  ((gnu packages ncurses) #:select (ncurses))
- ((gnu packages package-management) #:select (nix-unstable))
+ ((gnu packages package-management) #:select (nix nix-unstable))
  ((gnu packages shells) #:select (fish))
  ((gnu packages shellutils) #:select (fzy))
  ((gnu packages ssh) #:select (openssh))
@@ -179,9 +179,8 @@ EndSection\n")
     fontconfig-file-system-service
     (service nix-service-type
              (nix-configuration
-              (package nix-unstable)
-              (extra-config '("experimental-features = nix-command flakes"
-                              "keep-derivations = true"
+              (package nix)
+              (extra-config '("keep-derivations = true"
                               "keep-outputs = true"))))
     (service kmscon-service-type
              (kmscon-configuration
