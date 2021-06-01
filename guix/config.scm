@@ -287,8 +287,6 @@ EndSection\n")
      ,curl ,nss-certs
      ;; essentials
      ,iproute ,git ,openssh ,gnupg ,ncurses
-     ;; work related
-     ,nix-unstable
      ;; ???
      ,glibc-utf8-locales
      ;; text editors
