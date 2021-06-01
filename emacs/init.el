@@ -937,6 +937,7 @@
              imenu-generic-expression
              `(("Module" "^\\s-*module\\s-+\\(type\\s-+\\)?\\([a-zA-Z0-9_]+\\)" 2)
                ,@imenu-generic-expression))))
+(define-key merlin-mode-map (kbd "C-c C-o") #'merlin-occurrences)
 
 ;; TODO: Remove when these are properly packaged in guix
 (load-file "~/.guix-profile/share/emacs/site-lisp/dune.el")
