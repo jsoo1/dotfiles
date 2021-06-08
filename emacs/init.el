@@ -105,6 +105,7 @@
 
 ;; Erc
 (setq erc-autojoin-channels-alist nil
+      erc-rename-buffers t
       erc-hide-list '("JOIN" "PART" "QUIT"))
 
 (defun my-erc-freenode ()
@@ -117,21 +118,21 @@
      :nick "jsoo")))
 
 (defun my-erc-libera ()
-  "Open erc with my configuration for freenode."
+  "Open erc with my configuration for libera."
   (interactive)
   (let ((erc-prompt-for-password nil))
     (erc-tls
-     :server "irc.libera.chat"
-     :port 6697
-     :nick "jsoo_")))
+     :server "irc.refl.club"
+     :port 5556
+     :nick "jsoo")))
 
 (defun my-erc-oftc ()
   "Open erc with my configuration for oftc."
   (interactive)
   (let ((erc-prompt-for-password nil))
     (erc-tls
-     :server "irc.oftc.net"
-     :port 6697
+     :server "irc.refl.club"
+     :port 5557
      :nick "jsoo")))
 
 (add-hook 'erc-mode-hook
