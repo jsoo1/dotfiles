@@ -936,7 +936,7 @@
             (interactive)
             (setq-local
              imenu-generic-expression
-             `(("Module" "^\\s-*module\\s-+\\(type\\s-+\\)?\\([a-zA-Z0-9_]+\\)" 2)
+             `(("Module" "^\\s-*module\\s-+\\(type|rec\\s-+\\)?\\([a-zA-Z0-9_]+\\)" 2)
                ,@imenu-generic-expression))))
 (define-key tuareg-mode-map (kbd "C-c C-o") #'merlin-occurrences)
 
