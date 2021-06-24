@@ -1053,6 +1053,15 @@ Return nil if credentials not found."
 ;; Cassandra/CQL
 (add-to-list 'auto-mode-alist '("\\.schema\\'" . cql-mode))
 
+;; Redis
+(add-to-list 'auto-mode-alist '("\\.redis\\'" . redis-mode))
+(with-eval-after-load 'redis
+  (define-key redis-mode-map (kbd "C-c C-i") #'redis-cli)
+  (define-key redis-mode-map (kbd "C-c C-k")
+    (defun clear-redis-buffer ()
+      (interactive)
+      (with-current-buffer (get-buffer "*redis*") (comint-clear-buffer)))))
+
 ;; Cedille
 (require 'cedille-mode)
 (define-key cedille-mode-map (kbd "C-c C-l") #'cedille-start-navigation)

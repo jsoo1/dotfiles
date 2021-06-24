@@ -197,6 +197,7 @@
     "emacs-projectile"
     "emacs-psc-ide"
     "emacs-recutils"
+    "emacs-redis"
     "emacs-reformatter"
     "emacs-restclient"
     "emacs-rust-mode"
