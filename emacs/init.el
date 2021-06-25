@@ -1055,8 +1055,38 @@ Return nil if credentials not found."
 
 ;; Redis
 (add-to-list 'auto-mode-alist '("\\.redis\\'" . redis-mode))
+(defun redis-send-paragraph ()
+  "Send the current paragraph to the Redis process."
+  (interactive)
+  (let ((start (save-excursion
+		 (backward-paragraph)
+		 (point)))
+	(end (save-excursion
+	       (forward-paragraph)
+	       (point))))
+    (redis-send-region-content start end)))
+
+(defun redis-read-args (&optional pipe)
+  "Read the login params to redis-cli.
+
+If PIPE is non nil add redis --pipe to the args list, only used
+when send commands with redis protocol."
+  (if-let (url (redis-cli-get-login 'url)) `("--tls" "-u" ,url)
+    (let ((host (redis-cli-get-login 'host (and current-prefix-arg "Hostname: ")))
+          (port (redis-cli-get-login 'port (and current-prefix-arg "Port: ")))
+          (db (redis-cli-get-login 'db (and current-prefix-arg "Database number: ")))
+          (password (and current-prefix-arg (read-passwd "Password: "))))
+      (append (and host (list "-h" host))
+              (and port (list "-p" (number-to-string port)))
+              (and db (list "-n" (number-to-string db)))
+              (and (not (or (null password) (string= password "")))
+                   (list "-a" password))
+              (and pipe (list "--pipe"))))))
+
 (with-eval-after-load 'redis
   (define-key redis-mode-map (kbd "C-c C-i") #'redis-cli)
+  (define-key redis-mode-map (kbd "C-c C-c") #'redis-send-paragraph)
+  (define-key redis-mode-map (kbd "C-c C-b") #'redis-send-buffer-content)
   (define-key redis-mode-map (kbd "C-c C-k")
     (defun clear-redis-buffer ()
       (interactive)
