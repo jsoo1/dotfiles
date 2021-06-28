@@ -441,6 +441,13 @@
 (setq xref-show-definitions-function #'xref--show-defs-minibuffer)
 (setq xref-show-xrefs-function #'xref--show-defs-minibuffer)
 
+;; Process Menu
+(add-hook
+ 'process-menu-mode-hook
+ (defun make-process-menu-ctrl-c-map ()
+   (evil-local-set-key 'normal (kbd ",") process-menu-mode-map)
+   (local-set-key (kbd "C-c") process-menu-mode-map)))
+
 ;; Magit
 (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
 
