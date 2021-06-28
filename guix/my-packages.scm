@@ -33,6 +33,7 @@
     "mosh"
     "pijul"
     "pinentry"
+    "qemu"
     "recutils"
     "ripgrep"
     "rlwrap"
