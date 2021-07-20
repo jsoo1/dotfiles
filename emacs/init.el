@@ -774,7 +774,7 @@
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
 ;; Proof General
-(load-file "~/.guix-profile/share/emacs/site-lisp/site-start.d/pg-init.el")
+(load-file "~/.guix-profile/share/emacs/site-lisp/ProofGeneral/pg-init.el")
 
 ;; Idris mode
 (require 'idris-mode)
