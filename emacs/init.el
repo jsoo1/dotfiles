@@ -401,6 +401,10 @@
 (setq-default evil-escape-unordered-key-sequence 't)
 (with-eval-after-load 'magit (evil-collection-magit-setup))
 (with-eval-after-load 'dired (evil-collection-dired-setup))
+(with-eval-after-load 'ibuffer (evil-collection-ibuffer-setup))
+(with-eval-after-load 'man (evil-collection-man-setup))
+(with-eval-after-load 'debbugs (evil-collection-debbugs-setup))
+(with-eval-after-load 'info (evil-collection-info-setup))
 (global-evil-leader-mode)
 
 (evil-set-initial-state 'compilation-mode 'normal)
@@ -413,9 +417,7 @@
 (evil-set-initial-state 'comint-mode 'normal)
 (evil-set-initial-state 'org-agenda-mode 'normal)
 (evil-set-initial-state 'erc-mode 'normal)
-(evil-set-initial-state 'Man-mode 'normal)
 (evil-set-initial-state 'eshell-mode 'normal)
-(evil-set-initial-state 'debbugs-gnu-mode 'normal)
 (evil-set-initial-state 'tab-switcher-mode 'emacs)
 
 (evil-declare-not-repeat #'flycheck-next-error)
