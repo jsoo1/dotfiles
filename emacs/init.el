@@ -318,7 +318,8 @@
                            ("America/Phoenix" "Phoenix")
                            ("America/Denver" "Colorado")
                            ("America/New_York" "New York")
-                           ("Europe/Paris" "Central Europe"))
+                           ("Europe/Paris" "Central Europe")
+                           ("Africa/Douala" "Camaroon"))
  display-time-world-time-format "%a, %b %d %I:%M%p %Z")
 
 ;; Backups, lockfiles, auto-saves, local variables
@@ -992,12 +993,17 @@
 (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
 (with-eval-after-load 'nix-mode
   (define-key nix-mode-map (kbd "C-c C-f") 'nix-format-buffer))
+(setf
+ (alist-get 'nix-mode eglot-server-programs)
+ '("rnix-lsp"))
 (defvar nix-format-on-save t
   "Format the nix buffer with nixfmt before saving.")
+(add-hook 'nix-mode-hook #'eglot-ensure)
 (add-hook 'before-save-hook
           (defun my-nix-format-buffer ()
             (when (and nix-format-on-save (eq major-mode 'nix-mode))
               (nix-format-buffer))))
+(evil-define-key 'normal nix-mode-map (kbd ",") 'my-eglot-mode-map)
 
 ;; Common Lisp
 (with-eval-after-load 'geiser-guile
