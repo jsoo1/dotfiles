@@ -61,7 +61,8 @@
     ;; Waiting for https://forum.freecadweb.org/viewtopic.php?t=38982
     ;; "freecad"
     "garcon"
-    "ibm-capsense-usb-util"
+    "gnuplot"
+    ;; "ibm-capsense-usb-util"
     "libnotify"
     "libreoffice"
     "my-dmenu"
