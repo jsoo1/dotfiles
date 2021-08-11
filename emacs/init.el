@@ -949,6 +949,7 @@
              `(("Module" "^\\s-*module\\s-+\\(type|rec\\s-+\\)?\\([a-zA-Z0-9_]+\\)" 2)
                ,@imenu-generic-expression))))
 (define-key tuareg-mode-map (kbd "C-c C-o") #'merlin-occurrences)
+(define-key tuareg-mode-map (kbd "C-c C-c") #'merlin-error-next)
 
 ;; TODO: Remove when these are properly packaged in guix
 (load-file "~/.guix-profile/share/emacs/site-lisp/dune.el")
