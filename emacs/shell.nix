@@ -34,7 +34,6 @@ let
       cql-mode
       dhall-mode
       dired-git
-      # evil-tmux-navigator - Missing
       evil-replace-with-register
       graphql-mode
       merlin
@@ -47,6 +46,7 @@ let
       redis
       restclient
       systemd
+      tmux-pane
       vimrc-mode
       uuidgen
     ];

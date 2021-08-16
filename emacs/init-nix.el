@@ -373,6 +373,9 @@
 (require 'eshell-syntax-highlighting)
 (eshell-syntax-highlighting-global-mode 1)
 
+;; Helpful
+(require 'helpful)
+
 ;; Evil
 (global-set-key (kbd "<escape>") #'keyboard-escape-quit)
 ;; somehow needs to happen before any mention of evil mode
@@ -388,8 +391,9 @@
 (require 'evil-commentary)
 (require 'evil-leader)
 (require 'evil-escape)
-;; (require 'evil-replace-with-register)
-;; (require 'navigate)
+(require 'evil-replace-with-register)
+(require 'tmux-pane)
+(tmux-pane-mode)
 (require 'evil-collection)
 (evil-mode 1)
 (global-evil-surround-mode 1)
@@ -1708,10 +1712,10 @@ when send commands with redis protocol."
   "d" (defun my-delete-window ()
         (interactive) (progn (delete-window) (balance-windows)))
   "D" delete-frame
-  "h" (defun tmux-left () (interactive) (tmux-navigate "left"))
-  "j" (defun tmux-down () (interactive) (tmux-navigate "down"))
-  "k" (defun tmux-up () (interactive) (tmux-navigate "up"))
-  "l" (defun tmux-right () (interactive) (tmux-navigate "right"))
+  "h" (defun tmux-left () (interactive) (tmux-pane-omni-window-left))
+  "j" (defun tmux-down () (interactive) (tmux-pane-omni-window-down))
+  "k" (defun tmux-up () (interactive) (tmux-pane-omni-window-up))
+  "l" (defun tmux-right () (interactive) (tmux-pane-omni-window-right))
   "H" evil-window-move-far-left
   "J" evil-window-move-very-bottom
   "K" evil-window-move-very-top
