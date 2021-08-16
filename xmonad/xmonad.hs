@@ -142,6 +142,7 @@ dmenuGitDirs =
     \-E '\\.local' \
     \-E 'dist-newstyle' \
     \-E '\\.opam' \
+    \-E '/s3' \
     \| sed -E 's/\\/\\.git$//' \
     \| dmenu -f -F -p 'repository'"
   ]

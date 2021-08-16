@@ -125,6 +125,7 @@ function __ls_git_repos -d "List git repos"
         -E '\.local' \
         -E 'dist-newstyle' \
         -E '\.opam' \
+        -E '\/s3' \
     | sed -E 's/\/\.git$//'
 end
 
