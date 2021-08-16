@@ -10,6 +10,7 @@
   fonts
   c-tools
   haskell-tools
+  nix-tools
   ocaml-tools
   rust-tools
   guile-tools

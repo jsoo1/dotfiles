@@ -85,6 +85,9 @@
     "hlint"
     "hoogle"))
 
+(define-public nix-tools
+  '("nixfmt"))
+
 (define-public ocaml-tools
   '("dune"
     "opam"))
@@ -198,6 +201,7 @@
     "emacs-prescient"
     "emacs-projectile"
     "emacs-psc-ide"
+    "emacs-racket-mode"
     "emacs-recutils"
     "emacs-redis"
     "emacs-reformatter"
