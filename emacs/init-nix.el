@@ -90,6 +90,8 @@
                   "/run/current-system/profile/bin"
                   "/run/current-system/profile/sbin"
                   "~/dotfiles/emacs/"))
+(require 'exec-path-from-shell)
+(exec-path-from-shell-initialize)
 
 ;; Pinentry
 (setf epa-pinentry-mode 'loopback)
@@ -939,6 +941,7 @@
 
 ;; Ocaml
 (require 'tuareg)
+(require 'merlin)
 (add-hook 'tuareg-mode-hook #'merlin-mode)
 (add-to-list 'auto-mode-alist '("\\.ml\\'" . tuareg-mode))
 (add-to-list 'auto-mode-alist '("\\.mli\\'" . tuareg-mode))

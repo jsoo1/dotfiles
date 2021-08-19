@@ -35,6 +35,7 @@ let
       dhall-mode
       dired-git
       evil-replace-with-register
+      exec-path-from-shell
       graphql-mode
       merlin
       multi-term
@@ -60,7 +61,6 @@ let
       company-coq
       company-math
       counsel-projectile
-      dash
       diredfl
       docker
       dockerfile-mode
@@ -123,7 +123,7 @@ let
     (builtins.concatMap (f: f epkgs) [ elpa manual melpa melpaStable ]));
 in pkgs.mkShell {
   name = "emacs-config-shell";
-  buildInputs = [ emacs pkgs.glibcLocales ];
+  buildInputs = [ emacs pkgs.glibcLocales pkgs.postgresql ];
   shellHook = ''
     unset EMACSLOADPATH
     alias emacs="emacs -q -l $HOME/dotfiles/emacs/init-nix.el"
