@@ -87,6 +87,7 @@
             qemu-binfmt-configuration
             lookup-qemu-platforms))
  (gnu services xorg)
+ (gnu system setuid)
  (guix gexp)
  (ice-9 match))
 
@@ -139,24 +140,6 @@ EndSection\n")
 (define tamzen-psf-font
   (file-append
    font-tamzen "/share/kbd/consolefonts/TamzenForPowerline10x20.psf"))
-
-(define chown-program-service-type
-  (service-type
-   (name 'chown-program-service-type)
-   (extensions
-    (list
-     (service-extension setuid-program-service-type (const '()))
-     (service-extension
-      activation-service-type
-      (lambda (params)
-        #~(begin
-            (define (chownership prog user group perm)
-              (let ((uid (passwd:uid (getpw user)))
-                    (gid (group:gid (getgr group))))
-                (chown prog uid gid)
-                (chmod prog perm)))
-            (for-each (lambda (x) (apply chownership x)) #$params))))))
-   (description "Modify permissions and ownership of programs.")))
 
 (define my-services
   (cons*
@@ -221,13 +204,6 @@ EndSection\n")
 
     ;; The following two are for xorg without display manager
     x11-socket-directory-service
-    (service
-     chown-program-service-type
-     #~(list
-        (list
-         (string-append "/run/setuid-programs/" (basename #$startx))
-         "john" "input" #o2755)
-        '("/run/setuid-programs/X" "john" "input" #o2755)))
     (modify-services %base-services
       (udev-service-type
        c =>
@@ -296,12 +272,23 @@ EndSection\n")
      ,light
      ,@%base-packages))
   (setuid-programs
-   `(,(file-append docker-cli "/bin/docker")
+   `(,(setuid-program
+       (program (file-append docker-cli "/bin/docker")))
      ;; Stuff for xorg without display manager.
      ;; startx and X need to be in setuid-programs.
      ;; They also need extra tweaks in the chown-file service below.
-     ,(file-append xorg-server "/bin/X")
-     ,startx
+     ,(setuid-program
+       (program (file-append xorg-server "/bin/X"))
+       (user "john")
+       (group "input")
+       (setuid? #f)
+       (setgid? #t))
+     ,(setuid-program
+       (program startx)
+       (user "john")
+       (group "input")
+       (setuid? #f)
+       (setgid? #t))
      ,@%setuid-programs))
   (services my-services)
   ;; Allow resolution of '.local' host names with mDNS.
