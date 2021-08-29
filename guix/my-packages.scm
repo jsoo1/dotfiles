@@ -16,6 +16,7 @@
     "bat"
     "bpftrace"
     "cups"
+    "diffoscope"
     "direnv"
     "docker-cli"
     "dog"
@@ -116,6 +117,7 @@
   '("gcc-toolchain" ;; needed by xmonad
     "ghc-dbus"
     "ghc-xmonad-contrib"
+    "pavucontrol"
     "setxkbmap"
     "xcape"
     "xdg-utils"
