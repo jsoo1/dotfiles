@@ -181,9 +181,7 @@ EndSection\n")
              (nix-configuration
               (package nix)
               (extra-config '("keep-derivations = true"
-                              "keep-outputs = true"
-                              "run-diff-hook = true"
-                              "diff-hook = /home/john/projects/work/projects/nixpkgs/my-diff-hook.sh"))))
+                              "keep-outputs = true"))))
     (service kmscon-service-type
              (kmscon-configuration
               (virtual-terminal "tty8")
