@@ -1131,6 +1131,12 @@ when send commands with redis protocol."
  'cedille-keyword-face-df nil
  :foreground "#b58900")
 
+;; Java
+(setf
+ (alist-get 'java-mode eglot-server-programs)
+ '("java-language-server"))
+(evil-define-key 'normal java-mode-map (kbd ",") 'my-eglot-mode-map)
+
 ;; Xml
 (add-hook 'nxml-mode-hook #'origami-mode)
 
