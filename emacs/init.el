@@ -777,6 +777,9 @@
 ;; Proof General
 (load-file "~/.guix-profile/share/emacs/site-lisp/ProofGeneral/pg-init.el")
 
+;; Editorconfig
+(editorconfig-mode 1)
+
 ;; Idris mode
 (require 'idris-mode)
 (require 'inferior-idris)

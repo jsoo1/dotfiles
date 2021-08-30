@@ -154,6 +154,7 @@
     "emacs-docker"
     "emacs-dockerfile-mode"
     "emacs-ediprolog"
+    "emacs-editorconfig"
     "emacs-eglot"
     "emacs-elfeed"
     "emacs-elf-mode"
