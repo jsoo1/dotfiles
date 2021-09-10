@@ -37,6 +37,8 @@
             xorg-server
             xkeyboard-config))
  (gnu services)
+ ((gnu services audio)
+   #:select (mpd-service-type mpd-configuration))
  ((gnu services base)
   #:select (gpm-service-type
             gpm-configuration))
@@ -177,6 +179,8 @@ EndSection\n")
               ))
     (service mingetty-service-type (mingetty-configuration
                                     (tty "tty7")))
+    (service mpd-service-type (mpd-configuration
+                               (user "john")))
     (service network-manager-service-type)
     (service ntp-service-type)
     (service openssh-service-type
@@ -231,7 +235,7 @@ EndSection\n")
   (bootloader
    (bootloader-configuration
     (bootloader grub-efi-bootloader)
-    (target "/boot/efi")
+    (targets '("/boot/efi"))
     (keyboard-layout ctrl-nocaps)))
   (kernel linux-libre-with-bpf)
   (file-systems
