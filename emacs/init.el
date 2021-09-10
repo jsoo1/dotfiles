@@ -150,17 +150,8 @@
 
 ;; Elfeed
 (with-eval-after-load 'elfeed
-  (progn
-    (define-key elfeed-search-mode-map (kbd "C-l") elfeed-load-map)
-    (define-key elfeed-search-mode-map "l" elfeed-load-map)))
-(add-hook
- 'elfeed-search-mode-hook
- (defun make-elfeed-search-ctrl-c-map ()
-   (local-set-key (kbd "C-c") elfeed-search-mode-map)))
-(add-hook
- 'elfeed-show-mode-hook
- (defun make-elfeed-show-ctrl-c-map ()
-   (local-set-key (kbd "C-c") elfeed-show-mode-map)))
+  (elfeed-load-opml (expand-file-name "bazqux-reader-subscriptions.xml" user-emacs-directory))
+  (run-with-timer 0 (* 15 60) 'elfeed-update))
 
 ;; Shell
 (setq shell-file-name "bash")
@@ -406,6 +397,7 @@
 (with-eval-after-load 'man (evil-collection-man-setup))
 (with-eval-after-load 'debbugs (evil-collection-debbugs-setup))
 (with-eval-after-load 'info (evil-collection-info-setup))
+(with-eval-after-load 'elfeed (evil-collection-elfeed-setup))
 (global-evil-leader-mode)
 
 (evil-set-initial-state 'compilation-mode 'normal)

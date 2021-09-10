@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+    <head>
+        <title>BazQux Reader subscriptions</title>
+        <dateCreated>Fri, 10 Sep 2021 17:35:44 GMT</dateCreated>
+    </head>
+    <body>
+        <outline text="https://soap.coffee/~lthms" title="https://soap.coffee/~lthms" type="rss" xmlUrl="https://soap.coffee/~lthms"></outline>
+        <outline text="( )" title="( )" type="rss" xmlUrl="https://kcsongor.github.io/feed.xml"></outline>
+        <outline text="Alastair Reid" title="Alastair Reid" type="rss" xmlUrl="https://alastairreid.github.io/feed.xml"></outline>
+        <outline text="Alexandru Nedelcu — All articles" title="Alexandru Nedelcu — All articles" type="rss" xmlUrl="https://alexn.org/feed.xml"></outline>
+        <outline text="bitshiftcrazy" title="bitshiftcrazy" type="rss" xmlUrl="https://bitshiftcrazy.com/rss.xml"></outline>
+        <outline text="blog" title="blog" type="rss" xmlUrl="http://blog.vmchale.com/atom"></outline>
+        <outline text="Blog on Hillel Wayne" title="Blog on Hillel Wayne" type="rss" xmlUrl="https://www.hillelwayne.com/post/index.xml"></outline>
+        <outline text="Blog – PINE64" title="Blog – PINE64" type="rss" xmlUrl="https://www.pine64.org/blog/feed/"></outline>
+        <outline text="Bluishcoder" title="Bluishcoder" type="rss" xmlUrl="https://bluishcoder.co.nz/atom.xml"></outline>
+        <outline text="Brett Gilio&apos;s blog" title="Brett Gilio&apos;s blog" type="rss" xmlUrl="https://brettgilio.com/rss.xml"></outline>
+        <outline text="Chris Martin" title="Chris Martin" type="rss" xmlUrl="https://chris-martin.org/rss.xml"></outline>
+        <outline text="Christine Dodrill&apos;s Blog" title="Christine Dodrill&apos;s Blog" type="rss" xmlUrl="https://christine.website/blog.rss"></outline>
+        <outline text="Conal Elliott" title="Conal Elliott" type="rss" xmlUrl="http://conal.net/blog/feed"></outline>
+        <outline text="CoRecursive" title="CoRecursive" type="rss" xmlUrl="https://corecursive.libsyn.com/feed"></outline>
+        <outline text="Dan Ghica&apos;s Blog" title="Dan Ghica&apos;s Blog" type="rss" xmlUrl="https://danghica.blogspot.com/feeds/posts/default"></outline>
+        <outline text="Dan Luu" title="Dan Luu" type="rss" xmlUrl="https://danluu.com/atom.xml"></outline>
+        <outline text="DanielBrice.net" title="DanielBrice.net" type="rss" xmlUrl="https://www.danielbrice.net/feed.xml"></outline>
+        <outline text="Don Goodman-Wilson" title="Don Goodman-Wilson" type="rss" xmlUrl="https://don.goodman-wilson.com/index.xml"></outline>
+        <outline text="Donnacha Oisín Kidney&apos;s Blog" title="Donnacha Oisín Kidney&apos;s Blog" type="rss" xmlUrl="https://doisinkidney.com/rss.xml"></outline>
+        <outline text="Emacs Ninja" title="Emacs Ninja" type="rss" xmlUrl="https://emacsninja.com/feed.atom"></outline>
+        <outline text="Emma" title="Emma" type="rss" xmlUrl="https://english.emmaclit.com/feed/"></outline>
+        <outline text="Evelyn J Lamb » Evelyn J Lamb" title="Evelyn J Lamb » Evelyn J Lamb" type="rss" xmlUrl="http://feeds.feedburner.com/EvelynJLamb"></outline>
+        <outline text="frog hop" title="frog hop" type="rss" xmlUrl="http://graydon2.dreamwidth.org/data/rss"></outline>
+        <outline text="full stack engineer" title="full stack engineer" type="rss" xmlUrl="https://hannes.nqsb.io/atom"></outline>
+        <outline text="Functorial Blog" title="Functorial Blog" type="rss" xmlUrl="https://blog.functorial.com/feed.rss"></outline>
+        <outline text="Garrett Dawson | thedrearlight" title="Garrett Dawson | thedrearlight" type="rss" xmlUrl="https://feeds.feedburner.com/thedrearlight"></outline>
+        <outline text="GNU Guix — Blog" title="GNU Guix — Blog" type="rss" xmlUrl="http://guix.gnu.org/feeds/blog.atom"></outline>
+        <outline text="Graham Christensen" title="Graham Christensen" type="rss" xmlUrl="https://grahamc.com/feed/"></outline>
+        <outline text="Haskell for all" title="Haskell for all" type="rss" xmlUrl="http://www.haskellforall.com/feeds/posts/default"></outline>
+        <outline text="home" title="home" type="rss" xmlUrl="https://meta.plasm.us/atom.xml"></outline>
+        <outline text="IDE 2020 Updates" title="IDE 2020 Updates" type="rss" xmlUrl="https://mpickering.github.io/ide/atom.xml"></outline>
+        <outline text="in Code — Entries" title="in Code — Entries" type="rss" xmlUrl="http://feeds.feedburner.com/incodeblog"></outline>
+        <outline text="Jakob&apos;s Personal Webpage" title="Jakob&apos;s Personal Webpage" type="rss" xmlUrl="http://jakob.space/feed.xml"></outline>
+        <outline text="Jane Street Tech Blog" title="Jane Street Tech Blog" type="rss" xmlUrl="https://blog.janestreet.com/feed.xml"></outline>
+        <outline text="Jessitron" title="Jessitron" type="rss" xmlUrl="http://blog.jessitron.com/feeds/posts/default"></outline>
+        <outline text="John Millikin" title="John Millikin" type="rss" xmlUrl="https://john-millikin.com/changes.xml"></outline>
+        <outline text="joyofsource.com" title="joyofsource.com" type="rss" xmlUrl="http://joyofsource.com/feed.xml"></outline>
+        <outline text="Jules Hedges" title="Jules Hedges" type="rss" xmlUrl="https://julesh.com/feed/"></outline>
+        <outline text="Julia Evans" title="Julia Evans" type="rss" xmlUrl="https://www.jvns.ca/atom.xml"></outline>
+        <outline text="Learn PureScript and Functional Programming on Thomas Honeyman" title="Learn PureScript and Functional Programming on Thomas Honeyman" type="rss" xmlUrl="https://thomashoneyman.com/articles/index.xml"></outline>
+        <outline text="LWN.net" title="LWN.net" type="rss" xmlUrl="http://lwn.net/headlines/newrss"></outline>
+        <outline text="Lysxia&apos;s blog" title="Lysxia&apos;s blog" type="rss" xmlUrl="https://blog.poisson.chat/rss.xml"></outline>
+        <outline text="Math ∩ Programming" title="Math ∩ Programming" type="rss" xmlUrl="http://jeremykun.com/feed/"></outline>
+        <outline text="Matt Keeter" title="Matt Keeter" type="rss" xmlUrl="http://www.mattkeeter.com/atom.xml"></outline>
+        <outline text="Matt Might&apos;s blog" title="Matt Might&apos;s blog" type="rss" xmlUrl="http://matt.might.net/articles/feed.rss"></outline>
+        <outline text="Máirín Duffy" title="Máirín Duffy" type="rss" xmlUrl="https://blog.linuxgrrl.com/feed/"></outline>
+        <outline text="Newsletter feed for Computer Things" title="Newsletter feed for Computer Things" type="rss" xmlUrl="https://buttondown.email/hillelwayne/rss"></outline>
+        <outline text="Newsletter feed for Halfspace" title="Newsletter feed for Halfspace" type="rss" xmlUrl="https://buttondown.email/j2kun/rss"></outline>
+        <outline text="no time" title="no time" type="rss" xmlUrl="https://blogs.ncl.ac.uk/andreymokhov/feed/"></outline>
+        <outline text="Noahpinion" title="Noahpinion" type="rss" xmlUrl="http://noahpinionblog.blogspot.com/feeds/posts/default"></outline>
+        <outline text="Noahpinion" title="Noahpinion" type="rss" xmlUrl="https://noahpinion.substack.com/feed"></outline>
+        <outline text="OCaml Weekly News" title="OCaml Weekly News" type="rss" xmlUrl="http://alan.petitepomme.net/cwn/cwn.rss"></outline>
+        <outline text="Othacehe" title="Othacehe" type="rss" xmlUrl="https://othacehe.org/feed.xml"></outline>
+        <outline text="Overcoming Software" title="Overcoming Software" type="rss" xmlUrl="http://www.parsonsmatt.org/feed.xml"></outline>
+        <outline text="PINE64" title="PINE64" type="rss" xmlUrl="https://www.pine64.org/feed/"></outline>
+        <outline text="PLV@MIT" title="PLV@MIT" type="rss" xmlUrl="https://plv.csail.mit.edu/blog/feeds/all.atom.xml"></outline>
+        <outline text="Posts - John Soo" title="Posts - John Soo" type="rss" xmlUrl="https://www.refl.club/posts/atom.xml"></outline>
+        <outline text="QA9" title="QA9" type="rss" xmlUrl="https://queuea9.wordpress.com/feed/atom/"></outline>
+        <outline text="Reasonably Polymorphic" title="Reasonably Polymorphic" type="rss" xmlUrl="http://reasonablypolymorphic.com/atom.xml"></outline>
+        <outline text="Ryan Scott" title="Ryan Scott" type="rss" xmlUrl="https://ryanglscott.github.io/feed.xml"></outline>
+        <outline text="sacha chua :: living an awesome life" title="sacha chua :: living an awesome life" type="rss" xmlUrl="https://sachachua.com/blog/feed/"></outline>
+        <outline text="Stephen Diehl" title="Stephen Diehl" type="rss" xmlUrl="http://www.stephendiehl.com/feed.rss"></outline>
+        <outline text="Stories by Steve Krouse on Medium" title="Stories by Steve Krouse on Medium" type="rss" xmlUrl="https://medium.com/feed/@stevekrouse"></outline>
+        <outline text="Storm Country" title="Storm Country" type="rss" xmlUrl="http://storm-country.com/rss"></outline>
+        <outline text="Tatiana Mac" title="Tatiana Mac" type="rss" xmlUrl="https://tatianamac.com/feed/feed.xml"></outline>
+        <outline text="The Comonad.Reader" title="The Comonad.Reader" type="rss" xmlUrl="http://comonad.com/reader/feed/"></outline>
+        <outline text="Tom 7 Radar" title="Tom 7 Radar" type="rss" xmlUrl="http://radar.spacebar.org/f/a/weblog/rss/1"></outline>
+        <outline text="tonsky.me" title="tonsky.me" type="rss" xmlUrl="http://tonsky.me/blog/atom.xml"></outline>
+        <outline text="Tristan Hume" title="Tristan Hume" type="rss" xmlUrl="https://thume.ca/atom.xml"></outline>
+        <outline text="Type Classes" title="Type Classes" type="rss" xmlUrl="https://typeclasses.com/rss.xml"></outline>
+        <outline text="Uploads from ICFP Video" title="Uploads from ICFP Video" type="rss" xmlUrl="https://www.youtube.com/playlist?list=UUwRL68qZFfub1Ep1EScfmBw"></outline>
+        <outline text="We Can Solve This" title="We Can Solve This" type="rss" xmlUrl="http://sandymaguire.me/atom.xml"></outline>
+        <outline text="wingolog" title="wingolog" type="rss" xmlUrl="https://wingolog.org/feed/atom"></outline>
+    </body>
+</opml>
