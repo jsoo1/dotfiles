@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+    <head>
+        <title>Downcast Podcasts</title>
+    </head>
+    <body>
+        <outline text="The Indicator from Planet Money" type="rss" title="The Indicator from Planet Money" xmlUrl="https://feeds.npr.org/510325/podcast.xml" htmlUrl="https://www.npr.org/sections/money/567724614/the-indicator" />
+        <outline text="Heavyweight" type="rss" title="Heavyweight" xmlUrl="https://feeds.megaphone.fm/heavyweight" htmlUrl="https://gimletmedia.com/show/heavyweight/" />
+        <outline text="Crimetown" type="rss" title="Crimetown" xmlUrl="https://feeds.megaphone.fm/crimetown" htmlUrl="https://www.gimletmedia.com/show/crimetown" />
+        <outline text="Reply All" type="rss" title="Reply All" xmlUrl="https://feeds.megaphone.fm/replyall" htmlUrl="http://gimletmedia.com/shows/reply-all" />
+        <outline text="Functional Geekery" type="rss" title="Functional Geekery" xmlUrl="https://www.functionalgeekery.com/feed/mp3/" htmlUrl="https://www.functionalgeekery.com" />
+        <outline text="CaSE: Conversations about Software Engineering" type="rss" title="CaSE: Conversations about Software Engineering" xmlUrl="https://www.case-podcast.org/feed/aac" htmlUrl="https://www.case-podcast.org/" />
+        <outline text="Cultural Technologies" type="rss" title="Cultural Technologies" xmlUrl="http://feeds.feedburner.com/CulturalTechnologies" htmlUrl="http://bernardg.com/podcast/feed" />
+        <outline text="LambdaCast" type="rss" title="LambdaCast" xmlUrl="http://feeds.soundcloud.com/users/soundcloud:users:239787249/sounds.rss" htmlUrl="https://www.patreon.com/lambdacast" />
+        <outline text="Invisibilia" type="rss" title="Invisibilia" xmlUrl="https://feeds.npr.org/510307/podcast.xml" htmlUrl="https://www.npr.org/programs/invisibilia" />
+        <outline text="My Favorite Theorem" type="rss" title="My Favorite Theorem" xmlUrl="https://kpknudson.com/my-favorite-theorem?format=rss" htmlUrl="https://kpknudson.com/my-favorite-theorem/" />
+        <outline text="Three Devs and a Maybe" type="rss" title="Three Devs and a Maybe" xmlUrl="https://threedevsandamaybe.com/podcast.xml" htmlUrl="http://threedevsandamaybe.com/" />
+        <outline text="50 Things That Made the Modern Economy" type="rss" title="50 Things That Made the Modern Economy" xmlUrl="https://podcasts.files.bbci.co.uk/p04b1g3c.rss" htmlUrl="http://www.bbc.co.uk/programmes/p04b1g3c" />
+        <outline text="StartUp Podcast" type="rss" title="StartUp Podcast" xmlUrl="https://feeds.megaphone.fm/startup" htmlUrl="https://www.gimletmedia.com/startup" />
+        <outline text="The Type Theory Podcast" type="rss" title="The Type Theory Podcast" xmlUrl="http://typetheorypodcast.com/feed/podcast/" htmlUrl="http://typetheorypodcast.com" />
+        <outline text="Magic Read Along" type="rss" title="Magic Read Along" xmlUrl="http://www.magicreadalong.com/?format=rss" htmlUrl="http://www.magicreadalong.com/" />
+        <outline text="Libre Lounge" type="rss" title="Libre Lounge" xmlUrl="https://librelounge.org/rss-feed.rss" htmlUrl="https://librelounge.org" />
+        <outline text="CoRecursive: Coding Stories" type="rss" title="CoRecursive: Coding Stories" xmlUrl="https://corecursive.libsyn.com/feed" htmlUrl="http://corecursive.com" />
+        <outline text="EmacsCast" type="rss" title="EmacsCast" xmlUrl="https://pinecast.com/feed/emacscast" htmlUrl="http://emacscast.org" />
+        <outline text="Spectacular Vernacular" type="rss" title="Spectacular Vernacular" xmlUrl="https://feeds.megaphone.fm/slatelexiconvalley" htmlUrl="slate.com/podcasts" />
+        <outline text="Soft Skills Engineering" type="rss" title="Soft Skills Engineering" xmlUrl="http://feeds.feedburner.com/SoftSkillsEngineering" htmlUrl="https://softskills.audio/" />
+        <outline text="Command Line Heroes" type="rss" title="Command Line Heroes" xmlUrl="https://feeds.pacific-content.com/commandlineheroes" htmlUrl="https://www.redhat.com/en/command-line-heroes" />
+        <outline text="Conversations with Tyler" type="rss" title="Conversations with Tyler" xmlUrl="http://cowenconvos.libsyn.com/rss" htmlUrl="https://www.conversationswithtyler.com" />
+        <outline text="Behind the Money" type="rss" title="Behind the Money" xmlUrl="https://rss.acast.com/behindthemoney" htmlUrl="http://ft.com/behindthemoney" />
+        <outline text="Talkhouse Podcast" type="rss" title="Talkhouse Podcast" xmlUrl="http://thetalkhouse.libsyn.com/rss" htmlUrl="https://www.talkhouse.com/" />
+        <outline text="Why Are Computers" type="rss" title="Why Are Computers" xmlUrl="https://whyarecomputers.com/feed.rss" htmlUrl="http://whyarecomputers.com/" />
+        <outline text="Darknet Diaries" type="rss" title="Darknet Diaries" xmlUrl="https://feeds.megaphone.fm/darknetdiaries" htmlUrl="https://darknetdiaries.com/" />
+        <outline text="On The Metal" type="rss" title="On The Metal" xmlUrl="https://feeds.transistor.fm/on-the-metal-0294649e-ec23-4eab-975a-9eb13fd94e06" htmlUrl="https://onthemetal.fm" />
+        <outline text="Iowa Type Theory Commute" type="rss" title="Iowa Type Theory Commute" xmlUrl="https://feeds.buzzsprout.com/728558.rss" htmlUrl="http://www.cs.uiowa.edu/~astump" />
+        <outline text="Reason Town" type="rss" title="Reason Town" xmlUrl="https://anchor.fm/s/79070e8/podcast/rss" htmlUrl="https://reason.town" />
+        <outline text="Indie Hackers" type="rss" title="Indie Hackers" xmlUrl="https://feeds.transistor.fm/the-indie-hackers-podcast" htmlUrl="https://www.indiehackers.com" />
+        <outline text="Greater Than Code" type="rss" title="Greater Than Code" xmlUrl="https://feeds.fireside.fm/greaterthancode/rss" htmlUrl="https://www.greaterthancode.com" />
+        <outline text="The Search Space" type="rss" title="The Search Space" xmlUrl="https://feeds.transistor.fm/the-search-space" htmlUrl="http://thesearch.space" />
+        <outline text="Nice White Parents" type="rss" title="Nice White Parents" xmlUrl="https://feeds.simplecast.com/Z4wHC1c2" htmlUrl="https://nice-white-parents.simplecast.com" />
+        <outline text="Rustacean Station" type="rss" title="Rustacean Station" xmlUrl="https://rustacean-station.org/podcast.rss" htmlUrl="https://rustacean-station.org" />
+        <outline text="Quanta Science Podcast" type="rss" title="Quanta Science Podcast" xmlUrl="https://api.quantamagazine.org/feed/podcast/" htmlUrl="https://www.quantamagazine.org" />
+        <outline text="The Partially Examined Life (Citizens)" type="rss" title="The Partially Examined Life (Citizens)" xmlUrl="https://partiallyexaminedlife.com/feed/citizen" htmlUrl="https://partiallyexaminedlife.com" />
+        <outline text="Embedded" type="rss" title="Embedded" xmlUrl="https://makingembeddedsystems.libsyn.com/rss" htmlUrl="https://embedded.fm" />
+        <outline text="Signals and Threads" type="rss" title="Signals and Threads" xmlUrl="https://feeds.simplecast.com/L9810DOa" htmlUrl="signalsandthreads.com" />
+        <outline text="Resistance" type="rss" title="Resistance" xmlUrl="https://feeds.megaphone.fm/resistance-wide" htmlUrl="(null)" />
+        <outline text="Arrested DevOps" type="rss" title="Arrested DevOps" xmlUrl="https://www.arresteddevops.com/episode/index.xml" htmlUrl="https://www.arresteddevops.com" />
+        <outline text="Thrasher Radio" type="rss" title="Thrasher Radio" xmlUrl="https://www.thrashermagazine.com/Callbacks/Radio/Podcast_clean.php" htmlUrl="http://www.thrashermagazine.com" />
+        <outline text="Future of Coding" type="rss" title="Future of Coding" xmlUrl="https://omny.fm/shows/future-of-coding/playlists/podcast.rss" htmlUrl="https://futureofcoding.org/" />
+        <outline text="How to Save a Planet" type="rss" title="How to Save a Planet" xmlUrl="https://feeds.megaphone.fm/howtosaveaplanet" htmlUrl="https://gimletmedia.com/shows/howtosaveaplanet" />
+        <outline text="Compositional" type="rss" title="Compositional" xmlUrl="https://feeds.fireside.fm/compositional/rss" htmlUrl="https://www.compositional.fm" />
+        <outline text="Serial" type="rss" title="Serial" xmlUrl="https://feeds.simplecast.com/xl36XBC2" htmlUrl="https://serialpodcast.org" />
+        <outline text="Cognicast" type="rss" title="Cognicast" xmlUrl="http://feeds.feedburner.com/cognicast" htmlUrl="https://www.cognitect.com/cognicast/" />
+        <outline text="Louder Than A Riot" type="rss" title="Louder Than A Riot" xmlUrl="https://feeds.npr.org/510357/podcast.xml" htmlUrl="https://www.npr.org/podcasts/510357/louder-than-a-riot" />
+        <outline text="I Don&amp;apos;t Speak German" type="rss" title="I Don&amp;apos;t Speak German" xmlUrl="https://idontspeakgerman.libsyn.com/rss" htmlUrl="http://idontspeakgerman.libsyn.com/website" />
+        <outline text="Behind the Bastards" type="rss" title="Behind the Bastards" xmlUrl="https://feeds.megaphone.fm/behindthebastards" htmlUrl="https://www.behindthebastards.com/" />
+        <outline text="Building Better Systems" type="rss" title="Building Better Systems" xmlUrl="https://feeds.simplecast.com/JdJ0jEHv" htmlUrl="https://building-better-systems.simplecast.com" />
+        <outline text="Screaming in the Cloud" type="rss" title="Screaming in the Cloud" xmlUrl="https://feeds.transistor.fm/screaming-in-the-cloud" htmlUrl="https://screaminginthecloud.com" />
+        <outline text="Planet Money" type="rss" title="Planet Money" xmlUrl="https://feeds.npr.org/510289/podcast.xml" htmlUrl="https://www.npr.org/podcasts/510289/planet-money" />
+        <outline text="Polyglot" type="rss" title="Polyglot" xmlUrl="https://feeds.buzzsprout.com/1677727.rss" htmlUrl="" />
+        <outline text="This American Life" type="rss" title="This American Life" xmlUrl="http://feed.thisamericanlife.org/talpodcast" htmlUrl="https://www.thisamericanlife.org" />
+        <outline text="Mathematically Uncensored" type="rss" title="Mathematically Uncensored" xmlUrl="https://feeds.simplecast.com/mcwuPBFS" htmlUrl="https://mathematically-uncensored.simplecast.com" />
+        <outline text="The Sporkful" type="rss" title="The Sporkful" xmlUrl="https://www.omnycontent.com/d/playlist/aaea4e69-af51-495e-afc9-a9760146922b/9a16516d-cd6b-428e-a3b3-aac50181710a/b4dbf52c-d783-4d4a-ab56-aac501817114/podcast.rss" htmlUrl="http://www.sporkful.com/" />
+        <outline text="The Improvement Association" type="rss" title="The Improvement Association" xmlUrl="https://feeds.simplecast.com/zG20qvRw" htmlUrl="https://the-improvement-association.simplecast.com" />
+        <outline text="PineTalk Podcast" type="rss" title="PineTalk Podcast" xmlUrl="https://www.pine64.org/feed/mp3/" htmlUrl="https://www.pine64.org" />
+        <outline text="Unnamed Reverse Engineering Podcast" type="rss" title="Unnamed Reverse Engineering Podcast" xmlUrl="https://reverseengineering.libsyn.com/rss" htmlUrl="https://unnamedre.com" />
+        <outline text="Hexapodia (private feed for jsoo1@asu.edu)" type="rss" title="Hexapodia (private feed for jsoo1@asu.edu)" xmlUrl="https://api.substack.com/feed/podcast/35345/private/4dd27026-9552-4ddf-83a0-42505a25cbd8.rss" htmlUrl="https://noahpinion.substack.com/podcast" />
+        <outline text="Legacy Code Rocks" type="rss" title="Legacy Code Rocks" xmlUrl="https://legacycoderocks.libsyn.com/rss" htmlUrl="http://legacycode.rocks" />
+        <outline text="EconTalk" type="rss" title="EconTalk" xmlUrl="https://feeds.simplecast.com/wgl4xEgL" htmlUrl="https://simplecast.econtalk.org" />
+        <outline text="Lexicon Valley" type="rss" title="Lexicon Valley" xmlUrl="https://api.substack.com/feed/podcast/366168/s/2522.rss" htmlUrl="https://www.booksmartstudios.org/s/lexicon-valley" />
+    </body>
+</opml>
