@@ -151,6 +151,7 @@
 ;; Elfeed
 (with-eval-after-load 'elfeed
   (elfeed-load-opml (expand-file-name "bazqux-reader-subscriptions.xml" user-emacs-directory))
+  (elfeed-load-opml (expand-file-name "Downcast.opml" user-emacs-directory))
   (run-with-timer 0 (* 15 60) 'elfeed-update))
 
 ;; Shell
