@@ -2,7 +2,7 @@
 <opml version="1.0">
     <head>
         <title>BazQux Reader subscriptions</title>
-        <dateCreated>Fri, 10 Sep 2021 17:35:44 GMT</dateCreated>
+        <dateCreated>Fri, 10 Sep 2021 17:53:58 GMT</dateCreated>
     </head>
     <body>
         <outline text="https://soap.coffee/~lthms" title="https://soap.coffee/~lthms" type="rss" xmlUrl="https://soap.coffee/~lthms"></outline>
@@ -44,6 +44,7 @@
         <outline text="joyofsource.com" title="joyofsource.com" type="rss" xmlUrl="http://joyofsource.com/feed.xml"></outline>
         <outline text="Jules Hedges" title="Jules Hedges" type="rss" xmlUrl="https://julesh.com/feed/"></outline>
         <outline text="Julia Evans" title="Julia Evans" type="rss" xmlUrl="https://www.jvns.ca/atom.xml"></outline>
+        <outline text="Karthinks" title="Karthinks" type="rss" xmlUrl="https://karthinks.com/index.xml"></outline>
         <outline text="Learn PureScript and Functional Programming on Thomas Honeyman" title="Learn PureScript and Functional Programming on Thomas Honeyman" type="rss" xmlUrl="https://thomashoneyman.com/articles/index.xml"></outline>
         <outline text="LWN.net" title="LWN.net" type="rss" xmlUrl="http://lwn.net/headlines/newrss"></outline>
         <outline text="Lysxia&apos;s blog" title="Lysxia&apos;s blog" type="rss" xmlUrl="https://blog.poisson.chat/rss.xml"></outline>
