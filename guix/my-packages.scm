@@ -41,7 +41,6 @@
     "shellcheck"
     "skim"
     "time"
-    "tlsdate"
     ;; "tokei"
     "tmux"
     "unzip"))
@@ -67,6 +66,7 @@
     "libnotify"
     "libreoffice"
     "my-dmenu"
+    "mpd-mpc"
     "pulseaudio"
     "scrot"))
 
@@ -201,6 +201,7 @@
     "emacs-ob-restclient"
     "emacs-org-mime"
     "emacs-origami-el"
+    "emacs-popper"
     "emacs-prescient"
     "emacs-projectile"
     "emacs-psc-ide"
