@@ -56,7 +56,6 @@ main = do
         [ "light -S 30.0"
         , "compton --config ~/.config/compton/compton.conf"
         , "xwallpaper --zoom ~/Downloads/richter-lucerne.jpg"
-        , "xcape -e 'Control_L=Escape'"
         ]
     }
     `additionalKeys` myCommands

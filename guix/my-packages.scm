@@ -41,7 +41,7 @@
     "shellcheck"
     "skim"
     "time"
-    ;; "tokei"
+    "tokei"
     "tmux"
     "unzip"))
 
@@ -119,7 +119,6 @@
     "ghc-xmonad-contrib"
     "pavucontrol"
     "setxkbmap"
-    "xcape"
     "xdg-utils"
     "xdotool"
     "xev"
