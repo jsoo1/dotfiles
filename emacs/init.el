@@ -150,6 +150,8 @@
 
 ;; Elfeed
 (with-eval-after-load 'elfeed
+  (setq elfeed-curl-max-connections 8)
+  (setq-default elfeed-search-filter "@6-months-ago")
   (elfeed-load-opml (expand-file-name "bazqux-reader-subscriptions.xml" user-emacs-directory))
   (elfeed-load-opml (expand-file-name "Downcast.opml" user-emacs-directory))
   (run-with-timer 0 (* 15 60) 'elfeed-update))
@@ -1252,6 +1254,16 @@ when send commands with redis protocol."
           (not (display-graphic-p (selected-frame))))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
            (set-face-background 'line-number "#073642" (selected-frame))))
+
+;; Popper
+(popper-mode 1)
+(setq popper-reference-buffers
+      '("\\*Messages\\*"
+        "Output\\*$"
+        "\\*Async Shell Command\\*"
+        eshell-mode
+        helpful-mode
+        compilation-mode))
 
 ;; Tab bar
 (setq
