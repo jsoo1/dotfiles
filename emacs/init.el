@@ -1278,6 +1278,7 @@ when send commands with redis protocol."
       '("\\*Messages\\*"
         "Output\\*$"
         "\\*Async Shell Command\\*")
+      popper-group-function 'popper-group-by-projectile
       popper-reference-modes
       '(eshell-mode help-mode helpful-mode compilation-mode))
 
