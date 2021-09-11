@@ -1279,7 +1279,7 @@ when send commands with redis protocol."
         "Output\\*$"
         "\\*Async Shell Command\\*")
       popper-reference-modes
-      '(eshell-mode helpful-mode compilation-mode))
+      '(eshell-mode help-mode helpful-mode compilation-mode))
 
 ;; Tab bar
 (setq
