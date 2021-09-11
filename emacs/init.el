@@ -1518,7 +1518,7 @@ when send commands with redis protocol."
 
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
-  (kbd "TAB") popper-toggle-b
+  (kbd "TAB") popper-toggle-latest
   "b" ivy-switch-buffer
   "c" (defun switch-to-compile-buffer ()
         (interactive) (my-switch-to-compile-buffer "compile"))
