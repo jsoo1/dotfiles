@@ -71,3 +71,23 @@ function nth -a i -d 'Select the nth element of stdin, a file or files'
         end
     end
 end
+
+function guix-signal -d 'Send a signal to guix processes'
+    set -l sig
+    set -l recsel recsel -t ChildProcess -j Session
+    argparse 's/sig=' 'e/expr=' -- $argv
+    or return 1
+    if test "$_flag_s" = ""
+        echo "--sig flag is required"
+        return 1
+    else
+        set sig "$_flag_s"
+    end
+    if test "$_flag_e" != ""
+        set -a recsel -e "\"$_flag_e\""
+    end
+    guix processes -f normalized \
+        | eval $recsel \
+        | recfmt -- ' -{{PID}} -{{Session.PID}}' \
+        | xargs sudo kill -"$sig"
+end
