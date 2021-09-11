@@ -1290,12 +1290,11 @@ when send commands with redis protocol."
                                (mapcan (pcase-lambda (`(,group . ,xs))
                                          (mapcar (lambda (x) (cons group x)) xs))
                                        popper-buried-popup-alist))
-            :action (pcase-lambda (`(,str-selected . (,group ,win . ,buf)))
+            :action (pcase-lambda (`(_ ,group . ,selection))
                       (let ((bufs (alist-get group popper-buried-popup-alist nil nil 'equal)))
-                        (setq bufs (delq `(,win . ,buf) bufs))
-                        (setf (alist-get group popper-buried-popup-alist nil nil 'equal) bufs)
                         (setf (alist-get group popper-buried-popup-alist nil nil 'equal)
-                              (cons `(,win . ,buf) bufs)))
+                              (cons selection
+                                    (seq-filter (lambda (x) (not (equal selection x))) bufs))))
                       (popper-open-latest group))
             :require-match t
             :caller 'counsel-popper-buried-popups))
