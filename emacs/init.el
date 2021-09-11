@@ -1281,6 +1281,30 @@ when send commands with redis protocol."
       popper-reference-modes
       '(eshell-mode help-mode helpful-mode compilation-mode))
 
+(defun counsel-popper-buried-popups ()
+  "Ivy search for popper buried popups."
+  (interactive)
+  (ivy-read "Buffer: " (mapcar (pcase-lambda (`(,group ,win . ,buf))
+                                 `(,(format "%s: %s" group (buffer-name buf)) . (,group ,win . ,buf)))
+                               (mapcan (pcase-lambda (`(,group . ,xs))
+                                         (mapcar (lambda (x) (cons group x)) xs))
+                                       popper-buried-popup-alist))
+            :action (pcase-lambda (`(,str-selected . (,group ,win . ,buf)))
+                      (let ((bufs (alist-get group popper-buried-popup-alist nil nil 'equal)))
+                        (setq bufs (delq `(,win . ,buf) bufs))
+                        (setf (alist-get group popper-buried-popup-alist nil nil 'equal) bufs)
+                        (setf (alist-get group popper-buried-popup-alist nil nil 'equal)
+                              (cons `(,win . ,buf) bufs)))
+                      (popper-open-latest group))
+            :require-match t
+            :caller 'counsel-popper-buried-popups))
+
+(pcase nil
+  (x (message "x: %s" x)))
+(apply
+ (pcase-lambda (`(,x ,y . ,z)) (message "%s %s %s" x y z))
+ '((1 2 . 3)))
+
 ;; Tab bar
 (setq
  tab-bar-show nil
@@ -1631,6 +1655,7 @@ when send commands with redis protocol."
   "my jump keybindings"
   "i" counsel-imenu
   "o" counsel-org-goto-all
+  "p" counsel-popper-buried-popups
   "t" counsel-switch-tab
   "u" undo-tree-visualize
   "]" evil-jump-to-tag
