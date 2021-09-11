@@ -399,6 +399,7 @@
 (with-eval-after-load 'debbugs (evil-collection-debbugs-setup))
 (with-eval-after-load 'info (evil-collection-info-setup))
 (with-eval-after-load 'elfeed (evil-collection-elfeed-setup))
+(with-eval-after-load 'timer-list (evil-collection-timer-list-setup))
 (global-evil-leader-mode)
 
 (evil-set-initial-state 'compilation-mode 'normal)
