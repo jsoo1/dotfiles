@@ -1359,7 +1359,7 @@ when send commands with redis protocol."
     " "
     (:eval anzu--mode-line-format)))
 
-(setq-default mode-line-format nil)
+(setq-default mode-line-format my-mode-line-format)
 
 (defun toggle-mode-line ()
   "Toggle mode-line."
