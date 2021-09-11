@@ -155,6 +155,21 @@
   (elfeed-load-opml (expand-file-name "bazqux-reader-subscriptions.xml" user-emacs-directory))
   (elfeed-load-opml (expand-file-name "Downcast.opml" user-emacs-directory))
   (run-with-timer 0 (* 15 60) 'elfeed-update))
+(defun my-elfeed-podcast-tagger (entry)
+  (when (elfeed-entry-enclosures entry)
+    (elfeed-tag entry 'podcast)))
+(add-hook 'elfeed-new-entry-hook #'my-elfeed-podcast-tagger)
+
+;; EMMS
+(emms-all)
+(emms-default-players)
+(setq emms-source-file-directory (expand-file-name "~/Music")
+      emms-player-mpd-server-name "localhost"
+      emms-player-mpd-server-port "6600"
+      emms-player-mpd-music-directory "~/Music")
+(add-to-list 'emms-info-functions 'emms-info-mpd)
+(add-to-list 'emms-player-list 'emms-player-mpd)
+;; (emms-player-mpd-connect)
 
 ;; Shell
 (setq shell-file-name "bash")
@@ -402,6 +417,7 @@
 (with-eval-after-load 'info (evil-collection-info-setup))
 (with-eval-after-load 'elfeed (evil-collection-elfeed-setup))
 (with-eval-after-load 'timer-list (evil-collection-timer-list-setup))
+(with-eval-after-load 'emms (evil-collection-emms-setup))
 (global-evil-leader-mode)
 
 (evil-set-initial-state 'compilation-mode 'normal)

@@ -159,6 +159,7 @@
     "emacs-elf-mode"
     "emacs-elpher"
     "emacs-emmet-mode"
+    "emacs-emms"
     "emacs-envrc"
     "emacs-eredis"
     "emacs-eshell-syntax-highlighting"
