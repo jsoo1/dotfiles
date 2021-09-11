@@ -1299,12 +1299,6 @@ when send commands with redis protocol."
             :require-match t
             :caller 'counsel-popper-buried-popups))
 
-(pcase nil
-  (x (message "x: %s" x)))
-(apply
- (pcase-lambda (`(,x ,y . ,z)) (message "%s %s %s" x y z))
- '((1 2 . 3)))
-
 ;; Tab bar
 (setq
  tab-bar-show nil
