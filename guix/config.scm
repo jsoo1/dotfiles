@@ -30,7 +30,7 @@
  ((gnu packages vim) #:select (neovim))
  ((gnu packages vpn) #:select (wireguard-tools))
  ((gnu packages web-browsers) #:select (lynx))
- ((gnu packages xdisorg) #:select (xcape xlockmore))
+ ((gnu packages xdisorg) #:select (xlockmore))
  ((gnu packages xorg)
   #:select (xkbcomp
             xinit
@@ -79,9 +79,6 @@
  ((gnu services ssh)
   #:select (openssh-service-type
             openssh-configuration))
- ;; ((gnu services xdisorg)
- ;;  #:select (xcape-configuration
- ;;            xcape-service-type))
  ((gnu services sound)
   #:select (alsa-service-type))
  ((gnu services virtualization)
