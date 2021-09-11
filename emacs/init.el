@@ -799,6 +799,7 @@
   (add-hook 'emacs-lisp-mode-hook #'company-mode 't))
 (define-key emacs-lisp-mode-map (kbd "C-c C-e") #'edebug-defun)
 (define-key emacs-lisp-mode-map (kbd "C-c C-b") #'eval-buffer)
+(define-key emacs-lisp-mode-map (kbd "C-C C-r") #'eval-region)
 (add-hook 'emacs-lisp-mode-hook
           (defun setup-elisp-imenu ()
             (setq-local
