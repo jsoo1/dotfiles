@@ -1261,10 +1261,9 @@ when send commands with redis protocol."
 (setq popper-reference-buffers
       '("\\*Messages\\*"
         "Output\\*$"
-        "\\*Async Shell Command\\*"
-        eshell-mode
-        helpful-mode
-        compilation-mode))
+        "\\*Async Shell Command\\*")
+      popper-reference-modes
+      '(eshell-mode helpful-mode compilation-mode))
 
 ;; Tab bar
 (setq
@@ -1503,6 +1502,7 @@ when send commands with redis protocol."
 
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
+  (kbd "TAB") popper-toggle-b
   "b" ivy-switch-buffer
   "c" (defun switch-to-compile-buffer ()
         (interactive) (my-switch-to-compile-buffer "compile"))
@@ -1703,7 +1703,7 @@ when send commands with redis protocol."
 
 (define-prefix-keymap my-toggle-map
   "my toggles"
-  "b" popper-cycle
+  "b" popper-toggle-latest
   "B" popper-toggle-type
   "c" display-fill-column-indicator-mode
   "d" toggle-debug-on-error
@@ -1717,7 +1717,7 @@ when send commands with redis protocol."
         (interactive)
         (setq display-line-numbers (next-line-number display-line-numbers)))
   "o" my-org-toggle-map
-  "p" popper-toggle-latest
+  "p" popper-cycle
   "t" tab-bar-mode
   "T" counsel-load-theme
   "w" whitespace-mode
