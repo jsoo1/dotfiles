@@ -1518,7 +1518,6 @@ when send commands with redis protocol."
 
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
-  (kbd "TAB") popper-toggle-latest
   "b" ivy-switch-buffer
   "c" (defun switch-to-compile-buffer ()
         (interactive) (my-switch-to-compile-buffer "compile"))
@@ -1719,8 +1718,6 @@ when send commands with redis protocol."
 
 (define-prefix-keymap my-toggle-map
   "my toggles"
-  "b" popper-toggle-latest
-  "B" popper-toggle-type
   "c" display-fill-column-indicator-mode
   "d" toggle-debug-on-error
   "D" toggle-debug-on-quit
@@ -1734,6 +1731,7 @@ when send commands with redis protocol."
         (setq display-line-numbers (next-line-number display-line-numbers)))
   "o" my-org-toggle-map
   "p" popper-cycle
+  "P" popper-toggle-type
   "t" tab-bar-mode
   "T" counsel-load-theme
   "w" whitespace-mode
@@ -1767,6 +1765,7 @@ when send commands with redis protocol."
   "K" evil-window-move-very-top
   "L" evil-window-move-far-right
   "m" delete-other-windows
+  "p" popper-toggle-latest
   "r" winner-redo
   "u" winner-undo
   "=" balance-windows)
