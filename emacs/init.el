@@ -1702,6 +1702,8 @@ when send commands with redis protocol."
 
 (define-prefix-keymap my-toggle-map
   "my toggles"
+  "b" popper-cycle
+  "B" popper-toggle-type
   "c" display-fill-column-indicator-mode
   "d" toggle-debug-on-error
   "D" toggle-debug-on-quit
@@ -1714,6 +1716,7 @@ when send commands with redis protocol."
         (interactive)
         (setq display-line-numbers (next-line-number display-line-numbers)))
   "o" my-org-toggle-map
+  "p" popper-toggle-latest
   "t" tab-bar-mode
   "T" counsel-load-theme
   "w" whitespace-mode
