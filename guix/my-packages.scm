@@ -32,6 +32,7 @@
     "lastpass-cli"
     "make"
     "mosh"
+    "mpv"
     "pijul"
     "pinentry"
     "qemu"
