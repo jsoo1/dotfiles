@@ -106,6 +106,7 @@
 ;; Erc
 (setq erc-autojoin-channels-alist nil
       erc-rename-buffers t
+      erc-ignore-list '("{\\^-\\^}")
       erc-hide-list '("JOIN" "PART" "QUIT"))
 
 (defun my-erc-freenode ()
