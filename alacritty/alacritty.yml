@@ -128,16 +128,23 @@ enable_experimental_conpty_backend: false
 
 alt_send_esc: true
 
+hints:
+  enabled:
+  - regex: "(ipfs:|ipns:|magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)\
+            [^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+    command: xdg-open
+    post_processing: true
+    mouse:
+      enabled: true
+      mods: Control
+    binding:
+      key: U
+      mods: Control|Shift
+
 mouse:
   double_click: { threshold: 300 }
   triple_click: { threshold: 300 }
   hide_when_typing: true
-
-  url:
-    launcher:
-      program: xdg-open
-      args: []
-    modifiers: Control
 
 linux-keybindings: &linux-keybindings
   - { key: V,        mods: Control|Shift,    action: Paste               }
