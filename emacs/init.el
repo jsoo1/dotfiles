@@ -1513,6 +1513,7 @@ when send commands with redis protocol."
   "G" elpher-go
   "i" my-erc-map
   "l" list-processes
+  "m" emms
   "o" org-agenda
   "p" proced
   "t" display-time-world
