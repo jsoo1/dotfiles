@@ -435,6 +435,7 @@
 (evil-set-initial-state 'erc-mode 'normal)
 (evil-set-initial-state 'eshell-mode 'normal)
 (evil-set-initial-state 'tab-switcher-mode 'emacs)
+(evil-set-initial-state 'reb-mode 'normal)
 
 (evil-declare-not-repeat #'flycheck-next-error)
 (evil-declare-not-repeat #'flycheck-previous-error)
@@ -1281,7 +1282,13 @@ when send commands with redis protocol."
         "\\*Async Shell Command\\*")
       popper-group-function 'popper-group-by-projectile
       popper-reference-modes
-      '(eshell-mode help-mode helpful-mode compilation-mode))
+      '(eshell-mode
+        proced
+        process-list
+        help-mode
+        helpful-mode
+        reb-mode
+        compilation-mode))
 
 (defun counsel-popper-buried-popups ()
   "Ivy search for popper buried popups."
@@ -1523,6 +1530,7 @@ when send commands with redis protocol."
   "m" emms
   "o" org-agenda
   "p" proced
+  "r" re-builder
   "t" display-time-world
   "T" list-timers)
 
