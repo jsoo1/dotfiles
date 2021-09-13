@@ -34,12 +34,10 @@ Config
       ]
     , Run Date "%F | %r" "date" 600
     , Run UnsafeStdinReader
-    , Run MPD ["-t", "<state>: <artist> - <track>"] 10
     ]
   , alignSep = "}{"
   , template =
     " λ %UnsafeStdinReader% \
-    \}{%mpd% | \
-    \<action=`amixer -q set Master toggle`>%alsa:default:Master%</action>\
+    \}{<action=`amixer -q set Master toggle`>%alsa:default:Master%</action>\
     \ | %wlp9s0wi% | %battery% | %date%  "
   }
