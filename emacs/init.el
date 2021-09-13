@@ -1520,6 +1520,11 @@ when send commands with redis protocol."
   "r" eglot-rename
   "X" eglot-signal-didChangeConfiguration)
 
+(define-prefix-keymap my-emms-map
+  "my emms bindings"
+  "m" emms
+  "p" emms-pause)
+
 (define-prefix-keymap my-process-map
   "my process keybindings"
   "b" my-debbugs-modes-map
@@ -1530,7 +1535,7 @@ when send commands with redis protocol."
   "G" elpher-go
   "i" my-erc-map
   "l" list-processes
-  "m" emms
+  "m" my-emms-map
   "o" org-agenda
   "p" proced
   "r" re-builder
