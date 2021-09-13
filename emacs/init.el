@@ -1288,6 +1288,8 @@ when send commands with redis protocol."
         process-list
         help-mode
         helpful-mode
+        Man-mode
+        woman-mode
         reb-mode
         compilation-mode))
 
