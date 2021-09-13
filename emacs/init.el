@@ -383,6 +383,7 @@
 
 ;; Undo-Tree
 (global-undo-tree-mode)
+(setq undo-tree-history-directory-alist `((".*" . ,(expand-file-name "undo-tree" user-emacs-directory))))
 
 ;; Evil
 (global-set-key (kbd "<escape>") #'keyboard-escape-quit)
