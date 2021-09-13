@@ -1267,6 +1267,11 @@ when send commands with redis protocol."
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
            (set-face-background 'line-number "#073642" (selected-frame))))
 
+;; Shackle
+(shackle-mode 1)
+(setq shackle-rules '((compilation-mode :noselect t)
+                      (eshell-mode :select t :align "right" :size 0.5)))
+
 ;; Popper
 (popper-mode 1)
 (setq popper-reference-buffers

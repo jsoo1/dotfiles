@@ -212,6 +212,7 @@
     "emacs-restclient"
     "emacs-rust-mode"
     "emacs-s"
+    "emacs-shackle"
     "emacs-slime"
     "emacs-slime-company"
     "emacs-sml-mode"
