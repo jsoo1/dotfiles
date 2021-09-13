@@ -418,6 +418,8 @@
 (with-eval-after-load 'elfeed (evil-collection-elfeed-setup))
 (with-eval-after-load 'timer-list (evil-collection-timer-list-setup))
 (with-eval-after-load 'emms (evil-collection-emms-setup))
+(with-eval-after-load 'proced (evil-collection-proced-setup))
+(with-eval-after-load 'process-list (evil-collection-process-menu-setup))
 (global-evil-leader-mode)
 
 (evil-set-initial-state 'compilation-mode 'normal)
@@ -455,13 +457,6 @@
 (evil-define-key 'normal xref--xref-buffer-mode-map (kbd "C-c") xref--xref-buffer-mode-map)
 (setq xref-show-definitions-function #'xref--show-defs-minibuffer)
 (setq xref-show-xrefs-function #'xref--show-defs-minibuffer)
-
-;; Process Menu
-(add-hook
- 'process-menu-mode-hook
- (defun make-process-menu-ctrl-c-map ()
-   (evil-local-set-key 'normal (kbd ",") process-menu-mode-map)
-   (local-set-key (kbd "C-c") process-menu-mode-map)))
 
 ;; Magit
 (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
