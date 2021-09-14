@@ -64,12 +64,15 @@
     "garcon"
     "gnuplot"
     ;; "ibm-capsense-usb-util"
+    "alsa-lib"
     "libnotify"
     "libreoffice"
+    "libxpm"
     "my-dmenu"
     "mpd-mpc"
     "pulseaudio"
-    "scrot"))
+    "scrot"
+    "wireless-tools"))
 
 (define-public fonts
   '("mkfontdir"
