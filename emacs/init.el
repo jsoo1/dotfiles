@@ -1303,7 +1303,7 @@ when send commands with redis protocol."
                                                  popper-buried-popup-alist)))
             :action (pcase-lambda (`(_ ,group . ,selection))
                       (popper-bury-all)
-                      (let ((bufs (al ist-get group popper-buried-popup-alist nil nil 'equal)))
+                      (let ((bufs (alist-get group popper-buried-popup-alist nil nil 'equal)))
                         (setf (alist-get group popper-buried-popup-alist nil nil 'equal)
                               (cons selection
                                     (seq-filter (lambda (x) (not (equal selection x))) bufs))))
