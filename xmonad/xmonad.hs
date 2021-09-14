@@ -18,7 +18,7 @@ import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
 import           System.Posix.Process             (forkProcess)
 import           System.Process                   (createPipe)
-import qualified Xmobar                           as Xmobar
+import qualified Xmobar
 import           XMonad
 import           XMonad.Actions.CycleWS           (WSType (..), moveTo, shiftTo)
 import           XMonad.Actions.WindowBringer
