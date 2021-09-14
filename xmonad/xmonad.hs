@@ -9,7 +9,7 @@ import           Control.Monad                    (join, unless, void, when)
 import           Data.Coerce                      (coerce)
 import           Data.Foldable                    (traverse_)
 import           Data.Function                    (on)
-import           Data.List                        (isPrefixOf)
+import           Data.List                        (intersperse, isPrefixOf)
 import qualified Data.Map.Strict                  as Map
 import           Data.Maybe                       (listToMaybe)
 import qualified DBus
@@ -72,58 +72,6 @@ gaps screenGap windowGap =
       (Border windowGap windowGap windowGap windowGap)
       True
   . smartBorders
-
--- ============== Bar ==============
-
-xmobarScreenId :: Int
-xmobarScreenId = 1
-
-xmobarConf :: Handle -> Xmobar.Config
-xmobarConf xmobarRead = Xmobar.defaultConfig
-  { Xmobar.font = "xft:Iosevka:size=12:light:antialias=true"
-  , Xmobar.additionalFonts = []
-  , Xmobar.borderColor = "#002b36"
-  , Xmobar.border = Xmobar.BottomB
-  , Xmobar.bgColor = "#00362b"
-  , Xmobar.fgColor = "#839496"
-  , Xmobar.alpha = 204
-  , Xmobar.position = Xmobar.OnScreen xmobarScreenId Xmobar.Top
-  , Xmobar.textOffset = -1
-  , Xmobar.iconOffset = -1
-  , Xmobar.lowerOnStart = True
-  , Xmobar.pickBroadest = False
-  , Xmobar.persistent = False
-  , Xmobar.hideOnStart = False
-  , Xmobar.iconRoot = "."
-  , Xmobar.commands =
-    [ Xmobar.Run (Xmobar.HandleReader xmobarRead "windows")
-    , Xmobar.Run (Xmobar.Wireless "wlp9s0" [ "-t" , "wifi <quality>%"] 200)
-    , Xmobar.Run (Xmobar.Battery
-      [ "-t" , "<acstatus> <left>%"
-      , "--"
-      , "-O" , "ac"
-      , "-i", "full"
-      , "-o" , "bat"
-      , "-h" , "#859900"
-      , "-l" , "#dc322f"
-      ]
-      20)
-    , Xmobar.Run (Xmobar.Alsa "default" "Master"
-      [ "-t" , "<status> <volume>%"
-      , "--"
-      , "--on", "vol", "--onc" , "#839496"
-      , "-o", "vol", "--offc" , "#dc322f"
-      ])
-    , Xmobar.Run (Xmobar.Date "%F | %r" "date" 600)
-    , Xmobar.Run Xmobar.UnsafeStdinReader
-    ]
-  , Xmobar.alignSep = "}{"
-  , Xmobar.template =
-    " λ %windows% \
-    \}{<action=`amixer -q set Master toggle`>%alsa:default:Master%</action>\
-    \ | %wlp9s0wi% | %battery% | %date%  "
-  , Xmobar.verbose = True
-  }
 
 -- ============== Keybindings ==============
 
@@ -243,6 +191,59 @@ tmuxNewSession fullPath = do
 
 -- ============== Bar ==============
 
+xmobarScreenId :: Int
+xmobarScreenId = 1
+
+
+xmobarSegmentSep :: String
+xmobarSegmentSep =  " | "
+
+
+xmobarConf :: Handle -> Xmobar.Config
+xmobarConf xmobarRead = Xmobar.defaultConfig
+  { Xmobar.font = "xft:Iosevka:size=12:light:antialias=true"
+  , Xmobar.additionalFonts = []
+  , Xmobar.borderColor = coerce base03
+  , Xmobar.border = Xmobar.BottomB
+  , Xmobar.bgColor = "#00362b"
+  , Xmobar.fgColor = coerce base0
+  , Xmobar.alpha = 204
+  , Xmobar.position = Xmobar.OnScreen xmobarScreenId (Xmobar.TopW Xmobar.L 100)
+  , Xmobar.textOffset = -1
+  , Xmobar.iconOffset = -1
+  , Xmobar.allDesktops = True
+  , Xmobar.lowerOnStart = True
+  , Xmobar.pickBroadest = False
+  , Xmobar.persistent = False
+  , Xmobar.hideOnStart = False
+  , Xmobar.iconRoot = "."
+  , Xmobar.commands =
+    [ Xmobar.Run (Xmobar.HandleReader xmobarRead "pipe")
+    , Xmobar.Run (Xmobar.DynNetwork [] 20)
+    , Xmobar.Run (Xmobar.Alsa "default" "Master"
+      [ "-t" , "<status> <volume>%"
+      , "--"
+      , "--on", "vol", "--onc" , coerce base0
+      , "-o", "vol", "--offc" , coerce red
+      ])
+    , Xmobar.Run (Xmobar.Date ("%F" <> xmobarSegmentSep <> "%r") "date" 600)
+    , Xmobar.Run Xmobar.UnsafeStdinReader
+    ]
+  , Xmobar.alignSep = alignSep
+  , Xmobar.template = mconcat (leftTemplate <> [ alignSep ] <> rightTemplate)
+  , Xmobar.verbose = True
+  }
+  where
+    leftTemplate = [ " λ %pipe% " ]
+    rightTemplate = intersperse xmobarSegmentSep
+      [ xmobarAction "amixer -q set Master toggle" "1" "%alsa:default:Master%"
+      -- , "%wlp9s0wi%"
+      , "%dynnetwork%"
+      , "%date%"
+      , "  "
+      ]
+    alignSep = "}{"
+
 xmobarCmd :: MonadIO m => Int -> Int -> m (Int, Handle)
 xmobarCmd nScreens screen = do
   xmobarPipe <- spawnPipe cmd
@@ -267,18 +268,17 @@ sendXmobar cmd = liftIO $ do
   client <- DBus.connectSession
   DBus.call_ client (xmobarMethod {DBus.methodCallBody = [DBus.toVariant cmd]})
 
-
 myXmobar :: Handle -> X ()
 myXmobar xmobarWrite = do
   Titles {..} <- withWindowSet allTitles
 
   let wsPrefix :: WorkspaceId -> String
       wsPrefix wsId =
-        " " ++ show xmobarScreenId ++ "," ++ wsId ++ " | "
+        " " ++ show xmobarScreenId ++ "," ++ wsId ++ xmobarSegmentSep
 
   dynamicLogWithPP $ xmobarPP
     { ppOutput =
-        hPutStrLn xmobarWrite
+        hPutStr xmobarWrite
         . (xmobarColor' base0 green (show xmobarScreenId ++ ". ") ++)
     , ppCurrent =
         \wsId ->
@@ -389,3 +389,6 @@ base03 = SpaceColor "#002b36"
 
 green :: SpaceColor
 green = SpaceColor "#859900"
+
+red :: SpaceColor
+red = SpaceColor "#dc322f"
