@@ -130,22 +130,24 @@ dmenuGitDirs :: X String
 dmenuGitDirs =
   runProcessWithInput "bash"
   [ "-c"
-  , "fd '\\.git' '/' -t d -H -I \
-    \-E '\\.github' \
-    \-E '\\.cache' \
-    \-E '\\.tmux' \
-    \-E '\\.cargo' \
-    \-E /gnu/store \
-    \-E '\\.git-credential-cache' \
-    \-E '\\.spago' \
-    \-E '/nix/store' \
-    \-E '/tmp' \
-    \-E '\\.local' \
-    \-E 'dist-newstyle' \
-    \-E '\\.opam' \
-    \-E '/s3' \
-    \| sed -E 's/\\/\\.git$//' \
-    \| dmenu -f -F -p 'repository'"
+  , mconcat $ intersperse " "
+    ["fd '\\.git' '/' -t d -H -I"
+    , "-E '\\.github'"
+    , "-E '\\.cache'"
+    , "-E '\\.tmux'"
+    , "-E '\\.cargo'"
+    , "-E /gnu/store"
+    , "-E '\\.git-credential-cache'"
+    , "-E '\\.spago'"
+    , "-E '/nix/store'"
+    , "-E '/tmp'"
+    , "-E '\\.local'"
+    , "-E 'dist-newstyle'"
+    , "-E '\\.opam'"
+    , "-E '/s3'"
+    , "| sed -E 's/\\/\\.git$//'"
+    , "| dmenu -f -F -p 'repository'"
+    ]
   ]
   ""
 
@@ -230,26 +232,17 @@ xmobarConf xmobarRead = Xmobar.defaultConfig
     , Xmobar.Run Xmobar.UnsafeStdinReader
     ]
   , Xmobar.alignSep = alignSep
-  , Xmobar.template = mconcat (leftTemplate <> [ alignSep ] <> rightTemplate)
+  , Xmobar.template = mconcat ([" λ "] <> leftTemplate <> [ alignSep ] <> rightTemplate <> [ "  " ])
   , Xmobar.verbose = True
   }
   where
-    leftTemplate = [ " λ %pipe% " ]
+    leftTemplate = [ "%pipe%" ]
     rightTemplate = intersperse xmobarSegmentSep
       [ xmobarAction "amixer -q set Master toggle" "1" "%alsa:default:Master%"
-      -- , "%wlp9s0wi%"
       , "%dynnetwork%"
       , "%date%"
-      , "  "
       ]
     alignSep = "}{"
-
-xmobarCmd :: MonadIO m => Int -> Int -> m (Int, Handle)
-xmobarCmd nScreens screen = do
-  xmobarPipe <- spawnPipe cmd
-  pure ( screen, xmobarPipe )
-  where
-    cmd = "xmobar ~/.config/xmobar/xmobar.hs --screen=" <> show (succ nScreens - screen)
 
 
 xmobarMethod :: DBus.MethodCall
@@ -268,6 +261,7 @@ sendXmobar cmd = liftIO $ do
   client <- DBus.connectSession
   DBus.call_ client (xmobarMethod {DBus.methodCallBody = [DBus.toVariant cmd]})
 
+
 myXmobar :: Handle -> X ()
 myXmobar xmobarWrite = do
   Titles {..} <- withWindowSet allTitles
@@ -278,7 +272,7 @@ myXmobar xmobarWrite = do
 
   dynamicLogWithPP $ xmobarPP
     { ppOutput =
-        hPutStr xmobarWrite
+        hPutStrLn xmobarWrite
         . (xmobarColor' base0 green (show xmobarScreenId ++ ". ") ++)
     , ppCurrent =
         \wsId ->
