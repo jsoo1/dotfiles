@@ -18,7 +18,6 @@ XDG_HOME_DIRS = \
 	guix \
 	lynx \
 	shepherd \
-	xmobar \
 	zathura
 
 DIRS = \
@@ -56,7 +55,6 @@ SYMLINKS = \
 	$(XDG_HOME)/shepherd/init.scm \
 	$(HOME)/.tmux.conf \
 	$(HOME)/.tmux/tmuxline.conf \
-	$(XDG_HOME)/xmobar/xmobar.hs \
 	$(HOME)/.xsession \
 	$(HOME)/.xmonad/xmonad.hs \
 	$(XDG_HOME)/zathura/zathurarc
@@ -161,9 +159,6 @@ $(HOME)/.tmux.conf: | $(HOME) ## Tmux configuration
 
 $(HOME)/.tmux/tmuxline.conf: | $(HOME)/.tmux ## Tmux status line configuration
 	$(ln) $(PWD)/tmux/tmuxline.conf $@
-
-$(XDG_HOME)/xmobar/xmobar.hs: | $(XDG_HOME)/xmobar ## Xmobar configuration
-	$(ln) $(PWD)/xmobar/xmobar.hs $@
 
 $(HOME)/.xsession: | $(HOME) ## Loaded by gdm and other DMs on login
 	$(ln) $(PWD)/xmonad/.xsession $@

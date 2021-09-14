@@ -17,6 +17,7 @@ import qualified DBus.Client                      as DBus
 import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
 import           System.Posix.Process             (forkProcess)
+import           System.Process                   (createPipe)
 import qualified Xmobar                           as Xmobar
 import           XMonad
 import           XMonad.Actions.CycleWS           (WSType (..), moveTo, shiftTo)
@@ -39,8 +40,8 @@ import           XMonad.Util.Run                  (runInTerm,
 main :: IO ()
 main = do
   replace
-  -- (read, write) <- Xmobar.createPipe
-  xmobarProc <- forkProcess $ Xmobar.xmobar xmobarConf
+  (xmobarRead, xmobarWrite) <- createPipe
+  xmobarProc <- forkProcess $ Xmobar.xmobar $ xmobarConf xmobarRead
   xmonad $ docks def
     { terminal = "alacritty"
     , focusFollowsMouse = False
@@ -52,7 +53,7 @@ main = do
     , manageHook = manageDocks <+> manageHook def
     , layoutHook =
         avoidStruts $ gaps 5 5 $ ThreeColMid 1 (3/100) (1/2) ||| layoutHook def
-    , logHook = pure () -- io $ Xmobar.xmobar xmobarConf
+    , logHook = myXmobar xmobarWrite
     , startupHook = traverse_ spawn
         [ "light -S 30.0"
         , "compton --config ~/.config/compton/compton.conf"
@@ -74,8 +75,11 @@ gaps screenGap windowGap =
 
 -- ============== Bar ==============
 
-xmobarConf :: Xmobar.Config
-xmobarConf = Xmobar.defaultConfig
+xmobarScreenId :: Int
+xmobarScreenId = 1
+
+xmobarConf :: Handle -> Xmobar.Config
+xmobarConf xmobarRead = Xmobar.defaultConfig
   { Xmobar.font = "xft:Iosevka:size=12:light:antialias=true"
   , Xmobar.additionalFonts = []
   , Xmobar.borderColor = "#002b36"
@@ -83,7 +87,7 @@ xmobarConf = Xmobar.defaultConfig
   , Xmobar.bgColor = "#00362b"
   , Xmobar.fgColor = "#839496"
   , Xmobar.alpha = 204
-  , Xmobar.position = Xmobar.Top
+  , Xmobar.position = Xmobar.OnScreen xmobarScreenId Xmobar.Top
   , Xmobar.textOffset = -1
   , Xmobar.iconOffset = -1
   , Xmobar.lowerOnStart = True
@@ -92,7 +96,8 @@ xmobarConf = Xmobar.defaultConfig
   , Xmobar.hideOnStart = False
   , Xmobar.iconRoot = "."
   , Xmobar.commands =
-    [ Xmobar.Run (Xmobar.Wireless "wlp9s0" [ "-t" , "wifi <quality>%"] 200)
+    [ Xmobar.Run (Xmobar.HandleReader xmobarRead "windows")
+    , Xmobar.Run (Xmobar.Wireless "wlp9s0" [ "-t" , "wifi <quality>%"] 200)
     , Xmobar.Run (Xmobar.Battery
       [ "-t" , "<acstatus> <left>%"
       , "--"
@@ -114,9 +119,10 @@ xmobarConf = Xmobar.defaultConfig
     ]
   , Xmobar.alignSep = "}{"
   , Xmobar.template =
-    " λ %UnsafeStdinReader% \
+    " λ %windows% \
     \}{<action=`amixer -q set Master toggle`>%alsa:default:Master%</action>\
     \ | %wlp9s0wi% | %battery% | %date%  "
+  , Xmobar.verbose = True
   }
 
 -- ============== Keybindings ==============
@@ -262,18 +268,18 @@ sendXmobar cmd = liftIO $ do
   DBus.call_ client (xmobarMethod {DBus.methodCallBody = [DBus.toVariant cmd]})
 
 
-myXmobar :: (Int, Handle) -> X ()
-myXmobar (screenId, xmobarPipe) = do
+myXmobar :: Handle -> X ()
+myXmobar xmobarWrite = do
   Titles {..} <- withWindowSet allTitles
 
   let wsPrefix :: WorkspaceId -> String
       wsPrefix wsId =
-        " " ++ show screenId ++ "," ++ wsId ++ " | "
+        " " ++ show xmobarScreenId ++ "," ++ wsId ++ " | "
 
   dynamicLogWithPP $ xmobarPP
     { ppOutput =
-        hPutStrLn xmobarPipe
-        . (xmobarColor' base0 green (show screenId ++ ". ") ++)
+        hPutStrLn xmobarWrite
+        . (xmobarColor' base0 green (show xmobarScreenId ++ ". ") ++)
     , ppCurrent =
         \wsId ->
           xmobarColor' base0 base01
