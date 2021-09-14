@@ -16,6 +16,8 @@ import qualified DBus
 import qualified DBus.Client                      as DBus
 import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
+import           System.Posix.Process             (forkProcess)
+import qualified Xmobar                           as Xmobar
 import           XMonad
 import           XMonad.Actions.CycleWS           (WSType (..), moveTo, shiftTo)
 import           XMonad.Actions.WindowBringer
@@ -37,9 +39,8 @@ import           XMonad.Util.Run                  (runInTerm,
 main :: IO ()
 main = do
   replace
-
-  xmobarPipe <- xmobarCmd 1 1
-
+  -- (read, write) <- Xmobar.createPipe
+  xmobarProc <- forkProcess $ Xmobar.xmobar xmobarConf
   xmonad $ docks def
     { terminal = "alacritty"
     , focusFollowsMouse = False
@@ -51,7 +52,7 @@ main = do
     , manageHook = manageDocks <+> manageHook def
     , layoutHook =
         avoidStruts $ gaps 5 5 $ ThreeColMid 1 (3/100) (1/2) ||| layoutHook def
-    , logHook = myXmobar xmobarPipe
+    , logHook = pure () -- io $ Xmobar.xmobar xmobarConf
     , startupHook = traverse_ spawn
         [ "light -S 30.0"
         , "compton --config ~/.config/compton/compton.conf"
@@ -70,6 +71,53 @@ gaps screenGap windowGap =
       (Border windowGap windowGap windowGap windowGap)
       True
   . smartBorders
+
+-- ============== Bar ==============
+
+xmobarConf :: Xmobar.Config
+xmobarConf = Xmobar.defaultConfig
+  { Xmobar.font = "xft:Iosevka:size=12:light:antialias=true"
+  , Xmobar.additionalFonts = []
+  , Xmobar.borderColor = "#002b36"
+  , Xmobar.border = Xmobar.BottomB
+  , Xmobar.bgColor = "#00362b"
+  , Xmobar.fgColor = "#839496"
+  , Xmobar.alpha = 204
+  , Xmobar.position = Xmobar.Top
+  , Xmobar.textOffset = -1
+  , Xmobar.iconOffset = -1
+  , Xmobar.lowerOnStart = True
+  , Xmobar.pickBroadest = False
+  , Xmobar.persistent = False
+  , Xmobar.hideOnStart = False
+  , Xmobar.iconRoot = "."
+  , Xmobar.commands =
+    [ Xmobar.Run (Xmobar.Wireless "wlp9s0" [ "-t" , "wifi <quality>%"] 200)
+    , Xmobar.Run (Xmobar.Battery
+      [ "-t" , "<acstatus> <left>%"
+      , "--"
+      , "-O" , "ac"
+      , "-i", "full"
+      , "-o" , "bat"
+      , "-h" , "#859900"
+      , "-l" , "#dc322f"
+      ]
+      20)
+    , Xmobar.Run (Xmobar.Alsa "default" "Master"
+      [ "-t" , "<status> <volume>%"
+      , "--"
+      , "--on", "vol", "--onc" , "#839496"
+      , "-o", "vol", "--offc" , "#dc322f"
+      ])
+    , Xmobar.Run (Xmobar.Date "%F | %r" "date" 600)
+    , Xmobar.Run Xmobar.UnsafeStdinReader
+    ]
+  , Xmobar.alignSep = "}{"
+  , Xmobar.template =
+    " λ %UnsafeStdinReader% \
+    \}{<action=`amixer -q set Master toggle`>%alsa:default:Master%</action>\
+    \ | %wlp9s0wi% | %battery% | %date%  "
+  }
 
 -- ============== Keybindings ==============
 
