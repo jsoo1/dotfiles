@@ -41,6 +41,7 @@
     "rlwrap"
     "shellcheck"
     "skim"
+    "tealdeer"
     "time"
     "tokei"
     "tmux"
