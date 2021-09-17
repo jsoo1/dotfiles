@@ -11,7 +11,7 @@
  (channel
   (name 'private)
   (url "file:///home/john/projects/guix-channel/.git")
-  (branch "release")
+  (branch "upstream-tealdeer")
   (introduction
    (make-channel-introduction
     "cf22e20eceb112c940d02c3b57e16c7cee1f4a7f"
