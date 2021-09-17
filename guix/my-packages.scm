@@ -90,7 +90,8 @@
   '(; "cabal-install" Broken right now
     "ghc@8.6"
     "hlint"
-    "hoogle"))
+    "hoogle"
+    "stylish-haskell"))
 
 (define-public nix-tools
   '("nixfmt"))
