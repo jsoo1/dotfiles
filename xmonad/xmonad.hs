@@ -5,39 +5,41 @@
 
 module Main where
 
-import           Control.Concurrent               (forkIO)
-import qualified Control.Concurrent.STM           as STM
-import           Control.Concurrent.STM.TQueue    (TQueue)
-import           Control.Monad                    (join, unless, void, when)
-import           Data.Coerce                      (coerce)
-import           Data.Foldable                    (traverse_)
-import           Data.Function                    (on)
-import           Data.List                        (intersperse, isPrefixOf)
-import qualified Data.Map.Strict                  as Map
-import           Data.Maybe                       (listToMaybe)
+import           Control.Concurrent                  (forkIO)
+import qualified Control.Concurrent.STM              as STM
+import           Control.Concurrent.STM.TQueue       (TQueue)
+import           Control.Monad                       (join, unless, void, when)
+import           Data.Coerce                         (coerce)
+import           Data.Foldable                       (traverse_)
+import           Data.Function                       (on)
+import           Data.List                           (intersperse, isPrefixOf)
+import qualified Data.Map.Strict                     as Map
+import           Data.Maybe                          (listToMaybe)
 import qualified DBus
-import qualified DBus.Client                      as DBus
+import qualified DBus.Client                         as DBus
 import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
-import           System.Process                   (createPipe)
+import           System.Process                      (createPipe)
 import qualified Xmobar
 import           XMonad
-import           XMonad.Actions.CycleWS           (WSType (..), moveTo, shiftTo)
+import           XMonad.Actions.CycleWS              (WSType (..), moveTo,
+                                                      shiftTo)
 import           XMonad.Actions.WindowBringer
-import           XMonad.Config.Prime              (liftIO)
+import           XMonad.Config.Prime                 (liftIO)
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
-import           XMonad.Layout.IndependentScreens (countScreens)
-import           XMonad.Layout.NoBorders          (smartBorders)
+import           XMonad.Layout.IndependentScreens    (countScreens)
+import           XMonad.Layout.LayoutModifier        (ModifiedLayout)
+import           XMonad.Layout.NoBorders             (SmartBorder, smartBorders)
 import           XMonad.Layout.Spacing
-import           XMonad.Layout.ThreeColumns       (ThreeCol (..))
-import qualified XMonad.StackSet                  as W
-import           XMonad.Util.EZConfig             (additionalKeys)
+import           XMonad.Layout.ThreeColumns          (ThreeCol (..))
+import qualified XMonad.StackSet                     as W
+import           XMonad.Util.EZConfig                (additionalKeys)
 import           XMonad.Util.NamedWindows
 import           XMonad.Util.Replace
-import           XMonad.Util.Run                  (runInTerm,
-                                                   runProcessWithInput,
-                                                   spawnPipe)
+import           XMonad.Util.Run                     (runInTerm,
+                                                      runProcessWithInput,
+                                                      spawnPipe)
 
 main :: IO ()
 main = do
@@ -66,6 +68,12 @@ main = do
 
 -- ============== Layouts ==============
 
+gaps ::
+  LayoutClass l a =>
+  Integer ->
+  Integer ->
+  l a ->
+  ModifiedLayout Spacing (ModifiedLayout SmartBorder l) a
 gaps screenGap windowGap =
   spacingRaw
       True
