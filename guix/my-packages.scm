@@ -70,6 +70,8 @@
     "libxpm"
     "my-dmenu"
     "mpd-mpc"
+    "pamixer"
+    "pulsemixer"
     "pulseaudio"
     "scrot"
     "wireless-tools"))
@@ -121,7 +123,6 @@
   '("gcc-toolchain" ;; needed by xmonad
     "ghc-dbus"
     "ghc-xmonad-contrib"
-    "pavucontrol"
     "setxkbmap"
     "xdg-utils"
     "xdotool"
@@ -209,6 +210,7 @@
     "emacs-prescient"
     "emacs-projectile"
     "emacs-psc-ide"
+    "emacs-pulseaudio-control"
     "emacs-racket-mode"
     "emacs-recutils"
     "emacs-redis"
