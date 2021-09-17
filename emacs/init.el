@@ -841,8 +841,9 @@ _]_: toggle use of default sink  _n_: control select sink by name
           (defun setup-elisp-imenu ()
             (setq-local
              imenu-generic-expression
-             (cons '("Keymap" "^(define-prefix-keymap\\s-+\\([a-z-]+\\)" 1)
-                   imenu-generic-expression))))
+             `(("Keymap" "^(define-prefix-keymap\\s-+\\([a-z-]+\\)" 1)
+               ("Hydra" "^(defhydra\\+?\\s-+\\([a-z-]+\\)" 1)
+               ,@imenu-generic-expression))))
 
 ;; JavaScript
 (require 'nodejs-repl)
