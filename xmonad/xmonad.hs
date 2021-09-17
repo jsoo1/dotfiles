@@ -1,10 +1,13 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE RecordWildCards  #-}
 {-# LANGUAGE TupleSections    #-}
-
+{-# LANGUAGE TypeApplications #-}
 
 module Main where
 
+import           Control.Concurrent               (forkIO)
+import qualified Control.Concurrent.STM           as STM
+import           Control.Concurrent.STM.TQueue    (TQueue)
 import           Control.Monad                    (join, unless, void, when)
 import           Data.Coerce                      (coerce)
 import           Data.Foldable                    (traverse_)
@@ -16,7 +19,6 @@ import qualified DBus
 import qualified DBus.Client                      as DBus
 import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
-import           System.Posix.Process             (forkProcess)
 import           System.Process                   (createPipe)
 import qualified Xmobar
 import           XMonad
@@ -40,8 +42,8 @@ import           XMonad.Util.Run                  (runInTerm,
 main :: IO ()
 main = do
   replace
-  (xmobarRead, xmobarWrite) <- createPipe
-  xmobarProc <- forkProcess $ Xmobar.xmobar $ xmobarConf xmobarRead
+  xmobarQueue <- STM.newTQueueIO @String
+  xmobarProc <- forkIO $ Xmobar.xmobar $ xmobarConf xmobarQueue
   xmonad $ docks def
     { terminal = "alacritty"
     , focusFollowsMouse = False
@@ -53,7 +55,7 @@ main = do
     , manageHook = manageDocks <+> manageHook def
     , layoutHook =
         avoidStruts $ gaps 5 5 $ ThreeColMid 1 (3/100) (1/2) ||| layoutHook def
-    , logHook = myXmobar xmobarWrite
+    , logHook = myXmobar xmobarQueue
     , startupHook = traverse_ spawn
         [ "light -S 30.0"
         , "compton --config ~/.config/compton/compton.conf"
@@ -201,8 +203,8 @@ xmobarSegmentSep :: String
 xmobarSegmentSep =  " | "
 
 
-xmobarConf :: Handle -> Xmobar.Config
-xmobarConf xmobarRead = Xmobar.defaultConfig
+xmobarConf :: TQueue String -> Xmobar.Config
+xmobarConf xmobarQueue = Xmobar.defaultConfig
   { Xmobar.font = "xft:Iosevka:size=12:light:antialias=true"
   , Xmobar.additionalFonts = []
   , Xmobar.borderColor = coerce base03
@@ -220,7 +222,7 @@ xmobarConf xmobarRead = Xmobar.defaultConfig
   , Xmobar.hideOnStart = False
   , Xmobar.iconRoot = "."
   , Xmobar.commands =
-    [ Xmobar.Run (Xmobar.HandleReader xmobarRead "pipe")
+    [ Xmobar.Run (Xmobar.QueueReader xmobarQueue id "xmonadstuff")
     , Xmobar.Run (Xmobar.DynNetwork [] 20)
     , Xmobar.Run (Xmobar.Alsa "default" "Master"
       [ "-t" , "<status> <volume>%"
@@ -236,7 +238,7 @@ xmobarConf xmobarRead = Xmobar.defaultConfig
   , Xmobar.verbose = True
   }
   where
-    leftTemplate = [ "%pipe%" ]
+    leftTemplate = [ "%xmonadstuff%" ]
     rightTemplate = intersperse xmobarSegmentSep
       [ xmobarAction "amixer -q set Master toggle" "1" "%alsa:default:Master%"
       , "%dynnetwork%"
@@ -262,8 +264,8 @@ sendXmobar cmd = liftIO $ do
   DBus.call_ client (xmobarMethod {DBus.methodCallBody = [DBus.toVariant cmd]})
 
 
-myXmobar :: Handle -> X ()
-myXmobar xmobarWrite = do
+myXmobar :: TQueue String -> X ()
+myXmobar xmobarQueue = do
   Titles {..} <- withWindowSet allTitles
 
   let wsPrefix :: WorkspaceId -> String
@@ -271,32 +273,29 @@ myXmobar xmobarWrite = do
         " " ++ show xmobarScreenId ++ "," ++ wsId ++ xmobarSegmentSep
 
   dynamicLogWithPP $ xmobarPP
-    { ppOutput =
-        hPutStrLn xmobarWrite
-        . (xmobarColor' base0 green (show xmobarScreenId ++ ". ") ++)
-    , ppCurrent =
-        \wsId ->
-          xmobarColor' base0 base01
-          $ wsPrefix wsId ++ titleFormat current
-    , ppHidden =
-        \wsId ->
-          xmobarAction ("xdotool key super+" ++ wsId) "1"
-          $ xmobarColor' base01 base03
-          $ wsPrefix wsId ++ hiddenTitle hidden wsId
-    , ppVisible =
-      \wsId ->
+    { ppOutput = \out ->
+        STM.atomically
+        $ STM.writeTQueue xmobarQueue
+        $ xmobarColor' base0 green (show xmobarScreenId ++ ". ") ++ out
+    , ppCurrent = \wsId ->
+        xmobarColor' base0 base01
+        $ wsPrefix wsId ++ titleFormat current
+    , ppHidden = \wsId ->
+        xmobarAction ("xdotool key super+" ++ wsId) "1"
+        $ xmobarColor' base01 base03
+        $ wsPrefix wsId ++ hiddenTitle hidden wsId
+    , ppVisible = \wsId ->
         xmobarColor' base01 base03
         $ wsPrefix wsId ++ titleFor visible wsId
-    , ppUrgent =
-        \wsId ->
-          let
-            t =
-              if null $ titleFor visible wsId
-              then titleFor visible wsId
-              else hiddenTitle hidden wsId
-          in
-            xmobarAction ("xdotool key super+" ++ wsId) "1"
-            $ xmobarColor' base03 base0 t
+    , ppUrgent = \wsId ->
+        let
+          t =
+            if null $ titleFor visible wsId
+            then titleFor visible wsId
+            else hiddenTitle hidden wsId
+        in
+          xmobarAction ("xdotool key super+" ++ wsId) "1"
+          $ xmobarColor' base03 base0 t
     , ppSep = ""
     , ppWsSep = ""
     , ppTitle = const ""
