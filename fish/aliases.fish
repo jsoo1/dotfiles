@@ -30,7 +30,6 @@ function shep
 end
 
 # Emacs
-abbr --add -U -- ed "emacs --bg-daemon=term"
 function em
     emacsclient -nw --socket-name term $argv
 end
