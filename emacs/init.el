@@ -1469,6 +1469,14 @@ when send commands with redis protocol."
      ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
       (format-time-string "%z" time* zone*)))))
 
+;; Zoom
+(defhydra zoom (:hint nil)
+  "zoom"
+  ("+" text-scale-increase "+")
+  ("=" text-scale-increase "+")
+  ("-" text-scale-decrease "-")
+  ("_" text-scale-decrease "-"))
+
 ;; Keybindings
 (evil-leader/set-leader "<SPC>")
 
@@ -1494,7 +1502,7 @@ when send commands with redis protocol."
   "w" 'my-window-map
   "x" 'my-text-map
   "y" 'my-yank-map
-  "z" 'my-zoom-map
+  "z" 'zoom/body
   "'" 'eshell
   "/" 'counsel-projectile-rg)
 
@@ -1835,12 +1843,6 @@ when send commands with redis protocol."
 (define-prefix-keymap my-yank-map
   "my yanking keybindings"
   "y" counsel-yank-pop)
-
-(define-prefix-keymap my-zoom-map
-  "my zoom/text scaling keybindings"
-  "+" text-scale-increase
-  "=" text-scale-increase
-  "-" text-scale-decrease)
 
 ;; Reset these to have all the configuration we just did
 (with-current-buffer (get-buffer "*Messages*") (normal-mode))
