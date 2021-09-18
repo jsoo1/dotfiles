@@ -1,13 +1,11 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE RecordWildCards  #-}
 {-# LANGUAGE TupleSections    #-}
-{-# LANGUAGE TypeApplications #-}
 
 module Main where
 
 import           Control.Concurrent               (ThreadId, forkIO)
 import qualified Control.Concurrent.STM           as STM
-import           Control.Concurrent.STM.TQueue    (TQueue)
 import           Control.Monad                    (join, unless, void, when)
 import           Data.Coerce                      (coerce)
 import           Data.Foldable                    (traverse_)
@@ -64,9 +62,9 @@ main = do
 
 startXmobar :: IO (STM.TQueue String, STM.TMVar Xmobar.SignalType, ThreadId)
 startXmobar = do
-  xmobarQueue <- STM.newTQueueIO @String
-  xmobarSignal <- STM.newEmptyTMVarIO @Xmobar.SignalType
-  xmobarProc <- forkIO $ Xmobar.xmobar (Just xmobarSignal) $ xmobarConf xmobarQueue
+  xmobarQueue <- STM.newTQueueIO
+  xmobarSignal <- STM.newEmptyTMVarIO
+  xmobarProc <- forkIO $ Xmobar.xmobar $ xmobarConf xmobarSignal xmobarQueue
   pure (xmobarQueue, xmobarSignal, xmobarProc)
 
 -- ============== Layouts ==============
@@ -240,8 +238,8 @@ xmobarSegmentSep :: String
 xmobarSegmentSep =  " | "
 
 
-xmobarConf :: TQueue String -> Xmobar.Config
-xmobarConf xmobarQueue = Xmobar.defaultConfig
+xmobarConf :: STM.TMVar Xmobar.SignalType -> STM.TQueue String -> Xmobar.Config
+xmobarConf xmobarSignal xmobarQueue = Xmobar.defaultConfig
   { Xmobar.font = "xft:Iosevka:size=12:light:antialias=true"
   , Xmobar.additionalFonts = []
   , Xmobar.borderColor = coerce base03
@@ -272,6 +270,7 @@ xmobarConf xmobarQueue = Xmobar.defaultConfig
     ]
   , Xmobar.alignSep = alignSep
   , Xmobar.template = mconcat ([" λ "] <> leftTemplate <> [ alignSep ] <> rightTemplate <> [ "  " ])
+  , Xmobar.signal = Xmobar.SignalChan (Just xmobarSignal)
   , Xmobar.verbose = True
   }
   where
@@ -284,7 +283,7 @@ xmobarConf xmobarQueue = Xmobar.defaultConfig
     alignSep = "}{"
 
 
-myXmobar :: TQueue String -> X ()
+myXmobar :: STM.TQueue String -> X ()
 myXmobar xmobarQueue = do
   Titles {..} <- withWindowSet allTitles
 
@@ -405,3 +404,12 @@ green = SpaceColor "#859900"
 
 red :: SpaceColor
 red = SpaceColor "#dc322f"
+
+testBar = do
+  (xmobarQueue, xmobarSignal, xmobarProc ) <- startXmobar
+  pure ( xmobarQueue
+       , xmobarSignal
+       , xmobarProc
+       , STM.atomically . STM.writeTQueue xmobarQueue . xmobarColor' base0 green
+       , STM.atomically . STM.putTMVar xmobarSignal
+       )
