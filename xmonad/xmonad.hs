@@ -5,47 +5,43 @@
 
 module Main where
 
-import           Control.Concurrent                  (forkIO)
-import qualified Control.Concurrent.STM              as STM
-import           Control.Concurrent.STM.TQueue       (TQueue)
-import           Control.Monad                       (join, unless, void, when)
-import           Data.Coerce                         (coerce)
-import           Data.Foldable                       (traverse_)
-import           Data.Function                       (on)
-import           Data.List                           (intersperse, isPrefixOf)
-import qualified Data.Map.Strict                     as Map
-import           Data.Maybe                          (listToMaybe)
-import qualified DBus
-import qualified DBus.Client                         as DBus
+import           Control.Concurrent               (ThreadId, forkIO)
+import qualified Control.Concurrent.STM           as STM
+import           Control.Concurrent.STM.TQueue    (TQueue)
+import           Control.Monad                    (join, unless, void, when)
+import           Data.Coerce                      (coerce)
+import           Data.Foldable                    (traverse_)
+import           Data.Function                    (on)
+import           Data.List                        (intersperse, isPrefixOf)
+import qualified Data.Map.Strict                  as Map
+import           Data.Maybe                       (listToMaybe)
 import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
-import           System.Process                      (createPipe)
+import           System.Process                   (createPipe)
 import qualified Xmobar
 import           XMonad
-import           XMonad.Actions.CycleWS              (WSType (..), moveTo,
-                                                      shiftTo)
+import           XMonad.Actions.CycleWS           (WSType (..), moveTo, shiftTo)
 import           XMonad.Actions.WindowBringer
-import           XMonad.Config.Prime                 (liftIO)
+import           XMonad.Config.Prime              (liftIO)
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageDocks
-import           XMonad.Layout.IndependentScreens    (countScreens)
-import           XMonad.Layout.LayoutModifier        (ModifiedLayout)
-import           XMonad.Layout.NoBorders             (SmartBorder, smartBorders)
+import           XMonad.Layout.IndependentScreens (countScreens)
+import           XMonad.Layout.LayoutModifier     (ModifiedLayout)
+import           XMonad.Layout.NoBorders          (SmartBorder, smartBorders)
 import           XMonad.Layout.Spacing
-import           XMonad.Layout.ThreeColumns          (ThreeCol (..))
-import qualified XMonad.StackSet                     as W
-import           XMonad.Util.EZConfig                (additionalKeys)
+import           XMonad.Layout.ThreeColumns       (ThreeCol (..))
+import qualified XMonad.StackSet                  as W
+import           XMonad.Util.EZConfig             (additionalKeys)
 import           XMonad.Util.NamedWindows
 import           XMonad.Util.Replace
-import           XMonad.Util.Run                     (runInTerm,
-                                                      runProcessWithInput,
-                                                      spawnPipe)
+import           XMonad.Util.Run                  (runInTerm,
+                                                   runProcessWithInput,
+                                                   spawnPipe)
 
 main :: IO ()
 main = do
   replace
-  xmobarQueue <- STM.newTQueueIO @String
-  xmobarProc <- forkIO $ Xmobar.xmobar $ xmobarConf xmobarQueue
+  (xmobarQueue, xmobarSignal, xmobarProc) <- startXmobar
   xmonad $ docks def
     { terminal = "alacritty"
     , focusFollowsMouse = False
@@ -64,7 +60,14 @@ main = do
         , "xwallpaper --zoom ~/Downloads/richter-lucerne.jpg"
         ]
     }
-    `additionalKeys` myCommands
+    `additionalKeys` myKeybindings xmobarSignal
+
+startXmobar :: IO (STM.TQueue String, STM.TMVar Xmobar.SignalType, ThreadId)
+startXmobar = do
+  xmobarQueue <- STM.newTQueueIO @String
+  xmobarSignal <- STM.newEmptyTMVarIO @Xmobar.SignalType
+  xmobarProc <- forkIO $ Xmobar.xmobar (Just xmobarSignal) $ xmobarConf xmobarQueue
+  pure (xmobarQueue, xmobarSignal, xmobarProc)
 
 -- ============== Layouts ==============
 
@@ -88,24 +91,35 @@ gaps screenGap windowGap =
 myModMask :: KeyMask
 myModMask = mod4Mask
 
+toggleBar :: STM.TMVar Xmobar.SignalType -> X ()
+toggleBar xmobarSignal = do
+  broadcastMessage ToggleStruts
+  io (STM.atomically (STM.putTMVar xmobarSignal (Xmobar.Toggle 0)))
+  refresh
 
-myCommands :: [((KeyMask, KeySym), X ())]
-myCommands =
-  [ ( ( myModMask, xK_i ), spawn "dmenu_run -F -p open" )
+
+myKeybindings :: STM.TMVar Xmobar.SignalType -> [((KeyMask, KeySym), X ())]
+myKeybindings xmobarSignal =
+  [ ( ( myModMask .|. shiftMask, xK_q ) , void dmenuKillSession )
+  , ( ( myModMask, xK_i ), spawn "dmenu_run -F -p open" )
   , ( ( myModMask,  xK_o )
     , dmenuGitDirs >>= \dir -> unless (null dir) $ tmuxNewSession dir
     )
   , ( ( myModMask, xK_u ) , spawn "/home/john/.local/bin/clipmenu -p clipboard" )
   , ( ( myModMask .|. shiftMask , xK_l ) , dmenuLPass )
-  , ( ( myModMask .|. controlMask, xK_f)
-    , void (sendXmobar "Toggle 0") <+> broadcastMessage ToggleStruts <+> refresh
-    )
+  , ( ( myModMask .|. controlMask, xK_f) , toggleBar xmobarSignal )
   , ( ( myModMask .|. shiftMask, xK_x ), spawn "xlock -mode rain" )
   , ( ( myModMask .|. controlMask, xK_4 ), spawn "scrot" )
-  , ( ( myModMask, xK_Tab )
+  , ( ( myModMask, xK_g )
     , gotoMenuConfig $ def
       { menuCommand = "dmenu"
       , menuArgs = [ "-f", "-F", "-p", "workspace" ]
+      }
+    )
+  , ( ( myModMask, xK_b )
+    , bringMenuConfig $ def
+      { menuCommand = "dmenu"
+      , menuArgs = [ "-f", "-F", "-p", "window" ]
       }
     )
   , ( ( 0, xF86XK_AudioLowerVolume )
@@ -157,6 +171,21 @@ dmenuGitDirs =
     , "-E '/s3'"
     , "| sed -E 's/\\/\\.git$//'"
     , "| dmenu -f -F -p 'repository'"
+    ]
+  ]
+  ""
+
+
+dmenuKillSession :: X String
+dmenuKillSession =
+  runProcessWithInput "bash"
+  [ "-c"
+  , mconcat $ intersperse " | "
+    [ "loginctl list-sessions"
+    , "rg tty"
+    , "dmenu -f -F -p 'kill session'"
+    , "gawk '{ print $1 }'"
+    , "xargs loginctl terminate-session"
     ]
   ]
   ""
@@ -236,9 +265,9 @@ xmobarConf xmobarQueue = Xmobar.defaultConfig
       [ "-t" , "<status> <volume>%"
       , "--"
       , "--on", "vol", "--onc" , coerce base0
-      , "-o", "vol", "--offc" , coerce red
+      , "--off", "vol", "--offc" , coerce red
       ])
-    , Xmobar.Run (Xmobar.Date ("%F" <> xmobarSegmentSep <> "%r") "date" 600)
+    , Xmobar.Run (Xmobar.Date ("%F" <> xmobarSegmentSep <> "%r") "date" 10)
     , Xmobar.Run Xmobar.UnsafeStdinReader
     ]
   , Xmobar.alignSep = alignSep
@@ -253,23 +282,6 @@ xmobarConf xmobarQueue = Xmobar.defaultConfig
       , "%date%"
       ]
     alignSep = "}{"
-
-
-xmobarMethod :: DBus.MethodCall
-xmobarMethod =
-  method {DBus.methodCallDestination = Just busName}
-  where
-    busName = DBus.busName_ "org.Xmobar.Control"
-    objectPath = DBus.objectPath_ "/org/Xmobar/Control"
-    interfaceName = DBus.interfaceName_ "org.Xmobar.Control"
-    memberName = DBus.memberName_ "SendSignal"
-    method = DBus.methodCall objectPath interfaceName memberName
-
-
-sendXmobar :: String -> X DBus.MethodReturn
-sendXmobar cmd = liftIO $ do
-  client <- DBus.connectSession
-  DBus.call_ client (xmobarMethod {DBus.methodCallBody = [DBus.toVariant cmd]})
 
 
 myXmobar :: TQueue String -> X ()
