@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE LambdaCase       #-}
 {-# LANGUAGE RecordWildCards  #-}
 {-# LANGUAGE TupleSections    #-}
 
@@ -98,8 +99,14 @@ toggleBar xmobarSignal = do
 
 myKeybindings :: STM.TMVar Xmobar.SignalType -> [((KeyMask, KeySym), X ())]
 myKeybindings xmobarSignal =
-  [ ( ( myModMask, xK_a ), dmenuSelectXmonad >>= \xmnd -> restart xmnd True )
-  , ( ( myModMask .|. shiftMask, xK_q ), void dmenuKillSession )
+  [ ( ( myModMask, xK_q ), fmap lines dmenuSelectXmonad >>= \case
+        [] -> pure ()
+        (xmnd:_) -> restart xmnd True
+    )
+  , ( ( myModMask .|. shiftMask, xK_q ), fmap lines dmenuSelectSession >>= \case
+        [] -> pure ()
+        (session:_) -> terminateSession session
+    )
   , ( ( myModMask, xK_i ), spawn "dmenu_run -F -p open" )
   , ( ( myModMask,  xK_o )
     , dmenuGitDirs >>= \dir -> unless (null dir) $ tmuxNewSession dir
@@ -175,8 +182,8 @@ dmenuGitDirs =
   ""
 
 
-dmenuKillSession :: X String
-dmenuKillSession =
+dmenuSelectSession :: X String
+dmenuSelectSession =
   runProcessWithInput "bash"
   [ "-c"
   , mconcat $ intersperse " | "
@@ -184,10 +191,18 @@ dmenuKillSession =
     , "rg tty"
     , "dmenu -f -F -p 'kill session'"
     , "gawk '{ print $1 }'"
-    , "xargs loginctl terminate-session"
     ]
   ]
   ""
+
+
+terminateSession :: String -> X ()
+terminateSession session = void $ runProcessWithInput "loginctl"
+  [ "terminate-session"
+  , session
+  ]
+  ""
+
 
 dmenuSelectXmonad :: X String
 dmenuSelectXmonad =
@@ -288,8 +303,8 @@ xmobarConf xmobarSignal xmobarQueue = Xmobar.defaultConfig
   where
     leftTemplate = [ "%xmonadstuff%" ]
     rightTemplate = intersperse xmobarSegmentSep
-      -- [ xmobarAction "amixer -q set Master toggle" "1" "%alsa:default:Master%"
       [ "%dynnetwork%"
+      -- , xmobarAction "amixer -q set Master toggle" "1" "%alsa:default:Master%"
       , "%date%"
       ]
     alignSep = "}{"
