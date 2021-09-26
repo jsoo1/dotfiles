@@ -22,6 +22,22 @@
                      (string-match "dist" f)
                      (string-match "dist-newstyle" f))))))
 
+(define my-xmobar
+  (let ((commit "ipc-improvements"))
+    (package
+      (inherit xmobar)
+      (name "xmobar")
+      (version "0.40")
+      (source
+       (origin
+         (method git-fetch)
+         (uri (git-reference
+               (url "https://github.com/jsoo1/xmobar")
+               (commit commit)))
+         (sha256
+          (base32 "18c81gqyi80ps30hzb7dlvfs51af07vfnaik8sxjvmlvhkwz3683"))
+         (file-name (git-file-name name version)))))))
+
 (package
  (inherit xmonad)
  (name %name)
@@ -29,7 +45,7 @@
  (source %local)
  (inputs
   `(("libxpm" ,libxpm)
-    ("xmobar" ,xmobar)
+    ("xmobar" ,my-xmobar)
     ("xmonad" ,xmonad)
     ("ghc-xmonad-contrib" ,ghc-xmonad-contrib)))
  (arguments
