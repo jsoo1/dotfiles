@@ -87,7 +87,7 @@ function __skim_files -d "List files and folders"
     set -l commandline (__fzf_parse_commandline)
 
     begin
-        fd '.*' '.' | TERM=xterm-256color sk -m | while read -l r; set result $result $r; end
+        fd '.*' '.' --hidden -E '.git*' | TERM=xterm-256color sk -m | while read -l r; set result $result $r; end
     end
     if [ -z "$result" ]
         commandline -f repaint
@@ -113,6 +113,7 @@ end
 
 function __ls_git_repos -d "List git repos"
     fd '\.git' '/' -t d -H -I \
+        -E '\.gitlab' \
         -E '\.github' \
         -E '\.cache' \
         -E '\.tmux' \
