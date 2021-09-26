@@ -48,8 +48,7 @@
     "unzip"))
 
 (define-public browsers
-  '("firefox"
-    "icecat"
+  '("icecat"
     "lynx"
     "ungoogled-chromium"))
 
