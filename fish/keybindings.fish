@@ -87,7 +87,7 @@ function __skim_files -d "List files and folders"
     set -l commandline (__fzf_parse_commandline)
 
     begin
-        fd '.*' '.' --hidden -E '.git*' | TERM=xterm-256color sk -m | while read -l r; set result $result $r; end
+        fd '.*' '.' --hidden -E '.git*' | sk | while read -l r; set result $result $r; end
     end
     if [ -z "$result" ]
         commandline -f repaint
@@ -105,7 +105,7 @@ end
 
 function __skim_history -d "Find in history"
     begin
-        history | TERM=xterm-256color sk -m | read -l result
+        history | sk | read -l result
         and commandline -- $result
     end
     commandline -f repaint
@@ -132,7 +132,7 @@ end
 
 function __skim_git_repos -d "Find a git repo"
     begin
-        __ls_git_repos | TERM=xterm-256color sk -m | read -l result
+        __ls_git_repos | sk | read -l result
         and commandline -it -- "tmux new-session -A -s (basename $result | tr '.' '-') -c $result -n emacs 'exec $EDITOR $result'"
     end
 end
@@ -143,7 +143,7 @@ function skim_docker_images -d "Find a docker image"
         | awk '{ print $1 ":" $2 " " $3 }' \
         | rg -v 'REPOSITORY:TAG' \
         | column -t \
-        | TERM=xterm-256color sk -m \
+        | sk \
         | awk '{ print $1 }' \
         | read -l result
         and commandline -it -- $result
@@ -153,7 +153,7 @@ end
 function skim_lpass -d "Get a password"
     if test (lpass status) = "Not logged in."; lpass login jsoo1@asu.edu; end
     and lpass ls --color=never \
-    | TERM=xterm-256color sk -m \
+    | sk \
     | read -l result
     and echo "$result" \
     | sed -E 's/^.*id: ([0-9]+)]$/\1/' \
