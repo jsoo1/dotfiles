@@ -16,7 +16,6 @@
     "bat"
     "bpftrace"
     "cups"
-    "diffoscope"
     "direnv"
     "docker-cli"
     "dog"
@@ -40,9 +39,7 @@
     "rlwrap"
     "shellcheck"
     "skim"
-    "tealdeer"
     "time"
-    "tokei"
     "tmux"
     "unzip"))
 
@@ -67,7 +64,6 @@
     ;; "ibm-capsense-usb-util"
     "libnotify"
     "libreoffice"
-    "my-dmenu"
     "mpd-mpc"
     "pamixer"
     "pulsemixer"
@@ -120,8 +116,7 @@
     "zathura-pdf-mupdf"))
 
 (define-public xorg-tools
-  '("setxkbmap"
-    "xdg-utils"
+  '("xdg-utils"
     "xdotool"
     "xev"
     "xfontsel"
