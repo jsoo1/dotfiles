@@ -37,6 +37,7 @@ import           XMonad.Util.Run                  (runInTerm,
                                                    runProcessWithInput,
                                                    spawnPipe)
 
+
 main :: IO ()
 main = do
   replace
@@ -61,6 +62,7 @@ main = do
     }
     `additionalKeys` myKeybindings xmobarSignal
 
+
 startXmobar :: IO (STM.TQueue String, STM.TMVar Xmobar.SignalType, ThreadId)
 startXmobar = do
   xmobarQueue <- STM.newTQueueIO
@@ -68,7 +70,9 @@ startXmobar = do
   xmobarProc <- forkIO $ Xmobar.xmobar $ xmobarConf xmobarSignal xmobarQueue
   pure (xmobarQueue, xmobarSignal, xmobarProc)
 
+
 -- ============== Layouts ==============
+
 
 gaps ::
   LayoutClass l a =>
@@ -85,10 +89,13 @@ gaps screenGap windowGap =
       True
   . smartBorders
 
+
 -- ============== Keybindings ==============
+
 
 myModMask :: KeyMask
 myModMask = mod4Mask
+
 
 toggleBar :: STM.TMVar Xmobar.SignalType -> X ()
 toggleBar xmobarSignal = do
@@ -142,6 +149,7 @@ myKeybindings xmobarSignal =
   , ( ( myModMask .|. shiftMask, xK_n ), shiftTo Next EmptyWS )
   , ( ( myModMask .|. shiftMask, xK_p ), shiftTo Prev EmptyWS )
   ]
+
 
 -- ============== Dmenu/Tmux =============
 
@@ -210,7 +218,7 @@ dmenuSelectXmonad =
   [ "-c"
   , mconcat $ intersperse " | "
     [ "for f in ~/.{guix-profile,cabal}/bin/my-xmonad; do echo $f; done"
-    , "dmenu -f -F -p 'xmonad'"
+    , "dmenu -f -F -p 'restart with'"
     ]
   ]
   ""
@@ -239,6 +247,7 @@ dmenuLPass = do
   --   ""
   choice <- runProcessWithInput "bash" [ "-c", "lpass ls --color=never | dmenu -p password" ] ""
   liftIO (print choice)
+
 
 tmuxNewSession :: String -> X ()
 tmuxNewSession fullPath = do
@@ -359,8 +368,10 @@ data WorkspaceTitles =
     , visible :: Map.Map WorkspaceId (ScreenId, Maybe NamedWindow)
     }
 
+
 emptyTitle :: String
 emptyTitle = "         "
+
 
 titleFor :: (Show a, Show b, Ord k) => Map.Map k (b, Maybe a) -> k -> String
 titleFor windowNames wsId =
@@ -406,31 +417,41 @@ masterWindow =
 
 --  ============= COLORS ============
 
+
 newtype SpaceColor = SpaceColor { unSpaceColor :: String }
+
 
 xmobarColor' :: SpaceColor -> SpaceColor -> String -> String
 xmobarColor' =
   xmobarColor `on` unSpaceColor
 
+
 -- Solarized
+
 
 base0 :: SpaceColor
 base0 = SpaceColor "#839496"
 
+
 base3 :: SpaceColor
 base3 = SpaceColor "#fdf6e3"
+
 
 base01 :: SpaceColor
 base01 = SpaceColor "#586e75"
 
+
 base03 :: SpaceColor
 base03 = SpaceColor "#002b36"
+
 
 green :: SpaceColor
 green = SpaceColor "#859900"
 
+
 red :: SpaceColor
 red = SpaceColor "#dc322f"
+
 
 testBar = do
   (xmobarQueue, xmobarSignal, xmobarProc ) <- startXmobar
