@@ -1400,7 +1400,8 @@ when send commands with redis protocol."
     ('emacs   "#2aa198")
     ('replace "#dc322f")
     ('visual  "#268bd2")
-    ('motion  "#2aa198")))
+    ('motion  "#2aa198")
+    (_        "#859900")))
 
 (defun my-flycheck-error-str (n fg)
   "Properties string for a number of errors `N' with foreground color `FG'."
