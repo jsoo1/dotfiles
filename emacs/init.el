@@ -1308,6 +1308,7 @@ when send commands with redis protocol."
       popper-group-function 'popper-group-by-projectile
       popper-reference-modes
       '(eshell-mode
+        elfeed-search-mode
         proced
         process-list
         help-mode
