@@ -19,4 +19,5 @@
       xorg-tools
       emacs-packages))
    ,(packages->manifest
-     `(,(load "../xmonad/guix.scm")))))
+     `(,(load "../xmonad/guix.scm")
+       ,(load "../dmenu/guix.scm")))))
