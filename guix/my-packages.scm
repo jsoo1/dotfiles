@@ -25,7 +25,6 @@
     "fd"
     "fish"
     "fish-foreign-env" ; Busted for now. Let's fix it.
-    "fzy"
     "gdb"
     "global"
     "groff"

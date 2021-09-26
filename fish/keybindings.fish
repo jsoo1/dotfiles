@@ -1,20 +1,20 @@
 # vi mode
 fish_hybrid_key_bindings
 
-# ---------- FZY -----------
-bind \cr __fzy_history
-bind -M insert \cr __fzy_history
+# ---------- SKIM -----------
+bind \cr __skim_history
+bind -M insert \cr __skim_history
 
-bind \ct __fzy_files
-bind -M insert \ct __fzy_files
+bind \ct __skim_files
+bind -M insert \ct __skim_files
 
 # --------- Git repos ---------
-bind \co __fzy_git_repos
-bind -M insert \co __fzy_git_repos
+bind \co __skim_git_repos
+bind -M insert \co __skim_git_repos
 
 # --------- Lpass ---------
-bind \el 'fzy_lpass | xsel -ib'
-bind -M insert \el 'fzy_lpass | xsel -ib'
+bind \el 'skim_lpass | xsel -ib'
+bind -M insert \el 'skim_lpass | xsel -ib'
 
 # MIT License for __fzf_parse_commandline and __fzf_get_dir
 # The MIT License (MIT)
@@ -83,11 +83,11 @@ function __fzf_get_dir -d 'Find the longest existing filepath from input string'
     echo $dir
 end
 
-function __fzy_files -d "List files and folders"
+function __skim_files -d "List files and folders"
     set -l commandline (__fzf_parse_commandline)
 
     begin
-        fd '.*' '.' | fzy | while read -l r; set result $result $r; end
+        fd '.*' '.' | TERM=xterm-256color sk -m | while read -l r; set result $result $r; end
     end
     if [ -z "$result" ]
         commandline -f repaint
@@ -103,9 +103,9 @@ function __fzy_files -d "List files and folders"
     commandline -f repaint
 end
 
-function __fzy_history -d "Find in history"
+function __skim_history -d "Find in history"
     begin
-        history | fzy | read -l result
+        history | TERM=xterm-256color sk -m | read -l result
         and commandline -- $result
     end
     commandline -f repaint
@@ -129,24 +129,30 @@ function __ls_git_repos -d "List git repos"
     | sed -E 's/\/\.git$//'
 end
 
-function __fzy_git_repos -d "Find a git repo"
+function __skim_git_repos -d "Find a git repo"
     begin
-        __ls_git_repos | fzy | read -l result
+        __ls_git_repos | TERM=xterm-256color sk -m | read -l result
         and commandline -it -- "tmux new-session -A -s (basename $result | tr '.' '-') -c $result -n emacs 'exec $EDITOR $result'"
     end
 end
 
-function fzy_docker_images -d "Find a docker image"
+function skim_docker_images -d "Find a docker image"
     begin
-        docker images | awk '{ print $1 ":" $2 " " $3 }' | rg -v 'REPOSITORY:TAG' | column -t | fzy | awk '{ print $1 }' | read -l result
+        docker images \
+        | awk '{ print $1 ":" $2 " " $3 }' \
+        | rg -v 'REPOSITORY:TAG' \
+        | column -t \
+        | TERM=xterm-256color sk -m \
+        | awk '{ print $1 }' \
+        | read -l result
         and commandline -it -- $result
     end
 end
 
-function fzy_lpass -d "Get a password"
+function skim_lpass -d "Get a password"
     if test (lpass status) = "Not logged in."; lpass login jsoo1@asu.edu; end
     and lpass ls --color=never \
-    | fzy \
+    | TERM=xterm-256color sk -m \
     | read -l result
     and echo "$result" \
     | sed -E 's/^.*id: ([0-9]+)]$/\1/' \
