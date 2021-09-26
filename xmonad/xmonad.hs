@@ -302,7 +302,6 @@ xmobarConf xmobarSignal xmobarQueue = Xmobar.defaultConfig
     --   , "--off", "vol", "--offc" , coerce red
     --   ])
     , Xmobar.Run (Xmobar.Date ("%F" <> xmobarSegmentSep <> "%r") "date" 10)
-    , Xmobar.Run Xmobar.UnsafeStdinReader
     ]
   , Xmobar.alignSep = alignSep
   , Xmobar.template = mconcat ([" λ "] <> leftTemplate <> [ alignSep ] <> rightTemplate <> [ "  " ])
