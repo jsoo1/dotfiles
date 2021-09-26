@@ -984,7 +984,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
             (interactive)
             (setq-local
              imenu-generic-expression
-             `(("Module" "^\\s-*module\\s-+\\(type|rec\\s-+\\)?\\([a-zA-Z0-9_]+\\)" 2)
+             `(("Module" "^\\s-*\\(module\\|and\\)\\s-+\\(type|rec\\s-+\\)?\\([a-zA-Z0-9_]+\\)" 3)
                ,@imenu-generic-expression))))
 (define-key tuareg-mode-map (kbd "C-c C-o") #'merlin-occurrences)
 (define-key tuareg-mode-map (kbd "C-c C-c") #'merlin-error-next)
