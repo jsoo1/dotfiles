@@ -40,7 +40,7 @@ main :: IO ()
 main = do
   replace
   (xmobarQueue, xmobarSignal, xmobarProc) <- startXmobar
-  xmonad $ docks def
+  launch $ docks def
     { terminal = "alacritty"
     , focusFollowsMouse = False
     , borderWidth = 2
@@ -98,7 +98,8 @@ toggleBar xmobarSignal = do
 
 myKeybindings :: STM.TMVar Xmobar.SignalType -> [((KeyMask, KeySym), X ())]
 myKeybindings xmobarSignal =
-  [ ( ( myModMask .|. shiftMask, xK_q ) , void dmenuKillSession )
+  [ ( ( myModMask, xK_a ), dmenuSelectXmonad >>= \xmnd -> restart xmnd True )
+  , ( ( myModMask .|. shiftMask, xK_q ), void dmenuKillSession )
   , ( ( myModMask, xK_i ), spawn "dmenu_run -F -p open" )
   , ( ( myModMask,  xK_o )
     , dmenuGitDirs >>= \dir -> unless (null dir) $ tmuxNewSession dir
@@ -188,6 +189,17 @@ dmenuKillSession =
   ]
   ""
 
+dmenuSelectXmonad :: X String
+dmenuSelectXmonad =
+  runProcessWithInput "bash"
+  [ "-c"
+  , mconcat $ intersperse " | "
+    [ "for f in ~/.{guix-profile,cabal}/bin/my-xmonad; do echo $f; done"
+    , "dmenu -f -F -p 'xmonad'"
+    ]
+  ]
+  ""
+
 
 dmenuLPass :: X ()
 dmenuLPass = do
@@ -259,12 +271,12 @@ xmobarConf xmobarSignal xmobarQueue = Xmobar.defaultConfig
   , Xmobar.commands =
     [ Xmobar.Run (Xmobar.QueueReader xmobarQueue id "xmonadstuff")
     , Xmobar.Run (Xmobar.DynNetwork [] 20)
-    , Xmobar.Run (Xmobar.Alsa "default" "Master"
-      [ "-t" , "<status> <volume>%"
-      , "--"
-      , "--on", "vol", "--onc" , coerce base0
-      , "--off", "vol", "--offc" , coerce red
-      ])
+    -- , Xmobar.Run (Xmobar.Alsa "default" "Master"
+    --   [ "-t" , "<status> <volume>%"
+    --   , "--"
+    --   , "--on", "vol", "--onc" , coerce base0
+    --   , "--off", "vol", "--offc" , coerce red
+    --   ])
     , Xmobar.Run (Xmobar.Date ("%F" <> xmobarSegmentSep <> "%r") "date" 10)
     , Xmobar.Run Xmobar.UnsafeStdinReader
     ]
@@ -276,8 +288,8 @@ xmobarConf xmobarSignal xmobarQueue = Xmobar.defaultConfig
   where
     leftTemplate = [ "%xmonadstuff%" ]
     rightTemplate = intersperse xmobarSegmentSep
-      [ xmobarAction "amixer -q set Master toggle" "1" "%alsa:default:Master%"
-      , "%dynnetwork%"
+      -- [ xmobarAction "amixer -q set Master toggle" "1" "%alsa:default:Master%"
+      [ "%dynnetwork%"
       , "%date%"
       ]
     alignSep = "}{"

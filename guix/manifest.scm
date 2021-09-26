@@ -1,19 +1,22 @@
-(add-to-load-path "/home/john/dotfiles/guix")
-(use-modules (gnu packages) (my-packages))
+(add-to-load-path (dirname (current-filename)))
+(use-modules (gnu packages) (guix profiles) (my-packages))
 
-(specifications->manifest
- (append
-  languages
-  utilities
-  browsers
-  desktop-tools
-  fonts
-  c-tools
-  haskell-tools
-  nix-tools
-  ocaml-tools
-  rust-tools
-  guile-tools
-  pdf-tools
-  xorg-tools
-  emacs-packages))
+(concatenate-manifests
+ `(,(specifications->manifest
+     (append
+      languages
+      utilities
+      browsers
+      desktop-tools
+      fonts
+      c-tools
+      haskell-tools
+      nix-tools
+      ocaml-tools
+      rust-tools
+      guile-tools
+      pdf-tools
+      xorg-tools
+      emacs-packages))
+   ,(packages->manifest
+     `(,(load "../xmonad/guix.scm")))))

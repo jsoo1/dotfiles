@@ -56,7 +56,6 @@ SYMLINKS = \
 	$(HOME)/.tmux.conf \
 	$(HOME)/.tmux/tmuxline.conf \
 	$(HOME)/.xsession \
-	$(HOME)/.xmonad/xmonad.hs \
 	$(XDG_HOME)/zathura/zathurarc
 
 ln = ln -s
@@ -162,9 +161,6 @@ $(HOME)/.tmux/tmuxline.conf: | $(HOME)/.tmux ## Tmux status line configuration
 
 $(HOME)/.xsession: | $(HOME) ## Loaded by gdm and other DMs on login
 	$(ln) $(PWD)/xmonad/.xsession $@
-
-$(HOME)/.xmonad/xmonad.hs: | $(HOME)/.xmonad ## XMonad configuration
-	$(ln) $(PWD)/xmonad/xmonad.hs $@
 
 $(XDG_HOME)/zathura/zathurarc: | $(XDG_HOME)/zathura ## Zathura configuration
 	$(ln) $(PWD)/zathura/zathurarc $@

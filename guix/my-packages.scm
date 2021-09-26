@@ -48,7 +48,8 @@
     "unzip"))
 
 (define-public browsers
-  '("icecat"
+  '("firefox"
+    "icecat"
     "lynx"
     "ungoogled-chromium"))
 
@@ -65,10 +66,8 @@
     "garcon"
     "gnuplot"
     ;; "ibm-capsense-usb-util"
-    "alsa-lib"
     "libnotify"
     "libreoffice"
-    "libxpm"
     "my-dmenu"
     "mpd-mpc"
     "pamixer"
@@ -88,7 +87,7 @@
   '("ccls"))
 
 (define-public haskell-tools
-  '(; "cabal-install" Broken right now
+  '("cabal-install"
     "ghc@8.6"
     "hlint"
     "hoogle"
@@ -122,10 +121,7 @@
     "zathura-pdf-mupdf"))
 
 (define-public xorg-tools
-  '("gcc-toolchain" ;; needed by xmonad
-    "ghc-dbus"
-    "ghc-xmonad-contrib"
-    "setxkbmap"
+  '("setxkbmap"
     "xdg-utils"
     "xdotool"
     "xev"
@@ -134,8 +130,6 @@
     "xinput"
     "xlockmore"
     "xmessage"
-    "xmobar"
-    "xmonad"
     "xrandr"
     "xsel"
     "xsetroot"

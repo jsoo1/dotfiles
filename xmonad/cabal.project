@@ -1,0 +1,3 @@
+packages: ../../projects/xmobar
+          ./my-xmonad.cabal
+constraints: xmobar +with_xft

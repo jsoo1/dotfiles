@@ -1,0 +1,27 @@
+name:           my-xmonad
+version:        0.0.1.0
+description:    My XMonad executable
+homepage:       https://git.sr.ht/~jsoo/dotfiles
+bug-reports:    https://lists.sr.ht/~jsoo/dotfiles
+author:         John Soo <jsoo1@asu.edu>
+copyright:      2021 John Soo
+build-type:     Simple
+cabal-version:  >= 2.0
+tested-with:    GHC == 8.6.5
+
+source-repository head
+  type: git
+  location: https://git.sr.ht/~jsoo/dotfiles
+
+executable my-xmonad
+  main-is: xmonad.hs
+  ghc-options: -threaded -rtsopts -O2 -with-rtsopts=-N -optl-pthread
+  build-depends: base >=4.7 && <5
+               , containers >=0.6 && <0.7
+               , process >=1.6.5 && <1.7
+               , stm >=2.5 && <2.6
+               , xmonad >=0.15 && <0.16
+               , xmonad-contrib >=0.16 && <0.17
+               , xmobar >=0.40 && <0.41
+               , X11 >=1.9 && <2
+  default-language: Haskell2010
