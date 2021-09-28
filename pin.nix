@@ -122,6 +122,19 @@ in import nix-src {
       rev = "2b083adda6867e7c3812c84a10c04d1476c1ac81";
     }))
     (self: super: {
+      restream = super.restream.overrideAttrs (_: {
+        installPhase = ''
+          runHook preInstall
+
+          install -D restream.arm.static $out/libexec/restream.arm.static
+          install -D reStream.sh $out/bin/restream
+
+          runHook postInstall
+        '';
+        patches = [ ./nix/restream-invert.patch ];
+      });
+    })
+    (self: super: {
       my-emacs = super.emacs.pkgs.emacsWithPackages (epkgs:
         (builtins.concatMap (f: f epkgs) [ elpa manual melpa melpaStable ]));
     })

@@ -1,6 +1,2 @@
-let pkgs = import ../pin.nix; in with pkgs; [
-  my-emacs
-  iosevka
-  qemu
-  gnupg
-]
+let pkgs = import ../pin.nix;
+in with pkgs; [ gnupg iosevka my-emacs qemu restream ]
