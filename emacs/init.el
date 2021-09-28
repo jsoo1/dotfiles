@@ -1307,7 +1307,8 @@ when send commands with redis protocol."
         "\\*Async Shell Command\\*")
       popper-group-function 'popper-group-by-projectile
       popper-reference-modes
-      '(eshell-mode
+      '(display-time-world-mode
+        eshell-mode
         elfeed-search-mode
         proced
         process-list
