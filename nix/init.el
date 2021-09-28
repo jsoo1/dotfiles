@@ -787,7 +787,7 @@
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
 ;; Proof General
-(load-file "~/.guix-profile/share/emacs/site-lisp/ProofGeneral/pg-init.el")
+;; (load-file "~/.guix-profile/share/emacs/site-lisp/ProofGeneral/pg-init.el")
 
 ;; Idris mode
 (require 'idris-mode)
@@ -868,76 +868,76 @@
 (define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
 (add-hook 'haskell-mode-hook #'make-standard-paragraph-rules)
 
-;; Agda mode
-(load-library (let ((coding-system-for-read 'utf-8))
-                (shell-command-to-string "agda-mode locate")))
-(with-eval-after-load 'agda2-mode
-  (progn
-    (define-key agda2-mode-map (kbd "C-c C-SPC") #'agda2-give)
-    (define-key agda2-mode-map (kbd "C-c C-u") #'counsel-unicode-char)
-    (define-key agda2-mode-map (kbd "C-c ,") #'agda2-goal-and-context)
-    (define-key agda2-mode-map (kbd "C-c .") #'agda2-goal-and-context-and-inferred)
-    (define-key agda2-mode-map (kbd "C-c ;") #'agda2-goal-and-context-and-checked)
-    (set-face-attribute
-     'agda2-highlight-function-face nil
-     :inherit 'default
-     :foreground 'unspecified)
-    (set-face-attribute
-     'agda2-highlight-datatype-face nil
-     :inherit 'font-lock-type-face
-     :foreground 'unspecified)
-    (set-face-attribute
-     'agda2-highlight-primitive-face nil
-     :inherit 'font-lock-variable-name-face
-     :foreground 'unspecified)
-    (set-face-attribute
-     'agda2-highlight-primitive-type-face nil
-     :inherit 'font-lock-type-face
-     :foreground 'unspecified)
-    (set-face-attribute
-     'agda2-highlight-inductive-constructor-face nil
-     :inherit 'font-lock-type-face
-     :foreground 'unspecified)
-    (set-face-attribute
-     'agda2-highlight-postulate-face nil
-     :inherit 'font-lock-type-face
-     :foreground 'unspecified)
-    (set-face-attribute
-     'agda2-highlight-keyword-face nil
-     :inherit 'font-lock-keyword-face
-     :foreground 'unspecified)
-    (set-face-attribute
-     'agda2-highlight-module-face nil
-     :inherit 'font-lock-type-face
-     :foreground 'unspecified)
-    (set-face-attribute
-     'agda2-highlight-symbol-face nil
-     :inherit 'font-lock-variable-name-face
-     :foreground 'unspecified)
-    (set-face-attribute
-     'agda2-highlight-primitive-face nil
-     :inherit 'default
-     :foreground 'unspecified)
-    (set-face-attribute
-     'agda2-highlight-number-face nil
-     :inherit 'default
-     :foreground 'unspecified)
-    (set-face-attribute
-     'agda2-highlight-string-face nil
-     :inherit 'font-lock-string-face
-     :foreground 'unspecified)
-    (set-face-attribute
-     'agda2-highlight-catchall-clause-face nil
-     :background 'unspecified)
-    (set-face-attribute
-     'agda2-highlight-error-face nil
-     :inherit 'default
-     :background 'unspecified)
-    (set-face-attribute
-     'agda2-highlight-unsolved-meta-face nil
-     :inherit 'default
-     :background 'unspecified
-     :foreground "red")))
+;; ;; Agda mode
+;; (load-library (let ((coding-system-for-read 'utf-8))
+;;                 (shell-command-to-string "agda-mode locate")))
+;; (with-eval-after-load 'agda2-mode
+;;   (progn
+;;     (define-key agda2-mode-map (kbd "C-c C-SPC") #'agda2-give)
+;;     (define-key agda2-mode-map (kbd "C-c C-u") #'counsel-unicode-char)
+;;     (define-key agda2-mode-map (kbd "C-c ,") #'agda2-goal-and-context)
+;;     (define-key agda2-mode-map (kbd "C-c .") #'agda2-goal-and-context-and-inferred)
+;;     (define-key agda2-mode-map (kbd "C-c ;") #'agda2-goal-and-context-and-checked)
+;;     (set-face-attribute
+;;      'agda2-highlight-function-face nil
+;;      :inherit 'default
+;;      :foreground 'unspecified)
+;;     (set-face-attribute
+;;      'agda2-highlight-datatype-face nil
+;;      :inherit 'font-lock-type-face
+;;      :foreground 'unspecified)
+;;     (set-face-attribute
+;;      'agda2-highlight-primitive-face nil
+;;      :inherit 'font-lock-variable-name-face
+;;      :foreground 'unspecified)
+;;     (set-face-attribute
+;;      'agda2-highlight-primitive-type-face nil
+;;      :inherit 'font-lock-type-face
+;;      :foreground 'unspecified)
+;;     (set-face-attribute
+;;      'agda2-highlight-inductive-constructor-face nil
+;;      :inherit 'font-lock-type-face
+;;      :foreground 'unspecified)
+;;     (set-face-attribute
+;;      'agda2-highlight-postulate-face nil
+;;      :inherit 'font-lock-type-face
+;;      :foreground 'unspecified)
+;;     (set-face-attribute
+;;      'agda2-highlight-keyword-face nil
+;;      :inherit 'font-lock-keyword-face
+;;      :foreground 'unspecified)
+;;     (set-face-attribute
+;;      'agda2-highlight-module-face nil
+;;      :inherit 'font-lock-type-face
+;;      :foreground 'unspecified)
+;;     (set-face-attribute
+;;      'agda2-highlight-symbol-face nil
+;;      :inherit 'font-lock-variable-name-face
+;;      :foreground 'unspecified)
+;;     (set-face-attribute
+;;      'agda2-highlight-primitive-face nil
+;;      :inherit 'default
+;;      :foreground 'unspecified)
+;;     (set-face-attribute
+;;      'agda2-highlight-number-face nil
+;;      :inherit 'default
+;;      :foreground 'unspecified)
+;;     (set-face-attribute
+;;      'agda2-highlight-string-face nil
+;;      :inherit 'font-lock-string-face
+;;      :foreground 'unspecified)
+;;     (set-face-attribute
+;;      'agda2-highlight-catchall-clause-face nil
+;;      :background 'unspecified)
+;;     (set-face-attribute
+;;      'agda2-highlight-error-face nil
+;;      :inherit 'default
+;;      :background 'unspecified)
+;;     (set-face-attribute
+;;      'agda2-highlight-unsolved-meta-face nil
+;;      :inherit 'default
+;;      :background 'unspecified
+;;      :foreground "red")))
 
 ;; Ocaml
 (require 'tuareg)
@@ -966,31 +966,31 @@
 (define-key tuareg-mode-map (kbd "C-c C-c") #'merlin-error-next)
 
 ;; TODO: Remove when these are properly packaged in guix
-(load-file "~/.guix-profile/share/emacs/site-lisp/dune.el")
-(load-file "~/.guix-profile/share/emacs/site-lisp/dune-flymake.el")
+;; (load-file "~/.guix-profile/share/emacs/site-lisp/dune.el")
+;; (load-file "~/.guix-profile/share/emacs/site-lisp/dune-flymake.el")
 
-;; Purescript
-(add-to-list 'load-path "~/.emacs.d/private/purescript-mode")
-(require 'purescript-mode-autoloads)
-(add-to-list 'Info-default-directory-list "~/.emacs.d/private/purescript-mode/")
-(add-to-list 'auto-mode-alist '("\\.purs\\'" . purescript-mode))
-(require 'psc-ide)
-(add-hook 'purescript-mode-hook
-          (defun my-purescript-hook ()
-            (psc-ide-mode)
-            (company-mode)
-            (flycheck-mode)
-            (turn-on-purescript-indentation)))
-(define-key purescript-mode-map (kbd "C-c C-s") 'psc-ide-server-start)
-(define-key purescript-mode-map (kbd "C-c C-q") 'psc-ide-server-quit)
+;; ;; Purescript
+;; (add-to-list 'load-path "~/.emacs.d/private/purescript-mode")
+;; (require 'purescript-mode-autoloads)
+;; (add-to-list 'Info-default-directory-list "~/.emacs.d/private/purescript-mode/")
+;; (add-to-list 'auto-mode-alist '("\\.purs\\'" . purescript-mode))
+;; (require 'psc-ide)
+;; (add-hook 'purescript-mode-hook
+;;           (defun my-purescript-hook ()
+;;             (psc-ide-mode)
+;;             (company-mode)
+;;             (flycheck-mode)
+;;             (turn-on-purescript-indentation)))
+;; (define-key purescript-mode-map (kbd "C-c C-s") 'psc-ide-server-start)
+;; (define-key purescript-mode-map (kbd "C-c C-q") 'psc-ide-server-quit)
 
 ;; Guix
 (add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
 (add-hook 'scheme-mode-hook #'geiser-mode)
-(with-eval-after-load 'geiser-guile
-  (add-to-list 'geiser-guile-load-path "~/projects/guix"))
-(with-eval-after-load 'yasnippet
-  (add-to-list 'yas-snippet-dirs "~/projects/guix/etc/snippets"))
+;; (with-eval-after-load 'geiser-guile
+;;   (add-to-list 'geiser-guile-load-path "~/projects/guix"))
+;; (with-eval-after-load 'yasnippet
+;;   (add-to-list 'yas-snippet-dirs "~/projects/guix/etc/snippets"))
 (require 'scheme)
 (defvar guile-imenu-generic-expression
   (append '(("Public" "^(define-public\\s-+(?\\(\\sw+\\)" 1)
