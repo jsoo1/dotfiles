@@ -295,12 +295,12 @@ xmobarConf xmobarSignal xmobarQueue = Xmobar.defaultConfig
   , Xmobar.commands =
     [ Xmobar.Run (Xmobar.QueueReader xmobarQueue id "xmonadstuff")
     , Xmobar.Run (Xmobar.DynNetwork [] 20)
-    -- , Xmobar.Run (Xmobar.Alsa "default" "Master"
-    --   [ "-t" , "<status> <volume>%"
-    --   , "--"
-    --   , "--on", "vol", "--onc" , coerce base0
-    --   , "--off", "vol", "--offc" , coerce red
-    --   ])
+    , Xmobar.Run (Xmobar.Alsa "default" "Master"
+      [ "-t" , "<status> <volume>%"
+      , "--"
+      , "--on", "vol", "--onc" , coerce base0
+      , "--off", "vol", "--offc" , coerce red
+      ])
     , Xmobar.Run (Xmobar.Date ("%F" <> xmobarSegmentSep <> "%r") "date" 10)
     ]
   , Xmobar.alignSep = alignSep
@@ -312,7 +312,7 @@ xmobarConf xmobarSignal xmobarQueue = Xmobar.defaultConfig
     leftTemplate = [ "%xmonadstuff%" ]
     rightTemplate = intersperse xmobarSegmentSep
       [ "%dynnetwork%"
-      -- , xmobarAction "amixer -q set Master toggle" "1" "%alsa:default:Master%"
+      , xmobarAction "amixer -q set Master toggle" "1" "%alsa:default:Master%"
       , "%date%"
       ]
     alignSep = "}{"
