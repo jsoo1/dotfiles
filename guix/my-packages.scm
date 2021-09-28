@@ -132,6 +132,7 @@
 (define-public emacs-packages
   '("emacs-aio"
     "emacs-anzu"
+    "emacs-base16-theme"
     "emacs-clojure-mode"
     "emacs-cmake-mode"
     "emacs-company"
