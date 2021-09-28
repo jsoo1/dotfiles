@@ -226,7 +226,7 @@
  split-width-threshold 160)
 
 ;; Dired
-(setq dired-listing-switches "-al --group-directories-first")
+(setq dired-listing-switches "-al")
 (add-hook 'dired-mode-hook
           (defun my-dired-hook ()
             (turn-on-gnus-dired-mode)
