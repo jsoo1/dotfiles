@@ -96,31 +96,6 @@
 ;; Pinentry
 (setf epa-pinentry-mode 'loopback)
 
-;; Color setup
-(defvar base03  "#002b36" "Theme base03.")
-(defvar base02  "#073642" "Theme base02.")
-(defvar base01  "#586e75" "Theme base01.")
-(defvar base00  "#657b83" "Theme base00.")
-(defvar base1   "#93a1a1" "Theme cyan.")
-(defvar base0   "#839496" "Theme base0.")
-(defvar yellow  "#b58900" "Theme yellow.")
-(defvar red     "#dc322f" "Theme red.")
-(defvar green   "#859900" "Theme green.")
-(defvar blue    "#286bd2" "Theme blue.")
-(defvar cyan    "#2aa198" "Theme cyan.")
-(defvar magenta "#d33682" "Theme magenta.")
-(defvar orange  "#cb4b16" "Theme orange.")
-(defvar violet  "#6c71c4" "Theme violet.")
-
-;; Gnus
-;; set-face-attribute does not work here, why?
-;; even with with-eval-after-load 'mm-uu
-;; or in a hook
-(defface mm-uu-extract
-  `((,t . (:foreground ,blue :background unspecified)))
-  "Face for extracted buffers."
-  :group 'gnus-article-mime)
-
 ;; Erc
 (setq erc-autojoin-channels-alist nil
       erc-rename-buffers t
@@ -183,6 +158,32 @@
 ;; Shell
 (setq shell-file-name "bash")
 
+;; Color setup
+(require 'base16-solarized-dark-theme)
+(defvar my-base03  (plist-get base16-solarized-dark-colors :base03)  "Theme base03.")
+(defvar my-base02  (plist-get base16-solarized-dark-colors :base02)  "Theme base02.")
+(defvar my-base01  (plist-get base16-solarized-dark-colors :base01)  "Theme base01.")
+(defvar my-base00  (plist-get base16-solarized-dark-colors :base00)  "Theme base00.")
+(defvar my-base1   (plist-get base16-solarized-dark-colors :base1)   "Theme base1.")
+(defvar my-base0   (plist-get base16-solarized-dark-colors :base0)   "Theme base0.")
+(defvar my-yellow  (plist-get base16-solarized-dark-colors :yellow)  "Theme yellow.")
+(defvar my-red     (plist-get base16-solarized-dark-colors :red)     "Theme red.")
+(defvar my-green   (plist-get base16-solarized-dark-colors :green)   "Theme green.")
+(defvar my-blue    (plist-get base16-solarized-dark-colors :blue)    "Theme blue.")
+(defvar my-cyan    (plist-get base16-solarized-dark-colors :cyan)    "Theme cyan.")
+(defvar my-magenta (plist-get base16-solarized-dark-colors :magenta) "Theme magenta.")
+(defvar my-orange  (plist-get base16-solarized-dark-colors :orange)  "Theme orange.")
+(defvar my-violet  (plist-get base16-solarized-dark-colors :violet)  "Theme violet.")
+
+;; Gnus
+;; set-face-attribute does not work here, why?
+;; even with with-eval-after-load 'mm-uu
+;; or in a hook
+(defface mm-uu-extract
+  `((,t . (:foreground ,my-blue :background unspecified)))
+  "Face for extracted buffers."
+  :group 'gnus-article-mime)
+
 ;; EShell
 (add-hook 'emacs-startup-hook
           (defun eshell-in-current-directory ()
@@ -211,19 +212,19 @@
       eshell-prompt-function
       (defun make-my-eshell-prompt ()
         (concat
-         (propertize (eshell/whoami) 'face `(:foreground ,base1))
+         (propertize (eshell/whoami) 'face `(:foreground ,my-base1))
          " "
          (propertize (replace-regexp-in-string (concat "^" (getenv "HOME")) "~" (eshell/pwd))
-                     'face `(:foreground ,blue))
+                     'face `(:foreground ,my-blue))
          " "
          (propertize (condition-case nil
                          (let ((curr-branch (magit-get-current-branch)))
                            (if curr-branch curr-branch
                              (substring (magit-rev-parse "HEAD") 0 7)))
                        (error ""))
-                     'face `(:foreground ,green))
+                     'face `(:foreground ,my-green))
          " "
-         (propertize "λ" 'face `(:foreground ,yellow :weight normal))
+         (propertize "λ" 'face `(:foreground ,my-yellow :weight normal))
          " ")))
 
 (defun my-side-eshell (props)
@@ -257,79 +258,79 @@
 (diredfl-global-mode 1)
 (set-face-attribute
  diredfl-dir-heading nil
- :foreground blue
+ :foreground my-blue
  :background "unspecified")
 (set-face-attribute
  diredfl-number nil
- :foreground green
+ :foreground my-green
  :background "unspecified")
 (set-face-attribute
  diredfl-date-time nil
- :foreground yellow
+ :foreground my-yellow
  :background "unspecified")
 (set-face-attribute
  diredfl-file-name nil
- :foreground base0
+ :foreground my-base0
  :background "unspecified")
 (set-face-attribute
  diredfl-file-suffix nil
- :foreground green
+ :foreground my-green
  :background "unspecified")
 (set-face-attribute
  diredfl-dir-name nil
- :foreground blue
+ :foreground my-blue
  :background "unspecified")
 (set-face-attribute
  diredfl-symlink nil
- :foreground cyan
+ :foreground my-cyan
  :background "unspecified")
 (set-face-attribute
  diredfl-no-priv nil
- :foreground base0
+ :foreground my-base0
  :background "unspecified")
 (set-face-attribute
  diredfl-dir-priv nil
- :foreground blue
+ :foreground my-blue
  :background "unspecified")
 (set-face-attribute
  diredfl-read-priv nil
- :foreground base0
+ :foreground my-base0
  :background "unspecified")
 (set-face-attribute
  diredfl-write-priv nil
- :foreground cyan
+ :foreground my-cyan
  :background "unspecified")
 (set-face-attribute
  diredfl-exec-priv nil
- :foreground magenta
+ :foreground my-magenta
  :background "unspecified")
 (set-face-attribute
  diredfl-rare-priv nil
- :foreground magenta
+ :foreground my-magenta
  :background "unspecified")
 (set-face-attribute
  diredfl-other-priv nil
- :foreground orange
+ :foreground my-orange
  :background "unspecified")
 (set-face-attribute
  diredfl-deletion nil
- :foreground red
+ :foreground my-red
  :background "unspecified")
 (set-face-attribute
  diredfl-deletion-file-name nil
- :foreground red
+ :foreground my-red
  :background "unspecified")
 (set-face-attribute
  diredfl-flag-mark nil
- :foreground violet
+ :foreground my-violet
  :background "unspecified")
 (set-face-attribute
  diredfl-flag-mark-line nil
- :foreground violet
+ :foreground my-violet
  :background "unspecified")
 (set-face-attribute
  diredfl-ignored-file-name nil
- :foreground base01
+ :foreground my-base01
  :background "unspecified")
 
 ;; World times to display
@@ -813,13 +814,13 @@
 (require 'idris-ipkg-mode)
 (setq idris-interpreter-path "/home/john/.guix-profile/bin/idris")
 
-(dolist (f `((idris-active-term-face        ,base00)
-             (idris-semantic-type-face      ,yellow)
-             (idris-semantic-data-face      ,red)
+(dolist (f `((idris-active-term-face        ,my-base00)
+             (idris-semantic-type-face      ,my-yellow)
+             (idris-semantic-data-face      ,my-red)
              (idris-semantic-function-face  "unspecified")
-             (idris-semantic-bound-face     ,violet)
-             (idris-semantic-module-face    ,yellow)
-             (idris-identifier-face         ,base01)))
+             (idris-semantic-bound-face     ,my-violet)
+             (idris-semantic-module-face    ,my-yellow)
+             (idris-identifier-face         ,my-base01)))
   (set-face-foreground (car f) (cadr f)))
 
 (define-key idris-repl-mode-map (kbd "C-c C-k" ) #'idris-repl-clear-buffer)
@@ -863,7 +864,7 @@
     (set-face-attribute
      'proof-locked-face nil
      :underline nil
-     :background base02)
+     :background my-base02)
     (add-hook 'coq-mode-hook #'company-coq-mode)
     (define-key coq-mode-map (kbd "C-c RET") #'proof-goto-point)))
 
@@ -1220,7 +1221,6 @@ when send commands with redis protocol."
             (flycheck-mode -1)))
 
 ;; Theme
-(require 'base16-solarized-dark-theme)
 (load-theme 'base16-solarized-dark t)
 
 ;; Transparency in gui
@@ -1234,7 +1234,7 @@ when send commands with redis protocol."
           (string= "base" (daemonp))
           (string= "term" (daemonp)))
       (progn (set-face-background 'default "unspecified-bg" frame)
-             (set-face-background 'line-number base02 frame))))
+             (set-face-background 'line-number my-base02 frame))))
 
 (defun my-make-this-frame-transparent ()
   "Make `selected-frame' transparent."
@@ -1249,7 +1249,7 @@ when send commands with redis protocol."
   "Setup transparency in terminal."
   (unless (display-graphic-p (selected-frame))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-           (set-face-background 'line-number base02 (selected-frame)))))
+           (set-face-background 'line-number my-base02 (selected-frame)))))
 
 (add-hook 'window-setup-hook #'on-after-init)
 
@@ -1257,7 +1257,7 @@ when send commands with redis protocol."
           (string= "term" (daemonp))
           (not (display-graphic-p (selected-frame))))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-           (set-face-background 'line-number base02 (selected-frame))))
+           (set-face-background 'line-number my-base02 (selected-frame))))
 
 ;; Tab bar
 (setq
@@ -1273,15 +1273,15 @@ when send commands with redis protocol."
 
 (set-face-attribute
  'tab-bar nil
- :foreground base01
+ :foreground my-base01
  :background "unspecified")
 (set-face-attribute
  'tab-bar-tab nil
- :foreground base0
+ :foreground my-base0
  :background "unspecified")
 (set-face-attribute
  'tab-bar-tab-inactive nil
- :foreground base01
+ :foreground my-base01
  :background "unspecified")
 
 (defun my-tab-bar-name (tab)
@@ -1303,27 +1303,27 @@ when send commands with redis protocol."
  'mode-line nil
  :underline nil
  :overline nil
- :foreground base0
- :background base02
- :box `(:line-width 1 :color ,base02 :style unspecified))
+ :foreground my-base0
+ :background my-base02
+ :box `(:line-width 1 :color ,my-base02 :style unspecified))
 
 (set-face-attribute
  'mode-line-inactive nil
  :overline nil
  :underline nil
- :foreground base01
- :background base03
- :box `(:line-width 1 :color ,base03 :style 'unspecified))
+ :foreground my-base01
+ :background my-base03
+ :box `(:line-width 1 :color ,my-base03 :style 'unspecified))
 
 (defun evil-state-foreground (state)
   "The mode line color for evil-state `STATE'."
   (pcase state
-    ('normal  green)
-    ('insert  yellow)
-    ('emacs   cyan)
-    ('replace red)
-    ('visual  blue)
-    ('motion  cyan)))
+    ('normal  my-green)
+    ('insert  my-yellow)
+    ('emacs   my-cyan)
+    ('replace my-red)
+    ('visual  my-blue)
+    ('motion  my-cyan)))
 
 (defun my-flycheck-error-str (n fg)
   "Properties string for a number of errors `N' with foreground color `FG'."
@@ -1332,10 +1332,10 @@ when send commands with redis protocol."
 (defun my-flycheck-error-format (errors)
   "Format `ERRORS', if there are any of type warning or error."
   (let-alist errors
-    `(,(if .error (my-flycheck-error-str .error red)
+    `(,(if .error (my-flycheck-error-str .error my-red)
          "")
       " "
-      ,(if .warning (my-flycheck-error-str .warning  yellow)
+      ,(if .warning (my-flycheck-error-str .warning  my-yellow)
          ""))))
 
 (defun my-flycheck-mode-line-status-text ()
