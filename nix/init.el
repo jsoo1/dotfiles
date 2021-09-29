@@ -242,7 +242,8 @@
  split-width-threshold 160)
 
 ;; Dired
-(setq dired-listing-switches "-al")
+(setq dired-listing-switches "-al"
+      dired-use-ls-dired nil)
 (add-hook 'dired-mode-hook
           (defun my-dired-hook ()
             (turn-on-gnus-dired-mode)
