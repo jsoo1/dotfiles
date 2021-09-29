@@ -1313,7 +1313,7 @@ when send commands with redis protocol."
  :underline nil
  :foreground base01
  :background base03
- :box `(:line-width 1 :color ,base03 :style 'unspecified))
+ :box `(:line-width 1 :color ,base03 :style unspecified))
 
 (defun evil-state-foreground (state)
   "The mode line color for evil-state `STATE'."
