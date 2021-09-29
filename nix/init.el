@@ -334,6 +334,7 @@
  enable-local-eval t
  safe-local-variable-values
  '(;; Haskell-specific
+   (before-save-hook . nil)
    (haskell-stylish-on-save . nil)
    (haskell-process-type . stack-ghci)
    (haskell-process-type . cabal-repl)
@@ -1202,9 +1203,8 @@ when send commands with redis protocol."
             (flycheck-mode -1)))
 
 ;; Theme
-(require 'solarized)
-(require 'solarized-dark-theme)
-(load-theme 'solarized-dark t)
+(require 'base16-solarized-dark-theme)
+(load-theme 'base16-solarized-dark t)
 
 ;; Transparency in gui
 (set-frame-parameter (selected-frame) 'alpha '(80 . 50))
