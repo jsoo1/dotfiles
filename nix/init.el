@@ -1312,7 +1312,7 @@ when send commands with redis protocol."
  :overline nil
  :underline nil
  :foreground base01
- :background base03
+ :background "unspecified"
  :box `(:line-width 1 :color ,base03 :style unspecified))
 
 (defun evil-state-foreground (state)
