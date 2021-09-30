@@ -690,9 +690,6 @@
 ;; Clipboard
 (require 'xclip)
 (xclip-mode 1)
-(setq
- xclip-method 'xsel
- xclip-program "xsel")
 (defun toggle-xclip-mode ()
   "Toggle `xclip-mode'."
   (interactive)
