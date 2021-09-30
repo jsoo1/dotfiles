@@ -97,6 +97,8 @@
 (defvar base02  "#073642" "Theme base02.")
 (defvar base01  "#586e75" "Theme base01.")
 (defvar base00  "#657b83" "Theme base00.")
+(defvar base3   "#fdf6e3" "Theme base3.")
+(defvar base2   "#eee8d5" "Theme base2.")
 (defvar base1   "#93a1a1" "Theme cyan.")
 (defvar base0   "#839496" "Theme base0.")
 (defvar yellow  "#b58900" "Theme yellow.")
@@ -1300,7 +1302,7 @@ when send commands with redis protocol."
  :underline nil
  :overline nil
  :foreground base0
- :background base02
+ :background base2
  :box `(:line-width 1 :color ,base02 :style unspecified))
 
 (set-face-attribute
