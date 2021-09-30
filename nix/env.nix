@@ -2,6 +2,7 @@ let pkgs = import ../pin.nix;
 in with pkgs; [
   direnv
   fd
+  ghcid
   gnupg
   iosevka
   my-emacs
