@@ -1,5 +1,4 @@
-let
-  pkgs = import ../pin.nix;
+let pkgs = import ../pin.nix;
 in pkgs.mkShell {
   name = "emacs-config-shell";
   buildInputs = [ emacs pkgs.glibcLocales pkgs.postgresql ];
