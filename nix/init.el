@@ -1776,4 +1776,6 @@ when send commands with redis protocol."
               (user-error
                (message "Unloaded env for %s" (buffer-name))))))
 
+(require 'server)
+(unless (server-running-p) (server-start))
 ;;; init.el ends here
