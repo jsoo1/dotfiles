@@ -1385,7 +1385,17 @@ when send commands with redis protocol."
 
 ;; ISO 8601
 (defun iso-8601-string (&optional time zone)
-  "Make an ISO 8601 formatted date string for `TIME' and `ZONE'."
+  "Make a short ISO 8601 formatted date string for `TIME' and
+`ZONE' - defaulting to `CURRENT-TIME' and `CURRENT-TIME-ZONE',
+respectively."
+  (let ((time* (or time (current-time)))
+        (zone* (or zone (current-time-zone))))
+    (format-time-string "%Y-%m-%d" time* zone*)))
+
+(defun iso-8601-string-full (&optional time zone)
+  "Make full ISO 8601 formatted date string for `TIME' and `ZONE'
+- defaulting to `CURRENT-TIME' and `CURRENT-TIME-ZONE',
+respectively."
   (let ((time* (or time (current-time)))
         (zone* (or zone (current-time-zone))))
     (concat
@@ -1602,6 +1612,8 @@ when send commands with redis protocol."
         (interactive) (uuidgen nil))
   "t" (defun insert-time-now-as-iso-8601 ()
         (interactive) (insert (iso-8601-string)))
+  "T" (defun insert-time-now-as-iso-8601-full ()
+        (interactive) (insert (iso-8601-string-full)))
   "u" counsel-unicode-char)
 
 (define-prefix-keymap my-jump-map
