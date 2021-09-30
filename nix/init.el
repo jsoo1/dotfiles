@@ -1302,7 +1302,7 @@ when send commands with redis protocol."
  :underline nil
  :overline nil
  :foreground base0
- :background base2
+ :background base02
  :box `(:line-width 1 :color ,base02 :style unspecified))
 
 (set-face-attribute
