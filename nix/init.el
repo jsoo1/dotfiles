@@ -796,6 +796,10 @@
             (evil-local-set-key 'motion (kbd ",") elpher-mode-map)
             (local-set-key (kbd "C-c") elpher-mode-map)))
 
+;; Editorconfig
+(require 'editorconfig)
+(editorconfig-mode 1)
+
 ;; Restclient
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
