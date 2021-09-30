@@ -20,6 +20,7 @@ let
       cql-mode
       dhall-mode
       dired-git
+      editorconfig
       evil-replace-with-register
       exec-path-from-shell
       graphql-mode
