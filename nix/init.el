@@ -577,55 +577,12 @@
     (split-string string "[\n\r]+"))))
 
 ;; Set org-agenda-files
-;; Right now, very not thread safe.
-(defvar home-org-dirs '())
-(defvar on-my-org-callback nil)
-(defvar on-my-org-repo-dir nil)
-(defun on-my-org-repo (repo-dir ref cb)
-  "Perform `CB' on the org directories of `REPO-DIR' at git `REF'."
-  ;; (assert (stringp repo-dir))
-  ;; (assert (stringp ref))
-  ;; (assert (functionp cb))
-  (setq on-my-org-callback cb)
-  (setq on-my-org-repo-dir repo-dir)
-  (let ((default-directory repo-dir))
-    (make-process
-     :name "list-tracked-org-files"
-     :command `("git" "ls-tree" "--name-only" "-r" ,ref)
-     :buffer (current-buffer)
-     :filter
-     (lambda (proc string)
-       (funcall on-my-org-callback (str-to-org-dirs on-my-org-repo-dir string)))
-     :sentinel (lambda (proc event) nil))))
-
-(on-my-org-repo
- "~" "master"
- (lambda (home-dirs)
-   (setq home-org-dirs home-dirs)
-   (on-my-org-repo
-    "~/projects/work" "consumable"
-    (lambda (work-dirs)
-      (setq org-agenda-files (append home-org-dirs work-dirs))))))
-
-(let ((default-directory "~"))
-  (make-process
-   :name "list-tracked-org-files"
-   :command `("git" "ls-tree" "--name-only" "-r" "master")
-   :buffer (current-buffer)
-   :filter
-   (lambda (proc string)
-     (let ((default-directory "~/projects/work"))
-       (setq home-org-dirs (str-to-org-dirs "~/" string))
-       (make-process
-        :name "list-tracked-org-files"
-        :command `("git" "ls-tree" "--name-only" "-r" "consumable")
-        :buffer (current-buffer)
-        :filter
-        (lambda (proc string)
-          (setq work-org-dirs (str-to-org-dirs "~/projects/work" string))
-          (setq org-agenda-files (append home-org-dirs work-org-dirs)))
-        :sentinel (lambda (proc event) nil))))
-   :sentinel (lambda (proc event) nil)))
+(make-thread
+ (lambda () (setq org-agenda-files
+                  (append
+                   (directory-files-recursively "~/dotfiles" "TODOs\\.org$" nil t)
+                   (directory-files-recursively "~/projects" "TODOs\\.org$" nil t))))
+ "get-org-files")
 
 (set-face-attribute
  'variable-pitch nil
