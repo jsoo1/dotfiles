@@ -24,16 +24,19 @@ let
     ];
   melpa = { melpaPackages, ... }:
     with melpaPackages; [
+      counsel-projectile
       cql-mode
       dhall-mode
       dired-git
       evil-replace-with-register
       exec-path-from-shell
       graphql-mode
+      ibuffer-projectile
       merlin
       multi-term
       ob-restclient
       origami
+      projectile
       proof-general
       psc-ide
       racket-mode
@@ -54,7 +57,6 @@ let
       company
       company-coq
       company-math
-      counsel-projectile
       diredfl
       docker
       dockerfile-mode
@@ -87,7 +89,6 @@ let
       haskell-mode
       haskell-snippets
       helpful
-      ibuffer-projectile
       idris-mode
       imenu-list
       ivy
@@ -97,7 +98,6 @@ let
       nodejs-repl
       org-mime
       ivy-prescient
-      projectile
       reformatter
       rust-mode
       s
