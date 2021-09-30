@@ -7,11 +7,11 @@ alias sk='TERM=xterm-256color command sk --color=bw'
 alias vi=nvim
 eval "$(direnv hook zsh)"
 __skim_history () {
-    printf '%s' $(history | sk | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}')
+    LBUFFER="$LBUFFER$(history | sk | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}')"
 }
 zle -N skim_history __skim_history
 __skim_files () {
-    printf '%s' $(fd '.*' '.' --hidden -E '.git*' | sk)
+    LBUFFER="$LBUFFER$(fd '.*' '.' --hidden -E '.git*' | sk)"
 }
 zle -N skim_files __skim_files
 bindkey '^r' skim_history
