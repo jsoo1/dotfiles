@@ -9,5 +9,6 @@ in with pkgs; [
   qemu
   restream
   ripgrep
+  skim
   tmux
 ]
