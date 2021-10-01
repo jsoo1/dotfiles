@@ -1,3 +1,3 @@
 * Todos
-** TODO <2020-05-25 Mon> Make pdump work.
-** TODO <2020-05-26 Tue> Figure out how to make lexical scope work with on-my-org-repo and make-process.
+** CANCELLED <2020-05-25 Mon> Make pdump work.
+** CANCELLED <2020-05-26 Tue> Figure out how to make lexical scope work with on-my-org-repo and make-process.
