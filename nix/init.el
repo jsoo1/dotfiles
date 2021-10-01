@@ -166,17 +166,26 @@
 
 ;; Elfeed
 (with-eval-after-load 'elfeed
-  (progn
-    (define-key elfeed-search-mode-map (kbd "C-l") elfeed-load-map)
-    (define-key elfeed-search-mode-map "l" elfeed-load-map)))
-(add-hook
- 'elfeed-search-mode-hook
- (defun make-elfeed-search-ctrl-c-map ()
-   (local-set-key (kbd "C-c") elfeed-search-mode-map)))
-(add-hook
- 'elfeed-show-mode-hook
- (defun make-elfeed-show-ctrl-c-map ()
-   (local-set-key (kbd "C-c") elfeed-show-mode-map)))
+  (setq elfeed-curl-max-connections 8)
+  (setq-default elfeed-search-filter "@6-months-ago +unread")
+  (elfeed-load-opml (expand-file-name "bazqux-reader-subscriptions.xml" user-emacs-directory))
+  (elfeed-load-opml (expand-file-name "Downcast.opml" user-emacs-directory))
+  (run-with-timer 0 (* 15 60) 'elfeed-update))
+(defun my-elfeed-podcast-tagger (entry)
+  (when (elfeed-entry-enclosures entry)
+    (elfeed-tag entry 'podcast)))
+(add-hook 'elfeed-new-entry-hook #'my-elfeed-podcast-tagger)
+
+;; EMMS
+(emms-all)
+(emms-default-players)
+(setq emms-source-file-directory (expand-file-name "~/Music")
+      emms-player-mpd-server-name "localhost"
+      emms-player-mpd-server-port "6600"
+      emms-player-mpd-music-directory "~/Music")
+(add-to-list 'emms-info-functions 'emms-info-mpd)
+(add-to-list 'emms-player-list 'emms-player-mpd)
+(emms-player-mpd-connect)
 
 ;; Shell
 (setq shell-file-name "bash")
@@ -394,6 +403,10 @@
 ;; Helpful
 (require 'helpful)
 
+;; Undo-Tree
+(global-undo-tree-mode)
+(setq undo-tree-history-directory-alist `((".*" . ,(expand-file-name "undo-tree" user-emacs-directory))))
+
 ;; Evil
 (global-set-key (kbd "<escape>") #'keyboard-escape-quit)
 ;; somehow needs to happen before any mention of evil mode
@@ -427,6 +440,11 @@
 (with-eval-after-load 'man (evil-collection-man-setup))
 (with-eval-after-load 'debbugs (evil-collection-debbugs-setup))
 (with-eval-after-load 'info (evil-collection-info-setup))
+(with-eval-after-load 'elfeed (evil-collection-elfeed-setup))
+(with-eval-after-load 'timer-list (evil-collection-timer-list-setup))
+(with-eval-after-load 'emms (evil-collection-emms-setup))
+(with-eval-after-load 'proced (evil-collection-proced-setup))
+(with-eval-after-load 'process-list (evil-collection-process-menu-setup))
 (global-evil-leader-mode)
 
 (evil-set-initial-state 'compilation-mode 'normal)
@@ -441,6 +459,7 @@
 (evil-set-initial-state 'erc-mode 'normal)
 (evil-set-initial-state 'eshell-mode 'normal)
 (evil-set-initial-state 'tab-switcher-mode 'emacs)
+(evil-set-initial-state 'reb-mode 'normal)
 
 (evil-declare-not-repeat #'flycheck-next-error)
 (evil-declare-not-repeat #'flycheck-previous-error)
@@ -464,13 +483,6 @@
 (evil-define-key 'normal xref--xref-buffer-mode-map (kbd "C-c") xref--xref-buffer-mode-map)
 (setq xref-show-definitions-function #'xref--show-defs-minibuffer)
 (setq xref-show-xrefs-function #'xref--show-defs-minibuffer)
-
-;; Process Menu
-(add-hook
- 'process-menu-mode-hook
- (defun make-process-menu-ctrl-c-map ()
-   (evil-local-set-key 'normal (kbd ",") process-menu-mode-map)
-   (local-set-key (kbd "C-c") process-menu-mode-map)))
 
 ;; Magit
 (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
@@ -754,15 +766,38 @@
             (evil-local-set-key 'motion (kbd ",") elpher-mode-map)
             (local-set-key (kbd "C-c") elpher-mode-map)))
 
-;; Editorconfig
-(require 'editorconfig)
-(editorconfig-mode 1)
-
 ;; Restclient
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
+;; Pulseaudio
+(require 'pulseaudio-control)
+(defhydra pulseaudio-control-hydra (:hint nil)
+  "
+pulseaudio (pactl)
+_+_: increase volume             _d_: control display volume            _v_: control set volume
+_-_: decrease volume             _e_: control toggle sink mute by name  _x_: toggle sink mute by index
+_m_: mute default sink           _i_: control sink by index
+_]_: toggle use of default sink  _n_: control select sink by name
+"
+  ("+" pulseaudio-control-increase-volume)
+  ("=" pulseaudio-control-increase-volume)
+  ("-" pulseaudio-control-decrease-volume)
+  ("_" pulseaudio-control-decrease-volume)
+  ("m" pulseaudio-control-toggle-current-sink-mute)
+  ("]" pulseaudio-control-toggle-use-of-default-sink)
+  ("d" pulseaudio-control-display-volume)
+  ("e" pulseaudio-control-toggle-sink-mute-by-name)
+  ("i" pulseaudio-control-select-sink-by-index)
+  ("n" pulseaudio-control-select-sink-by-name)
+  ("v" pulseaudio-control-set-volume)
+  ("x" pulseaudio-toggle-sink-mute-by-index))
+
 ;; Proof General
 ;; (load-file "~/.guix-profile/share/emacs/site-lisp/ProofGeneral/pg-init.el")
+
+;; Editorconfig
+(require 'editorconfig)
+(editorconfig-mode 1)
 
 ;; Idris mode
 (require 'idris-mode)
@@ -787,12 +822,14 @@
   (add-hook 'emacs-lisp-mode-hook #'company-mode 't))
 (define-key emacs-lisp-mode-map (kbd "C-c C-e") #'edebug-defun)
 (define-key emacs-lisp-mode-map (kbd "C-c C-b") #'eval-buffer)
+(define-key emacs-lisp-mode-map (kbd "C-C C-r") #'eval-region)
 (add-hook 'emacs-lisp-mode-hook
           (defun setup-elisp-imenu ()
             (setq-local
              imenu-generic-expression
-             (cons '("Keymap" "^(define-prefix-keymap\\s-+\\([a-z-]+\\)" 1)
-                   imenu-generic-expression))))
+             `(("Keymap" "^(define-prefix-keymap\\s-+\\([a-z-]+\\)" 1)
+               ("Hydra" "^(defhydra\\+?\\s-+\\([a-z-]+\\)" 1)
+               ,@imenu-generic-expression))))
 
 ;; JavaScript
 (require 'nodejs-repl)
@@ -935,7 +972,7 @@
             (interactive)
             (setq-local
              imenu-generic-expression
-             `(("Module" "^\\s-*and|module\\s-+\\(type|rec\\s-+\\)?\\([a-zA-Z0-9_]+\\)" 2)
+             `(("Module" "^\\s-*\\(module\\|and\\)\\s-+\\(type|rec\\s-+\\)?\\([a-zA-Z0-9_]+\\)" 3)
                ,@imenu-generic-expression))))
 (define-key tuareg-mode-map (kbd "C-c C-o") #'merlin-occurrences)
 (define-key tuareg-mode-map (kbd "C-c C-c") #'merlin-error-next)
@@ -1216,6 +1253,51 @@ when send commands with redis protocol."
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
            (set-face-background 'line-number base02 (selected-frame))))
 
+;; Shackle
+(setq shackle-rules '((compilation-mode :noselect t :other t)
+                      (Man-mode :select t :popup t :align 'right :size 0.5)
+                      (woman :select t :popup t :align 'right :size 0.5)
+                      (eshell-mode :popup t :select t :align 'right :size 0.5 :other t)))
+(shackle-mode)
+
+;; Popper
+(popper-mode 1)
+(setq popper-reference-buffers
+      '("\\*Messages\\*"
+        "Output\\*$"
+        "\\*Async Shell Command\\*")
+      popper-group-function 'popper-group-by-projectile
+      popper-reference-modes
+      '(display-time-world-mode
+        eshell-mode
+        elfeed-search-mode
+        proced
+        process-list
+        help-mode
+        helpful-mode
+        Man-mode
+        woman-mode
+        reb-mode
+        compilation-mode))
+
+(defun counsel-popper-buried-popups ()
+  "Ivy search for popper buried popups."
+  (interactive)
+  (ivy-read "Buffer: " (mapcar (pcase-lambda (`(,group ,win . ,buf))
+                                 `(,(format "%s: %s" group (buffer-name buf)) . (,group ,win . ,buf)))
+                               (seq-uniq (mapcan (pcase-lambda (`(,group . ,xs))
+                                                   (mapcar (lambda (x) (cons group x)) xs))
+                                                 popper-buried-popup-alist)))
+            :action (pcase-lambda (`(_ ,group . ,selection))
+                      (popper-bury-all)
+                      (let ((bufs (alist-get group popper-buried-popup-alist nil nil 'equal)))
+                        (setf (alist-get group popper-buried-popup-alist nil nil 'equal)
+                              (cons selection
+                                    (seq-filter (lambda (x) (not (equal selection x))) bufs))))
+                      (popper-open-latest group))
+            :require-match t
+            :caller 'counsel-popper-buried-popups))
+
 ;; Tab bar
 (setq
  tab-bar-show nil
@@ -1361,6 +1443,14 @@ respectively."
      ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
       (format-time-string "%z" time* zone*)))))
 
+;; Zoom
+(defhydra zoom (:hint nil)
+  "zoom"
+  ("+" text-scale-increase "+")
+  ("=" text-scale-increase "+")
+  ("-" text-scale-decrease "-")
+  ("_" text-scale-decrease "-"))
+
 ;; Keybindings
 (evil-leader/set-leader "<SPC>")
 
@@ -1386,7 +1476,7 @@ respectively."
   "w" 'my-window-map
   "x" 'my-text-map
   "y" 'my-yank-map
-  "z" 'my-zoom-map
+  "z" 'zoom/body
   "'" 'eshell
   "/" 'counsel-projectile-rg)
 
@@ -1435,8 +1525,14 @@ respectively."
   "r" eglot-rename
   "X" eglot-signal-didChangeConfiguration)
 
+(define-prefix-keymap my-emms-map
+  "my emms bindings"
+  "m" emms
+  "p" emms-pause)
+
 (define-prefix-keymap my-process-map
   "my process keybindings"
+  "a" pulseaudio-control-hydra/body
   "b" my-debbugs-modes-map
   "d" docker
   "e" gnus
@@ -1445,8 +1541,10 @@ respectively."
   "G" elpher-go
   "i" my-erc-map
   "l" list-processes
+  "m" my-emms-map
   "o" org-agenda
   "p" proced
+  "r" re-builder
   "t" display-time-world
   "T" list-timers)
 
@@ -1578,6 +1676,7 @@ respectively."
   "my jump keybindings"
   "i" counsel-imenu
   "o" counsel-org-goto-all
+  "p" counsel-popper-buried-popups
   "t" counsel-switch-tab
   "u" undo-tree-visualize
   "]" evil-jump-to-tag
@@ -1677,6 +1776,8 @@ respectively."
         (interactive)
         (setq display-line-numbers (next-line-number display-line-numbers)))
   "o" my-org-toggle-map
+  "p" popper-cycle
+  "P" popper-toggle-type
   "t" tab-bar-mode
   "T" counsel-load-theme
   "w" whitespace-mode
@@ -1701,15 +1802,16 @@ respectively."
   "d" (defun my-delete-window ()
         (interactive) (progn (delete-window) (balance-windows)))
   "D" delete-frame
-  "h" (defun tmux-left () (interactive) (tmux-pane-omni-window-left))
-  "j" (defun tmux-down () (interactive) (tmux-pane-omni-window-down))
-  "k" (defun tmux-up () (interactive) (tmux-pane-omni-window-up))
-  "l" (defun tmux-right () (interactive) (tmux-pane-omni-window-right))
+  "h" (defun tmux-left () (interactive) (tmux-navigate "left"))
+  "j" (defun tmux-down () (interactive) (tmux-navigate "down"))
+  "k" (defun tmux-up () (interactive) (tmux-navigate "up"))
+  "l" (defun tmux-right () (interactive) (tmux-navigate "right"))
   "H" evil-window-move-far-left
   "J" evil-window-move-very-bottom
   "K" evil-window-move-very-top
   "L" evil-window-move-far-right
   "m" delete-other-windows
+  "p" popper-toggle-latest
   "r" winner-redo
   "u" winner-undo
   "=" balance-windows)
@@ -1717,12 +1819,6 @@ respectively."
 (define-prefix-keymap my-yank-map
   "my yanking keybindings"
   "y" counsel-yank-pop)
-
-(define-prefix-keymap my-zoom-map
-  "my zoom/text scaling keybindings"
-  "+" text-scale-increase
-  "=" text-scale-increase
-  "-" text-scale-decrease)
 
 ;; Reset these to have all the configuration we just did
 (with-current-buffer (get-buffer "*Messages*") (normal-mode))

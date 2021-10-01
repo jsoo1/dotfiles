@@ -21,6 +21,7 @@ let
       dhall-mode
       dired-git
       editorconfig
+      emms
       evil-replace-with-register
       exec-path-from-shell
       graphql-mode
@@ -29,12 +30,15 @@ let
       multi-term
       ob-restclient
       origami
+      popper
       projectile
       proof-general
       psc-ide
+      pulseaudio-control
       racket-mode
       redis
       restclient
+      shackle
       systemd
       tmux-pane
       vimrc-mode
