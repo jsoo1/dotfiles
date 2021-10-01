@@ -25,6 +25,7 @@ let
       evil-replace-with-register
       exec-path-from-shell
       graphql-mode
+      hydra
       ibuffer-projectile
       merlin
       multi-term

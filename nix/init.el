@@ -185,7 +185,7 @@
       emms-player-mpd-music-directory "~/Music")
 (add-to-list 'emms-info-functions 'emms-info-mpd)
 (add-to-list 'emms-player-list 'emms-player-mpd)
-(emms-player-mpd-connect)
+;; (emms-player-mpd-connect)
 
 ;; Shell
 (setq shell-file-name "bash")
@@ -770,6 +770,7 @@
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
 ;; Pulseaudio
+(require 'hydra)
 (require 'pulseaudio-control)
 (defhydra pulseaudio-control-hydra (:hint nil)
   "
