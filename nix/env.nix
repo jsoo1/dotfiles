@@ -10,6 +10,7 @@ in with pkgs; [
   neovim
   restream
   ripgrep
+  rnix-lsp
   skim
   tmux
 ]
