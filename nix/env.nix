@@ -5,9 +5,9 @@ in with pkgs; [
   ghcid
   gnupg
   iosevka
+  mosh
   my-emacs
   neovim
-  qemu
   restream
   ripgrep
   skim
