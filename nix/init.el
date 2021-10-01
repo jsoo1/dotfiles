@@ -425,8 +425,6 @@
 (require 'evil-replace-with-register)
 (setq evil-replace-with-register-key (kbd "gr"))
 (evil-replace-with-register-install)
-(require 'tmux-pane)
-(tmux-pane-mode)
 (require 'evil-collection)
 (evil-mode 1)
 (global-evil-surround-mode 1)
@@ -472,6 +470,10 @@
             (evil-local-set-key 'normal (kbd "g T") #'tab-bar-switch-to-prev-tab)))
 
 (add-hook 'compilation-mode-hook #'fix-dired-tab-motions)
+
+;; Tmux
+(require 'tmux-pane)
+(tmux-pane-mode)
 
 ;; Vinegar and friends
 (define-key evil-normal-state-map "-" #'dired-jump)
