@@ -356,7 +356,7 @@
  display-time-world-list '(("America/Los_Angeles" "California")
                            ("America/Phoenix" "Phoenix")
                            ("America/Denver" "Colorado")
-                           ("America/New_York" "North Carolina")
+                           ("America/New_York" "East Coast")
                            ("America/Chicago" "Chicago")
                            ("Europe/Paris" "Central Europe")
                            ("Africa/Douala" "Camaroon"))
