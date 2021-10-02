@@ -1704,6 +1704,12 @@ respectively."
   "\"" counsel-evil-marks
   "=" indent-region-or-buffer)
 
+(define-prefix-keymap my-org-mime-map
+  "my org-mime keybindings"
+  "m" org-mime-htmlize
+  "s" org-mime-org-subtree-htmlize
+  "b" org-mime-org-buffer-htmlize)
+
 (define-prefix-keymap my-org-map
   "my org bindings"
   "a" counsel-projectile-org-agenda
@@ -1711,6 +1717,7 @@ respectively."
   "g" counsel-org-goto
   "i" counsel-org-entity
   "l" org-store-link
+  "m" my-org-mime-map
   "t" counsel-org-tag)
 
 (defun get-tab-by-name-create (name)
