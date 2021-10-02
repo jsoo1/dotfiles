@@ -2,7 +2,7 @@
 <opml version="1.0">
     <head>
         <title>BazQux Reader subscriptions</title>
-        <dateCreated>Fri, 10 Sep 2021 17:53:58 GMT</dateCreated>
+        <dateCreated>Sat,  2 Oct 2021 16:03:15 GMT</dateCreated>
     </head>
     <body>
         <outline text="https://soap.coffee/~lthms" title="https://soap.coffee/~lthms" type="rss" xmlUrl="https://soap.coffee/~lthms"></outline>
@@ -32,6 +32,7 @@
         <outline text="Functorial Blog" title="Functorial Blog" type="rss" xmlUrl="https://blog.functorial.com/feed.rss"></outline>
         <outline text="Garrett Dawson | thedrearlight" title="Garrett Dawson | thedrearlight" type="rss" xmlUrl="https://feeds.feedburner.com/thedrearlight"></outline>
         <outline text="GNU Guix — Blog" title="GNU Guix — Blog" type="rss" xmlUrl="http://guix.gnu.org/feeds/blog.atom"></outline>
+        <outline text="Gopiandcode&apos;s posts" title="Gopiandcode&apos;s posts" type="rss" xmlUrl="https://gopiandcode.uk/rss.xml"></outline>
         <outline text="Graham Christensen" title="Graham Christensen" type="rss" xmlUrl="https://grahamc.com/feed/"></outline>
         <outline text="Haskell for all" title="Haskell for all" type="rss" xmlUrl="http://www.haskellforall.com/feeds/posts/default"></outline>
         <outline text="home" title="home" type="rss" xmlUrl="https://meta.plasm.us/atom.xml"></outline>
