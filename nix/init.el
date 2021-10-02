@@ -178,7 +178,7 @@
 
 ;; Elfeed
 (with-eval-after-load 'elfeed
-  (setq elfeed-curl-max-connections 8)
+  (setq elfeed-curl-max-connections 4)
   (setq-default elfeed-search-filter "@6-months-ago +unread")
   (elfeed-load-opml (expand-file-name "bazqux-reader-subscriptions.xml" user-emacs-directory))
   (elfeed-load-opml (expand-file-name "Downcast.opml" user-emacs-directory))
@@ -356,7 +356,8 @@
  display-time-world-list '(("America/Los_Angeles" "California")
                            ("America/Phoenix" "Phoenix")
                            ("America/Denver" "Colorado")
-                           ("America/New_York" "New York")
+                           ("America/New_York" "North Carolina")
+                           ("America/Chicago" "Chicago")
                            ("Europe/Paris" "Central Europe")
                            ("Africa/Douala" "Camaroon"))
  display-time-world-time-format "%a, %b %d %I:%M%p %Z")
