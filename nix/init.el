@@ -1218,6 +1218,7 @@ when send commands with redis protocol."
 
 ;; Theme
 (require 'base16-solarized-dark-theme)
+(setq base16-theme-256-color-source "colors")
 (load-theme 'base16-solarized-dark t)
 
 ;; Transparency in gui
