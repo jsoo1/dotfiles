@@ -884,6 +884,8 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (require 'haskell-interactive-mode)
 (require 'haskell-process)
 (require 'haskell-snippets)
+(evil-define-key 'normal haskell-mode-map (kbd ",") 'my-eglot-mode-map)
+
 ;; See https://github.com/haskell/haskell-mode/issues/1553#issuecomment-358373643
 (setq haskell-process-type 'auto
       haskell-process-log 't
@@ -898,6 +900,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 ;; (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
 (define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
 (add-hook 'haskell-mode-hook #'make-standard-paragraph-rules)
+(add-hook 'haskell-mode-hook #'eglot-ensure)
 
 ;; ;; Agda mode
 ;; (load-library (let ((coding-system-for-read 'utf-8))
