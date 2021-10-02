@@ -81,7 +81,19 @@
 ;; GC Threshold
 (setq gc-cons-threshold (* 2 1000 1000 10))
 
-;; Path
+;; Paths
+(defun package-manager-user-profile ()
+  (let* ((guix-profile (getenv "GUIX_PROFILE"))
+         (nix-profile (getenv "NIX_PROFILE"))
+         (nix-profiles* (getenv "NIX_PROFILES"))
+         (nix-profiles (when nix-profiles*
+                         (split-string nix-profiles* "\\s-+"))))
+    (or guix-profile
+        nix-profile
+        (seq-find (lambda (p)
+                    (string-match-p (rx bol (eval (getenv "HOME"))) p))
+                  nix-profiles)))) ;
+
 (setq exec-path '("~/.local/.bin"
                   "/run/current-system/profile/bin"
                   "/run/current-system/profile/sbin"
@@ -795,9 +807,6 @@ _]_: toggle use of default sink  _n_: control select sink by name
   ("v" pulseaudio-control-set-volume)
   ("x" pulseaudio-toggle-sink-mute-by-index))
 
-;; Proof General
-;; (load-file "~/.guix-profile/share/emacs/site-lisp/ProofGeneral/pg-init.el")
-
 ;; Editorconfig
 (require 'editorconfig)
 (editorconfig-mode 1)
@@ -806,7 +815,10 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (require 'idris-mode)
 (require 'inferior-idris)
 (require 'idris-ipkg-mode)
-(setq idris-interpreter-path "/home/john/.guix-profile/bin/idris")
+(when (package-manager-user-profile)
+  (setq idris-interpreter-path
+        (expand-file-name "bin/idris" (package-manager-user-profile))))
+
 
 (dolist (f `((idris-active-term-face        ,base00)
              (idris-semantic-type-face      ,yellow)
@@ -980,10 +992,6 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (define-key tuareg-mode-map (kbd "C-c C-o") #'merlin-occurrences)
 (define-key tuareg-mode-map (kbd "C-c C-c") #'merlin-error-next)
 
-;; TODO: Remove when these are properly packaged in guix
-;; (load-file "~/.guix-profile/share/emacs/site-lisp/dune.el")
-;; (load-file "~/.guix-profile/share/emacs/site-lisp/dune-flymake.el")
-
 ;; ;; Purescript
 ;; (add-to-list 'load-path "~/.emacs.d/private/purescript-mode")
 ;; (require 'purescript-mode-autoloads)
@@ -1045,7 +1053,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 (setf
  (alist-get 'rust-mode eglot-server-programs)
- '("/home/john/.guix-profile/bin/rust-analyzer"))
+ `(,(expand-file-name "bin/rust-analyzer" (package-manager-user-profile))))
 (evil-define-key 'normal rust-mode-map (kbd ",") 'my-eglot-mode-map)
 (add-hook 'rust-mode-hook #'eglot-ensure)
 (add-hook 'rust-mode-hook #'eldoc-mode)
