@@ -5,6 +5,7 @@ let
       debbugs
       ediprolog
       let-alist
+      pinentry
       seq
       sml-mode
       xclip
