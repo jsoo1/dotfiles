@@ -619,10 +619,14 @@
 (setq
  org-export-with-author nil
  org-export-with-toc nil
+ org-export-with-section-numbers nil
  org-export-with-title nil
  org-export-with-creator nil
  org-export-time-stamp-file nil
  org-html-validation-link nil)
+
+;; Mail composition
+(setq message-fill-column nil)
 
 ;; Ediff
 (setq
