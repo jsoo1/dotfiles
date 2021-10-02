@@ -370,9 +370,10 @@
  auto-save-file-name-transforms `((".*" ,(expand-file-name "auto-saves" user-emacs-directory) t))
  enable-local-eval t
  safe-local-variable-values
- '(;; Haskell-specific
+ `(;; Haskell-specific
    (before-save-hook . nil)
    (haskell-stylish-on-save . nil)
+   (nix-format-buffer . nil)
    (haskell-process-type . stack-ghci)
    (haskell-process-type . cabal-repl)
    (haskell-mode-stylish-haskell-path . "ormolu")
@@ -384,6 +385,10 @@
    (haskell-process-wrapper-function
     . (lambda (argv)
         (append (list "env" "NO_COLOR=true") argv)))
+   ;; Project s
+   ,@(seq-map (pcase-lambda (`(,f . _)) `(projectile-project-root . ,(format "%s/" f)))
+              (seq-filter (pcase-lambda (`(_ . (,dir? . _))) (eq t dir?))
+                          (directory-files-and-attributes "~/projects" t "[^\(\\/\\.\\.$\)|\(\\/\\.$\)]")))
    ;; Ocaml-specific
    (smie-indent-basic . 2)
    ;; Rust-specific
