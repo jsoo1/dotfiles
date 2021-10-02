@@ -1420,7 +1420,7 @@ when send commands with redis protocol."
     (:eval (if (and (featurep 'flycheck) flycheck-mode)
                (my-flycheck-mode-line-status-text)
              ""))
-    (:eval (if flymake-mode flymake--mode-line-format ""))
+    (:eval (if flymake-mode flymake-mode-line-format ""))
     " "
     (:eval anzu--mode-line-format)))
 
