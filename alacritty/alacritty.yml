@@ -81,6 +81,10 @@ solarized-dark: &solarized-dark
     background: '0x002b36'
     foreground: '0x839496'
 
+  cursor:
+    text: '0x002b36'
+    cursor: '0xdc322f'
+
   normal:
     black:   '0x073642'
     red:     '0xdc322f'

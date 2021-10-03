@@ -1253,9 +1253,9 @@ when send commands with redis protocol."
             (flycheck-mode -1)))
 
 ;; Theme
-(require 'solarized)
-(require 'solarized-dark-theme)
-(load-theme 'solarized-dark t)
+(require 'base16-solarized-dark-theme)
+(setq base16-theme-256-color-source "colors")
+(load-theme 'base16-solarized-dark t)
 
 ;; Transparency in gui
 (set-frame-parameter (selected-frame) 'alpha '(80 . 50))
@@ -1889,6 +1889,4 @@ respectively."
               (user-error
                (message "Unloaded env for %s" (buffer-name))))))
 
-(require 'server)
-(unless (server-running-p) (server-start))
 ;;; init.el ends here
