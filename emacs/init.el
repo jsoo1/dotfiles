@@ -81,7 +81,19 @@
 ;; GC Threshold
 (setq gc-cons-threshold (* 2 1000 1000 10))
 
-;; Path
+;; Paths
+(defun package-manager-user-profile ()
+  (let* ((guix-profile (getenv "GUIX_PROFILE"))
+         (nix-profile (getenv "NIX_PROFILE"))
+         (nix-profiles* (getenv "NIX_PROFILES"))
+         (nix-profiles (when nix-profiles*
+                         (split-string nix-profiles* "\\s-+"))))
+    (or guix-profile
+        nix-profile
+        (seq-find (lambda (p)
+                    (string-match-p (rx bol (eval (getenv "HOME"))) p))
+                  nix-profiles)))) ;
+
 (setq exec-path '("~/.local/.bin"
                   "/run/setuid-programs"
                   "~/.config/guix/current/bin"
@@ -94,12 +106,30 @@
 ;; Pinentry
 (setf epa-pinentry-mode 'loopback)
 
+;; Color setup
+(defvar base03  "#002b36" "Theme base03.")
+(defvar base02  "#073642" "Theme base02.")
+(defvar base01  "#586e75" "Theme base01.")
+(defvar base00  "#657b83" "Theme base00.")
+(defvar base3   "#fdf6e3" "Theme base3.")
+(defvar base2   "#eee8d5" "Theme base2.")
+(defvar base1   "#93a1a1" "Theme cyan.")
+(defvar base0   "#839496" "Theme base0.")
+(defvar yellow  "#b58900" "Theme yellow.")
+(defvar red     "#dc322f" "Theme red.")
+(defvar green   "#859900" "Theme green.")
+(defvar blue    "#286bd2" "Theme blue.")
+(defvar cyan    "#2aa198" "Theme cyan.")
+(defvar magenta "#d33682" "Theme magenta.")
+(defvar orange  "#cb4b16" "Theme orange.")
+(defvar violet  "#6c71c4" "Theme violet.")
+
 ;; Gnus
 ;; set-face-attribute does not work here, why?
 ;; even with with-eval-after-load 'mm-uu
 ;; or in a hook
 (defface mm-uu-extract
-  '((t . (:foreground "#268bd2" :background "unspecified")))
+  `((,t . (:foreground ,blue :background unspecified)))
   "Face for extracted buffers."
   :group 'gnus-article-mime)
 
@@ -203,19 +233,19 @@
       eshell-prompt-function
       (defun make-my-eshell-prompt ()
         (concat
-         (propertize (eshell/whoami) 'face `(:foreground "#93a1a1"))
+         (propertize (eshell/whoami) 'face `(:foreground ,base1))
          " "
          (propertize (replace-regexp-in-string (concat "^" (getenv "HOME")) "~" (eshell/pwd))
-                     'face `(:foreground "#268bd2"))
+                     'face `(:foreground ,blue))
          " "
          (propertize (condition-case nil
                          (let ((curr-branch (magit-get-current-branch)))
                            (if curr-branch curr-branch
                              (substring (magit-rev-parse "HEAD") 0 7)))
                        (error ""))
-                     'face `(:foreground "#859900"))
+                     'face `(:foreground ,green))
          " "
-         (propertize "λ" 'face `(:foreground "#b58900" :weight normal))
+         (propertize "λ" 'face `(:foreground ,yellow :weight normal))
          " ")))
 
 (defun my-side-eshell (props)
@@ -247,79 +277,79 @@
 (diredfl-global-mode 1)
 (set-face-attribute
  diredfl-dir-heading nil
- :foreground "#268bd2"
+ :foreground blue
  :background "unspecified")
 (set-face-attribute
  diredfl-number nil
- :foreground "#859900"
+ :foreground green
  :background "unspecified")
 (set-face-attribute
  diredfl-date-time nil
- :foreground "#b58900"
+ :foreground yellow
  :background "unspecified")
 (set-face-attribute
  diredfl-file-name nil
- :foreground "#839496"
+ :foreground base0
  :background "unspecified")
 (set-face-attribute
  diredfl-file-suffix nil
- :foreground "#859900"
+ :foreground green
  :background "unspecified")
 (set-face-attribute
  diredfl-dir-name nil
- :foreground "#268bd2"
+ :foreground blue
  :background "unspecified")
 (set-face-attribute
  diredfl-symlink nil
- :foreground "#2aa198"
+ :foreground cyan
  :background "unspecified")
 (set-face-attribute
  diredfl-no-priv nil
- :foreground "#839496"
+ :foreground base0
  :background "unspecified")
 (set-face-attribute
  diredfl-dir-priv nil
- :foreground "#268bd2"
+ :foreground blue
  :background "unspecified")
 (set-face-attribute
  diredfl-read-priv nil
- :foreground "#839496"
+ :foreground base0
  :background "unspecified")
 (set-face-attribute
  diredfl-write-priv nil
- :foreground "#2aa198"
+ :foreground cyan
  :background "unspecified")
 (set-face-attribute
  diredfl-exec-priv nil
- :foreground  "#d33682"
+ :foreground magenta
  :background "unspecified")
 (set-face-attribute
  diredfl-rare-priv nil
- :foreground "#d33682"
+ :foreground magenta
  :background "unspecified")
 (set-face-attribute
  diredfl-other-priv nil
- :foreground "#cb4b16"
+ :foreground orange
  :background "unspecified")
 (set-face-attribute
  diredfl-deletion nil
- :foreground "#dc322f"
+ :foreground red
  :background "unspecified")
 (set-face-attribute
  diredfl-deletion-file-name nil
- :foreground "#dc322f"
+ :foreground red
  :background "unspecified")
 (set-face-attribute
  diredfl-flag-mark nil
- :foreground "#6c71c4"
+ :foreground violet
  :background "unspecified")
 (set-face-attribute
  diredfl-flag-mark-line nil
- :foreground "#6c71c4"
+ :foreground violet
  :background "unspecified")
 (set-face-attribute
  diredfl-ignored-file-name nil
- :foreground "#586e75"
+ :foreground base01
  :background "unspecified")
 
 ;; World times to display
@@ -327,7 +357,8 @@
  display-time-world-list '(("America/Los_Angeles" "California")
                            ("America/Phoenix" "Phoenix")
                            ("America/Denver" "Colorado")
-                           ("America/New_York" "New York")
+                           ("America/New_York" "East Coast")
+                           ("America/Chicago" "Chicago")
                            ("Europe/Paris" "Central Europe")
                            ("Africa/Douala" "Camaroon"))
  display-time-world-time-format "%a, %b %d %I:%M%p %Z")
@@ -340,8 +371,10 @@
  auto-save-file-name-transforms `((".*" ,(expand-file-name "auto-saves" user-emacs-directory) t))
  enable-local-eval t
  safe-local-variable-values
- '(;; Haskell-specific
+ `(;; Haskell-specific
+   (before-save-hook . nil)
    (haskell-stylish-on-save . nil)
+   (nix-format-buffer . nil)
    (haskell-process-type . stack-ghci)
    (haskell-process-type . cabal-repl)
    (haskell-mode-stylish-haskell-path . "ormolu")
@@ -400,15 +433,15 @@
 (require 'evil-commentary)
 (require 'evil-leader)
 (require 'evil-escape)
-(require 'evil-replace-with-register)
 (require 'navigate)
+(require 'evil-replace-with-register)
+(setq evil-replace-with-register-key (kbd "gr"))
+(evil-replace-with-register-install)
 (require 'evil-collection)
 (evil-mode 1)
 (global-evil-surround-mode 1)
 (evil-commentary-mode)
 (evil-escape-mode)
-(setq-default evil-replace-with-register-key (kbd "gr"))
-(evil-replace-with-register-install)
 (setq-default evil-escape-key-sequence "jk")
 (setq-default evil-escape-unordered-key-sequence 't)
 (with-eval-after-load 'magit (evil-collection-magit-setup))
@@ -470,6 +503,7 @@
       projectile-indexing-method 'hybrid
       projectile-enable-caching 't
       projectile-project-search-path "~/projects/"
+      projectile-globally-unignored-files '(".*\\.projectile$" ".*\\.envrc$" ".*\\.dir-locals.el$")
       projectile-project-root-files-functions (list #'projectile-root-local
                                                     #'projectile-root-top-down-recurring
                                                     #'projectile-root-top-down
@@ -565,55 +599,13 @@
     (split-string string "[\n\r]+"))))
 
 ;; Set org-agenda-files
-;; Right now, very not thread safe.
-(defvar home-org-dirs '())
-(defvar on-my-org-callback nil)
-(defvar on-my-org-repo-dir nil)
-(defun on-my-org-repo (repo-dir ref cb)
-  "Perform `CB' on the org directories of `REPO-DIR' at git `REF'."
-  ;; (assert (stringp repo-dir))
-  ;; (assert (stringp ref))
-  ;; (assert (functionp cb))
-  (setq on-my-org-callback cb)
-  (setq on-my-org-repo-dir repo-dir)
-  (let ((default-directory repo-dir))
-    (make-process
-     :name "list-tracked-org-files"
-     :command `("git" "ls-tree" "--name-only" "-r" ,ref)
-     :buffer (current-buffer)
-     :filter
-     (lambda (proc string)
-       (funcall on-my-org-callback (str-to-org-dirs on-my-org-repo-dir string)))
-     :sentinel (lambda (proc event) nil))))
-
-(on-my-org-repo
- "~" "master"
- (lambda (home-dirs)
-   (setq home-org-dirs home-dirs)
-   (on-my-org-repo
-    "~/projects/work" "consumable"
-    (lambda (work-dirs)
-      (setq org-agenda-files (append home-org-dirs work-dirs))))))
-
-(let ((default-directory "~"))
-  (make-process
-   :name "list-tracked-org-files"
-   :command `("git" "ls-tree" "--name-only" "-r" "master")
-   :buffer (current-buffer)
-   :filter
-   (lambda (proc string)
-     (let ((default-directory "~/projects/work"))
-       (setq home-org-dirs (str-to-org-dirs "~/" string))
-       (make-process
-        :name "list-tracked-org-files"
-        :command `("git" "ls-tree" "--name-only" "-r" "consumable")
-        :buffer (current-buffer)
-        :filter
-        (lambda (proc string)
-          (setq work-org-dirs (str-to-org-dirs "~/projects/work" string))
-          (setq org-agenda-files (append home-org-dirs work-org-dirs)))
-        :sentinel (lambda (proc event) nil))))
-   :sentinel (lambda (proc event) nil)))
+(make-thread
+ (lambda () (setq org-agenda-files
+                  (append
+                   '("~/TODOs.org")
+                   (while-no-input (directory-files-recursively "~/dotfiles" "TODOs\\.org$" nil t))
+                   (while-no-input (directory-files-recursively "~/projects" "TODOs\\.org$" nil t)))))
+ "get-org-files")
 
 (set-face-attribute
  'variable-pitch nil
@@ -623,10 +615,14 @@
 (setq
  org-export-with-author nil
  org-export-with-toc nil
+ org-export-with-section-numbers nil
  org-export-with-title nil
  org-export-with-creator nil
  org-export-time-stamp-file nil
  org-html-validation-link nil)
+
+;; Mail composition
+(setq message-fill-column nil)
 
 ;; Ediff
 (setq
@@ -817,15 +813,18 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (require 'idris-mode)
 (require 'inferior-idris)
 (require 'idris-ipkg-mode)
-(setq idris-interpreter-path "/home/john/.guix-profile/bin/idris")
+(when (package-manager-user-profile)
+  (setq idris-interpreter-path
+        (expand-file-name "bin/idris" (package-manager-user-profile))))
 
-(dolist (f '((idris-active-term-face        "#657b83")
-             (idris-semantic-type-face      "#b58900")
-             (idris-semantic-data-face      "#dc322f")
+
+(dolist (f `((idris-active-term-face        ,base00)
+             (idris-semantic-type-face      ,yellow)
+             (idris-semantic-data-face      ,red)
              (idris-semantic-function-face  "unspecified")
-             (idris-semantic-bound-face     "#6c71c4")
-             (idris-semantic-module-face    "#b58900")
-             (idris-identifier-face         "#586e75")))
+             (idris-semantic-bound-face     ,violet)
+             (idris-semantic-module-face    ,yellow)
+             (idris-identifier-face         ,base01)))
   (set-face-foreground (car f) (cadr f)))
 
 (define-key idris-repl-mode-map (kbd "C-c C-k" ) #'idris-repl-clear-buffer)
@@ -871,7 +870,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
     (set-face-attribute
      'proof-locked-face nil
      :underline nil
-     :background "#073642")
+     :background base02)
     (add-hook 'coq-mode-hook #'company-coq-mode)
     (define-key coq-mode-map (kbd "C-c RET") #'proof-goto-point)))
 
@@ -1053,7 +1052,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 (setf
  (alist-get 'rust-mode eglot-server-programs)
- '("/home/john/.guix-profile/bin/rust-analyzer"))
+ `(,(expand-file-name "bin/rust-analyzer" (package-manager-user-profile))))
 (evil-define-key 'normal rust-mode-map (kbd ",") 'my-eglot-mode-map)
 (add-hook 'rust-mode-hook #'eglot-ensure)
 (add-hook 'rust-mode-hook #'eldoc-mode)
@@ -1269,7 +1268,7 @@ when send commands with redis protocol."
           (string= "base" (daemonp))
           (string= "term" (daemonp)))
       (progn (set-face-background 'default "unspecified-bg" frame)
-             (set-face-background 'line-number "#073642" frame))))
+             (set-face-background 'line-number base02 frame))))
 
 (defun my-make-this-frame-transparent ()
   "Make `selected-frame' transparent."
@@ -1284,7 +1283,7 @@ when send commands with redis protocol."
   "Setup transparency in terminal."
   (unless (display-graphic-p (selected-frame))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-           (set-face-background 'line-number "#073642" (selected-frame)))))
+           (set-face-background 'line-number base02 (selected-frame)))))
 
 (add-hook 'window-setup-hook #'on-after-init)
 
@@ -1292,7 +1291,7 @@ when send commands with redis protocol."
           (string= "term" (daemonp))
           (not (display-graphic-p (selected-frame))))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-           (set-face-background 'line-number "#073642" (selected-frame))))
+           (set-face-background 'line-number base02 (selected-frame))))
 
 ;; Shackle
 (setq shackle-rules '((compilation-mode :noselect t :other t)
@@ -1312,6 +1311,7 @@ when send commands with redis protocol."
       '(display-time-world-mode
         eshell-mode
         elfeed-search-mode
+        org-agenda-mode
         proced
         process-list
         help-mode
@@ -1353,15 +1353,15 @@ when send commands with redis protocol."
 
 (set-face-attribute
  'tab-bar nil
- :foreground "#586e75"
+ :foreground base01
  :background "unspecified")
 (set-face-attribute
  'tab-bar-tab nil
- :foreground "#839496"
+ :foreground base0
  :background "unspecified")
 (set-face-attribute
  'tab-bar-tab-inactive nil
- :foreground "#586e75"
+ :foreground base01
  :background "unspecified")
 
 (defun my-tab-bar-name (tab)
@@ -1383,28 +1383,27 @@ when send commands with redis protocol."
  'mode-line nil
  :underline nil
  :overline nil
- :foreground "#839496"
- :background "#073642"
- :box '(:line-width 1 :color "#073642" :style 'unspecified))
+ :foreground base0
+ :background base02
+ :box `(:line-width 1 :color ,base02 :style unspecified))
 
 (set-face-attribute
  'mode-line-inactive nil
  :overline nil
  :underline nil
- :foreground "#586e75"
- :background "#002b36"
- :box '(:line-width 1 :color "#002b36" :style 'unspecified))
+ :foreground base01
+ :background "unspecified"
+ :box `(:line-width 1 :color ,base03 :style unspecified))
 
 (defun evil-state-foreground (state)
   "The mode line color for evil-state `STATE'."
   (pcase state
-    ('normal  "#859900")
-    ('insert  "#b58900")
-    ('emacs   "#2aa198")
-    ('replace "#dc322f")
-    ('visual  "#268bd2")
-    ('motion  "#2aa198")
-    (_        "#859900")))
+    ('normal  green)
+    ('insert  yellow)
+    ('emacs   cyan)
+    ('replace red)
+    ('visual  blue)
+    ('motion  cyan)))
 
 (defun my-flycheck-error-str (n fg)
   "Properties string for a number of errors `N' with foreground color `FG'."
@@ -1413,10 +1412,10 @@ when send commands with redis protocol."
 (defun my-flycheck-error-format (errors)
   "Format `ERRORS', if there are any of type warning or error."
   (let-alist errors
-    `(,(if .error (my-flycheck-error-str .error "#dc322f")
+    `(,(if .error (my-flycheck-error-str .error red)
          "")
       " "
-      ,(if .warning (my-flycheck-error-str .warning  "#b58900")
+      ,(if .warning (my-flycheck-error-str .warning  yellow)
          ""))))
 
 (defun my-flycheck-mode-line-status-text ()
@@ -1467,7 +1466,17 @@ when send commands with redis protocol."
 
 ;; ISO 8601
 (defun iso-8601-string (&optional time zone)
-  "Make an ISO 8601 formatted date string for `TIME' and `ZONE'."
+  "Make a short ISO 8601 formatted date string for `TIME' and
+`ZONE' - defaulting to `CURRENT-TIME' and `CURRENT-TIME-ZONE',
+respectively."
+  (let ((time* (or time (current-time)))
+        (zone* (or zone (current-time-zone))))
+    (format-time-string "%Y-%m-%d" time* zone*)))
+
+(defun iso-8601-string-full (&optional time zone)
+  "Make full ISO 8601 formatted date string for `TIME' and `ZONE'
+- defaulting to `CURRENT-TIME' and `CURRENT-TIME-ZONE',
+respectively."
   (let ((time* (or time (current-time)))
         (zone* (or zone (current-time-zone))))
     (concat
@@ -1700,6 +1709,8 @@ when send commands with redis protocol."
         (interactive) (uuidgen nil))
   "t" (defun insert-time-now-as-iso-8601 ()
         (interactive) (insert (iso-8601-string)))
+  "T" (defun insert-time-now-as-iso-8601-full ()
+        (interactive) (insert (iso-8601-string-full)))
   "u" counsel-unicode-char)
 
 (define-prefix-keymap my-jump-map
@@ -1714,6 +1725,12 @@ when send commands with redis protocol."
   "\"" counsel-evil-marks
   "=" indent-region-or-buffer)
 
+(define-prefix-keymap my-org-mime-map
+  "my org-mime keybindings"
+  "m" org-mime-htmlize
+  "s" org-mime-org-subtree-htmlize
+  "b" org-mime-org-buffer-htmlize)
+
 (define-prefix-keymap my-org-map
   "my org bindings"
   "a" counsel-projectile-org-agenda
@@ -1721,6 +1738,7 @@ when send commands with redis protocol."
   "g" counsel-org-goto
   "i" counsel-org-entity
   "l" org-store-link
+  "m" my-org-mime-map
   "t" counsel-org-tag)
 
 (defun get-tab-by-name-create (name)
@@ -1871,4 +1889,6 @@ when send commands with redis protocol."
               (user-error
                (message "Unloaded env for %s" (buffer-name))))))
 
+(require 'server)
+(unless (server-running-p) (server-start))
 ;;; init.el ends here
