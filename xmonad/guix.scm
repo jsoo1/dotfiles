@@ -35,8 +35,9 @@
                (url "https://github.com/jsoo1/xmobar")
                (commit commit)))
          (sha256
-          (base32 "18c81gqyi80ps30hzb7dlvfs51af07vfnaik8sxjvmlvhkwz3683"))
-         (file-name (git-file-name name version)))))))
+          (base32 "0yip895qfvsn2y2qc42j8klmrwczpdmhczgkavxrmnxb9lg18n05"))
+         (file-name (git-file-name name version))))
+      (arguments `(#:tests? #f ,@(package-arguments xmobar))))))
 
 (package
  (inherit xmonad)

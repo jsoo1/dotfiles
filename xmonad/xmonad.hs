@@ -298,6 +298,7 @@ xmobarConf xmobarSignal xmobarQueue = Xmobar.defaultConfig
     , Xmobar.Run (Xmobar.Alsa "default" "Master"
       [ "-t" , "<status> <volume>%"
       , "--"
+      , "--alsactl=/home/john/.guix-profile/bin/pactl"
       , "--on", "vol", "--onc" , coerce base0
       , "--off", "vol", "--offc" , coerce red
       ])
