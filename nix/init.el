@@ -1297,6 +1297,7 @@ when send commands with redis protocol."
       '(display-time-world-mode
         eshell-mode
         elfeed-search-mode
+        ivy-occur-mode
         org-agenda-mode
         proced
         process-list
