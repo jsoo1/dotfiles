@@ -37,6 +37,7 @@ let
       proof-general
       psc-ide
       pulseaudio-control
+      purescript-mode
       racket-mode
       redis
       restclient
