@@ -5,7 +5,8 @@ let
   haskell-utilities = [ ghcid haskell-language-server ];
   nix-utilities = [ rnix-lsp ];
   remarkable-utilities = [ restream ];
-  shell-utilities = [ direnv fd git gnupg mosh neovim ripgrep skim tmux ];
+  shell-utilities =
+    [ direnv dogdns fd git gnupg mosh neovim ripgrep skim tmux ];
 in builtins.concatLists [
   emacs
   fonts
