@@ -1,4 +1,5 @@
-with import ../pin.nix;
+{ pkgs ? import ../pin.nix }:
+with pkgs;
 let
   emacs = [ my-emacs pinentry-emacs ];
   fonts = [ iosevka ];

@@ -1,5 +1,4 @@
-let pkgs = import ./pin.nix;
-in pkgs.mkShell {
+{ pkgs ? import ./pin.nix }: pkgs.mkShell {
   name = "dotfiles-shell";
   packages = with pkgs; [ nixfmt ];
 }
