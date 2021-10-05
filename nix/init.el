@@ -472,7 +472,7 @@
 (evil-set-initial-state 'ert-results-mode 'normal)
 (evil-set-initial-state 'Info-mode 'normal)
 (evil-set-initial-state 'comint-mode 'normal)
-(evil-set-initial-state 'org-agenda-mode 'normal)
+(evil-set-initial-state 'org-agenda-mode 'motion)
 (evil-set-initial-state 'erc-mode 'normal)
 (evil-set-initial-state 'eshell-mode 'normal)
 (evil-set-initial-state 'tab-switcher-mode 'emacs)
@@ -592,6 +592,9 @@
          (file+headline "${root}/TODOs.org" "Todos")
          "* TODO %U %?
   %a")
+        ("pt" "[${name}] Plain Todo" entry
+         (file+headline "${root}/TODOs.org" "Todos")
+         "* TODO %?")
         ("bt" "[${name}] Note" entry
          (file+headline "${root}/TODOs.org" "Notes")
          "* %U %?
@@ -600,8 +603,7 @@
 (setq org-directory "~")
 (with-eval-after-load 'org-agenda-mode
   (progn
-    (define-key org-agenda-mode-map (kbd "C-c") org-agenda-mode-map)
-    (define-key org-agenda-mode-map (kbd "C-m") #'org-agenda-month-view)
+    (define-key org-agenda-mode-map (kbd "C-c RET") #'org-agenda-switch-to)
     (define-key org-agenda-mode-map "m" #'org-agenda-month-view)))
 
 (defun str-to-org-dirs (repo-dir string)
