@@ -23,7 +23,7 @@
                      (string-match "dist-newstyle" f))))))
 
 (define my-xmobar
-  (let ((commit "ipc-improvements"))
+  (let ((commit "release"))
     (package
       (inherit xmobar)
       (name "xmobar")
