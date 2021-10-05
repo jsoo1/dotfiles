@@ -7,7 +7,7 @@ let
   nix-utilities = [ rnix-lsp ];
   remarkable-utilities = [ restream ];
   shell-utilities =
-    [ direnv dogdns fd git gnupg mosh neovim ripgrep skim tmux ];
+    [ direnv dogdns fd git gnupg htop mosh neovim ripgrep skim tmux ];
 in builtins.concatLists [
   emacs
   fonts
