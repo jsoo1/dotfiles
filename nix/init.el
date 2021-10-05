@@ -461,6 +461,7 @@
 (with-eval-after-load 'emms (evil-collection-emms-setup))
 (with-eval-after-load 'proced (evil-collection-proced-setup))
 (with-eval-after-load 'process-list (evil-collection-process-menu-setup))
+(with-eval-after-load 'tar-mode (evil-collection-tar-mode-setup))
 (global-evil-leader-mode)
 
 (evil-set-initial-state 'compilation-mode 'normal)
@@ -476,6 +477,7 @@
 (evil-set-initial-state 'eshell-mode 'normal)
 (evil-set-initial-state 'tab-switcher-mode 'emacs)
 (evil-set-initial-state 'reb-mode 'normal)
+(evil-set-initial-state 'tar-mode 'motion)
 
 (evil-declare-not-repeat #'flycheck-next-error)
 (evil-declare-not-repeat #'flycheck-previous-error)
