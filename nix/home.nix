@@ -18,34 +18,30 @@ let
       remarkable-utilities
       shell-utilities
     ];
-in {
-  home = {
-    inherit packages;
-    file = {
-      ".zshrc" = {
-        source = "/Users/johh.soo/dotfiles/nix/.zshrc";
-        target = ".zshrc";
-        executable = true;
-      };
-      ".vimrc" = {
-        source = "/Users/johh.soo/dotfiles/minimal/.vimrc";
-        target = ".vimrc";
-      };
-      ".tmux.conf" = {
-        source = "/Users/johh.soo/dotfiles/minimal/.tmux.conf";
-        target = ".tmux.conf";
-      };
-      ".tmuxline.conf" = {
-        source = "/Users/johh.soo/dotfiles/minimal/.tmuxline.conf";
-      };
-      ".emacs.d/${bq-opml}" = {
-        source = "/Users/johh.soo/dotfiles/${bq-opml}";
-        target = ".emacs.d/${bq-opml}";
-      };
-      ".emacs.d/${downcast-opml}" = {
-        source = "/Users/johh.soo/dotfiles/${downcast-opml}";
-        target = ".emacs.d/${downcast-opml}";
-      };
+  file = {
+    ".zshrc" = {
+      source = "/Users/johh.soo/dotfiles/nix/.zshrc";
+      target = ".zshrc";
+      executable = true;
+    };
+    ".vimrc" = {
+      source = "/Users/johh.soo/dotfiles/minimal/.vimrc";
+      target = ".vimrc";
+    };
+    ".tmux.conf" = {
+      source = "/Users/johh.soo/dotfiles/minimal/.tmux.conf";
+      target = ".tmux.conf";
+    };
+    ".tmuxline.conf" = {
+      source = "/Users/johh.soo/dotfiles/minimal/.tmuxline.conf";
+    };
+    ".emacs.d/${bq-opml}" = {
+      source = "/Users/johh.soo/dotfiles/${bq-opml}";
+      target = ".emacs.d/${bq-opml}";
+    };
+    ".emacs.d/${downcast-opml}" = {
+      source = "/Users/johh.soo/dotfiles/${downcast-opml}";
+      target = ".emacs.d/${downcast-opml}";
     };
   };
   programs = {
@@ -62,4 +58,7 @@ in {
     tmux = { enable = true; };
     zsh = { enable = true; };
   };
+in {
+  home = { inherit packages file; };
+  inherit programs;
 }
