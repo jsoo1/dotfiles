@@ -182,11 +182,11 @@
 
 ;; Elfeed
 (with-eval-after-load 'elfeed
-  (setq elfeed-curl-max-connections 4)
+  (setq elfeed-curl-max-connections 8)
   (setq-default elfeed-search-filter "@6-months-ago +unread")
   (elfeed-load-opml (expand-file-name "bazqux-reader-subscriptions.xml" user-emacs-directory))
   (elfeed-load-opml (expand-file-name "Downcast.opml" user-emacs-directory))
-  (run-with-timer 0 (* 15 60) 'elfeed-update))
+  (run-with-timer 0 (* 60 60) 'elfeed-update))
 (defun my-elfeed-podcast-tagger (entry)
   (when (elfeed-entry-enclosures entry)
     (elfeed-tag entry 'podcast)))
