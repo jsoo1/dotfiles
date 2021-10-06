@@ -1305,6 +1305,7 @@ when send commands with redis protocol."
       '(display-time-world-mode
         eshell-mode
         elfeed-search-mode
+        grep-mode
         ivy-occur-mode
         org-agenda-mode
         proced
@@ -1790,6 +1791,7 @@ respectively."
 
 (define-prefix-keymap my-search-map
   "my searching keybindings"
+  "g" grep-find
   "s" swiper
   "p" counsel-projectile-rg)
 
