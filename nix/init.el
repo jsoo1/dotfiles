@@ -122,6 +122,10 @@
 (defvar orange  "#cb4b16" "Theme orange.")
 (defvar violet  "#6c71c4" "Theme violet.")
 
+;; Grep
+(with-eval-after-load 'grep
+  (grep-apply-setting 'grep-find-command '("fd . -t f -x rg -nH0 ''" . 23)))
+
 ;; Gnus
 ;; set-face-attribute does not work here, why?
 ;; even with with-eval-after-load 'mm-uu
