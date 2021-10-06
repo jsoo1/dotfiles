@@ -124,7 +124,7 @@
 
 ;; Grep
 (with-eval-after-load 'grep
-  (grep-apply-setting 'grep-find-command '("fd . -t f -x rg -nH0 ''" . 23)))
+  (grep-apply-setting 'grep-find-command '("fd -t f -H -x rg -nH0 ''" . 24)))
 
 ;; Gnus
 ;; set-face-attribute does not work here, why?
