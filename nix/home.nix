@@ -7,7 +7,7 @@ let
       emacs = [ pinentry-emacs ];
       fonts = [ iosevka ];
       haskell-utilities = [ ghcid haskell-language-server ];
-      nix-utilities = [ rnix-lsp ];
+      nix-utilities = [ nix-diff nix-prefetch rnix-lsp ];
       remarkable-utilities = [ restream ];
       shell-utilities = [ bat dogdns fd git jq mosh ripgrep ];
     in builtins.concatLists [
