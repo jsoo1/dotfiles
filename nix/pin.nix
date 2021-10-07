@@ -6,5 +6,5 @@ let
     sha256 = "13fx0yb95gxyk0jyvgrxv2yp4fj54g7nzrlvjfc8slx9ccqd2v86";
   };
 in import nix-src {
-  overlays = import ./nix/restream.nix ++ import ./nix/emacs.nix;
+  overlays = import ./restream.nix ++ import ./my-emacs.nix;
 }
