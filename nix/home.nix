@@ -35,7 +35,7 @@ let
       target = ".emacs.d/${downcast-opml}";
     };
   };
-  sk = "TERM=xterm-256color command ${pkgs.skim}/bin/sk --color=bw";
+  sk = "${pkgs.skim}/bin/sk --color=bw";
   tmux = "${pkgs.tmux}/bin/tmux";
   emacs = "${pkgs.emacs}/bin/emacs";
   emacsclient = "${pkgs.emacs}/bin/emacslient";
