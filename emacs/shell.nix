@@ -1,4 +1,5 @@
-{ pkgs ? import ../pin.nix } pkgs.mkShell {
+{ pkgs ? import ../pin.nix }:
+pkgs.mkShell {
   name = "emacs-config-shell";
   buildInputs = [ emacs pkgs.glibcLocales pkgs.postgresql ];
   shellHook = ''
