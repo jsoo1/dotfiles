@@ -6,30 +6,10 @@ let
   pkgs = import ./pin.nix;
   bq-opml = "bazqux-reader-subscriptions.xml";
   downcast-opml = "Downcast.opml";
-  packages = with pkgs;
-    let
-      emacs = [ pinentry-emacs ];
-      fonts = [ iosevka ];
-      haskell-utilities = [ ghcid haskell-language-server ];
-      nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
-      remarkable-utilities = [ restream ];
-      shell-utilities = [ bat dogdns fd gawk git jq mosh ripgrep ];
-    in builtins.concatLists [
-      emacs
-      haskell-utilities
-      nix-utilities
-      (if isDarwin then fonts ++ remarkable-utilities else [ ])
-      shell-utilities
-    ];
-  emacs-files = {
+  elfeed-feeds = {
     ".emacs.d/${bq-opml}" = { source = "${dotfiles}/${bq-opml}"; };
     ".emacs.d/${downcast-opml}" = { source = "${dotfiles}/${downcast-opml}"; };
   };
-  file = {
-    ".vimrc" = { source = "${dotfiles}/minimal/.vimrc"; };
-    ".tmux.conf" = { source = "${dotfiles}/minimal/.tmux.conf"; };
-    ".tmuxline.conf" = { source = "${dotfiles}/minimal/.tmuxline.conf"; };
-  } // (if isDarwin then emacs-files else { });
   shellAliases = {
     tm = "tmux new-session -A -s $(basename $PWD | tr '.' '-') ${
         if isDarwin then "emacs" else ""
@@ -41,10 +21,33 @@ let
     vi = "nvim";
   };
   sessionVariables = { SKIM_DEFAULT_OPTIONS = "-m --color=bw"; };
+in {
+  home = {
+    packages = with pkgs;
+      let
+        emacs = [ pinentry-emacs ];
+        fonts = [ iosevka ];
+        haskell-utilities = [ ghcid haskell-language-server ];
+        nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
+        remarkable-utilities = [ restream ];
+        shell-utilities = [ bat dogdns fd gawk git jq mosh ripgrep ];
+      in builtins.concatLists [
+        emacs
+        haskell-utilities
+        nix-utilities
+        (if isDarwin then fonts ++ remarkable-utilities else [ ])
+        shell-utilities
+      ];
+    file = {
+      ".vimrc" = { source = "${dotfiles}/minimal/.vimrc"; };
+      ".tmux.conf" = { source = "${dotfiles}/minimal/.tmux.conf"; };
+      ".tmuxline.conf" = { source = "${dotfiles}/minimal/.tmuxline.conf"; };
+    } // (if isDarwin then elfeed-feeds else { });
+  };
   programs = {
     direnv = { enable = true; };
     zsh = {
-      enable = builtins.currentSystem == "x86_64-darwin";
+      enable = isDarwin;
       inherit shellAliases sessionVariables;
       initExtra = let
         skim-files = "fd '.*' '.' --hidden -E '.git*' | sk";
@@ -81,7 +84,4 @@ let
     skim = { enable = true; };
     tmux = { enable = true; };
   };
-in {
-  home = { inherit packages file; };
-  inherit programs;
 }
