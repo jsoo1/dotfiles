@@ -10,10 +10,13 @@ let
     ".emacs.d/${bq-opml}" = { source = "${dotfiles}/${bq-opml}"; };
     ".emacs.d/${downcast-opml}" = { source = "${dotfiles}/${downcast-opml}"; };
   };
-  shellAliases = {
-    tm = "tmux new-session -A -s $(basename $PWD | tr '.' '-') ${
+  tm = var:
+    ''
+      tmux new-session -A -s $(basename "${var}" | tr '.' '-') ${
         if isDarwin then "emacs" else ""
-      }";
+      }'';
+  shellAliases = {
+    tm = tm "$PWD";
     tml = "tmux list-sessions";
     tma = "tmux attach-session -t";
     em = "emacsclient -t";
@@ -54,6 +57,9 @@ in {
         skim-history = ''
           history | sk | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}'
         '';
+        skim-projects = ''
+          fd '.git$' ~/projects -t d -H -x dirname | sk | tr -d '\n'
+        '';
       in ''
         restart-nix-daemon () {
             sudo launchctl bootout system/org.nixos.nix-daemon \
@@ -61,12 +67,22 @@ in {
         }
 
         # ----- Keybindings -----
-        __skim_history () { LBUFFER="$LBUFFER$(${skim-history})" }
+        __skim_history () {
+          LBUFFER="$LBUFFER$(${skim-history})"
+        }
         zle -N skim_history __skim_history
-        __skim_files () { LBUFFER="$LBUFFER$(${skim-files})" }
+        __skim_files () {
+          LBUFFER="$LBUFFER$(${skim-files})"
+        }
         zle -N skim_files __skim_files
+        __tmux_projects () {
+          local proj="$(${skim-projects})"
+          [ "" != "$proj" ] && LBUFFER="${tm "$proj"}"
+        }
+        zle -N tmux_projects __tmux_projects
         bindkey '^r' skim_history
         bindkey '^t' skim_files
+        bindkey '^o' tmux_projects
       '';
     };
     bash = {
