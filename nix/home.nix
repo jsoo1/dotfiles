@@ -1,4 +1,8 @@
 let
+  dotfiles = if builtins.currentSystem == "x86_64-darwin" then
+    "/Users/johh.soo/dotfiles"
+  else
+    "/home/john/dotfiles";
   pkgs = import ../pin.nix;
   bq-opml = "bazqux-reader-subscriptions.xml";
   downcast-opml = "Downcast.opml";
@@ -19,23 +23,15 @@ let
       shell-utilities
     ];
   file = {
-    ".vimrc" = {
-      source = "/Users/johh.soo/dotfiles/minimal/.vimrc";
-      target = ".vimrc";
-    };
-    ".tmux.conf" = {
-      source = "/Users/johh.soo/dotfiles/minimal/.tmux.conf";
-      target = ".tmux.conf";
-    };
-    ".tmuxline.conf" = {
-      source = "/Users/johh.soo/dotfiles/minimal/.tmuxline.conf";
-    };
+    ".vimrc" = { source = "${dotfiles}/minimal/.vimrc"; };
+    ".tmux.conf" = { source = "${dotfiles}/minimal/.tmux.conf"; };
+    ".tmuxline.conf" = { source = "${dotfiles}/minimal/.tmuxline.conf"; };
     ".emacs.d/${bq-opml}" = {
-      source = "/Users/johh.soo/dotfiles/${bq-opml}";
+      source = "${dotfiles}/${bq-opml}";
       target = ".emacs.d/${bq-opml}";
     };
     ".emacs.d/${downcast-opml}" = {
-      source = "/Users/johh.soo/dotfiles/${downcast-opml}";
+      source = "${dotfiles}/${downcast-opml}";
       target = ".emacs.d/${downcast-opml}";
     };
   };
