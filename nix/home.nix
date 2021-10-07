@@ -22,10 +22,8 @@ let
       shell-utilities
     ];
   emacs-files = {
-    ".emacs.d/${bq-opml}" = {source = "${dotfiles}/${bq-opml}";};
-    ".emacs.d/${downcast-opml}" = {
-      target = ".emacs.d/${downcast-opml}";
-    };
+    ".emacs.d/${bq-opml}" = { source = "${dotfiles}/${bq-opml}"; };
+    ".emacs.d/${downcast-opml}" = { source = "${dotfiles}/${downcast-opml}"; };
   };
   file = {
     ".vimrc" = { source = "${dotfiles}/minimal/.vimrc"; };
