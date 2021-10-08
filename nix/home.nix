@@ -19,6 +19,7 @@ let
     em = "emacsclient -t";
     lsa = "ls -lsa";
     vi = "nvim";
+    pb = "curl -F c=@- pb";
   };
   sessionVariables = { SKIM_DEFAULT_OPTIONS = "-m --color=bw"; };
 in {
