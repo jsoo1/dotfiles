@@ -101,6 +101,10 @@
 (require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
 
+;; Tramp
+(setq tramp-remote-path `(tramp-own-remote-path ,@tramp-remote-path)
+      tramp-terminal-type "xterm-256color")
+
 ;; Pinentry
 (setf epa-pinentry-mode 'loopback)
 
@@ -390,7 +394,8 @@
     . (lambda (argv)
         (append (list "env" "NO_COLOR=true") argv)))
    ;; Project s
-   ,@(seq-map (pcase-lambda (`(,f . _)) `(projectile-project-root . ,(format "%s/" f)))
+   ,@(seq-mapcat (pcase-lambda (`(,f . _)) `((projectile-project-root . ,(format "/ssh:hd:%s/" f))
+                                             (projectile-project-root . ,(format "%s/" f))))
               (seq-filter (pcase-lambda (`(_ . (,dir? . _))) (eq t dir?))
                           (directory-files-and-attributes "~/projects" t "[^\(\\/\\.\\.$\)|\(\\/\\.$\)]")))
    ;; Ocaml-specific
