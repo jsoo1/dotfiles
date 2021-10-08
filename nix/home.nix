@@ -10,13 +10,10 @@ let
     ".emacs.d/${bq-opml}" = { source = "${dotfiles}/${bq-opml}"; };
     ".emacs.d/${downcast-opml}" = { source = "${dotfiles}/${downcast-opml}"; };
   };
-  tm = var:
-    ''
-      tmux new-session -A -s $(basename "${var}" | tr '.' '-') ${
-        if isDarwin then "emacs" else ""
-      }'';
+  tm = dir:
+    ''tmux new-session -A -s $(basename "${dir}" | tr '.' '-') -c "${dir}"'';
   shellAliases = {
-    tm = tm "$PWD";
+    tm = "${tm "$PWD"} ${if isDarwin then "emacs" else ""}";
     tml = "tmux list-sessions";
     tma = "tmux attach-session -t";
     em = "emacsclient -t";
@@ -77,7 +74,9 @@ in {
         zle -N skim_files __skim_files
         __tmux_projects () {
           local proj="$(${skim-projects})"
-          [ "" != "$proj" ] && LBUFFER="${tm "$proj"}"
+          [ "" != "$proj" ] && LBUFFER="${tm "$proj"} ${
+            if isDarwin then "emacs" else ""
+          }"
         }
         zle -N tmux_projects __tmux_projects
         bindkey '^r' skim_history
