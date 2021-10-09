@@ -22,8 +22,12 @@ let
     pb = "curl -F c=@- pb";
   };
   sessionVariables = { SKIM_DEFAULT_OPTIONS = "-m --color=bw"; };
-in {
+in { lib, ... }: {
   home = {
+    activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/nix,.emacs.d}/init.el
+    '';
+    extraOutputsToInstall = [ "doc" ];
     packages = with pkgs;
       let
         emacs = [ pinentry-emacs ];
@@ -40,6 +44,10 @@ in {
         shell-utilities
       ];
     file = {
+      ".ghci" = { source = "${dotfiles}/ghci/.ghci"; };
+      ".haskeline" = { source = "${dotfiles}/ghci/.haskeline"; };
+      ".inputrc" = { source = "${dotfiles}/readline/.inputrc"; };
+      ".psqlrc" = { source = "${dotfiles}/psql/.psqlrc"; };
       ".vimrc" = { source = "${dotfiles}/minimal/.vimrc"; };
       ".tmux.conf" = { source = "${dotfiles}/minimal/.tmux.conf"; };
       ".tmuxline.conf" = { source = "${dotfiles}/minimal/.tmuxline.conf"; };
