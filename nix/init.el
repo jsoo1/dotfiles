@@ -102,10 +102,11 @@
 (exec-path-from-shell-initialize)
 
 ;; Tramp
-(setq tramp-remote-path `(tramp-own-remote-path
-                          "/home/john/.nix-profile/bin"
-                          ,@tramp-remote-path)
-      enable-remote-dir-locals t)
+(with-eval-after-load 'tramp
+  (setq tramp-remote-path `(tramp-own-remote-path
+                            "/home/john/.nix-profile/bin"
+                            ,@tramp-remote-path)
+        enable-remote-dir-locals t))
 
 ;; Pinentry
 (setf epa-pinentry-mode 'loopback)
@@ -187,16 +188,17 @@
 (setq eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
 
 ;; Elfeed
-(with-eval-after-load 'elfeed
-  (setq elfeed-curl-max-connections 8)
-  (setq-default elfeed-search-filter "@6-months-ago +unread")
-  (elfeed-load-opml (expand-file-name "bazqux-reader-subscriptions.xml" user-emacs-directory))
-  (elfeed-load-opml (expand-file-name "Downcast.opml" user-emacs-directory))
-  (run-with-timer 0 (* 60 60) 'elfeed-update))
-(defun my-elfeed-podcast-tagger (entry)
-  (when (elfeed-entry-enclosures entry)
-    (elfeed-tag entry 'podcast)))
-(add-hook 'elfeed-new-entry-hook #'my-elfeed-podcast-tagger)
+(when (eq 'darwin system-type)
+  (with-eval-after-load 'elfeed
+    (setq elfeed-curl-max-connections 8)
+    (setq-default elfeed-search-filter "@6-months-ago +unread")
+    (elfeed-load-opml (expand-file-name "bazqux-reader-subscriptions.xml" user-emacs-directory))
+    (elfeed-load-opml (expand-file-name "Downcast.opml" user-emacs-directory))
+    (run-with-timer 0 (* 60 60) 'elfeed-update))
+  (defun my-elfeed-podcast-tagger (entry)
+    (when (elfeed-entry-enclosures entry)
+      (elfeed-tag entry 'podcast)))
+  (add-hook 'elfeed-new-entry-hook #'my-elfeed-podcast-tagger))
 
 ;; EMMS
 (emms-all)
@@ -699,12 +701,13 @@
 (setq which-key-idle-delay 0.1)
 
 ;; Clipboard
-(require 'xclip)
-(xclip-mode 1)
-(defun toggle-xclip-mode ()
-  "Toggle `xclip-mode'."
-  (interactive)
-  (xclip-mode (if xclip-mode -1 1)))
+(when (eq 'darwin system-type)
+  (require 'xclip)
+  (xclip-mode 1)
+  (defun toggle-xclip-mode ()
+    "Toggle `xclip-mode'."
+    (interactive)
+    (xclip-mode (if xclip-mode -1 1))))
 
 ;; GNUTLS issues
 ;; Skip v1.3 per https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341#19
@@ -1894,6 +1897,7 @@ respectively."
               (user-error
                (message "Unloaded env for %s" (buffer-name))))))
 
-(require 'server)
-(unless (server-running-p) (server-start))
+(when (eq 'darwin system-type)
+  (require 'server)
+  (unless (server-running-p) (server-start)))
 ;;; init.el ends here

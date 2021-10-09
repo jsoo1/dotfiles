@@ -1,8 +1,8 @@
+{ config, lib, ... }:
 let
   isDarwin = builtins.currentSystem == "x86_64-darwin";
   isLinux = builtins.currentSystem == "x86_64-linux";
-  dotfiles =
-    if isDarwin then "/Users/johh.soo/dotfiles" else "/home/john/dotfiles";
+  dotfiles = "${config.home.homeDirectory}/dotfiles";
   pkgs = import ./pin.nix;
   bq-opml = "bazqux-reader-subscriptions.xml";
   downcast-opml = "Downcast.opml";
@@ -13,7 +13,7 @@ let
   tm = dir:
     ''tmux new-session -A -s $(basename "${dir}" | tr '.' '-') -c "${dir}"'';
   shellAliases = {
-    tm = "${tm "$PWD"} ${if isDarwin then "emacs" else ""}";
+    tm = "${tm "$PWD"}";
     tml = "tmux list-sessions";
     tma = "tmux attach-session -t";
     em = "emacsclient -t";
@@ -22,7 +22,17 @@ let
     pb = "curl -F c=@- pb";
   };
   sessionVariables = { SKIM_DEFAULT_OPTIONS = "-m --color=bw"; };
-in { lib, ... }: {
+  systemd.user.services.emacs = {
+    description = "Emacs Daemon";
+    documentation = "man:emacs(1)";
+    wantedBy = [ "default.target" ];
+    serviceConfig = {
+      StandardOutput = "journal";
+      ExecStart = "emacs --fg-daemon";
+      ExecStop = "kill -9 $MAINPID";
+    };
+  };
+in {
   home = {
     activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/nix,.emacs.d}/init.el
@@ -30,18 +40,18 @@ in { lib, ... }: {
     extraOutputsToInstall = [ "doc" ];
     packages = with pkgs;
       let
-        emacs = [ pinentry-emacs ];
+        emacs-utilities = [ pinentry-emacs ];
         fonts = [ iosevka ];
         haskell-utilities = [ ghcid haskell-language-server ];
         nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
         remarkable-utilities = [ restream ];
         shell-utilities = [ bat dogdns fd gawk git jq mosh ripgrep ];
       in builtins.concatLists [
-        emacs
+        emacs-utilities
         haskell-utilities
         nix-utilities
-        (if isDarwin then fonts ++ remarkable-utilities else [ ])
         shell-utilities
+        (lib.optionals isDarwin (fonts ++ remarkable-utilities))
       ];
     file = {
       ".ghci" = { source = "${dotfiles}/ghci/.ghci"; };
@@ -50,8 +60,7 @@ in { lib, ... }: {
       ".psqlrc" = { source = "${dotfiles}/psql/.psqlrc"; };
       ".vimrc" = { source = "${dotfiles}/minimal/.vimrc"; };
       ".tmux.conf" = { source = "${dotfiles}/minimal/.tmux.conf"; };
-      ".tmuxline.conf" = { source = "${dotfiles}/minimal/.tmuxline.conf"; };
-    } // (if isDarwin then elfeed-feeds else { });
+    } // (lib.optionalAttrs isDarwin elfeed-feeds);
   };
   programs = {
     direnv = { enable = true; };
@@ -98,7 +107,7 @@ in { lib, ... }: {
       inherit shellAliases sessionVariables;
     };
     emacs = {
-      enable = isDarwin;
+      enable = true;
       package = pkgs.my-emacs;
     };
     gpg = { enable = true; };
@@ -108,4 +117,4 @@ in { lib, ... }: {
     skim = { enable = true; };
     tmux = { enable = true; };
   };
-}
+} // lib.optionalAttrs (!isDarwin) systemd
