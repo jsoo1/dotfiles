@@ -102,8 +102,10 @@
 (exec-path-from-shell-initialize)
 
 ;; Tramp
-(setq tramp-remote-path `(tramp-own-remote-path ,@tramp-remote-path)
-      tramp-terminal-type "xterm-256color")
+(setq tramp-remote-path `(tramp-own-remote-path
+                          "/home/john/.nix-profile/bin"
+                          ,@tramp-remote-path)
+      enable-remote-dir-locals t)
 
 ;; Pinentry
 (setf epa-pinentry-mode 'loopback)
@@ -380,6 +382,7 @@
  safe-local-variable-values
  `(;; Haskell-specific
    (before-save-hook . nil)
+   (projectile-indexing-method . hybrid)
    (haskell-stylish-on-save . nil)
    (nix-format-buffer . nil)
    (haskell-process-type . stack-ghci)
