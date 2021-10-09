@@ -54,7 +54,7 @@ in {
         haskell-utilities = [ ghcid haskell-language-server ];
         nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
         remarkable-utilities = [ restream ];
-        shell-utilities = [ bat dogdns fd gawk git jq mosh rage ripgrep tmate ];
+        shell-utilities = [ bat dogdns fd gawk git jq mosh rage ripgrep ];
       in builtins.concatLists [
         emacs-utilities
         haskell-utilities
