@@ -45,7 +45,7 @@ in {
         haskell-utilities = [ ghcid haskell-language-server ];
         nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
         remarkable-utilities = [ restream ];
-        shell-utilities = [ bat dogdns fd gawk git jq mosh ripgrep ];
+        shell-utilities = [ bat dogdns fd gawk git jq mosh rage ripgrep ];
       in builtins.concatLists [
         emacs-utilities
         haskell-utilities
@@ -117,4 +117,4 @@ in {
     skim = { enable = true; };
     tmux = { enable = true; };
   };
-} // lib.optionalAttrs (!isDarwin) systemd
+}
