@@ -124,6 +124,10 @@
 (defvar orange  "#cb4b16" "Theme orange.")
 (defvar violet  "#6c71c4" "Theme violet.")
 
+;; Grep
+(with-eval-after-load 'grep
+  (grep-apply-setting 'grep-find-command '("fd '.*' . -t f -H -x rg -nH0 ''" . 31)))
+
 ;; Gnus
 ;; set-face-attribute does not work here, why?
 ;; even with with-eval-after-load 'mm-uu
@@ -373,6 +377,7 @@
  safe-local-variable-values
  `(;; Haskell-specific
    (before-save-hook . nil)
+   (projectile-indexing-method . hybrid)
    (haskell-stylish-on-save . nil)
    (nix-format-buffer . nil)
    (haskell-process-type . stack-ghci)
@@ -455,6 +460,7 @@
 (with-eval-after-load 'emms (evil-collection-emms-setup))
 (with-eval-after-load 'proced (evil-collection-proced-setup))
 (with-eval-after-load 'process-list (evil-collection-process-menu-setup))
+(with-eval-after-load 'tar-mode (evil-collection-tar-mode-setup))
 (global-evil-leader-mode)
 
 (evil-set-initial-state 'compilation-mode 'normal)
@@ -465,11 +471,12 @@
 (evil-set-initial-state 'ert-results-mode 'normal)
 (evil-set-initial-state 'Info-mode 'normal)
 (evil-set-initial-state 'comint-mode 'normal)
-(evil-set-initial-state 'org-agenda-mode 'normal)
+(evil-set-initial-state 'org-agenda-mode 'motion)
 (evil-set-initial-state 'erc-mode 'normal)
 (evil-set-initial-state 'eshell-mode 'normal)
 (evil-set-initial-state 'tab-switcher-mode 'emacs)
 (evil-set-initial-state 'reb-mode 'normal)
+(evil-set-initial-state 'tar-mode 'motion)
 
 (evil-declare-not-repeat #'flycheck-next-error)
 (evil-declare-not-repeat #'flycheck-previous-error)
@@ -500,10 +507,11 @@
 ;; Projectile
 (projectile-mode +1)
 (setq projectile-completion-system 'ivy
-      projectile-indexing-method 'hybrid
+      projectile-indexing-method 'native
       projectile-enable-caching 't
       projectile-project-search-path "~/projects/"
       projectile-globally-unignored-files '(".*\\.projectile$" ".*\\.envrc$" ".*\\.dir-locals.el$")
+      projectile-globally-unignored-directories '("^/scratch/.*")
       projectile-project-root-files-functions (list #'projectile-root-local
                                                     #'projectile-root-top-down-recurring
                                                     #'projectile-root-top-down
@@ -578,6 +586,9 @@
          (file+headline "${root}/TODOs.org" "Todos")
          "* TODO %U %?
   %a")
+        ("pt" "[${name}] Plain Todo" entry
+         (file+headline "${root}/TODOs.org" "Todos")
+         "* TODO %?")
         ("bt" "[${name}] Note" entry
          (file+headline "${root}/TODOs.org" "Notes")
          "* %U %?
@@ -586,8 +597,7 @@
 (setq org-directory "~")
 (with-eval-after-load 'org-agenda-mode
   (progn
-    (define-key org-agenda-mode-map (kbd "C-c") org-agenda-mode-map)
-    (define-key org-agenda-mode-map (kbd "C-m") #'org-agenda-month-view)
+    (define-key org-agenda-mode-map (kbd "C-c RET") #'org-agenda-switch-to)
     (define-key org-agenda-mode-map "m" #'org-agenda-month-view)))
 
 (defun str-to-org-dirs (repo-dir string)
@@ -603,8 +613,8 @@
  (lambda () (setq org-agenda-files
                   (append
                    '("~/TODOs.org")
-                   (while-no-input (directory-files-recursively "~/dotfiles" "TODOs\\.org$" nil t))
-                   (while-no-input (directory-files-recursively "~/projects" "TODOs\\.org$" nil t)))))
+                   (directory-files-recursively "~/dotfiles" "TODOs\\.org$" nil t)
+                   (directory-files-recursively "~/projects" "TODOs\\.org$" nil t))))
  "get-org-files")
 
 (set-face-attribute
@@ -878,6 +888,8 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (require 'haskell-interactive-mode)
 (require 'haskell-process)
 (require 'haskell-snippets)
+(evil-define-key 'normal haskell-mode-map (kbd ",") 'my-eglot-mode-map)
+
 ;; See https://github.com/haskell/haskell-mode/issues/1553#issuecomment-358373643
 (setq haskell-process-type 'auto
       haskell-process-log 't
@@ -892,6 +904,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 ;; (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
 (define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
 (add-hook 'haskell-mode-hook #'make-standard-paragraph-rules)
+(add-hook 'haskell-mode-hook #'eglot-ensure)
 
 ;; Agda mode
 (load-library (let ((coding-system-for-read 'utf-8))
@@ -1311,6 +1324,8 @@ when send commands with redis protocol."
       '(display-time-world-mode
         eshell-mode
         elfeed-search-mode
+        grep-mode
+        ivy-occur-mode
         org-agenda-mode
         proced
         process-list
@@ -1796,6 +1811,7 @@ respectively."
 
 (define-prefix-keymap my-search-map
   "my searching keybindings"
+  "g" grep-find
   "s" swiper
   "p" counsel-projectile-rg)
 
