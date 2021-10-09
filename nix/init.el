@@ -397,10 +397,10 @@
     . (lambda (argv)
         (append (list "env" "NO_COLOR=true") argv)))
    ;; Project s
-   ,@(seq-mapcat (pcase-lambda (`(,f . _)) `((projectile-project-root . ,(format "/ssh:hd:%s/" f))
-                                             (projectile-project-root . ,(format "%s/" f))))
+   ,@(seq-mapcat (pcase-lambda (`(,f . _)) `((projectile-project-root . ,(format "/ssh:hd:/home/john/projects/%s/" f))
+                                             (projectile-project-root . ,(format "%s/%s/" (getenv "HOME") f))))
               (seq-filter (pcase-lambda (`(_ . (,dir? . _))) (eq t dir?))
-                          (directory-files-and-attributes "~/projects" t "[^\(\\/\\.\\.$\)|\(\\/\\.$\)]")))
+                          (directory-files-and-attributes "~/projects" nil "[^\(\\/\\.\\.$\)|\(\\/\\.$\)]")))
    ;; Ocaml-specific
    (smie-indent-basic . 2)
    ;; Rust-specific
