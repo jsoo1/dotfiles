@@ -11,32 +11,35 @@ let
     ".emacs.d/${downcast-opml}" = { source = "${dotfiles}/${downcast-opml}"; };
   };
   tm = dir:
-    ''tmux new-session -A -s $(basename "${dir}" | tr '.' '-') -c "${dir}"'';
+    ''
+      tmux new-session -A -s $(basename "${dir}" | tr '.' '-') -c "${dir}" ${
+        if isDarwin then "emacs" else "emacsclient --socket-name=john -t ${dir}"
+      }'';
   shellAliases = {
     tm = "${tm "$PWD"}";
     tml = "tmux list-sessions";
     tma = "tmux attach-session -t";
-    em = "emacsclient -t";
+    em = "emacsclient -t ${if !isDarwin then "--socket-name=john" else ""}";
     lsa = "ls -lsa";
     vi = "nvim";
     pb = "curl -F c=@- pb";
   };
-  sessionVariables = { SKIM_DEFAULT_OPTIONS = "-m --color=bw"; };
   systemd.user.services.emacs = {
-    description = "Emacs Daemon";
-    documentation = "man:emacs(1)";
-    wantedBy = [ "default.target" ];
-    serviceConfig = {
-      StandardOutput = "journal";
-      ExecStart = "emacs --fg-daemon";
-      ExecStop = "kill -9 $MAINPID";
+    Unit = {
+      Description = "Emacs Daemon";
+      Documentation = "man:emacs(1)";
+    };
+    Install = { WantedBy = [ "default.target" ]; };
+    Service = {
+      ExecStart = "${pkgs.my-emacs}/bin/emacs --fg-daemon=john";
+      ExecStop = "${pkgs.coreutils}/bin/kill -9 $MAINPID";
     };
   };
+  activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/nix,.emacs.d}/init.el
+  '';
 in {
   home = {
-    activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/nix,.emacs.d}/init.el
-    '';
     extraOutputsToInstall = [ "doc" ];
     packages = with pkgs;
       let
@@ -56,17 +59,33 @@ in {
     file = {
       ".ghci" = { source = "${dotfiles}/ghci/.ghci"; };
       ".haskeline" = { source = "${dotfiles}/ghci/.haskeline"; };
-      ".inputrc" = { source = "${dotfiles}/readline/.inputrc"; };
       ".psqlrc" = { source = "${dotfiles}/psql/.psqlrc"; };
       ".vimrc" = { source = "${dotfiles}/minimal/.vimrc"; };
       ".tmux.conf" = { source = "${dotfiles}/minimal/.tmux.conf"; };
     } // (lib.optionalAttrs isDarwin elfeed-feeds);
   };
   programs = {
-    direnv = { enable = true; };
+    direnv.enable = true;
+    gpg.enable = true;
+    home-manager.enable = isDarwin;
+    htop.enable = true;
+    neovim.enable = true;
+    tmux.enable = true;
+    skim = {
+      enable = true;
+      defaultOptions = [ "-m" "--color=bw" ];
+    };
+    emacs = {
+      enable = true;
+      package = pkgs.my-emacs;
+    };
+    bash = {
+      enable = isLinux;
+      inherit shellAliases;
+    };
     zsh = {
       enable = isDarwin;
-      inherit shellAliases sessionVariables;
+      inherit shellAliases;
       initExtra = let
         skim-files = "fd '.*' '.' --hidden -E '.git*' | sk";
         skim-history = ''
@@ -92,9 +111,7 @@ in {
         zle -N skim_files __skim_files
         __tmux_projects () {
           local proj="$(${skim-projects})"
-          [ "" != "$proj" ] && LBUFFER="${tm "$proj"} ${
-            if isDarwin then "emacs" else ""
-          }"
+          [ "" != "$proj" ] && LBUFFER="${tm "$proj"}"
         }
         zle -N tmux_projects __tmux_projects
         bindkey '^r' skim_history
@@ -102,19 +119,5 @@ in {
         bindkey '^o' tmux_projects
       '';
     };
-    bash = {
-      enable = isLinux;
-      inherit shellAliases sessionVariables;
-    };
-    emacs = {
-      enable = true;
-      package = pkgs.my-emacs;
-    };
-    gpg = { enable = true; };
-    home-manager = { enable = isDarwin; };
-    htop = { enable = true; };
-    neovim = { enable = true; };
-    skim = { enable = true; };
-    tmux = { enable = true; };
   };
-}
+} // (if isDarwin then { inherit activation; } else { inherit systemd; })
