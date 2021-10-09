@@ -1852,10 +1852,10 @@ respectively."
   "d" (defun my-delete-window ()
         (interactive) (progn (delete-window) (balance-windows)))
   "D" delete-frame
-  "h" (defun tmux-left () (interactive) (tmux-navigate "left"))
-  "j" (defun tmux-down () (interactive) (tmux-navigate "down"))
-  "k" (defun tmux-up () (interactive) (tmux-navigate "up"))
-  "l" (defun tmux-right () (interactive) (tmux-navigate "right"))
+  "h" tmux-pane-omni-window-left
+  "j" tmux-pane-omni-window-down
+  "k" tmux-pane-omni-window-up
+  "l" tmux-pane-omni-window-right
   "H" evil-window-move-far-left
   "J" evil-window-move-very-bottom
   "K" evil-window-move-very-top
