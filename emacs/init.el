@@ -1587,7 +1587,8 @@ respectively."
   "p" proced
   "r" re-builder
   "t" display-time-world
-  "T" list-timers)
+  "T" list-timers
+  "w" eww)
 
 (define-prefix-keymap my-debbugs-modes-map
   "my debbugs modes."
