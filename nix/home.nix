@@ -13,13 +13,18 @@ let
   tm = dir:
     ''
       tmux new-session -A -s $(basename "${dir}" | tr '.' '-') -c "${dir}" ${
-        if isDarwin then "emacs" else "emacsclient --socket-name=john -t ${dir}"
+        if isDarwin then
+          "emacs"
+        else
+          "emacsclient --socket-name=${config.home.username} -t ${dir}"
       }'';
   shellAliases = {
     tm = "${tm "$PWD"}";
     tml = "tmux list-sessions";
     tma = "tmux attach-session -t";
-    em = "emacsclient -t ${if !isDarwin then "--socket-name=john" else ""}";
+    em = "emacsclient -t ${
+        if !isDarwin then "--socket-name=${config.home.username}" else ""
+      }";
     lsa = "ls -lsa";
     vi = "nvim";
     pb = "curl -F c=@- pb";
@@ -31,7 +36,8 @@ let
     };
     Install = { WantedBy = [ "default.target" ]; };
     Service = {
-      ExecStart = "${pkgs.my-emacs}/bin/emacs --fg-daemon=john";
+      ExecStart =
+        "${pkgs.my-emacs}/bin/emacs --fg-daemon=${config.home.username}";
       ExecStop = "${pkgs.coreutils}/bin/kill -9 $MAINPID";
     };
   };
@@ -48,7 +54,7 @@ in {
         haskell-utilities = [ ghcid haskell-language-server ];
         nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
         remarkable-utilities = [ restream ];
-        shell-utilities = [ bat dogdns fd gawk git jq mosh rage ripgrep ];
+        shell-utilities = [ bat dogdns fd gawk git jq mosh rage ripgrep tmate ];
       in builtins.concatLists [
         emacs-utilities
         haskell-utilities
