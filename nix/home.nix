@@ -63,7 +63,7 @@ in {
       ".vimrc" = { source = "${dotfiles}/minimal/.vimrc"; };
       ".tmux.conf" = { source = "${dotfiles}/minimal/.tmux.conf"; };
     } // (lib.optionalAttrs isDarwin elfeed-feeds);
-  };
+  } // lib.optionalAttrs isDarwin { inherit activation; };
   programs = {
     direnv.enable = true;
     gpg.enable = true;
@@ -123,4 +123,4 @@ in {
       '';
     };
   };
-} // (if isDarwin then { inherit activation; } else { inherit systemd; })
+} // (lib.optionalAttrs (!isDarwin) { inherit systemd; })
