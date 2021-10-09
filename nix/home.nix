@@ -82,6 +82,9 @@ in {
     bash = {
       enable = isLinux;
       inherit shellAliases;
+      initExtra = ''
+        [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" $HOME/.ssh/auth_sock
+      '';
     };
     zsh = {
       enable = isDarwin;

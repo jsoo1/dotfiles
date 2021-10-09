@@ -101,6 +101,10 @@
 (require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
 
+;; SSH
+(when (eq 'gnu/linux system-type)
+  (setenv "SSH_AUTH_SOCK" (concat (getenv "HOME") "/.ssh/auth_sock")))
+
 ;; Tramp
 (with-eval-after-load 'tramp
   (setq tramp-remote-path `(tramp-own-remote-path
