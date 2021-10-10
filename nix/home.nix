@@ -1,16 +1,16 @@
 { config, lib, ... }:
 let
-  isDarwin = builtins.currentSystem == "x86_64-darwin";
-  dotfiles = "${config.home.homeDirectory}/dotfiles";
   pkgs = import ./pin.nix;
-  bq-opml = "bazqux-reader-subscriptions.xml";
-  downcast-opml = "Downcast.opml";
-  elfeed-feeds = {
-    ".emacs.d/feeds" = {
-      recursive = true;
-      source = "${dotfiles}/rss";
-    };
-  };
+
+  isDarwin = builtins.currentSystem == "x86_64-darwin";
+
+  dotfiles = "${config.home.homeDirectory}/dotfiles";
+
+  ".emacs.d/feeds".recursive = true;
+  ".emacs.d/feeds".source = "${dotfiles}/rss";
+
+  ssh-auth-sock = "${config.home.homeDirectory}/.ssh/auth_sock";
+
   tm = dir:
     ''
       tmux new-session -A -s $(basename "${dir}" | tr '.' '-') -c "${dir}" ${
@@ -19,6 +19,7 @@ let
         else
           "emacsclient --socket-name=${config.home.username} -t ${dir}"
       }'';
+
   shellAliases = {
     tm = "${tm "$PWD"}";
     tml = "tmux list-sessions";
@@ -30,19 +31,14 @@ let
     vi = "nvim";
     pb = "curl -F c=@- pb";
   };
-  ssh-auth-sock = "${config.home.homeDirectory}/.ssh/auth_sock";
-  services.gpg-agent = {
-    enable = true;
-    extraConfig = ''
-      allow-emacs-pinentry
-    '';
-  };
+
+  services.gpg-agent.enable = true;
+  services.gpg-agent.extraConfig = "allow-emacs-pinentry";
+
   systemd.user.services.emacs = {
-    Unit = {
-      Description = "Emacs Daemon";
-      Documentation = "man:emacs(1)";
-    };
-    Install = { WantedBy = [ "default.target" ]; };
+    Unit.Description = "Emacs Daemon";
+    Unit.Documentation = "man:emacs(1)";
+    Install.WantedBy = [ "default.target" ];
     Service = {
       Environment = ''SSH_AUTH_SOCK="${ssh-auth-sock}"'';
       ExecStart =
@@ -50,12 +46,15 @@ let
       ExecStop = "${pkgs.coreutils}/bin/kill -9 $MAINPID";
     };
   };
+
   activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/nix,.emacs.d}/init.el
   '';
+
 in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
   home = lib.optionalAttrs isDarwin { inherit activation; } // {
     extraOutputsToInstall = [ "doc" ];
+
     packages = with pkgs;
       let
         fonts = [ iosevka ];
@@ -69,7 +68,8 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         shell-utilities
         (lib.optionals isDarwin (fonts ++ remarkable-utilities))
       ];
-    file = lib.optionalAttrs isDarwin elfeed-feeds // {
+
+    file = lib.optionalAttrs isDarwin { inherit (".emacs.d/feeds") ; } // {
       ".ghci".source = "${dotfiles}/ghci/.ghci";
       ".haskeline".source = "${dotfiles}/ghci/.haskeline";
       ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
@@ -77,20 +77,18 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
       ".tmux.conf".source = "${dotfiles}/minimal/.tmux.conf";
     };
   };
+
   programs = {
     direnv.enable = true;
     gpg.enable = true;
     htop.enable = true;
     neovim.enable = true;
     tmux.enable = true;
-    skim = {
-      enable = true;
-      defaultOptions = [ "-m" "--color=bw" ];
-    };
-    emacs = {
-      enable = true;
-      package = pkgs.my-emacs;
-    };
+    skim.enable = true;
+    skim.defaultOptions = [ "-m" "--color=bw" ];
+    emacs.enable = true;
+    emacs.package = pkgs.my-emacs;
+
     bash = {
       enable = !isDarwin;
       inherit shellAliases;
@@ -98,6 +96,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ${ssh-auth-sock}
       '';
     };
+
     zsh = {
       enable = isDarwin;
       inherit shellAliases;
