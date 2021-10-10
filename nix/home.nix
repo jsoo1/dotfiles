@@ -1,7 +1,6 @@
 { config, lib, ... }:
 let
   isDarwin = builtins.currentSystem == "x86_64-darwin";
-  isLinux = builtins.currentSystem == "x86_64-linux";
   dotfiles = "${config.home.homeDirectory}/dotfiles";
   pkgs = import ./pin.nix;
   bq-opml = "bazqux-reader-subscriptions.xml";
@@ -51,11 +50,11 @@ let
       ExecStop = "${pkgs.coreutils}/bin/kill -9 $MAINPID";
     };
   };
-in {
-  home = {
-    activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/nix,.emacs.d}/init.el
-    '';
+  activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/nix,.emacs.d}/init.el
+  '';
+in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
+  home = lib.optionalAttrs isDarwin { inherit activation; } // {
     extraOutputsToInstall = [ "doc" ];
     packages = with pkgs;
       let
@@ -70,13 +69,13 @@ in {
         shell-utilities
         (lib.optionals isDarwin (fonts ++ remarkable-utilities))
       ];
-    file = {
-      ".ghci" = { source = "${dotfiles}/ghci/.ghci"; };
-      ".haskeline" = { source = "${dotfiles}/ghci/.haskeline"; };
-      ".psqlrc" = { source = "${dotfiles}/psql/.psqlrc"; };
-      ".vimrc" = { source = "${dotfiles}/minimal/.vimrc"; };
-      ".tmux.conf" = { source = "${dotfiles}/minimal/.tmux.conf"; };
-    } // lib.optionalAttrs isDarwin elfeed-feeds;
+    file = lib.optionalAttrs isDarwin elfeed-feeds // {
+      ".ghci".source = "${dotfiles}/ghci/.ghci";
+      ".haskeline".source = "${dotfiles}/ghci/.haskeline";
+      ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
+      ".vimrc".source = "${dotfiles}/minimal/.vimrc";
+      ".tmux.conf".source = "${dotfiles}/minimal/.tmux.conf";
+    };
   };
   programs = {
     direnv.enable = true;
@@ -93,7 +92,7 @@ in {
       package = pkgs.my-emacs;
     };
     bash = {
-      enable = isLinux;
+      enable = !isDarwin;
       inherit shellAliases;
       initExtra = ''
         [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ${ssh-auth-sock}
@@ -136,4 +135,4 @@ in {
       '';
     };
   };
-} // (lib.optionalAttrs (!isDarwin) { inherit systemd services; })
+}
