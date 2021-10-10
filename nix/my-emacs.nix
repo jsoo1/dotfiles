@@ -5,10 +5,11 @@ let
       debbugs
       ediprolog
       let-alist
-      pinentry
+      project
       seq
       sml-mode
       xclip
+      xref
     ];
   manual = { manualPackages, ... }:
     with manualPackages;
