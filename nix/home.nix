@@ -43,11 +43,11 @@ let
       ExecStop = "${pkgs.coreutils}/bin/kill -9 $MAINPID";
     };
   };
-  activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/nix,.emacs.d}/init.el
-  '';
 in {
   home = {
+    activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/nix,.emacs.d}/init.el
+    '';
     extraOutputsToInstall = [ "doc" ];
     packages = with pkgs;
       let
@@ -70,8 +70,8 @@ in {
       ".psqlrc" = { source = "${dotfiles}/psql/.psqlrc"; };
       ".vimrc" = { source = "${dotfiles}/minimal/.vimrc"; };
       ".tmux.conf" = { source = "${dotfiles}/minimal/.tmux.conf"; };
-    } // (lib.optionalAttrs isDarwin elfeed-feeds);
-  } // lib.optionalAttrs isDarwin { inherit activation; };
+    } // lib.optionalAttrs isDarwin elfeed-feeds;
+  };
   programs = {
     direnv.enable = true;
     gpg.enable = true;
