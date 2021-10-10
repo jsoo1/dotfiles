@@ -1524,7 +1524,7 @@ respectively."
   "i" 'my-insert-map
   "j" 'my-jump-map
   "o" 'my-org-map
-  "p" 'my-projectile-map
+  "p" 'my-project-map
   "q" 'my-quit-map
   "s" 'my-search-map
   "t" 'my-toggle-map
@@ -1774,7 +1774,7 @@ respectively."
   (let* ((counsel-projectile-switch-project-action #'find-file-in-project-tab))
     (counsel-projectile-switch-project)))
 
-(define-prefix-keymap my-projectile-map
+(define-prefix-keymap my-project-map
   "my projectile keybindings"
   "a" counsel-projectile-org-agenda
   "b" counsel-projectile-switch-to-buffer
