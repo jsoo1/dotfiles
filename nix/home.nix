@@ -6,8 +6,10 @@ let
 
   dotfiles = "${config.home.homeDirectory}/dotfiles";
 
-  ".emacs.d/feeds".recursive = true;
-  ".emacs.d/feeds".source = "${dotfiles}/rss";
+  feeds = {
+    ".emacs.d/feeds".recursive = true;
+    ".emacs.d/feeds".source = "${dotfiles}/rss";
+  };
 
   ssh-auth-sock = "${config.home.homeDirectory}/.ssh/auth_sock";
 
@@ -61,7 +63,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         haskell-utilities = [ ghcid haskell-language-server ];
         nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
         remarkable-utilities = [ restream ];
-        shell-utilities = [ bat dogdns fd gawk git jq mosh rage ripgrep ];
+        shell-utilities = [ bat dogdns fd gawk git jq mosh rage ripgrep watch ];
       in builtins.concatLists [
         haskell-utilities
         nix-utilities
@@ -69,7 +71,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         (lib.optionals isDarwin (fonts ++ remarkable-utilities))
       ];
 
-    file = lib.optionalAttrs isDarwin { inherit (".emacs.d/feeds") ; } // {
+    file = lib.optionalAttrs isDarwin feeds // {
       ".ghci".source = "${dotfiles}/ghci/.ghci";
       ".haskeline".source = "${dotfiles}/ghci/.haskeline";
       ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
