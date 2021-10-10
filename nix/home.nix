@@ -7,8 +7,10 @@ let
   bq-opml = "bazqux-reader-subscriptions.xml";
   downcast-opml = "Downcast.opml";
   elfeed-feeds = {
-    ".emacs.d/${bq-opml}" = { source = "${dotfiles}/${bq-opml}"; };
-    ".emacs.d/${downcast-opml}" = { source = "${dotfiles}/${downcast-opml}"; };
+    ".emacs.d/feeds" = {
+      recursive = true;
+      source = "${dotfiles}/rss";
+    };
   };
   tm = dir:
     ''

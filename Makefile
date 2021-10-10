@@ -27,8 +27,7 @@ DIRS = \
 SYMLINKS = \
 	$(HOME)/.profile \
 	$(HOME)/.emacs.d/init.el \
-	$(HOME)/.emacs.d/bazqux-reader-subscriptions.xml \
-	$(HOME)/.emacs.d/Downcast.opml \
+	$(HOME)/.emacs.d/feeds \
 	$(HOME)/.emacs.d/eshell/alias \
 	$(HOME)/.local/share/applications/defaults.list \
 	$(XDG_HOME)/alacritty/alacritty.yml \
@@ -75,11 +74,8 @@ $(HOME)/.profile: | $(HOME) ## The profile for session initialization. Not posix
 $(HOME)/.emacs.d/init.el: | $(HOME)/.emacs.d ## Emacs initialization file
 	$(ln) $(PWD)/emacs/init.el $@
 
-$(HOME)/.emacs.d/bazqux-reader-subscriptions.xml: | $(HOME)/.emacs.d ## subscriptions for elfeed
-	$(ln) $(PWD)/bazqux-reader-subscriptions.xml $@
-
-$(HOME)/.emacs.d/Downcast.opml: | $(HOME)/.emacs.d ## subscriptions for elfeed
-	$(ln) $(PWD)/Downcast.opml $@
+$(HOME)/.emacs.d/feeds: | $(HOME)/.emacs.d ## subscriptions for elfeed
+	$(ln) $(PWD)/rss $@
 
 $(HOME)/.emacs.d/eshell/alias: | $(HOME)/.emacs.d/eshell
 	$(ln) $(PWD)/emacs/eshell/alias $@
