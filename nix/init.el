@@ -192,7 +192,7 @@
   (with-eval-after-load 'elfeed
     (setq elfeed-curl-max-connections 8)
     (setq-default elfeed-search-filter "@6-months-ago +unread")
-    (seq-map (lambda (opml) `(elfeed-load-opml ,opml))
+    (seq-each #'elfeed-load-opml
               (directory-files
                (expand-file-name "feeds" user-emacs-directory)
                t "\\(\\.xml\\|\\.opml\\)$" t))
