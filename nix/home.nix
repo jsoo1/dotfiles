@@ -34,6 +34,16 @@ let
     pb = "curl -F c=@- pb";
   };
 
+  skim-cmds = {
+    projects = ''
+      fd '.git$' ~ -t d -H -x dirname | sk | tr -d '\n'
+    '';
+    files = "fd '.*' '.' --hidden -E '.git*' | sk";
+    history = ''
+      history | sk | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}'
+    '';
+  };
+
   services.gpg-agent.enable = true;
   services.gpg-agent.extraConfig = "allow-emacs-pinentry";
 
@@ -95,6 +105,20 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
       enable = !isDarwin;
       inherit shellAliases;
       initExtra = ''
+        skim-projects () {
+          local proj="$(${skim-cmds.projects})"
+          echo ${tm "$proj"}
+        }
+        skim-files () {
+          echo $(${skim-cmds.files})
+        }
+        skim-history () {
+          echo $(${skim-cmds.history})
+        }
+        bind -m emacs-standard '"\C-o": " \C-b\C-k \C-u`skim-projects`\e\C-e\er\C-a\C-y\C-h\C-e\e \C-y\ey\C-x\C-x\C-f"'
+        bind -m emacs-standard '"\C-t": " \C-b\C-k \C-u`skim-files`\e\C-e\er\C-a\C-y\C-h\C-e\e \C-y\ey\C-x\C-x\C-f"'
+        bind -m emacs-standard '"\C-r": " \C-b\C-k \C-u`skim-history`\e\C-e\er\C-a\C-y\C-h\C-e\e \C-y\ey\C-x\C-x\C-f"'
+
         [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ${ssh-auth-sock}
       '';
     };
@@ -103,13 +127,6 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
       enable = isDarwin;
       inherit shellAliases;
       initExtra = let
-        skim-files = "fd '.*' '.' --hidden -E '.git*' | sk";
-        skim-history = ''
-          history | sk | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}'
-        '';
-        skim-projects = ''
-          fd '.git$' ~/projects -t d -H -x dirname | sk | tr -d '\n'
-        '';
       in ''
         restart-nix-daemon () {
             sudo launchctl bootout system/org.nixos.nix-daemon \
@@ -118,15 +135,15 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
 
         # ----- Keybindings -----
         __skim_history () {
-          LBUFFER="$LBUFFER$(${skim-history})"
+          LBUFFER="$LBUFFER$(${skim-cmds.history})"
         }
         zle -N skim_history __skim_history
         __skim_files () {
-          LBUFFER="$LBUFFER$(${skim-files})"
+          LBUFFER="$LBUFFER$(${skim-cmds.files})"
         }
         zle -N skim_files __skim_files
         __tmux_projects () {
-          local proj="$(${skim-projects})"
+          local proj="$(${skim-cmds.projects})"
           [ "" != "$proj" ] && LBUFFER="${tm "$proj"}"
         }
         zle -N tmux_projects __tmux_projects
