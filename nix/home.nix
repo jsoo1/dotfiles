@@ -29,6 +29,7 @@ let
     vi = "nvim";
     pb = "curl -F c=@- pb";
   };
+  ssh-auth-sock = "${config.home.homeDirectory}/.ssh/auth_sock";
   systemd.user.services.emacs = {
     Unit = {
       Description = "Emacs Daemon";
@@ -36,6 +37,7 @@ let
     };
     Install = { WantedBy = [ "default.target" ]; };
     Service = {
+      Environment = ''SSH_AUTH_SOCK="${ssh-auth-sock}"'';
       ExecStart =
         "${pkgs.my-emacs}/bin/emacs --fg-daemon=${config.home.username}";
       ExecStop = "${pkgs.coreutils}/bin/kill -9 $MAINPID";
@@ -89,7 +91,7 @@ in {
       enable = isLinux;
       inherit shellAliases;
       initExtra = ''
-        [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" $HOME/.ssh/auth_sock
+        [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ${ssh-auth-sock}
       '';
     };
     zsh = {
