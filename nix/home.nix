@@ -75,7 +75,6 @@ in {
   programs = {
     direnv.enable = true;
     gpg.enable = true;
-    home-manager.enable = isDarwin;
     htop.enable = true;
     neovim.enable = true;
     tmux.enable = true;
