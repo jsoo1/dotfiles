@@ -104,7 +104,7 @@
                   "~/dotfiles/emacs/"))
 
 ;; Pinentry
-(setf epa-pinentry-mode 'loopback)
+(setf epg-pinentry-mode 'loopback)
 
 ;; Color setup
 (defvar base03  "#002b36" "Theme base03.")

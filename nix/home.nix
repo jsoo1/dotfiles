@@ -32,6 +32,12 @@ let
     pb = "curl -F c=@- pb";
   };
   ssh-auth-sock = "${config.home.homeDirectory}/.ssh/auth_sock";
+  services.gpg-agent = {
+    enable = true;
+    extraConfig = ''
+      allow-emacs-pinentry
+    '';
+  };
   systemd.user.services.emacs = {
     Unit = {
       Description = "Emacs Daemon";
@@ -130,4 +136,4 @@ in {
       '';
     };
   };
-} // (lib.optionalAttrs (!isDarwin) { inherit systemd; })
+} // (lib.optionalAttrs (!isDarwin) { inherit systemd services; })
