@@ -38,7 +38,7 @@ let
     '';
     files = "fd '.*' '.' --hidden -E '.git*' | sk";
     history = ''
-      history | sk | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}'
+      history | sk | awk '{$1=""}1'
     '';
   };
 
