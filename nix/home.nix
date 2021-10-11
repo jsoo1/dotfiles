@@ -47,6 +47,8 @@ let
 
   services.gpg-agent.enable = true;
   services.gpg-agent.extraConfig = "allow-emacs-pinentry";
+  services.gpg-agent.enableExtraSocket = true;
+  services.gpg-agent.pinentryFlavor = "emacs";
 
   systemd.user.services.emacs = {
     Unit.Description = "Emacs Daemon";
