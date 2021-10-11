@@ -45,11 +45,6 @@ let
     '';
   };
 
-  services.gpg-agent.enable = true;
-  services.gpg-agent.extraConfig = "allow-emacs-pinentry";
-  services.gpg-agent.enableExtraSocket = true;
-  services.gpg-agent.pinentryFlavor = "emacs";
-
   systemd.user.services.emacs = {
     Unit.Description = "Emacs Daemon";
     Unit.Documentation = "man:emacs(1)";
@@ -65,7 +60,7 @@ let
     $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/nix,.emacs.d}/init.el
   '';
 
-in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
+in lib.optionalAttrs (!isDarwin) { inherit systemd; } // {
   home = lib.optionalAttrs isDarwin { inherit activation; } // {
     extraOutputsToInstall = [ "doc" ];
 
