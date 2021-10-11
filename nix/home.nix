@@ -126,7 +126,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         skim-history () {
           echo $(${skim-cmds.history})
         }
-        ${bind-key "C-o" (set-prompt-to "tmux-projects")}
+        ${bind-key "eo" (set-prompt-to "tmux-projects")}
         ${bind-key "C-t" (set-prompt-to "skim-files")}
         ${bind-key "C-r" (set-prompt-to "skim-history")}
         bind -r '\ec'
