@@ -51,8 +51,6 @@ let
       allow-emacs-pinentry
       allow-loopback-entry
     '';
-    enableSshSupport = true;
-    enableExtraSocket = true;
     verbose = true;
     pinentryFlavor = "curses";
   };
