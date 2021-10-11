@@ -113,6 +113,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
           bind -m emacs-standard '"\${kbd}": ${val}'
         '';
       in ''
+        # Keybindings
         skim-projects () {
           local proj="$(${skim-cmds.projects})"
           [ "" != "$proj" ] && echo ${tm "$proj"}
@@ -127,6 +128,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         ${bind-key "C-t" (set-prompt-to "skim-files")}
         ${bind-key "C-r" (set-prompt-to "skim-history")}
 
+        # Git support
         [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ${ssh-auth-sock}
       '';
     };
