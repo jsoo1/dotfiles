@@ -18,13 +18,13 @@ let
   em =
     "emacsclient -t ${if !isDarwin then "--socket-name=${username}" else ""}";
   tm = dir:
-    let emacs-cmd = if isDarwin then "emacs" else "${em}";
+    let emacs-cmd = if isDarwin then "emacs" else em;
     in ''
       tmux new-session -A -s $(basename "${dir}" | tr '.' '-') -c "${dir}" ${emacs-cmd} ${dir}'';
 
   shellAliases = {
     inherit em;
-    tm = "${tm "$PWD"}";
+    tm = tm "$PWD";
     tml = "tmux list-sessions";
     tma = "tmux attach-session -t";
     lsa = "ls -lsa";
