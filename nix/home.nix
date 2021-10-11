@@ -66,10 +66,11 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
 
     packages = let
       inherit (pkgs)
-        dogdns fd gawk ghcid git haskell-language-server iosevka nix-diff
+        bash dogdns fd gawk ghcid git haskell-language-server iosevka nix-diff
         nix-prefetch nixfmt rage restream ripgrep rnix-lsp watch;
       fonts = [ iosevka ];
       haskell-utilities = [ ghcid haskell-language-server ];
+      macos-quirks = [ bash ];
       nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
       remarkable-utilities = [ restream ];
       shell-utilities = [ dogdns fd gawk git rage ripgrep watch ];
@@ -77,7 +78,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
       haskell-utilities
       nix-utilities
       shell-utilities
-      (lib.optionals isDarwin (fonts ++ remarkable-utilities))
+      (lib.optionals isDarwin (fonts ++ macos-quirks ++ remarkable-utilities))
     ];
 
     file = lib.optionalAttrs isDarwin feeds // {
