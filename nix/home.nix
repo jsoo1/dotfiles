@@ -15,6 +15,7 @@ let
 
   ssh-auth-sock = "${home}/.ssh/auth_sock";
 
+  hd = "ssh hd 'rm $(gpgconf --list-dirs agent-socket)' && ssh hd";
   em =
     "emacsclient -t ${if !isDarwin then "--socket-name=${username}" else ""}";
   tm = dir:
@@ -22,7 +23,7 @@ let
     in ''
       tmux new-session -A -s $(basename "${dir}" | tr '.' '-') -c "${dir}" ${emacs-cmd} ${dir}'';
 
-  shellAliases = {
+  shellAliases = lib.optionalAttrs isDarwin { inherit hd; } // {
     inherit em;
     tm = tm "$PWD";
     tml = "tmux list-sessions";
