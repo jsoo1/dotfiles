@@ -27,6 +27,9 @@ let
     tm = tm "$PWD";
     tml = "tmux list-sessions";
     tma = "tmux attach-session -t";
+    gco = "git checkout";
+    gst = "git status";
+    glg = "git log";
     lsa = "ls -lsa";
     vi = "nvim";
     pb = "curl -F c=@- pb";
