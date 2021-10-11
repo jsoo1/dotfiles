@@ -4,31 +4,29 @@ let
 
   isDarwin = builtins.currentSystem == "x86_64-darwin";
 
-  dotfiles = "${config.home.homeDirectory}/dotfiles";
+  home = config.home.homeDirectory;
+  username = config.home.username;
+  dotfiles = "${home}/dotfiles";
 
   feeds = {
     ".emacs.d/feeds".recursive = true;
     ".emacs.d/feeds".source = "${dotfiles}/rss";
   };
 
-  ssh-auth-sock = "${config.home.homeDirectory}/.ssh/auth_sock";
+  ssh-auth-sock = "${home}/.ssh/auth_sock";
 
+  em =
+    "emacsclient -t ${if !isDarwin then "--socket-name=${username}" else ""}";
   tm = dir:
-    ''
-      tmux new-session -A -s $(basename "${dir}" | tr '.' '-') -c "${dir}" ${
-        if isDarwin then
-          "emacs"
-        else
-          "emacsclient --socket-name=${config.home.username} -t ${dir}"
-      }'';
+    let emacs-cmd = if isDarwin then "emacs" else "${em}";
+    in ''
+      tmux new-session -A -s $(basename "${dir}" | tr '.' '-') -c "${dir}" ${emacs-cmd} ${dir}'';
 
   shellAliases = {
+    inherit em;
     tm = "${tm "$PWD"}";
     tml = "tmux list-sessions";
     tma = "tmux attach-session -t";
-    em = "emacsclient -t ${
-        if !isDarwin then "--socket-name=${config.home.username}" else ""
-      }";
     lsa = "ls -lsa";
     vi = "nvim";
     pb = "curl -F c=@- pb";
@@ -53,8 +51,7 @@ let
     Install.WantedBy = [ "default.target" ];
     Service = {
       Environment = ''SSH_AUTH_SOCK="${ssh-auth-sock}"'';
-      ExecStart =
-        "${pkgs.my-emacs}/bin/emacs --fg-daemon=${config.home.username}";
+      ExecStart = "${pkgs.my-emacs}/bin/emacs --fg-daemon=${username}";
       ExecStop = "${pkgs.coreutils}/bin/kill -9 $MAINPID";
     };
   };
@@ -67,19 +64,21 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
   home = lib.optionalAttrs isDarwin { inherit activation; } // {
     extraOutputsToInstall = [ "doc" ];
 
-    packages = with pkgs;
-      let
-        fonts = [ iosevka ];
-        haskell-utilities = [ ghcid haskell-language-server ];
-        nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
-        remarkable-utilities = [ restream ];
-        shell-utilities = [ bat dogdns fd gawk git jq mosh rage ripgrep watch ];
-      in builtins.concatLists [
-        haskell-utilities
-        nix-utilities
-        shell-utilities
-        (lib.optionals isDarwin (fonts ++ remarkable-utilities))
-      ];
+    packages = let
+      inherit (pkgs)
+        dogdns fd gawk ghcid git haskell-language-server iosevka nix-diff
+        nix-prefetch nixfmt rage restream ripgrep rnix-lsp watch;
+      fonts = [ iosevka ];
+      haskell-utilities = [ ghcid haskell-language-server ];
+      nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
+      remarkable-utilities = [ restream ];
+      shell-utilities = [ dogdns fd gawk git rage ripgrep watch ];
+    in builtins.concatLists [
+      haskell-utilities
+      nix-utilities
+      shell-utilities
+      (lib.optionals isDarwin (fonts ++ remarkable-utilities))
+    ];
 
     file = lib.optionalAttrs isDarwin feeds // {
       ".ghci".source = "${dotfiles}/ghci/.ghci";
@@ -91,23 +90,32 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
   };
 
   programs = {
+    bat.enable = true;
     direnv.enable = true;
-    gpg.enable = true;
-    htop.enable = true;
-    neovim.enable = true;
-    tmux.enable = true;
-    skim.enable = true;
-    skim.defaultOptions = [ "-m" "--color=bw" ];
     emacs.enable = true;
     emacs.package = pkgs.my-emacs;
+    gpg.enable = true;
+    htop.enable = true;
+    jq.enable = true;
+    neovim.enable = true;
+    skim.defaultOptions = [ "-m" "--color=bw" ];
+    skim.enable = true;
+    tmux.enable = true;
 
     bash = {
       enable = !isDarwin;
       inherit shellAliases;
-      initExtra = ''
+      initExtra = let
+        set-prompt-to = cmd:
+          ''
+            " \C-b\C-k \C-u`${cmd}`\e\C-e\er\C-a\C-y\C-h\C-e\e \C-y\ey\C-x\C-x\C-f"'';
+        bind-key = kbd: val: ''
+          bind -m emacs-standard '"\${kbd}": ${val}'
+        '';
+      in ''
         skim-projects () {
           local proj="$(${skim-cmds.projects})"
-          echo ${tm "$proj"}
+          [ "" != "$proj" ] && echo ${tm "$proj"}
         }
         skim-files () {
           echo $(${skim-cmds.files})
@@ -115,9 +123,9 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         skim-history () {
           echo $(${skim-cmds.history})
         }
-        bind -m emacs-standard '"\C-o": " \C-b\C-k \C-u`skim-projects`\e\C-e\er\C-a\C-y\C-h\C-e\e \C-y\ey\C-x\C-x\C-f"'
-        bind -m emacs-standard '"\C-t": " \C-b\C-k \C-u`skim-files`\e\C-e\er\C-a\C-y\C-h\C-e\e \C-y\ey\C-x\C-x\C-f"'
-        bind -m emacs-standard '"\C-r": " \C-b\C-k \C-u`skim-history`\e\C-e\er\C-a\C-y\C-h\C-e\e \C-y\ey\C-x\C-x\C-f"'
+        ${bind-key "C-o" (set-prompt-to "skim-projects")}
+        ${bind-key "C-t" (set-prompt-to "skim-files")}
+        ${bind-key "C-r" (set-prompt-to "skim-history")}
 
         [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ${ssh-auth-sock}
       '';
@@ -127,6 +135,12 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
       enable = isDarwin;
       inherit shellAliases;
       initExtra = let
+        mkWidget = name: body: ''
+          __${name} () {
+            ${body}
+          }
+          zle -N ${name} __${name}
+        '';
       in ''
         restart-nix-daemon () {
             sudo launchctl bootout system/org.nixos.nix-daemon \
@@ -134,19 +148,12 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         }
 
         # ----- Keybindings -----
-        __skim_history () {
-          LBUFFER="$LBUFFER$(${skim-cmds.history})"
-        }
-        zle -N skim_history __skim_history
-        __skim_files () {
-          LBUFFER="$LBUFFER$(${skim-cmds.files})"
-        }
-        zle -N skim_files __skim_files
-        __tmux_projects () {
+        ${mkWidget "skim_history" "LBUFFER=$LBUFFER$(${skim-cmds.history})"}
+        ${mkWidget "skim_files" "LBUFFER=$LBUFFER$(${skim-cmds.files})"}
+        ${mkWidget "tmux_projects" ''
           local proj="$(${skim-cmds.projects})"
           [ "" != "$proj" ] && LBUFFER="${tm "$proj"}"
-        }
-        zle -N tmux_projects __tmux_projects
+        ''}
         bindkey '^r' skim_history
         bindkey '^t' skim_files
         bindkey '^o' tmux_projects
