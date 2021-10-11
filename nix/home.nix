@@ -104,6 +104,8 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
     emacs.enable = true;
     emacs.package = pkgs.my-emacs;
     gpg.enable = true;
+    gpg.settings.enable-ssh-support = true;
+    gpg.settings.allow-loopback-entry = true;
     htop.enable = true;
     jq.enable = true;
     neovim.enable = true;
