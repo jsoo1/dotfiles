@@ -124,6 +124,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
     bash = {
       enable = true;
       inherit sessionVariables shellAliases;
+      enableAutojump = true;
       initExtra = let
         set-prompt-to = cmd:
           ''
