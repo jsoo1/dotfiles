@@ -149,7 +149,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         PROMPT_COMMAND=prompt_command
 
         PS1="${
-          (if !isDarwin then bold else lib.id) "\\u@\\h \\w$GIT_STATUS $ "
+          (if !isDarwin then bold else lib.id) "\\u@\\h \\w\\$GIT_STATUS $ "
         }"
       '';
     };
