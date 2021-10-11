@@ -140,15 +140,12 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ${ssh-auth-sock}
 
         function prompt_command {
-          # Check if we are inside a git repository
           if git status > /dev/null 2>&1; then
-              # Only get the name of the branch
               export GIT_STATUS=$(git branch | awk '/^\*/ { $1=""; print $0 }')
           else
               export GIT_STATUS=""
           fi
         }
-        # This function gets called every time PS1 is shown
         PROMPT_COMMAND=prompt_command
 
         PS1="${
