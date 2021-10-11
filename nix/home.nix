@@ -92,6 +92,8 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
   programs = {
     bat.enable = true;
     direnv.enable = true;
+    direnv.enableZshIntegration = isDarwin;
+    direnv.enableBashIntegration = !isDarwin;
     emacs.enable = true;
     emacs.package = pkgs.my-emacs;
     gpg.enable = true;
