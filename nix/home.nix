@@ -139,7 +139,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
           # Check if we are inside a git repository
           if git status > /dev/null 2>&1; then
               # Only get the name of the branch
-              export GIT_STATUS=$(git status | grep 'On branch' | cut -b 10-)
+              export GIT_STATUS=$(git branch | awk '/^\*/ { $1=""; print $0 }')
           else
               export GIT_STATUS=""
           fi
