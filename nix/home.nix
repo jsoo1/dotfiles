@@ -66,11 +66,11 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
 
     packages = let
       inherit (pkgs)
-        bash dogdns fd gawk ghcid git haskell-language-server iosevka nix-diff
-        nix-prefetch nixfmt rage restream ripgrep rnix-lsp watch;
+        bashInteractive dogdns fd gawk ghcid git haskell-language-server iosevka
+        nix-diff nix-prefetch nixfmt rage restream ripgrep rnix-lsp watch;
       fonts = [ iosevka ];
       haskell-utilities = [ ghcid haskell-language-server ];
-      macos-quirks = [ bash ];
+      macos-quirks = [ bashInteractive ];
       nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
       remarkable-utilities = [ restream ];
       shell-utilities = [ dogdns fd gawk git rage ripgrep watch ];
@@ -93,8 +93,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
   programs = {
     bat.enable = true;
     direnv.enable = true;
-    direnv.enableZshIntegration = isDarwin;
-    direnv.enableBashIntegration = !isDarwin;
+    direnv.enableBashIntegration = true;
     emacs.enable = true;
     emacs.package = pkgs.my-emacs;
     gpg.enable = true;
@@ -106,7 +105,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
     tmux.enable = true;
 
     bash = {
-      enable = !isDarwin;
+      enable = true;
       inherit shellAliases;
       initExtra = let
         set-prompt-to = cmd:
@@ -117,7 +116,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         '';
       in ''
         # Keybindings
-        skim-projects () {
+        tmux-projects () {
           local proj="$(${skim-cmds.projects})"
           [ "" != "$proj" ] && echo ${tm "$proj"}
         }
@@ -127,41 +126,13 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         skim-history () {
           echo $(${skim-cmds.history})
         }
-        ${bind-key "C-o" (set-prompt-to "skim-projects")}
+        ${bind-key "C-o" (set-prompt-to "tmux-projects")}
         ${bind-key "C-t" (set-prompt-to "skim-files")}
         ${bind-key "C-r" (set-prompt-to "skim-history")}
+        bind -r '\ec'
 
         # Git support
         [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ${ssh-auth-sock}
-      '';
-    };
-
-    zsh = {
-      enable = isDarwin;
-      inherit shellAliases;
-      initExtra = let
-        mkWidget = name: body: ''
-          __${name} () {
-            ${body}
-          }
-          zle -N ${name} __${name}
-        '';
-      in ''
-        restart-nix-daemon () {
-            sudo launchctl bootout system/org.nixos.nix-daemon \
-                && sudo launchctl load /Library/LaunchDaemons/org.nixos.nix-daemon.plist
-        }
-
-        # ----- Keybindings -----
-        ${mkWidget "skim_history" "LBUFFER=$LBUFFER$(${skim-cmds.history})"}
-        ${mkWidget "skim_files" "LBUFFER=$LBUFFER$(${skim-cmds.files})"}
-        ${mkWidget "tmux_projects" ''
-          local proj="$(${skim-cmds.projects})"
-          [ "" != "$proj" ] && LBUFFER="${tm "$proj"}"
-        ''}
-        bindkey '^r' skim_history
-        bindkey '^t' skim_files
-        bindkey '^o' tmux_projects
       '';
     };
   };
