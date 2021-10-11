@@ -45,6 +45,18 @@ let
     '';
   };
 
+  services.gpg-agent = {
+    enable = true;
+    extraConfig = ''
+      allow-emacs-pinentry
+      allow-loopback-entry
+    '';
+    enableSshSupport = true;
+    enableExtraSocket = true;
+    verbose = true;
+    pinentryFlavor = "curses";
+  };
+
   systemd.user.services.emacs = {
     Unit.Description = "Emacs Daemon";
     Unit.Documentation = "man:emacs(1)";
@@ -60,7 +72,7 @@ let
     $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/nix,.emacs.d}/init.el
   '';
 
-in lib.optionalAttrs (!isDarwin) { inherit systemd; } // {
+in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
   home = lib.optionalAttrs isDarwin { inherit activation; } // {
     extraOutputsToInstall = [ "doc" ];
 
@@ -99,8 +111,6 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd; } // {
     emacs.enable = true;
     emacs.package = pkgs.my-emacs;
     gpg.enable = true;
-    gpg.settings.enable-ssh-support = true;
-    gpg.settings.allow-loopback-entry = true;
     htop.enable = true;
     jq.enable = true;
     neovim.enable = true;
