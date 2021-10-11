@@ -114,6 +114,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         bind-key = kbd: val: ''
           bind -m emacs-standard '"\${kbd}": ${val}'
         '';
+        bold = text: "\\033[1m${text}\\033[0m";
       in ''
         # Keybindings
         tmux-projects () {
@@ -147,7 +148,9 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         # This function gets called every time PS1 is shown
         PROMPT_COMMAND=prompt_command
 
-        PS1="\u@\h \w\$GIT_STATUS $ "
+        PS1="${
+          (if !isDarwin then bold else lib.id) "\\u@\\h \\w$GIT_STATUS $ "
+        }"
       '';
     };
   };
