@@ -127,7 +127,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         bind-key = kbd: val: ''
           bind -m emacs-standard '"\${kbd}": ${val}'
         '';
-        bold = text: "\\033[1m${text}\\033[0m";
+        bold = text: "\\[\\033[1m\\]${text}\\[\\033[0m\\]";
         fmt = if !isDarwin then bold else lib.id;
       in ''
         # Keybindings
