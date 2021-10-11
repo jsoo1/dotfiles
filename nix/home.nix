@@ -23,6 +23,10 @@ let
     in ''
       tmux new-session -A -s $(basename "${dir}" | tr '.' '-') -c "${dir}" ${emacs-cmd} ${dir}'';
 
+  sessionVariables = {
+    EDITOR = em;
+    ALTERNATE_EDITOR = "nvim";
+  };
   shellAliases = lib.optionalAttrs isDarwin { inherit hd; } // {
     inherit em;
     tm = tm "$PWD";
@@ -119,7 +123,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
 
     bash = {
       enable = true;
-      inherit shellAliases;
+      inherit sessionVariables shellAliases;
       initExtra = let
         set-prompt-to = cmd:
           ''
