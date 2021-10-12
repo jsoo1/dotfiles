@@ -132,8 +132,10 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         bind-key = kbd: val: ''
           bind -m emacs-standard '"\${kbd}": ${val}'
         '';
-        bold = text: "\\[\\033[1m\\]${text}\\[\\033[0m\\]";
-        fmt = if !isDarwin then bold else lib.id;
+        bold = text: "\\[\\033[0;1m\\]${text}\\[\\033[0m\\]";
+        red = text: "\\[\\033[0;1;31m\\]${text}\\[\\033[0m\\]";
+        yellow = text: "\\[\\033[0;33m\\]${text}\\[\\033[0m\\]";
+        fmt = style: if !isDarwin then style else lib.id;
       in ''
         # Keybindings
         tmux-projects () {
@@ -164,7 +166,9 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         }
         PROMPT_COMMAND=prompt_command
 
-        PS1="${fmt "\\u@\\h \\w\\$GIT_STATUS $ "}"
+        PS1="${fmt bold "\\u@"}${fmt red "\\h"} \\w${
+          fmt yellow "\\$GIT_STATUS"
+        } ${fmt bold "$"} "
       '';
     };
   };
