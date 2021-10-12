@@ -104,7 +104,7 @@
                   "~/dotfiles/emacs/"))
 
 ;; Pinentry
-(setf epg-pinentry-mode 'loopback)
+(setf epa-pinentry-mode 'loopback)
 
 ;; Color setup
 (defvar base03  "#002b36" "Theme base03.")
@@ -388,6 +388,7 @@
    (haskell-mode-stylish-haskell-args . ("--ghc-opt" "TypeApplications"))
    (haskell-stylish-on-save . t)
    (haskell-stylish-on-save . nil)
+   (projectile-compilation-command . "home-manager switch -f ~/dotfiles/nix/home.nix")
    (projectile-compilation-command . "cabal new-build")
    (projectile-compilation-command . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix ")
    (haskell-process-wrapper-function
@@ -1527,7 +1528,7 @@ respectively."
   "i" 'my-insert-map
   "j" 'my-jump-map
   "o" 'my-org-map
-  "p" 'my-projectile-map
+  "p" 'my-project-map
   "q" 'my-quit-map
   "s" 'my-search-map
   "t" 'my-toggle-map
@@ -1778,7 +1779,7 @@ respectively."
   (let* ((counsel-projectile-switch-project-action #'find-file-in-project-tab))
     (counsel-projectile-switch-project)))
 
-(define-prefix-keymap my-projectile-map
+(define-prefix-keymap my-project-map
   "my projectile keybindings"
   "a" counsel-projectile-org-agenda
   "b" counsel-projectile-switch-to-buffer
