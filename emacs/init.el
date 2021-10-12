@@ -615,7 +615,6 @@
 (make-thread
  (lambda () (setq org-agenda-files
                   (append
-                   '("~/TODOs.org")
                    (directory-files-recursively "~/dotfiles" "TODOs\\.org$" nil t)
                    (directory-files-recursively "~/projects" "TODOs\\.org$" nil t))))
  "get-org-files")
