@@ -159,17 +159,12 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         # Git stuff
         [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ${ssh-auth-sock}
 
-        function prompt_command {
-          if git status > /dev/null 2>&1; then
-              export GIT_STATUS=$(git branch | awk '/^\*/ { $1=""; print $0 }')
-          else
-              export GIT_STATUS=""
-          fi
+        function curr_branch_or_ref {
+          (git branch 2>/dev/null | awk '/^\*/ { $1=""; print $0 }') || echo ""
         }
-        PROMPT_COMMAND=prompt_command
 
         PS1="${fmt bold "\\u@"}${fmt red "\\h"} \\w${
-          fmt yellow "\\$GIT_STATUS"
+          fmt yellow "\\$(curr_branch_or_ref)"
         } $ "
       '';
     };
