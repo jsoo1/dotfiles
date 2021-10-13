@@ -160,13 +160,11 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         # Git stuff
         [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ${ssh-auth-sock}
 
-        function curr_branch_or_ref {
+        function _cbr {
           (git branch 2>/dev/null | awk '/^\*/ { $1=""; print $0 }') || echo ""
         }
 
-        PS1="${fmt bold "\\u@"}${fmt red "\\h"} \\w${
-          fmt yellow "\\$(curr_branch_or_ref)"
-        } $ "
+        PS1="${fmt bold "\\u@"}${fmt red "\\h"} \\w${fmt yellow "\\$(_cbr)"} $ "
       '';
     };
   };
