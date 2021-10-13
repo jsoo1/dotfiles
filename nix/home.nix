@@ -126,6 +126,8 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
     bash = {
       enable = true;
       inherit sessionVariables shellAliases;
+      historyControl = [ "ignoredups" "ignorespace" ];
+      historyIgnore = [ "ls" "cd" "tmux" ];
       enableAutojump = true;
       initExtra = let
         set-prompt-to = cmd:
