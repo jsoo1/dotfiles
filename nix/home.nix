@@ -90,7 +90,8 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
       macos-quirks = [ bashInteractive ];
       nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
       remarkable-utilities = [ restream ];
-      shell-utilities = [ bashCompletion dogdns fd gawk git rage watch ];
+      shell-utilities =
+        [ bashCompletion dogdns fd gawk git rage ripgrep watch ];
       socket-utilities = [
         libressl # see "nc" in extraOutputsToInstall
         socat
