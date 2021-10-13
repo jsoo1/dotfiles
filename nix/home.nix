@@ -86,7 +86,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         restream ripgrep rnix-lsp rr watch;
       fonts = [ iosevka ];
       haskell-utilities = [ ghcid haskell-language-server ];
-      c-utilities = [ gdb rr ];
+      c-utilities = [ gdb ] ++ lib.optional (!isDarwin) rr;
       macos-quirks = [ bashInteractive ];
       nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
       remarkable-utilities = [ restream ];
@@ -109,7 +109,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
     };
   };
 
-  programs = {
+  programs = lib.optionalAttrs isDarwin { autojump.enable = true; } // {
     bat.enable = true;
     direnv.enable = true;
     direnv.enableBashIntegration = true;
@@ -123,12 +123,11 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
     skim.enable = true;
     tmux.enable = true;
 
-    bash = {
+    bash = lib.optionalAttrs (!isDarwin) { enableAutojump = true; } // {
       enable = true;
       inherit sessionVariables shellAliases;
       historyControl = [ "ignoredups" "ignorespace" ];
       historyIgnore = [ "ls" "cd" "tmux" ];
-      enableAutojump = true;
       initExtra = let
         set-prompt-to = cmd:
           ''
