@@ -77,26 +77,30 @@ let
 
 in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
   home = lib.optionalAttrs isDarwin { inherit activation; } // {
-    extraOutputsToInstall = [ "doc" ];
+    extraOutputsToInstall = [ "doc" "nc" ];
 
     packages = let
       inherit (pkgs)
         bashCompletion bashInteractive dogdns fd gawk gdb ghcid git
-        haskell-language-server iosevka nix-diff nix-prefetch nixfmt rage
-        restream ripgrep rnix-lsp rr watch;
+        haskell-language-server iosevka libressl nix-diff nix-prefetch nixfmt
+        rage restream ripgrep rnix-lsp rr socat watch;
       fonts = [ iosevka ];
       haskell-utilities = [ ghcid haskell-language-server ];
       c-utilities = [ gdb ] ++ lib.optional (!isDarwin) rr;
       macos-quirks = [ bashInteractive ];
       nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
       remarkable-utilities = [ restream ];
-      shell-utilities =
-        [ bashCompletion dogdns fd gawk git rage ripgrep watch ];
+      shell-utilities = [ bashCompletion dogdns fd gawk git rage watch ];
+      socket-utilities = [
+        libressl # see "nc" in extraOutputsToInstall
+        socat
+      ];
     in builtins.concatLists [
       haskell-utilities
       c-utilities
       nix-utilities
       shell-utilities
+      socket-utilities
       (lib.optionals isDarwin (fonts ++ macos-quirks ++ remarkable-utilities))
     ];
 
