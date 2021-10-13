@@ -81,11 +81,12 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
 
     packages = let
       inherit (pkgs)
-        bashCompletion bashInteractive dogdns fd gawk ghcid git
+        bashCompletion bashInteractive dogdns fd gawk gdb ghcid git
         haskell-language-server iosevka nix-diff nix-prefetch nixfmt rage
-        restream ripgrep rnix-lsp watch;
+        restream ripgrep rnix-lsp rr watch;
       fonts = [ iosevka ];
       haskell-utilities = [ ghcid haskell-language-server ];
+      c-utilities = [ gdb rr ];
       macos-quirks = [ bashInteractive ];
       nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
       remarkable-utilities = [ restream ];
@@ -93,6 +94,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         [ bashCompletion dogdns fd gawk git rage ripgrep watch ];
     in builtins.concatLists [
       haskell-utilities
+      c-utilities
       nix-utilities
       shell-utilities
       (lib.optionals isDarwin (fonts ++ macos-quirks ++ remarkable-utilities))
@@ -168,7 +170,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
 
         PS1="${fmt bold "\\u@"}${fmt red "\\h"} \\w${
           fmt yellow "\\$GIT_STATUS"
-        } ${fmt bold "$"} "
+        } $ "
       '';
     };
   };
