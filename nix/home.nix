@@ -15,7 +15,7 @@ let
 
   ssh-auth-sock = "${home}/.ssh/auth_sock";
 
-  hd = "ssh hd 'rm $(gpgconf --list-dirs agent-socket)' && ssh hd";
+  hd = "ssh -q hd 'rm $(gpgconf --list-dirs agent-socket)' && ssh hd";
   em =
     "emacsclient -t ${if !isDarwin then "--socket-name=${username}" else ""}";
   tm = dir:
