@@ -110,7 +110,10 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
       ".haskeline".source = "${dotfiles}/ghci/.haskeline";
       ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
       ".vimrc".source = "${dotfiles}/minimal/.vimrc";
-      ".tmux.conf".source = "${dotfiles}/minimal/.tmux.conf";
+      ".tmux.conf".source = if isDarwin then
+        "${dotfiles}/tmux/.tmux.conf"
+      else
+        "${dotfiles}/minimal/.tmux.conf";
     };
   };
 
