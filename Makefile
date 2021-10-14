@@ -53,7 +53,6 @@ SYMLINKS = \
 	$(HOME)/.inputrc \
 	$(XDG_HOME)/shepherd/init.scm \
 	$(HOME)/.tmux.conf \
-	$(HOME)/.tmux/tmuxline.conf \
 	$(HOME)/.xsession \
 	$(XDG_HOME)/zathura/zathurarc
 
@@ -151,9 +150,6 @@ $(XDG_HOME)/shepherd/init.scm: | $(XDG_HOME)/shepherd ## User shepherd configura
 
 $(HOME)/.tmux.conf: | $(HOME) ## Tmux configuration
 	$(ln) $(PWD)/tmux/.tmux.conf $@
-
-$(HOME)/.tmux/tmuxline.conf: | $(HOME)/.tmux ## Tmux status line configuration
-	$(ln) $(PWD)/tmux/tmuxline.conf $@
 
 $(HOME)/.xsession: | $(HOME) ## Loaded by gdm and other DMs on login
 	$(ln) $(PWD)/xmonad/.xsession $@
