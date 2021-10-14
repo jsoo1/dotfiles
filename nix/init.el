@@ -1328,6 +1328,7 @@ when send commands with redis protocol."
         help-mode
         helpful-mode
         Man-mode
+        magit-process-mode
         woman-mode
         reb-mode
         compilation-mode))
