@@ -148,6 +148,13 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         yellow = text: "\\[\\033[0;33m\\]${text}\\[\\033[0m\\]";
         fmt = style: if !isDarwin then style else lib.id;
       in ''
+        ${if isDarwin then ''
+          restart-nix-daemon () {
+                      sudo launchctl bootout system/org.nixos.nix-daemon \
+                          && sudo launchctl load /Library/LaunchDaemons/org.nixos.nix-daemon.plist
+          }'' else
+          ""}
+
         # Keybindings
         tmux-projects () {
           local proj="$(${skim-cmds.projects})"
