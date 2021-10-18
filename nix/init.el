@@ -1311,27 +1311,26 @@ when send commands with redis protocol."
 
 ;; Popper
 (popper-mode 1)
-(setq popper-reference-buffers
-      '("\\*Messages\\*"
-        "Output\\*$"
-        "\\*Async Shell Command\\*")
-      popper-group-function 'popper-group-by-projectile
-      popper-reference-modes
-      '(display-time-world-mode
-        eshell-mode
+(setq popper-group-function 'popper-group-by-project
+      popper-reference-buffers
+      '("\\*Async Shell Command\\*"
+        "*\\*.*compile\\*$" compilation-mode
+        display-time-world-mode
+        "^\\*eshell.*\\*$" eshell-mode
         elfeed-search-mode
         grep-mode
-        ivy-occur-mode
-        org-agenda-mode
-        proced
-        process-list
         help-mode
         helpful-mode
-        Man-mode
+        "^\\*ivy-occur.*\\*$" ivy-occur-mode
+        org-agenda-mode
+        "^\\*Proced\\*$" proced
+        "^\\*Process List\\*$" process-list
         magit-process-mode
-        woman-mode
+        Man-mode
+        "\\*Messages\\*"
+        "Output\\*$"
         reb-mode
-        compilation-mode))
+        woman-mode))
 
 (defun counsel-popper-buried-popups ()
   "Ivy search for popper buried popups."
