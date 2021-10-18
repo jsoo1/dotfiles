@@ -10,7 +10,7 @@
  ((gnu packages fonts)
   #:select (font-adobe-source-code-pro
             font-iosevka
-            font-tamzen))
+            font-terminus))
  ((gnu packages fontutils) #:select (fontconfig))
  ((gnu packages gl) #:select (mesa))
  ((gnu packages gnupg) #:select (gnupg))
@@ -136,9 +136,9 @@ EndSection\n")
         (append '#$(xorg-configuration-server-arguments xorg-conf)
                 (cdr (command-line)))))))
 
-(define tamzen-psf-font
+(define terminus-psf-font
   (file-append
-   font-tamzen "/share/kbd/consolefonts/TamzenForPowerline10x20.psf"))
+   font-terminus "/share/consolefonts/ter-v32n.psf.gz"))
 
 (define my-services
   (cons*
@@ -219,7 +219,7 @@ EndSection\n")
       (console-font-service-type
        s =>
        (map
-        (match-lambda ((tty . font) `(,tty . ,tamzen-psf-font)))
+        (match-lambda ((tty . font) `(,tty . ,terminus-psf-font)))
         s)))))
 
 (operating-system
