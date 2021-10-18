@@ -1693,6 +1693,7 @@ respectively."
   "my file keybindings"
   "f" counsel-find-file
   "l" find-file-literally
+  "m" magit-find-file
   "r" counsel-buffer-or-recentf
   "s" save-buffer
   "t" find-file-other-tab
