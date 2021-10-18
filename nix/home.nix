@@ -83,7 +83,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
       inherit (pkgs)
         bashCompletion bashInteractive dogdns fd gawk gdb ghcid git
         haskell-language-server iosevka libressl nix-diff nix-prefetch nixfmt
-        rage restream ripgrep rnix-lsp rr socat watch;
+        rage restream ripgrep rnix-lsp rr socat terraform-lsp watch;
       fonts = [ iosevka ];
       haskell-utilities = [ ghcid haskell-language-server ];
       c-utilities = [ gdb ] ++ lib.optional (!isDarwin) rr;
@@ -96,12 +96,14 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
         libressl # see "nc" in extraOutputsToInstall
         socat
       ];
+      terraform-utilities = [ terraform-lsp ];
     in builtins.concatLists [
       haskell-utilities
       c-utilities
       nix-utilities
       shell-utilities
       socket-utilities
+      terraform-utilities
       (lib.optionals isDarwin (fonts ++ macos-quirks ++ remarkable-utilities))
     ];
 

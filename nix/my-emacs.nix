@@ -44,6 +44,7 @@ let
       restclient
       shackle
       systemd
+      terraform-mode
       tmux-pane
       vimrc-mode
       uuidgen
