@@ -397,9 +397,9 @@
    (haskell-mode-stylish-haskell-args . ("--ghc-opt" "TypeApplications"))
    (haskell-stylish-on-save . t)
    (haskell-stylish-on-save . nil)
-   (projectile-compilation-command . "home-manager switch -f ~/dotfiles/nix/home.nix")
-   (projectile-compilation-command . "cabal new-build")
-   (projectile-compilation-command . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix ")
+   (projectile-project-compilation-cmd . "home-manager switch -f ~/dotfiles/nix/home.nix")
+   (projectile-project-compilation-cmd . "cabal new-build")
+   (projectile-project-compilation-cmd . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix ")
    (haskell-process-wrapper-function
     . (lambda (argv)
         (append (list "env" "NO_COLOR=true") argv)))
@@ -412,9 +412,9 @@
    ;; Ocaml-specific
    (smie-indent-basic . 2)
    ;; Rust-specific
-   (projectile-run-command . "cargo run")
-   (projectile-compilation-command . "cargo build")
-   (projectile-test-command . "cargo test")
+   (projectile-project-run-cmd . "cargo run")
+   (projectile-project-compilation-cmd . "cargo build")
+   (projectile-project-test-command . "cargo test")
    ;; Guix projects
    (projectile-compilation-command . "guix build -f guix.scm")
    ;; Eglot-specific
