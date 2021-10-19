@@ -60,82 +60,73 @@ EndSection\n")
 
 (define my-services
   (cons*
-    (bluetooth-service #:auto-enable? #t)
-    (service alsa-service-type)
-    (service cups-pk-helper-service-type)
-    (service cups-service-type
-             (cups-configuration
-              (web-interface? #t)
-              (extensions
-               `(,cups-filters ,hplip-minimal))
-              (browsing? #t)))
-    (service dnsmasq-service-type
-             (dnsmasq-configuration
-              (servers '("1.1.1.1"))))
-    (service docker-service-type)
-    (dbus-service)
-    (service elogind-service-type)
-    fontconfig-file-system-service
-    (service nix-service-type
-             (nix-configuration
-              (package nix)
-              (extra-config '("keep-derivations = true"
-                              "keep-outputs = true"))))
-    (service kmscon-service-type
-             (kmscon-configuration
-              (virtual-terminal "tty8")
-              ;; (scrollback "100000")
-              ;; (font-name "'Fantasque Sans Mono'")
-              ;; (font-size "15")
-              ;; (xkb-layout "us")
-              ;; (xkb-variant "")
-              ;; (xkb-options "ctrl:nocaps")
-              ))
-    (service mingetty-service-type (mingetty-configuration
-                                    (tty "tty7")))
-    (service mpd-service-type (mpd-configuration
-                               (user "john")))
-    (service network-manager-service-type)
-    (service ntp-service-type)
-    (service openssh-service-type
-             (openssh-configuration
-              (challenge-response-authentication? #f)
-              (password-authentication? #f)))
-    polkit-wheel-service
-    (service tlp-service-type
-             (tlp-configuration
-              (tlp-default-mode "BAT")
-              (usb-autosuspend? #f)))
-    (service gpm-service-type (gpm-configuration))
-    (service qemu-binfmt-service-type
-             (qemu-binfmt-configuration
-              (platforms
-               (lookup-qemu-platforms "arm" "aarch64" "mips64el"))))
-    (udisks-service)
-    (service usb-modeswitch-service-type)
-    (service wpa-supplicant-service-type)
+   (bluetooth-service #:auto-enable? #t)
+   (service alsa-service-type)
+   (service cups-pk-helper-service-type)
+   (service cups-service-type (cups-configuration
+                               (web-interface? #t)
+                               (extensions
+                                `(,cups-filters ,hplip-minimal))
+                               (browsing? #t)))
+   (service dnsmasq-service-type (dnsmasq-configuration
+                                  (servers '("1.1.1.1"))))
+   (service docker-service-type)
+   (dbus-service)
+   (service elogind-service-type)
+   fontconfig-file-system-service
+   (service nix-service-type (nix-configuration
+                              (package nix)
+                              (extra-config '("keep-derivations = true"
+                                              "keep-outputs = true"))))
+   (service kmscon-service-type (kmscon-configuration
+                                 (virtual-terminal "tty8")
+                                 ;; (scrollback "100000")
+                                 ;; (font-name "'Fantasque Sans Mono'")
+                                 ;; (font-size "15")
+                                 ;; (xkb-layout "us")
+                                 ;; (xkb-variant "")
+                                 ;; (xkb-options "ctrl:nocaps")
+                                 ))
+   (service mingetty-service-type (mingetty-configuration
+                                   (tty "tty7")))
+   (service mpd-service-type (mpd-configuration
+                              (user "john")))
+   (service network-manager-service-type)
+   (service ntp-service-type)
+   (service openssh-service-type (openssh-configuration
+                                  (challenge-response-authentication? #f)
+                                  (password-authentication? #f)))
+   polkit-wheel-service
+   (service tlp-service-type (tlp-configuration
+                              (tlp-default-mode "BAT")
+                              (usb-autosuspend? #f)))
+   (service gpm-service-type (gpm-configuration))
+   (service qemu-binfmt-service-type (qemu-binfmt-configuration
+                                      (platforms
+                                       (lookup-qemu-platforms "arm" "aarch64" "mips64el"))))
+   (udisks-service)
+   (service usb-modeswitch-service-type)
+   (service wpa-supplicant-service-type)
 
-    (screen-locker-service slock)
-    (screen-locker-service xlockmore "xlock")
+   (screen-locker-service slock)
+   (screen-locker-service xlockmore "xlock")
 
     ;; The following is for xorg without display manager
     x11-socket-directory-service
     (modify-services %base-services
-      (udev-service-type
-       c =>
-       (udev-configuration
-        (inherit c)
-        (rules
-         `(,light ; Use light without sudo
-           ,(udev-rule ; For xorg sans display manager (gentoo wiki)
-             "99-dev-input-group.rules"
-             "SUBSYSTEM==\"input\", ACTION==\"add\", GROUP=\"input\"")
-           ,@(udev-configuration-rules c)))))
-      (console-font-service-type
-       s =>
-       (map
-        (match-lambda ((tty . font) `(,tty . ,terminus-psf-font)))
-        s)))))
+      (udev-service-type c =>
+                         (udev-configuration
+                          (inherit c)
+                          (rules
+                           `(,light ; Use light without sudo
+                             ,(udev-rule ; For xorg sans display manager (gentoo wiki)
+                               "99-dev-input-group.rules"
+                               "SUBSYSTEM==\"input\", ACTION==\"add\", GROUP=\"input\"")
+                             ,@(udev-configuration-rules c)))))
+      (console-font-service-type s =>
+                                 (map
+                                  (match-lambda ((tty . font) `(,tty . ,terminus-psf-font)))
+                                  s)))))
 
 (operating-system
   (host-name "ecenter")
