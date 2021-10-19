@@ -934,7 +934,12 @@ _]_: toggle use of default sink  _n_: control select sink by name
 ;; (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
 (define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
 (add-hook 'haskell-mode-hook #'make-standard-paragraph-rules)
-(add-hook 'haskell-mode-hook #'eglot-ensure)
+;; (add-hook 'haskell-mode-hook #'eglot-ensure)
+(defvar eww-hoogle-url "https://hoogle.haskell.org")
+(defun eww-hoogle (query)
+  (interactive "sQuery: ")
+  (eww (format "%s/?hoogle=%s" eww-hoogle-url (url-encode-url query))))
+(define-key haskell-mode-map (kbd "C-c C-h") #'eww-hoogle)
 
 ;; ;; Agda mode
 ;; (load-library (let ((coding-system-for-read 'utf-8))
