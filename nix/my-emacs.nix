@@ -8,7 +8,6 @@ let
       project
       seq
       sml-mode
-      undo-tree
       xclip
       xref
     ];
@@ -25,15 +24,7 @@ let
       dired-git
       editorconfig
       emms
-      evil
-      evil-anzu
-      evil-collection
-      evil-commentary
-      evil-escape
-      evil-leader
-      evil-org
       evil-replace-with-register
-      evil-surround
       exec-path-from-shell
       graphql-mode
       hydra
@@ -78,6 +69,14 @@ let
       envrc
       eredis
       eshell-syntax-highlighting
+      evil
+      evil-anzu
+      evil-collection
+      evil-commentary
+      evil-escape
+      evil-leader
+      evil-org
+      evil-surround
       f
       fill-column-indicator
       fish-completion
@@ -118,18 +117,10 @@ let
   emacs-overlay = (import (builtins.fetchGit {
     url = "https://github.com/nix-community/emacs-overlay";
     ref = "master";
-    # 2021-10-18
-    rev = "c60e01cf4e8d5cb2cc48c6a0ac1138dd57ad7bc7";
+    rev = "2b083adda6867e7c3812c84a10c04d1476c1ac81";
   }));
   my-emacs-overlay = (self: super: {
-    my-emacs = (super.emacsGit-nox.overrideAttrs (_: {
-      src = super.fetchFromSavannah {
-        repo = "emacs";
-        # emacs-28 branch on 2021-10-19
-        rev = "d742cc3c204ba0adeb9600d236a0e454e35a42ff";
-        sha256 = "0hs9qf8fldpqzyw3xcyc1sxaigp6w1f81xh0p5bi5qnvzj8flchn";
-      };
-    })).pkgs.emacsWithPackages (epkgs:
+    my-emacs = super.emacs-nox.pkgs.emacsWithPackages (epkgs:
       (builtins.concatMap (f: f epkgs) [ elpa manual melpa melpaStable ]));
   });
 in [ emacs-overlay my-emacs-overlay ]
