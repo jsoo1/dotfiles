@@ -1258,6 +1258,11 @@ when send commands with redis protocol."
 (require 'ediprolog)
 (add-to-list 'auto-mode-alist '("\\.pro\\'" . prolog-mode))
 
+;; Terraform
+(require 'terraform-mode)
+(add-hook 'terraform-mode-hook #'eglot-ensure)
+(define-key terraform-mode-map (kbd ",") 'my-eglot-mode-map)
+
 ;; C
 (evil-define-key 'normal c-mode-map (kbd ",") 'my-eglot-mode-map)
 (add-hook 'c-mode-hook #'eglot-ensure)
