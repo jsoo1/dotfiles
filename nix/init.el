@@ -101,6 +101,8 @@
 (require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
 
+(load-file (expand-file-name "local.el" user-emacs-directory))
+
 ;; Tramp
 (with-eval-after-load 'tramp
   (setq tramp-remote-path `(tramp-own-remote-path
