@@ -1233,9 +1233,6 @@ when send commands with redis protocol."
 ;; CSV
 (require 'csv-mode)
 
-;; CMake
-(require 'cmake-mode)
-
 ;; ELF
 (add-to-list 'auto-mode-alist '("\\.\\(?:a\\|so\\)\\'" . elf-mode))
 

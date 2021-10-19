@@ -55,7 +55,6 @@ let
       anzu
       base16-theme
       clojure-mode
-      cmake-mode
       company
       company-coq
       company-math
