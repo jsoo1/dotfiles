@@ -1,3 +1,4 @@
+:m + Prelude
 :set prompt "%s \x03BB "
 
 let abbr cmd arg = return $ ":! " ++ cmd ++ " " ++ arg
