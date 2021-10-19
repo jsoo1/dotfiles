@@ -514,8 +514,9 @@
 ;; Tmux
 (require 'tmux-pane)
 (tmux-pane-mode)
-(when (eq 'gnu/linux system-type)
-  (setenv "TMUX_TMPDIR" (xdg-runtime-dir)))
+(with-eval-after-load 'xdg
+  (when (eq 'gnu/linux system-type)
+    (setenv "TMUX_TMPDIR" (xdg-runtime-dir))))
 
 ;; Vinegar and friends
 (define-key evil-normal-state-map "-" #'dired-jump)
