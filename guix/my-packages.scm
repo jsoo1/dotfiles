@@ -2,8 +2,6 @@
 
 (define-public languages
   '("agda"
-    "agda-ial"
-    "cedille"
     "coq"
     "idris"
     "ocaml"

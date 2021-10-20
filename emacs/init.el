@@ -1160,29 +1160,6 @@ when send commands with redis protocol."
       (interactive)
       (with-current-buffer (get-buffer "*redis*") (comint-clear-buffer)))))
 
-;; Cedille
-(require 'cedille-mode)
-(define-key cedille-mode-map (kbd "C-c C-l") #'cedille-start-navigation)
-(evil-define-key 'normal cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
-(evil-define-key 'insert cedille-mode-map (kbd "C-c") (se-navi-get-keymap 'cedille-mode))
-
-(set-face-attribute
- 'cedille-type-face-df nil
- :foreground "#268bd2")
-(set-face-attribute
- 'cedille-constructor-face-df nil
- :foreground "unspecified")
-(set-face-attribute
- 'cedille-kind-face-df nil
- :foreground "red"
- :weight 'bold)
-(set-face-attribute
- 'cedille-datatype-face-df nil
- :foreground "#268bd2")
-(set-face-attribute
- 'cedille-keyword-face-df nil
- :foreground "#b58900")
-
 ;; Java
 (setf
  (alist-get 'java-mode eglot-server-programs)
