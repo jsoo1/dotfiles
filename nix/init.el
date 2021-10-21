@@ -1323,7 +1323,6 @@ when send commands with redis protocol."
 (shackle-mode)
 
 ;; Popper
-(popper-mode 1)
 (setq popper-group-function 'popper-group-by-project
       popper-reference-buffers
       '("\\*Async Shell Command\\*"
@@ -1344,6 +1343,7 @@ when send commands with redis protocol."
         "Output\\*$"
         reb-mode
         woman-mode))
+(popper-mode 1)
 
 (defun counsel-popper-buried-popups ()
   "Ivy search for popper buried popups."
