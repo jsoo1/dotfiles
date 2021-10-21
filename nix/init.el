@@ -1214,6 +1214,7 @@ when send commands with redis protocol."
 (autoload 'gfm-mode "markdown-mode"
   "Major mode for editing GitHub Flavored Markdown files" t)
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
+(add-hook 'markdown-mode-hook #'make-standard-paragraph-rules)
 
 ;; Systemd
 (add-to-list 'auto-mode-alist '("\\.timer\\'" . systemd-mode))
