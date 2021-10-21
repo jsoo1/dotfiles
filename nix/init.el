@@ -133,7 +133,7 @@
 
 ;; Grep
 (with-eval-after-load 'grep
-  (grep-apply-setting 'grep-find-command '("fd '.*' . -t f -H -x rg -nH0 ''" . 31)))
+  (grep-apply-setting 'grep-find-command '("rg --no-heading -nIH ''" . 23)))
 
 ;; Gnus
 ;; set-face-attribute does not work here, why?
