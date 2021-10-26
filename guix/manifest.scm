@@ -1,5 +1,5 @@
 (add-to-load-path (dirname (current-filename)))
-(use-modules (gnu packages) (guix profiles) (my-packages))
+(use-modules (gnu packages) (guix profiles) (my-packages) (dmenu) (xmonad))
 
 (concatenate-manifests
  `(,(specifications->manifest
@@ -19,5 +19,5 @@
       xorg-tools
       emacs-packages))
    ,(packages->manifest
-     `(,(load "../xmonad/guix.scm")
-       ,(load "../dmenu/guix.scm")))))
+     `(,my-xmonad
+       ,my-dmenu))))

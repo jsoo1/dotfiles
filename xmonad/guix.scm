@@ -1,12 +1,14 @@
-(use-modules (gnu packages wm)
-             (gnu packages xorg)
-             (guix gexp)
-             (guix git-download)
-             (guix packages)
-             (guix utils)
-             (ice-9 popen)
-             (ice-9 rdelim)
-             (ice-9 regex))
+(define-module (xmonad)
+ #:use-module (gnu packages wm)
+ #:use-module (gnu packages haskell-xyz)
+ #:use-module (gnu packages xorg)
+ #:use-module (guix gexp)
+ #:use-module (guix git-download)
+ #:use-module (guix packages)
+ #:use-module (guix utils)
+ #:use-module (ice-9 popen)
+ #:use-module (ice-9 rdelim)
+ #:use-module (ice-9 regex))
 
 (define %name "my-xmonad")
 (define %commit (read-string (open-pipe "git rev-parse HEAD" OPEN_READ)))
@@ -22,7 +24,7 @@
                      (string-match "dist" f)
                      (string-match "dist-newstyle" f))))))
 
-(define my-xmobar
+(define-public my-xmobar
   (let ((commit "release"))
     (package
       (inherit xmobar)
@@ -35,24 +37,29 @@
                (url "https://github.com/jsoo1/xmobar")
                (commit commit)))
          (sha256
-          (base32 "0yip895qfvsn2y2qc42j8klmrwczpdmhczgkavxrmnxb9lg18n05"))
+          (base32 "18zydr49rikrh2462dmsaikw9y2c41mv8ip91jmw173d143f59ir"))
          (file-name (git-file-name name version))))
+      (inputs `(("ghc-uuid" ,ghc-uuid)
+                ,@(package-inputs xmobar)))
       (arguments `(#:tests? #f ,@(package-arguments xmobar))))))
 
-(package
- (inherit xmonad)
- (name %name)
- (version %version)
- (source %local)
- (inputs
-  `(("libxpm" ,libxpm)
-    ("xmobar" ,my-xmobar)
-    ("xmonad" ,xmonad)
-    ("ghc-xmonad-contrib" ,ghc-xmonad-contrib)))
- (arguments
-  `(#:phases
-    (modify-phases %standard-phases
-      (add-after 'install 'make-static
-        (lambda* (#:key outputs #:allow-other-keys)
-          (mkdir-p (assoc-ref outputs "static"))))
-      (delete 'install-license-files)))))
+(define-public my-xmonad
+  (package
+    (inherit xmonad)
+    (name %name)
+    (version %version)
+    (source %local)
+    (inputs
+     `(("libxpm" ,libxpm)
+       ("xmobar" ,my-xmobar)
+       ("xmonad" ,xmonad)
+       ("ghc-xmonad-contrib" ,ghc-xmonad-contrib)))
+    (arguments
+     `(#:phases
+       (modify-phases %standard-phases
+         (add-after 'install 'make-static
+           (lambda* (#:key outputs #:allow-other-keys)
+             (mkdir-p (assoc-ref outputs "static"))))
+         (delete 'install-license-files))))))
+
+my-xmonad

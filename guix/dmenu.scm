@@ -1,0 +1,1 @@
+../dmenu/guix.scm
