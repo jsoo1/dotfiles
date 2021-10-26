@@ -26,3 +26,7 @@
         program = gpg
 [github]
 	user = jsoo1
+[commit]
+        gpgSign = true
+[branch]
+        autoSetupMerge = false
