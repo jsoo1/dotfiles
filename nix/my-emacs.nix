@@ -23,10 +23,12 @@ let
       dhall-mode
       dired-git
       editorconfig
+      elfeed
       emms
       evil-replace-with-register
       exec-path-from-shell
       graphql-mode
+      highlight-indent-guides
       hydra
       ibuffer-projectile
       merlin
@@ -63,7 +65,6 @@ let
       dockerfile-mode
       eglot
       elf-mode
-      elfeed
       elpher
       emmet-mode
       envrc

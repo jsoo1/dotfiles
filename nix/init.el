@@ -438,6 +438,9 @@
 (require 'eshell-syntax-highlighting)
 (eshell-syntax-highlighting-global-mode 1)
 
+;; Indentation guides
+(setq highlight-indent-guides-method 'character)
+
 ;; Helpful
 (require 'helpful)
 
@@ -1085,6 +1088,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (defvar nix-format-on-save t
   "Format the nix buffer with nixfmt before saving.")
 (add-hook 'nix-mode-hook #'eglot-ensure)
+(add-hook 'nix-mode-hook #'highlight-indent-guides-mode)
 (add-hook 'before-save-hook
           (defun my-nix-format-buffer ()
             (when (and nix-format-on-save (eq major-mode 'nix-mode))
@@ -1844,6 +1848,7 @@ respectively."
   "f" toggle-frame-fullscreen
   "h" toggle-global-hl-line
   "i" imenu-list-smart-toggle
+  "I" highlight-indent-guides-mode
   "l" toggle-truncate-lines
   "m" toggle-mode-line
   "n" (defun cycle-line-numbers ()
