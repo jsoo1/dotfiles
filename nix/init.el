@@ -440,6 +440,7 @@
 
 ;; Indentation guides
 (setq highlight-indent-guides-method 'character)
+(set-face-foreground 'highlight-indent-guides-character-face base01)
 
 ;; Helpful
 (require 'helpful)
