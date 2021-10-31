@@ -2,6 +2,7 @@
 {-# LANGUAGE LambdaCase       #-}
 {-# LANGUAGE RecordWildCards  #-}
 {-# LANGUAGE TupleSections    #-}
+{-# OPTIONS_GHC -Werror -fwarn-incomplete-record-updates #-}
 
 module Main where
 
@@ -14,10 +15,11 @@ import           Data.Function                    (on)
 import           Data.List                        (intersperse, isPrefixOf)
 import qualified Data.Map.Strict                  as Map
 import           Data.Maybe                       (listToMaybe)
+import           Data.UUID                        (UUID)
 import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
 import           System.Process                   (createPipe)
-import qualified Xmobar
+import           System.Random                    (randomIO)
 import           XMonad
 import           XMonad.Actions.CycleWS           (WSType (..), moveTo, shiftTo)
 import           XMonad.Actions.WindowBringer
@@ -36,6 +38,9 @@ import           XMonad.Util.Replace
 import           XMonad.Util.Run                  (runInTerm,
                                                    runProcessWithInput,
                                                    spawnPipe)
+import qualified Xmobar
+import qualified Xmobar.Config.Actions            as Action
+import qualified Xmobar.Config.Template.Parse              as Template
 
 
 main :: IO ()
@@ -67,7 +72,8 @@ startXmobar :: IO (STM.TQueue String, STM.TMVar Xmobar.SignalType, ThreadId)
 startXmobar = do
   xmobarQueue <- STM.newTQueueIO
   xmobarSignal <- STM.newEmptyTMVarIO
-  xmobarProc <- forkIO $ Xmobar.xmobar $ xmobarConf xmobarSignal xmobarQueue
+  conf <- xmobarConf xmobarSignal xmobarQueue
+  xmobarProc <- forkIO (Xmobar.xmobar conf)
   pure (xmobarQueue, xmobarSignal, xmobarProc)
 
 
@@ -107,11 +113,11 @@ toggleBar xmobarSignal = do
 myKeybindings :: STM.TMVar Xmobar.SignalType -> [((KeyMask, KeySym), X ())]
 myKeybindings xmobarSignal =
   [ ( ( myModMask, xK_q ), fmap lines dmenuSelectXmonad >>= \case
-        [] -> pure ()
+        []       -> pure ()
         (xmnd:_) -> restart xmnd True
     )
   , ( ( myModMask .|. shiftMask, xK_q ), fmap lines dmenuSelectSession >>= \case
-        [] -> pure ()
+        []          -> pure ()
         (session:_) -> terminateSession session
     )
   , ( ( myModMask, xK_i ), spawn "dmenu_run -F -p open" )
@@ -274,49 +280,99 @@ xmobarSegmentSep :: String
 xmobarSegmentSep =  " | "
 
 
-xmobarConf :: STM.TMVar Xmobar.SignalType -> STM.TQueue String -> Xmobar.Config
-xmobarConf xmobarSignal xmobarQueue = Xmobar.defaultConfig
-  { Xmobar.font = "xft:Iosevka:size=12:light:antialias=true"
-  , Xmobar.additionalFonts = []
-  , Xmobar.borderColor = coerce base03
-  , Xmobar.border = Xmobar.BottomB
-  , Xmobar.bgColor = "#00362b" -- Adjusted for alpha differences with transparency due to xmobar bug
-  , Xmobar.fgColor = coerce base0
-  , Xmobar.alpha = 204
-  , Xmobar.position = Xmobar.OnScreen xmobarScreenId (Xmobar.TopW Xmobar.L 100)
-  , Xmobar.textOffset = -1
-  , Xmobar.iconOffset = -1
-  , Xmobar.allDesktops = True
-  , Xmobar.lowerOnStart = True
-  , Xmobar.pickBroadest = False
-  , Xmobar.persistent = False
-  , Xmobar.hideOnStart = False
-  , Xmobar.iconRoot = "."
-  , Xmobar.commands =
-    [ Xmobar.Run (Xmobar.QueueReader xmobarQueue id "xmonadstuff")
-    , Xmobar.Run (Xmobar.DynNetwork [] 20)
-    , Xmobar.Run (Xmobar.Alsa "default" "Master"
-      [ "-t" , "<status> <volume>%"
-      , "--"
-      , "--alsactl=/home/john/.guix-profile/bin/pactl"
-      , "--on", "vol", "--onc" , coerce base0
-      , "--off", "vol", "--offc" , coerce red
-      ])
-    , Xmobar.Run (Xmobar.Date ("%F" <> xmobarSegmentSep <> "%r") "date" 10)
-    ]
-  , Xmobar.alignSep = alignSep
-  , Xmobar.template = mconcat ([" λ "] <> leftTemplate <> [ alignSep ] <> rightTemplate <> [ "  " ])
-  , Xmobar.signal = Xmobar.SignalChan (Just xmobarSignal)
-  , Xmobar.verbose = True
+queueReaderWidget :: STM.TQueue String -> UUID -> Template.RunnableWidget
+queueReaderWidget xmobarQueue i = Template.RunnableWidget
+  { Template.com = Xmobar.Run (Xmobar.QueueReader xmobarQueue id "xmonadstuff")
+  , Template.val = "xmonadstuff"
+  , Template.runnableId = i
   }
-  where
-    leftTemplate = [ "%xmonadstuff%" ]
-    rightTemplate = intersperse xmobarSegmentSep
-      [ "%dynnetwork%"
-      , xmobarAction "amixer -q set Master toggle" "1" "%alsa:default:Master%"
-      , "%date%"
-      ]
-    alignSep = "}{"
+
+
+dynNetworkWidget :: UUID -> Template.RunnableWidget
+dynNetworkWidget i = Template.RunnableWidget
+        { Template.com = Xmobar.Run (Xmobar.DynNetwork [] 20)
+        , Template.val = "dynnetwork"
+        , Template.runnableId = i
+        }
+
+alsaWidget :: UUID -> Template.RunnableWidget
+alsaWidget i = Template.RunnableWidget
+        { Template.com = Xmobar.Run
+          (Xmobar.Alsa "default" "Master"
+            [ "-t" , "<status> <volume>%"
+            , "--"
+            , "--alsactl=/home/john/.guix-profile/bin/pactl"
+            , "--on", "vol", "--onc" , coerce base0
+            , "--off", "vol", "--offc" , coerce red
+            ])
+        , Template.val = "alsa"
+        , Template.runnableId = i
+        }
+
+dateWidget :: UUID -> Template.RunnableWidget
+dateWidget i = Template.RunnableWidget
+        { Template.com = Xmobar.Run (Xmobar.Date ("%F" <> xmobarSegmentSep <> "%r") "date" 10)
+        , Template.val = "date"
+        , Template.runnableId = i
+        }
+
+xmobarConf :: STM.TMVar Xmobar.SignalType -> STM.TQueue String -> IO Xmobar.Config
+xmobarConf xmobarSignal xmobarQueue = do
+  queueReader <- queueReaderWidget xmobarQueue <$> randomIO
+  dynNetwork <- dynNetworkWidget <$> randomIO
+  alsa <- alsaWidget <$> randomIO
+  date <- dateWidget <$> randomIO
+
+  let fmt = Template.Format
+        { Template.fontIndex = 0
+        , Template.textRenderInfo = Template.TextRenderInfo
+          { Template.tColorsString = coerce base0 <> ",#00362b"
+          , Template.tBgTopOffset = -1
+          , Template.tBgBottomOffset = -1
+          , Template.tBoxes = []
+          }
+        , actions = Nothing
+        }
+      stdFormat w = Template.Seg
+        { Template.widget = w
+        , format = fmt
+        }
+      separatorSeg = stdFormat (Template.Text " | ")
+      bar = Template.Bar
+        { Template.left = stdFormat <$>
+          [ Template.Text "  λ "
+          , Template.Runnable queueReader
+          ]
+        , Template.center = []
+        , Template.right = intersperse separatorSeg
+            [ stdFormat (Template.Runnable dynNetwork)
+            , Template.Seg
+              { Template.widget = Template.Runnable alsa
+              , Template.format =
+                fmt { Template.actions = Just
+                      [ Action.Spawn [1] "amixer -q set Master toggle" ]
+                    }
+              }
+            , stdFormat (Template.Runnable date)
+            , stdFormat (Template.Text "  ")
+            ]
+        }
+
+  pure $ Xmobar.defaultConfig
+    { Xmobar.font = "xft:Iosevka:size=12:light:antialias=true"
+    , Xmobar.borderColor = coerce base03
+    , Xmobar.border = Xmobar.BottomB
+    , Xmobar.alpha = 204
+    , Xmobar.position = Xmobar.OnScreen xmobarScreenId (Xmobar.TopW Xmobar.L 100)
+    , Xmobar.allDesktops = True
+    , Xmobar.lowerOnStart = True
+    , Xmobar.pickBroadest = False
+    , Xmobar.persistent = False
+    , Xmobar.hideOnStart = False
+    , Xmobar.template = Xmobar.Parsed bar
+    , Xmobar.signal = Xmobar.SignalChan (Just xmobarSignal)
+    , Xmobar.verbose = True
+    }
 
 
 myXmobar :: STM.TQueue String -> X ()

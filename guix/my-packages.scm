@@ -81,7 +81,8 @@
 
 (define-public haskell-tools
   '("cabal-install"
-    "ghc@8.6"
+    "ghc"
+    "hspec-discover"
     "hlint"
     "hoogle"
     "stylish-haskell"))

@@ -37,7 +37,7 @@
                (url "https://github.com/jsoo1/xmobar")
                (commit commit)))
          (sha256
-          (base32 "18zydr49rikrh2462dmsaikw9y2c41mv8ip91jmw173d143f59ir"))
+          (base32 "0yslvrf9mr5kmnqknx3s5jy9rqrgi0rdz0svhwrp7dhvw13zild1"))
          (file-name (git-file-name name version))))
       (inputs `(("ghc-uuid" ,ghc-uuid)
                 ,@(package-inputs xmobar)))
@@ -53,6 +53,8 @@
      `(("libxpm" ,libxpm)
        ("xmobar" ,my-xmobar)
        ("xmonad" ,xmonad)
+       ("ghc-random" ,ghc-random)
+       ("ghc-uuid" ,ghc-uuid)
        ("ghc-xmonad-contrib" ,ghc-xmonad-contrib)))
     (arguments
      `(#:phases
