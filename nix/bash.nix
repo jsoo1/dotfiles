@@ -39,7 +39,7 @@ let
 in lib.optionalAttrs (!isDarwin) { enableAutojump = true; } // {
   enable = true;
   inherit sessionVariables shellAliases;
-  historyControl = [ "ignoredups" "ignorespace" ];
+  historyControl = [ "erasedups" "ignoredups" "ignorespace" ];
   historyIgnore = [ "ls" "cd" "tmux" ];
   initExtra = let
     set-prompt-to = cmd:
@@ -55,8 +55,8 @@ in lib.optionalAttrs (!isDarwin) { enableAutojump = true; } // {
   in ''
     ${if isDarwin then ''
       restart-nix-daemon () {
-                  sudo launchctl bootout system/org.nixos.nix-daemon \
-                      && sudo launchctl load /Library/LaunchDaemons/org.nixos.nix-daemon.plist
+        sudo launchctl bootout system/org.nixos.nix-daemon \
+          && sudo launchctl load /Library/LaunchDaemons/org.nixos.nix-daemon.plist
       }'' else
       ""}
 
