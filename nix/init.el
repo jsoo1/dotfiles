@@ -940,6 +940,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 ;; (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
 (define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
 (add-hook 'haskell-mode-hook #'make-standard-paragraph-rules)
+(add-hook 'haskell-mode-hook #'highlight-indent-guides-mode)
 ;; (add-hook 'haskell-mode-hook #'eglot-ensure)
 (defvar eww-hoogle-url "https://hoogle.haskell.org")
 (defun eww-hoogle (query)
