@@ -439,8 +439,10 @@
 (eshell-syntax-highlighting-global-mode 1)
 
 ;; Indentation guides
-(setq highlight-indent-guides-method 'character)
-(set-face-foreground 'highlight-indent-guides-character-face base01)
+(setq highlight-indent-guides-method 'character
+      highlight-indent-guides-auto-enabled nil)
+(with-eval-after-load 'highlight-indent-guides
+  (set-face-foreground 'highlight-indent-guides-character-face base01))
 
 ;; Helpful
 (require 'helpful)
