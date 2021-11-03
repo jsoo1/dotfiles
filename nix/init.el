@@ -605,6 +605,8 @@
 (add-hook 'org-agenda-mode-hook #'evil-org-mode)
 (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading))
 (evil-org-agenda-set-keys)
+(with-eval-after-load 'org-agenda
+  (define-key org-agenda-mode-map (kbd "C-c RET") #'org-agenda-switch-to))
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
                                (haskell . t)
@@ -630,10 +632,7 @@
   %a")))
 
 (setq org-directory "~")
-(with-eval-after-load 'org-agenda-mode
-  (progn
-    (define-key org-agenda-mode-map (kbd "C-c RET") #'org-agenda-switch-to)
-    (define-key org-agenda-mode-map "m" #'org-agenda-month-view)))
+
 
 (defun str-to-org-dirs (repo-dir string)
   "Take newline delimited `STRING' and return list of all directories with org files in `REPO-DIR'."
