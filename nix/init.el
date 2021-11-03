@@ -1269,8 +1269,11 @@ when send commands with redis protocol."
 
 ;; Terraform
 (require 'terraform-mode)
+(setf (alist-get 'terraform-mode eglot-server-programs)
+      '("terraform-lsp"))
 (add-hook 'terraform-mode-hook #'eglot-ensure)
-(define-key terraform-mode-map (kbd ",") 'my-eglot-mode-map)
+(define-key terraform-mode-map (kbd "C-c C-f") #'terraform-format-buffer)
+(evil-define-key 'normal terraform-mode-map (kbd ",") 'my-eglot-mode-map)
 
 ;; C
 (evil-define-key 'normal c-mode-map (kbd ",") 'my-eglot-mode-map)
