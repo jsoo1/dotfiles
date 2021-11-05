@@ -593,6 +593,11 @@
       (rename-buffer buffer-name))
     (balance-windows)))
 
+(defun my-project-recompile (cmd)
+  "Recompile project `CMD' (one of \"run\", \"compile\" or \"test\")."
+  (with-current-buffer (get-buffer (format "*%s-%s*" (projectile-project-name) cmd))
+    (recompile)))
+
 (defun my-switch-to-compile-buffer (kind)
   "Switch to compile buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'."
   (switch-to-buffer-other-window (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
@@ -1795,13 +1800,32 @@ respectively."
   (let* ((counsel-projectile-switch-project-action #'find-file-in-project-tab))
     (counsel-projectile-switch-project)))
 
+(define-prefix-keymap my-project-compile-map
+  "my project compilation keybindings"
+  "c" (defun projectile-recompile ()
+        (interactive)
+        (my-project-recompile "compile"))
+  "C" (defun projectile-compile ()
+        (interactive)
+        (my-projectile-command "compile"))
+  "r" (defun projectile-rerun ()
+        (interactive)
+        (my-project-recompile "run"))
+  "R" (defun projectile-run ()
+        (interactive)
+        (my-projectile-command "run"))
+  "t" (defun projectile-retest ()
+        (interactive)
+        (my-project-recompile "test"))
+  "T" (defun projectile-test ()
+        (interactive)
+        (my-projectile-command "test")))
+
 (define-prefix-keymap my-project-map
   "my projectile keybindings"
   "a" counsel-projectile-org-agenda
   "b" counsel-projectile-switch-to-buffer
-  "c" (defun projectile-compile ()
-        (interactive)
-        (my-projectile-command "compile"))
+  "c" my-project-compile-map
   "C" counsel-projectile-org-capture
   "d" counsel-projectile-find-dir
   "D" (defun switch-to-projectile-project-root ()
@@ -1814,10 +1838,6 @@ respectively."
         (interactive)
         (find-file (format "%sTODOs.org" (projectile-project-root))))
   "p" switch-project-workspace
-  "r" (defun projectile-run ()
-        (interactive) (my-projectile-command "run"))
-  "t" (defun projectile-test ()
-        (interactive) (my-projectile-command "test"))
   "'" (defun projectle-run-eshell-other-window ()
         (interactive)
         (switch-to-buffer-other-window (current-buffer))
