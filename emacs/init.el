@@ -102,6 +102,8 @@
                   "/run/current-system/profile/bin"
                   "/run/current-system/profile/sbin"
                   "~/dotfiles/emacs/"))
+(load-file (expand-file-name "local.el" user-emacs-directory))
+
 
 ;; Pinentry
 (setf epa-pinentry-mode 'loopback)
@@ -126,7 +128,7 @@
 
 ;; Grep
 (with-eval-after-load 'grep
-  (grep-apply-setting 'grep-find-command '("fd '.*' . -t f -H -x rg -nH0 ''" . 31)))
+  (grep-apply-setting 'grep-find-command '("rg --no-heading -nIH ''" . 23)))
 
 ;; Gnus
 ;; set-face-attribute does not work here, why?
@@ -422,6 +424,12 @@
 ;; Eshell syntax highlighting
 (eshell-syntax-highlighting-global-mode 1)
 
+;; Indentation guides
+(setq highlight-indent-guides-method 'character
+      highlight-indent-guides-auto-enabled nil)
+(with-eval-after-load 'highlight-indent-guides
+  (set-face-foreground 'highlight-indent-guides-character-face base01))
+
 ;; Undo-Tree
 (global-undo-tree-mode)
 (setq undo-tree-history-directory-alist `((".*" . ,(expand-file-name "undo-tree" user-emacs-directory))))
@@ -561,6 +569,11 @@
       (rename-buffer buffer-name))
     (balance-windows)))
 
+(defun my-project-recompile (cmd)
+  "Recompile project `CMD' (one of \"run\", \"compile\" or \"test\")."
+  (with-current-buffer (get-buffer (format "*%s-%s*" (projectile-project-name) cmd))
+    (recompile)))
+
 (defun my-switch-to-compile-buffer (kind)
   "Switch to compile buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'."
   (switch-to-buffer-other-window (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
@@ -573,6 +586,8 @@
 (add-hook 'org-agenda-mode-hook #'evil-org-mode)
 (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading))
 (evil-org-agenda-set-keys)
+(with-eval-after-load 'org-agenda
+  (define-key org-agenda-mode-map (kbd "C-c RET") #'org-agenda-switch-to))
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
                                (haskell . t)
@@ -598,10 +613,7 @@
   %a")))
 
 (setq org-directory "~")
-(with-eval-after-load 'org-agenda-mode
-  (progn
-    (define-key org-agenda-mode-map (kbd "C-c RET") #'org-agenda-switch-to)
-    (define-key org-agenda-mode-map "m" #'org-agenda-month-view)))
+
 
 (defun str-to-org-dirs (repo-dir string)
   "Take newline delimited `STRING' and return list of all directories with org files in `REPO-DIR'."
@@ -906,7 +918,13 @@ _]_: toggle use of default sink  _n_: control select sink by name
 ;; (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
 (define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
 (add-hook 'haskell-mode-hook #'make-standard-paragraph-rules)
-(add-hook 'haskell-mode-hook #'eglot-ensure)
+(add-hook 'haskell-mode-hook #'highlight-indent-guides-mode)
+;; (add-hook 'haskell-mode-hook #'eglot-ensure)
+(defvar eww-hoogle-url "https://hoogle.haskell.org")
+(defun eww-hoogle (query)
+  (interactive "sQuery: ")
+  (eww (format "%s/?hoogle=%s" eww-hoogle-url (url-encode-url query))))
+(define-key haskell-mode-map (kbd "C-c C-h") #'eww-hoogle)
 
 ;; Agda mode
 (load-library (let ((coding-system-for-read 'utf-8))
@@ -980,6 +998,8 @@ _]_: toggle use of default sink  _n_: control select sink by name
      :foreground "red")))
 
 ;; Ocaml
+(require 'tuareg)
+(require 'merlin)
 (add-hook 'tuareg-mode-hook #'merlin-mode)
 (add-to-list 'auto-mode-alist '("\\.ml\\'" . tuareg-mode))
 (add-to-list 'auto-mode-alist '("\\.mli\\'" . tuareg-mode))
@@ -1052,6 +1072,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (defvar nix-format-on-save t
   "Format the nix buffer with nixfmt before saving.")
 (add-hook 'nix-mode-hook #'eglot-ensure)
+(add-hook 'nix-mode-hook #'highlight-indent-guides-mode)
 (add-hook 'before-save-hook
           (defun my-nix-format-buffer ()
             (when (and nix-format-on-save (eq major-mode 'nix-mode))
@@ -1187,6 +1208,7 @@ when send commands with redis protocol."
 (autoload 'gfm-mode "markdown-mode"
   "Major mode for editing GitHub Flavored Markdown files" t)
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
+(add-hook 'markdown-mode-hook #'make-standard-paragraph-rules)
 
 ;; Systemd
 (add-to-list 'auto-mode-alist '("\\.timer\\'" . systemd-mode))
@@ -1293,27 +1315,27 @@ when send commands with redis protocol."
 (shackle-mode)
 
 ;; Popper
-(popper-mode 1)
-(setq popper-reference-buffers
-      '("\\*Messages\\*"
-        "Output\\*$"
-        "\\*Async Shell Command\\*")
-      popper-group-function 'popper-group-by-projectile
-      popper-reference-modes
-      '(display-time-world-mode
-        eshell-mode
+(setq popper-group-function 'popper-group-by-project
+      popper-reference-buffers
+      '("\\*Async Shell Command\\*"
+        "*\\*.*compile\\*$" compilation-mode
+        display-time-world-mode
+        "^\\*eshell.*\\*$" eshell-mode
         elfeed-search-mode
         grep-mode
-        ivy-occur-mode
-        org-agenda-mode
-        proced
-        process-list
         help-mode
         helpful-mode
+        "^\\*ivy-occur.*\\*$" ivy-occur-mode
+        org-agenda-mode
+        "^\\*Proced\\*$" proced
+        "^\\*Process List\\*$" process-list
+        magit-process-mode
         Man-mode
-        woman-mode
+        "\\*Messages\\*"
+        "Output\\*$"
         reb-mode
-        compilation-mode))
+        woman-mode))
+(popper-mode 1)
 
 (defun counsel-popper-buried-popups ()
   "Ivy search for popper buried popups."
@@ -1676,6 +1698,7 @@ respectively."
   "my file keybindings"
   "f" counsel-find-file
   "l" find-file-literally
+  "m" magit-find-file
   "r" counsel-buffer-or-recentf
   "s" save-buffer
   "t" find-file-other-tab
@@ -1755,13 +1778,32 @@ respectively."
   (let* ((counsel-projectile-switch-project-action #'find-file-in-project-tab))
     (counsel-projectile-switch-project)))
 
+(define-prefix-keymap my-project-compile-map
+  "my project compilation keybindings"
+  "c" (defun projectile-recompile ()
+        (interactive)
+        (my-project-recompile "compile"))
+  "C" (defun projectile-compile ()
+        (interactive)
+        (my-projectile-command "compile"))
+  "r" (defun projectile-rerun ()
+        (interactive)
+        (my-project-recompile "run"))
+  "R" (defun projectile-run ()
+        (interactive)
+        (my-projectile-command "run"))
+  "t" (defun projectile-retest ()
+        (interactive)
+        (my-project-recompile "test"))
+  "T" (defun projectile-test ()
+        (interactive)
+        (my-projectile-command "test")))
+
 (define-prefix-keymap my-project-map
   "my projectile keybindings"
   "a" counsel-projectile-org-agenda
   "b" counsel-projectile-switch-to-buffer
-  "c" (defun projectile-compile ()
-        (interactive)
-        (my-projectile-command "compile"))
+  "c" my-project-compile-map
   "C" counsel-projectile-org-capture
   "d" counsel-projectile-find-dir
   "D" (defun switch-to-projectile-project-root ()
@@ -1774,10 +1816,6 @@ respectively."
         (interactive)
         (find-file (format "%sTODOs.org" (projectile-project-root))))
   "p" switch-project-workspace
-  "r" (defun projectile-run ()
-        (interactive) (my-projectile-command "run"))
-  "t" (defun projectile-test ()
-        (interactive) (my-projectile-command "test"))
   "'" (defun projectle-run-eshell-other-window ()
         (interactive)
         (switch-to-buffer-other-window (current-buffer))
@@ -1814,6 +1852,7 @@ respectively."
   "f" toggle-frame-fullscreen
   "h" toggle-global-hl-line
   "i" imenu-list-smart-toggle
+  "I" highlight-indent-guides-mode
   "l" toggle-truncate-lines
   "m" toggle-mode-line
   "n" (defun cycle-line-numbers ()

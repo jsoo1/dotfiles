@@ -182,6 +182,7 @@
     "emacs-haskell-mode"
     "emacs-haskell-snippets"
     "emacs-helpful"
+    "emacs-highlight-indent-guides"
     "emacs-ibuffer-projectile"
     "emacs-idris-mode"
     "emacs-imenu-list"
