@@ -290,31 +290,31 @@ queueReaderWidget xmobarQueue i = Template.RunnableWidget
 
 dynNetworkWidget :: UUID -> Template.RunnableWidget
 dynNetworkWidget i = Template.RunnableWidget
-        { Template.com = Xmobar.Run (Xmobar.DynNetwork [] 20)
-        , Template.val = "dynnetwork"
-        , Template.runnableId = i
-        }
+  { Template.com = Xmobar.Run (Xmobar.DynNetwork [] 20)
+  , Template.val = "dynnetwork"
+  , Template.runnableId = i
+  }
 
 alsaWidget :: UUID -> Template.RunnableWidget
 alsaWidget i = Template.RunnableWidget
-        { Template.com = Xmobar.Run
-          (Xmobar.Alsa "default" "Master"
-            [ "-t" , "<status> <volume>%"
-            , "--"
-            , "--alsactl=/home/john/.guix-profile/bin/pactl"
-            , "--on", "vol", "--onc" , coerce base0
-            , "--off", "vol", "--offc" , coerce red
-            ])
-        , Template.val = "alsa"
-        , Template.runnableId = i
-        }
+  { Template.com = Xmobar.Run
+    (Xmobar.Alsa "default" "Master"
+      [ "-t" , "<status> <volume>%"
+      , "--"
+      , "--alsactl=/home/john/.guix-profile/bin/pactl"
+      , "--on", "vol", "--onc" , coerce base0
+      , "--off", "vol", "--offc" , coerce red
+      ])
+  , Template.val = "alsa"
+  , Template.runnableId = i
+  }
 
 dateWidget :: UUID -> Template.RunnableWidget
 dateWidget i = Template.RunnableWidget
-        { Template.com = Xmobar.Run (Xmobar.Date ("%F" <> xmobarSegmentSep <> "%r") "date" 10)
-        , Template.val = "date"
-        , Template.runnableId = i
-        }
+  { Template.com = Xmobar.Run (Xmobar.Date ("%F" <> xmobarSegmentSep <> "%r") "date" 10)
+  , Template.val = "date"
+  , Template.runnableId = i
+  }
 
 xmobarConf :: STM.TMVar Xmobar.SignalType -> STM.TQueue String -> IO Xmobar.Config
 xmobarConf xmobarSignal xmobarQueue = do
