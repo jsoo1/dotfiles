@@ -40,7 +40,7 @@ import           XMonad.Util.Run                  (runInTerm,
                                                    spawnPipe)
 import qualified Xmobar
 import qualified Xmobar.Config.Actions            as Action
-import qualified Xmobar.Config.Template.Parse              as Template
+import qualified Xmobar.Config.Template.Parse     as Template
 
 
 main :: IO ()
@@ -280,23 +280,23 @@ xmobarSegmentSep :: String
 xmobarSegmentSep =  " | "
 
 
-queueReaderWidget :: STM.TQueue String -> UUID -> Template.RunnableWidget
-queueReaderWidget xmobarQueue i = Template.RunnableWidget
+queueReaderWidget :: Template.Format -> STM.TQueue String -> Template.Seg
+queueReaderWidget fmt xmobarQueue = Template.Runnable $ Template.RunnableWidget
   { Template.com = Xmobar.Run (Xmobar.QueueReader xmobarQueue id "xmonadstuff")
-  , Template.val = "xmonadstuff"
-  , Template.runnableId = i
+  , Template.val = mempty
+  , Template.runnableFormat = fmt
   }
 
 
-dynNetworkWidget :: UUID -> Template.RunnableWidget
-dynNetworkWidget i = Template.RunnableWidget
+dynNetworkWidget :: Template.Format -> Template.Seg
+dynNetworkWidget fmt = Template.Runnable $ Template.RunnableWidget
   { Template.com = Xmobar.Run (Xmobar.DynNetwork [] 20)
-  , Template.val = "dynnetwork"
-  , Template.runnableId = i
+  , Template.val = mempty
+  , Template.runnableFormat = fmt
   }
 
-alsaWidget :: UUID -> Template.RunnableWidget
-alsaWidget i = Template.RunnableWidget
+alsaWidget :: Template.Format -> Template.Seg
+alsaWidget fmt = Template.Runnable $ Template.RunnableWidget
   { Template.com = Xmobar.Run
     (Xmobar.Alsa "default" "Master"
       [ "-t" , "<status> <volume>%"
@@ -305,55 +305,48 @@ alsaWidget i = Template.RunnableWidget
       , "--on", "vol", "--onc" , coerce base0
       , "--off", "vol", "--offc" , coerce red
       ])
-  , Template.val = "alsa"
-  , Template.runnableId = i
+  , Template.val = mempty
+  , Template.runnableFormat = fmt
   }
 
-dateWidget :: UUID -> Template.RunnableWidget
-dateWidget i = Template.RunnableWidget
+dateWidget :: Template.Format -> Template.Seg
+dateWidget fmt = Template.Runnable $ Template.RunnableWidget
   { Template.com = Xmobar.Run (Xmobar.Date ("%F" <> xmobarSegmentSep <> "%r") "date" 10)
-  , Template.val = "date"
-  , Template.runnableId = i
+  , Template.val = mempty
+  , Template.runnableFormat = fmt
+  }
+
+xmobarFmt :: Template.Format
+xmobarFmt = Template.Format
+  { Template.fontIndex = 0
+  , Template.textRenderInfo = Template.TextRenderInfo
+    { Template.tColorsString = coerce base0 <> ",#00362b"
+    , Template.tBgTopOffset = -1
+    , Template.tBgBottomOffset = -1
+    , Template.tBoxes = []
+    }
+  , actions = Nothing
   }
 
 xmobarConf :: STM.TMVar Xmobar.SignalType -> STM.TQueue String -> IO Xmobar.Config
 xmobarConf xmobarSignal xmobarQueue = do
-  queueReader <- queueReaderWidget xmobarQueue <$> randomIO
-  dynNetwork <- dynNetworkWidget <$> randomIO
-  alsa <- alsaWidget <$> randomIO
-  date <- dateWidget <$> randomIO
-
-  let fmt = Template.Format
-        { Template.fontIndex = 0
-        , Template.textRenderInfo = Template.TextRenderInfo
-          { Template.tColorsString = coerce base0 <> ",#00362b"
-          , Template.tBgTopOffset = -1
-          , Template.tBgBottomOffset = -1
-          , Template.tBoxes = []
-          }
-        , actions = Nothing
-        }
-      stdFormat w = Template.Seg
+  let stdFormat w = Template.Plain $ Template.PlainSeg
         { Template.widget = w
-        , format = fmt
+        , format = xmobarFmt
         }
       separatorSeg = stdFormat (Template.Text " | ")
       bar = Template.Bar
-        { Template.left = stdFormat <$>
-          [ Template.Text "  λ "
-          , Template.Runnable queueReader
+        { Template.left =
+          [ stdFormat (Template.Text "  λ ")
+          , queueReaderWidget xmobarFmt xmobarQueue
           ]
-        , Template.center = []
+        , Template.center = [ dateWidget xmobarFmt ]
         , Template.right = (intersperse separatorSeg
-            [ stdFormat (Template.Runnable dynNetwork)
-            , Template.Seg
-              { Template.widget = Template.Runnable alsa
-              , Template.format =
-                fmt { Template.actions = Just
-                      [ Action.Spawn [1] "amixer -q set Master toggle" ]
-                    }
-              }
-            , stdFormat (Template.Runnable date)
+            [ dynNetworkWidget xmobarFmt
+            , alsaWidget
+              xmobarFmt { Template.actions = Just
+                          [ Action.Spawn [1] "amixer -q set Master toggle" ]
+                        }
             ]) <> [ stdFormat (Template.Text "  ") ]
 
         }
@@ -387,7 +380,7 @@ myXmobar xmobarQueue = do
     { ppOutput = \out ->
         STM.atomically
         $ STM.writeTQueue xmobarQueue
-        $ xmobarColor' base0 green (show xmobarScreenId ++ ". ") ++ out
+        $ show xmobarScreenId ++ ". " ++ out
     , ppCurrent = \wsId ->
         xmobarColor' base0 base01
         $ wsPrefix wsId ++ titleFormat current
