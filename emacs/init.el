@@ -415,6 +415,9 @@
 (with-eval-after-load 'Info-mode
   (define-key Info-mode-map (kbd "C-c") Info-mode-map))
 
+;; Compilation
+(setq compilation-scroll-output t)
+
 ;; Imenu List
 (setq imenu-list-size 0.2)
 
