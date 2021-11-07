@@ -6,8 +6,8 @@ window:
     columns: 0
     lines: 0
   padding:
-    x: 4
-    y: 4
+    x: 11
+    y: 3
   dynamic_padding: true
   decorations: full
   startup_mode: Fullscreen
