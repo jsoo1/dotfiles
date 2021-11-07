@@ -357,6 +357,8 @@ xmobarConf xmobarSignal xmobarQueue = do
 
   pure $ Xmobar.defaultConfig
     { Xmobar.font = "xft:Iosevka:size=12:light:antialias=true"
+    , Xmobar.fgColor = coerce base0
+    , Xmobar.bgColor = "#00362B"
     , Xmobar.borderColor = coerce base03
     , Xmobar.border = Xmobar.BottomB
     , Xmobar.alpha = 204
