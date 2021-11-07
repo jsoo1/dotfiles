@@ -295,6 +295,7 @@ dynNetworkWidget fmt = Template.Runnable $ Template.RunnableWidget
   , Template.runnableFormat = fmt
   }
 
+
 alsaWidget :: Template.Format -> Template.Seg
 alsaWidget fmt = Template.Runnable $ Template.RunnableWidget
   { Template.com = Xmobar.Run
@@ -309,12 +310,14 @@ alsaWidget fmt = Template.Runnable $ Template.RunnableWidget
   , Template.runnableFormat = fmt
   }
 
+
 dateWidget :: Template.Format -> Template.Seg
 dateWidget fmt = Template.Runnable $ Template.RunnableWidget
   { Template.com = Xmobar.Run (Xmobar.Date ("%F" <> xmobarSegmentSep <> "%r") "date" 10)
   , Template.val = mempty
   , Template.runnableFormat = fmt
   }
+
 
 xmobarFmt :: Template.Format
 xmobarFmt = Template.Format
@@ -327,6 +330,7 @@ xmobarFmt = Template.Format
     }
   , actions = Nothing
   }
+
 
 xmobarConf :: STM.TMVar Xmobar.SignalType -> STM.TQueue String -> IO Xmobar.Config
 xmobarConf xmobarSignal xmobarQueue = do
