@@ -344,7 +344,7 @@ xmobarConf xmobarSignal xmobarQueue = do
           , Template.Runnable queueReader
           ]
         , Template.center = []
-        , Template.right = intersperse separatorSeg
+        , Template.right = (intersperse separatorSeg
             [ stdFormat (Template.Runnable dynNetwork)
             , Template.Seg
               { Template.widget = Template.Runnable alsa
@@ -354,8 +354,8 @@ xmobarConf xmobarSignal xmobarQueue = do
                     }
               }
             , stdFormat (Template.Runnable date)
-            , stdFormat (Template.Text "  ")
-            ]
+            ]) <> [ stdFormat (Template.Text "  ") ]
+
         }
 
   pure $ Xmobar.defaultConfig
@@ -507,13 +507,3 @@ green = SpaceColor "#859900"
 
 red :: SpaceColor
 red = SpaceColor "#dc322f"
-
-
-testBar = do
-  (xmobarQueue, xmobarSignal, xmobarProc ) <- startXmobar
-  pure ( xmobarQueue
-       , xmobarSignal
-       , xmobarProc
-       , STM.atomically . STM.writeTQueue xmobarQueue . xmobarColor' base0 green
-       , STM.atomically . STM.putTMVar xmobarSignal
-       )
