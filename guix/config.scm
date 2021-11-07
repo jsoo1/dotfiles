@@ -56,7 +56,7 @@ EndSection\n")
 
 (define terminus-psf-font
   (file-append
-   font-terminus "/share/consolefonts/ter-v32n.psf.gz"))
+   font-terminus "/share/consolefonts/ter-v22n.psf.gz"))
 
 (define my-services
   (cons*
