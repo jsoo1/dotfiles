@@ -8,6 +8,8 @@
                      networking nix pm shepherd ssh sound
                      virtualization xorg)
 
+(define username "john")
+
 (define cst-trackball
   "Section \"InputClass\"
     Identifier \"CST Trackball\"
@@ -91,7 +93,7 @@ EndSection\n")
    (service mingetty-service-type (mingetty-configuration
                                    (tty "tty7")))
    (service mpd-service-type (mpd-configuration
-                              (user "john")))
+                              (user username)))
    (service network-manager-service-type)
    (service ntp-service-type)
    (service openssh-service-type (openssh-configuration
@@ -156,12 +158,11 @@ EndSection\n")
   (swap-devices (list (uuid "7bcddb1d-889b-4cd4-8335-dc7c4a1a358d")))
   (users
    `(,(user-account
-       (name "john")
+       (name username)
        (comment "idiot man")
        (group "users")
        (supplementary-groups
         '("wheel" "netdev" "audio" "video" "lp"))
-       (home-directory "/home/john")
        (shell (file-append fish "/bin/fish")))
      ,@%base-user-accounts))
   (packages
@@ -186,13 +187,13 @@ EndSection\n")
      ;; They also need extra tweaks in the chown-file service below.
      ,(setuid-program
        (program (file-append xorg-server "/bin/X"))
-       (user "john")
+       (user username)
        (group "input")
        (setuid? #f)
        (setgid? #t))
      ,(setuid-program
        (program startx)
-       (user "john")
+       (user username)
        (group "input")
        (setuid? #f)
        (setgid? #t))
