@@ -58,7 +58,7 @@ main = do
     , manageHook = manageDocks <+> manageHook def
     , layoutHook =
         avoidStruts $ gaps 5 5 $ ThreeColMid 1 (3/100) (1/2) ||| layoutHook def
-    , logHook = myXmobar xmobarQueue
+    , logHook = myXmobarPP xmobarQueue
     , startupHook = traverse_ spawn
         [ "light -S 30.0"
         , "compton --config ~/.config/compton/compton.conf"
@@ -332,29 +332,36 @@ xmobarFmt = Template.Format
   }
 
 
+stdFormat :: Template.Widget -> Template.Seg
+stdFormat w = Template.Plain $ Template.PlainSeg
+  { Template.widget = w
+  , format = xmobarFmt
+  }
+
+
+separatorSeg :: Template.Seg
+separatorSeg = stdFormat (Template.Text " | ")
+
+
+bar :: STM.TMVar Xmobar.SignalType -> STM.TQueue String -> Template.Bar
+bar xmobarSignal xmobarQueue = Template.Bar
+  { Template.left =
+    [ stdFormat (Template.Text "  λ ")
+    , queueReaderWidget xmobarFmt xmobarQueue
+    ]
+  , Template.center = [ dateWidget xmobarFmt ]
+  , Template.right = (intersperse separatorSeg
+      [ dynNetworkWidget xmobarFmt
+      -- , alsaWidget
+      --   xmobarFmt { Template.actions = Just
+      --               [ Action.Spawn [1] "amixer -q set Master toggle" ]
+      --             }
+      ]) <> [ stdFormat (Template.Text "  ") ]
+  }
+
+
 xmobarConf :: STM.TMVar Xmobar.SignalType -> STM.TQueue String -> IO Xmobar.Config
-xmobarConf xmobarSignal xmobarQueue = do
-  let stdFormat w = Template.Plain $ Template.PlainSeg
-        { Template.widget = w
-        , format = xmobarFmt
-        }
-      separatorSeg = stdFormat (Template.Text " | ")
-      bar = Template.Bar
-        { Template.left =
-          [ stdFormat (Template.Text "  λ ")
-          , queueReaderWidget xmobarFmt xmobarQueue
-          ]
-        , Template.center = [ dateWidget xmobarFmt ]
-        , Template.right = (intersperse separatorSeg
-            [ dynNetworkWidget xmobarFmt
-            , alsaWidget
-              xmobarFmt { Template.actions = Just
-                          [ Action.Spawn [1] "amixer -q set Master toggle" ]
-                        }
-            ]) <> [ stdFormat (Template.Text "  ") ]
-
-        }
-
+xmobarConf xmobarSignal xmobarQueue =
   pure $ Xmobar.defaultConfig
     { Xmobar.font = "xft:Iosevka:size=12:light:antialias=true"
     , Xmobar.fgColor = coerce base0
@@ -368,14 +375,14 @@ xmobarConf xmobarSignal xmobarQueue = do
     , Xmobar.pickBroadest = False
     , Xmobar.persistent = False
     , Xmobar.hideOnStart = False
-    , Xmobar.template = Xmobar.Parsed bar
+    , Xmobar.template = Xmobar.Parsed (bar xmobarSignal xmobarQueue)
     , Xmobar.signal = Xmobar.SignalChan (Just xmobarSignal)
     , Xmobar.verbose = True
     }
 
 
-myXmobar :: STM.TQueue String -> X ()
-myXmobar xmobarQueue = do
+myXmobarPP :: STM.TQueue String -> X ()
+myXmobarPP xmobarQueue = do
   Titles {..} <- withWindowSet allTitles
 
   let wsPrefix :: WorkspaceId -> String
