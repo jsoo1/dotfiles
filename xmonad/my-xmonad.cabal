@@ -15,7 +15,7 @@ source-repository head
 
 executable my-xmonad
   main-is: xmonad.hs
-  ghc-options: -threaded -rtsopts -O2 -with-rtsopts=-N3
+  ghc-options: -threaded -rtsopts -O2 "-with-rtsopts=-N6 -M2g"
   build-depends: base >=4.7 && <5
                , containers >=0.6 && <0.7
                , process >=1.6.5 && <1.7
