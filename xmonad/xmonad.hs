@@ -2,7 +2,10 @@
 {-# LANGUAGE LambdaCase       #-}
 {-# LANGUAGE RecordWildCards  #-}
 {-# LANGUAGE TupleSections    #-}
-{-# OPTIONS_GHC -Werror -fwarn-incomplete-record-updates #-}
+{-# OPTIONS_GHC -Werror -Wincomplete-record-updates
+                        -Wmonomorphism-restriction
+                        -Wincomplete-uni-patterns
+                        -Wmissing-deriving-strategies #-}
 
 module Main where
 
@@ -416,7 +419,9 @@ myXmobarPP xmobarQueue = do
     , ppSep = ""
     , ppWsSep = ""
     , ppTitle = const ""
-    , ppOrder = \(ws:_:t:e) -> e ++ [ ws, t ]
+    , ppOrder = \case
+        (ws:_:t:e) -> e ++ [ ws, t ]
+        x          -> x
     }
 
 
