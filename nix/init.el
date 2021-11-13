@@ -455,6 +455,10 @@
 (global-undo-tree-mode)
 (setq undo-tree-history-directory-alist `((".*" . ,(expand-file-name "undo-tree" user-emacs-directory))))
 
+;; Remove upcase-word (I never use it and it is always pestering me)
+(define-key esc-map (kbd "u") nil)
+(define-key global-map (kbd "M-u") nil)
+
 ;; Evil
 (global-set-key (kbd "<escape>") #'keyboard-escape-quit)
 ;; somehow needs to happen before any mention of evil mode
