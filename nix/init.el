@@ -646,6 +646,8 @@
 
 (setq org-directory "~")
 
+;; todos
+(setq org-enforce-todo-dependencies t)
 
 (defun str-to-org-dirs (repo-dir string)
   "Take newline delimited `STRING' and return list of all directories with org files in `REPO-DIR'."
@@ -676,6 +678,9 @@
  org-export-with-creator nil
  org-export-time-stamp-file nil
  org-html-validation-link nil)
+
+;; refile
+(setq org-refile-targets '((nil . (:maxlevel . 10))))
 
 ;; Mail composition
 (setq message-fill-column nil)
