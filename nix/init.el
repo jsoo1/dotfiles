@@ -1687,7 +1687,8 @@ respectively."
   "my keybindings for compiling"
   "b" (defun pop-to-compilation-buffer ()
         (interactive) (pop-to-buffer (get-buffer-create "*compilation*")))
-  "c" counsel-compile)
+  "C" counsel-compile
+  "c" recompile)
 
 (define-prefix-keymap my-counsel-map
   "my keybindings to counsel"
