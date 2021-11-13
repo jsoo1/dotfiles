@@ -391,6 +391,7 @@
    (projectile-indexing-method . hybrid)
    (haskell-stylish-on-save . nil)
    (nix-format-buffer . nil)
+   (nix-format-on-save . nil)
    (haskell-process-type . stack-ghci)
    (haskell-process-type . cabal-repl)
    (haskell-mode-stylish-haskell-path . "ormolu")
