@@ -1229,7 +1229,12 @@ when send commands with redis protocol."
 (add-to-list 'auto-mode-alist '("\\.plist\\'" . xml-mode))
 
 ;; Dhall
+(define-key dhall-mode-map (kbd "C-c C-i") #'insert-char)
 (add-to-list 'auto-mode-alist '("\\.dhall\\'" . dhall-mode))
+(defvar dhall-imenu-generic-expression
+  '((nil "^\\s-*let\\s-+\\([a-zA-Z]+\\)\\(\\s-+=.*\\)?" 1)))
+(add-hook 'dhall-mode-hook (defun setup-dhall-imenu ()
+                             (setq-local imenu-generic-expression dhall-imenu-generic-expression)))
 
 ;; Markdown
 (autoload 'markdown-mode "markdown-mode"
