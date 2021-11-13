@@ -425,6 +425,9 @@
    ;; Builtins
    (tab-width . 4)))
 
+;; Compilation
+(setq compilation-scroll-output t)
+
 ;; Info
 (with-eval-after-load 'Info-mode
   (define-key Info-mode-map (kbd "C-c") Info-mode-map))
