@@ -85,7 +85,8 @@
     "hspec-discover"
     "hlint"
     "hoogle"
-    "stylish-haskell"))
+    "stylish-haskell"
+    "threadscope"))
 
 (define-public nix-tools
   '("nixfmt"))
