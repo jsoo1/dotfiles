@@ -552,7 +552,7 @@
 (setq projectile-completion-system 'ivy
       projectile-indexing-method 'native
       projectile-enable-caching 't
-      projectile-project-search-path "~/projects/"
+      projectile-project-search-path '("~/projects/")
       projectile-globally-unignored-files '(".*\\.projectile$" ".*\\.envrc$" ".*\\.dir-locals.el$")
       projectile-globally-unignored-directories '("^/scratch/.*")
       projectile-project-root-files-functions (list #'projectile-root-local
@@ -1229,7 +1229,8 @@ when send commands with redis protocol."
 (add-to-list 'auto-mode-alist '("\\.plist\\'" . xml-mode))
 
 ;; Dhall
-(define-key dhall-mode-map (kbd "C-c C-i") #'insert-char)
+(with-eval-after-load 'dhall-mode
+  (define-key dhall-mode-map (kbd "C-c C-i") #'insert-char))
 (add-to-list 'auto-mode-alist '("\\.dhall\\'" . dhall-mode))
 (defvar dhall-imenu-generic-expression
   '((nil "^\\s-*let\\s-+\\([a-zA-Z]+\\)\\(\\s-+=.*\\)?" 1)))
