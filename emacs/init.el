@@ -404,7 +404,7 @@
    (projectile-project-compilation-cmd . "cargo build")
    (projectile-project-test-command . "cargo test")
    ;; Guix projects
-   (projectile-compilation-command . "guix build -f guix.scm")
+   (projectile-project-compilation-cmd . "guix build -f guix.scm")
    ;; Eglot-specific
    (eglot-connect-timeout . nil)
    ;; Javascript-specific
