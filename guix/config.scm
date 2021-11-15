@@ -15,7 +15,7 @@
     Identifier \"CST Trackball\"
     MatchProduct \"CST CST USB UNITRAC\"
     Driver \"libinput\"
-    Option \"AccelSpeed\" \"2.0\"
+    Option \"AccelSpeed\" \"1\"
 EndSection\n")
 
 (define touchscreen-disable
