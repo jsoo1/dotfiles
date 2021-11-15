@@ -384,6 +384,7 @@
    (projectile-indexing-method . hybrid)
    (haskell-stylish-on-save . nil)
    (nix-format-buffer . nil)
+   (nix-format-on-save . nil)
    (haskell-process-type . stack-ghci)
    (haskell-process-type . cabal-repl)
    (haskell-mode-stylish-haskell-path . "ormolu")
@@ -392,7 +393,7 @@
    (haskell-stylish-on-save . nil)
    (projectile-project-compilation-cmd . "home-manager switch -f ~/dotfiles/nix/home.nix")
    (projectile-project-compilation-cmd . "cabal new-build")
-   (projectile-compilation-command . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix ")
+   (projectile-project-compilation-cmd . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix ")
    (haskell-process-wrapper-function
     . (lambda (argv)
         (append (list "env" "NO_COLOR=true") argv)))
@@ -401,9 +402,9 @@
    ;; Rust-specific
    (projectile-project-run-cmd . "cargo run")
    (projectile-project-compilation-cmd . "cargo build")
-   (projectile-project-test-cmd . "cargo test")
+   (projectile-project-test-command . "cargo test")
    ;; Guix projects
-   (projectile-project-compilation-cmd . "guix build -f guix.scm")
+   (projectile-compilation-command . "guix build -f guix.scm")
    ;; Eglot-specific
    (eglot-connect-timeout . nil)
    ;; Javascript-specific
@@ -411,12 +412,12 @@
    ;; Builtins
    (tab-width . 4)))
 
+;; Compilation
+(setq compilation-scroll-output t)
+
 ;; Info
 (with-eval-after-load 'Info-mode
   (define-key Info-mode-map (kbd "C-c") Info-mode-map))
-
-;; Compilation
-(setq compilation-scroll-output t)
 
 ;; Imenu List
 (setq imenu-list-size 0.2)
@@ -436,6 +437,10 @@
 ;; Undo-Tree
 (global-undo-tree-mode)
 (setq undo-tree-history-directory-alist `((".*" . ,(expand-file-name "undo-tree" user-emacs-directory))))
+
+;; Remove upcase-word (I never use it and it is always pestering me)
+(define-key esc-map (kbd "u") nil)
+(define-key global-map (kbd "M-u") nil)
 
 ;; Evil
 (global-set-key (kbd "<escape>") #'keyboard-escape-quit)
@@ -617,6 +622,8 @@
 
 (setq org-directory "~")
 
+;; todos
+(setq org-enforce-todo-dependencies t)
 
 (defun str-to-org-dirs (repo-dir string)
   "Take newline delimited `STRING' and return list of all directories with org files in `REPO-DIR'."
@@ -647,6 +654,9 @@
  org-export-with-creator nil
  org-export-time-stamp-file nil
  org-html-validation-link nil)
+
+;; refile
+(setq org-refile-targets '((nil . (:maxlevel . 10))))
 
 ;; Mail composition
 (setq message-fill-column nil)
@@ -1201,7 +1211,13 @@ when send commands with redis protocol."
 (add-to-list 'auto-mode-alist '("\\.plist\\'" . xml-mode))
 
 ;; Dhall
+(with-eval-after-load 'dhall-mode
+  (define-key dhall-mode-map (kbd "C-c C-i") #'insert-char))
 (add-to-list 'auto-mode-alist '("\\.dhall\\'" . dhall-mode))
+(defvar dhall-imenu-generic-expression
+  '((nil "^\\s-*let\\s-+\\([a-zA-Z]+\\)\\(\\s-+=.*\\)?" 1)))
+(add-hook 'dhall-mode-hook (defun setup-dhall-imenu ()
+                             (setq-local imenu-generic-expression dhall-imenu-generic-expression)))
 
 ;; Markdown
 (autoload 'markdown-mode "markdown-mode"
@@ -1259,6 +1275,14 @@ when send commands with redis protocol."
 ;; Prolog
 (require 'ediprolog)
 (add-to-list 'auto-mode-alist '("\\.pro\\'" . prolog-mode))
+
+;; Terraform
+(setf (alist-get 'terraform-mode eglot-server-programs)
+      '("terraform-lsp"))
+(add-hook 'terraform-mode-hook #'eglot-ensure)
+(with-eval-after-load 'terraform-mode
+  (define-key terraform-mode-map (kbd "C-c C-f") #'terraform-format-buffer))
+(evil-define-key 'normal terraform-mode-map (kbd ",") 'my-eglot-mode-map)
 
 ;; C
 (evil-define-key 'normal c-mode-map (kbd ",") 'my-eglot-mode-map)
@@ -1319,6 +1343,7 @@ when send commands with redis protocol."
 
 ;; Popper
 (setq popper-group-function 'popper-group-by-project
+      popper-display-control 'user
       popper-reference-buffers
       '("\\*Async Shell Command\\*"
         "*\\*.*compile\\*$" compilation-mode
@@ -1332,6 +1357,7 @@ when send commands with redis protocol."
         org-agenda-mode
         "^\\*Proced\\*$" proced
         "^\\*Process List\\*$" process-list
+        magit-diff-mode
         magit-process-mode
         Man-mode
         "\\*Messages\\*"
@@ -1647,7 +1673,8 @@ respectively."
   "my keybindings for compiling"
   "b" (defun pop-to-compilation-buffer ()
         (interactive) (pop-to-buffer (get-buffer-create "*compilation*")))
-  "c" counsel-compile)
+  "C" counsel-compile
+  "c" recompile)
 
 (define-prefix-keymap my-counsel-map
   "my keybindings to counsel"
