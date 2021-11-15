@@ -281,22 +281,22 @@ xmobarSegmentSep :: String
 xmobarSegmentSep =  " | "
 
 
-queueReaderWidget :: Template.Format -> STM.TQueue String -> Template.Seg Template.RunnableWidget
-queueReaderWidget fmt xmobarQueue = Template.Runnable $ Template.RunnableWidget
+queueReaderWidget :: STM.TQueue String -> Template.Seg Template.RunnableWidget
+queueReaderWidget xmobarQueue = Template.Runnable $ Template.RunnableWidget
   { Template.com = Xmobar.Run (Xmobar.QueueReader xmobarQueue id "xmonadstuff")
-  , Template.runnableFormat = fmt
+  , Template.runnableFormat = xmobarFmt
   }
 
 
-dynNetworkWidget :: Template.Format -> Template.Seg Template.RunnableWidget
-dynNetworkWidget fmt = Template.Runnable $ Template.RunnableWidget
+dynNetworkWidget :: Template.Seg Template.RunnableWidget
+dynNetworkWidget = Template.Runnable $ Template.RunnableWidget
   { Template.com = Xmobar.Run (Xmobar.DynNetwork [] 20)
-  , Template.runnableFormat = fmt
+  , Template.runnableFormat = xmobarFmt
   }
 
 
-alsaWidget :: Template.Format -> Template.Seg Template.RunnableWidget
-alsaWidget fmt = Template.Runnable $ Template.RunnableWidget
+alsaWidget :: Template.Seg Template.RunnableWidget
+alsaWidget = Template.Runnable $ Template.RunnableWidget
   { Template.com = Xmobar.Run
     (Xmobar.Alsa "default" "Master"
       [ "-t" , "<status> <volume>%"
@@ -305,14 +305,28 @@ alsaWidget fmt = Template.Runnable $ Template.RunnableWidget
       , "--on", "vol", "--onc" , coerce base0
       , "--off", "vol", "--offc" , coerce red
       ])
-  , Template.runnableFormat = fmt
+  , Template.runnableFormat = xmobarFmt
+    { Template.actions =
+      Just [ Action.Spawn [1] "amixer -q set Master toggle" ]
+    }
   }
 
 
-dateWidget :: Template.Format -> Template.Seg Template.RunnableWidget
-dateWidget fmt = Template.Runnable $ Template.RunnableWidget
+mpdWidget :: Template.Seg Template.RunnableWidget
+mpdWidget = Template.Runnable $ Template.RunnableWidget
+  { Template.com = Xmobar.Run (Xmobar.MPD
+     ["-t"
+     , "<composer> <title> (<album>) <track>/<plength> <statei> [<flags>]"
+     , "--", "-P", ">>", "-Z", "|", "-S", "><"
+     ] 10)
+  , Template.runnableFormat = xmobarFmt
+  }
+
+
+dateWidget :: Template.Seg Template.RunnableWidget
+dateWidget = Template.Runnable $ Template.RunnableWidget
   { Template.com = Xmobar.Run (Xmobar.Date ("%F" <> xmobarSegmentSep <> "%r") "date" 10)
-  , Template.runnableFormat = fmt
+  , Template.runnableFormat = xmobarFmt
   }
 
 
@@ -343,17 +357,16 @@ separatorSeg = stdFormat (Template.Text " | ")
 bar :: STM.TMVar Xmobar.SignalType -> STM.TQueue String -> Template.Bar Template.RunnableWidget
 bar xmobarSignal xmobarQueue = Template.Bar
   { Template.left =
-    [ stdFormat (Template.Text "  λ ")
-    , queueReaderWidget xmobarFmt xmobarQueue
+    [ stdFormat (Template.Text " λ ")
+    , queueReaderWidget xmobarQueue
     ]
-  , Template.center = [ dateWidget xmobarFmt ]
+  , Template.center = [ dateWidget ]
   , Template.right = (intersperse separatorSeg
-      [ dynNetworkWidget xmobarFmt
-      -- , alsaWidget
-      --   xmobarFmt { Template.actions = Just
-      --               [ Action.Spawn [1] "amixer -q set Master toggle" ]
-      --             }
-      ]) <> [ stdFormat (Template.Text "  ") ]
+    -- [ mpdWidget
+    -- , alsaWidget
+    [ dynNetworkWidget
+    ])
+    <> [ stdFormat (Template.Text " ") ]
   }
 
 
