@@ -99,6 +99,9 @@ EndSection\n")
    (service openssh-service-type (openssh-configuration
                                   (challenge-response-authentication? #f)
                                   (password-authentication? #f)))
+   (pam-limits-service
+    (list
+     (pam-limits-entry "john" 'both 'nofile 100000)))
    polkit-wheel-service
    (service tlp-service-type (tlp-configuration
                               (tlp-default-mode "BAT")
