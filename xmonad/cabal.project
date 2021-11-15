@@ -1,3 +1,3 @@
 packages: ../../projects/xmobar
           ./my-xmonad.cabal
-constraints: xmobar +with_xft +with_alsa +with_rtsopts +with_threaded
+constraints: xmobar +all_extensions +with_rtsopts +with_threaded
