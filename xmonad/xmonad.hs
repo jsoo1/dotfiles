@@ -18,11 +18,9 @@ import           Data.Function                    (on)
 import           Data.List                        (intersperse, isPrefixOf)
 import qualified Data.Map.Strict                  as Map
 import           Data.Maybe                       (listToMaybe)
-import           Data.UUID                        (UUID)
 import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
 import           System.Process                   (createPipe)
-import           System.Random                    (randomIO)
 import           XMonad
 import           XMonad.Actions.CycleWS           (WSType (..), moveTo, shiftTo)
 import           XMonad.Actions.WindowBringer
