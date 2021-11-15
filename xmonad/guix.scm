@@ -37,7 +37,7 @@
                (url "https://github.com/jsoo1/xmobar")
                (commit commit)))
          (sha256
-          (base32 "0wvl84igskma7abscl5nz19rkvfbdd4bbcpmg99g6amzvvprsh2r"))
+          (base32 "0vbwk60sv6dhcpvm4y7x75f92zl22a26v0gwk4afdkal3m6mfcz2"))
          (file-name (git-file-name name version))))
       (inputs `(("ghc-uuid" ,ghc-uuid)
                 ,@(package-inputs xmobar)))

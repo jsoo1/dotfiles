@@ -283,23 +283,21 @@ xmobarSegmentSep :: String
 xmobarSegmentSep =  " | "
 
 
-queueReaderWidget :: Template.Format -> STM.TQueue String -> Template.Seg
+queueReaderWidget :: Template.Format -> STM.TQueue String -> Template.Seg Template.RunnableWidget
 queueReaderWidget fmt xmobarQueue = Template.Runnable $ Template.RunnableWidget
   { Template.com = Xmobar.Run (Xmobar.QueueReader xmobarQueue id "xmonadstuff")
-  , Template.val = mempty
   , Template.runnableFormat = fmt
   }
 
 
-dynNetworkWidget :: Template.Format -> Template.Seg
+dynNetworkWidget :: Template.Format -> Template.Seg Template.RunnableWidget
 dynNetworkWidget fmt = Template.Runnable $ Template.RunnableWidget
   { Template.com = Xmobar.Run (Xmobar.DynNetwork [] 20)
-  , Template.val = mempty
   , Template.runnableFormat = fmt
   }
 
 
-alsaWidget :: Template.Format -> Template.Seg
+alsaWidget :: Template.Format -> Template.Seg Template.RunnableWidget
 alsaWidget fmt = Template.Runnable $ Template.RunnableWidget
   { Template.com = Xmobar.Run
     (Xmobar.Alsa "default" "Master"
@@ -309,15 +307,13 @@ alsaWidget fmt = Template.Runnable $ Template.RunnableWidget
       , "--on", "vol", "--onc" , coerce base0
       , "--off", "vol", "--offc" , coerce red
       ])
-  , Template.val = mempty
   , Template.runnableFormat = fmt
   }
 
 
-dateWidget :: Template.Format -> Template.Seg
+dateWidget :: Template.Format -> Template.Seg Template.RunnableWidget
 dateWidget fmt = Template.Runnable $ Template.RunnableWidget
   { Template.com = Xmobar.Run (Xmobar.Date ("%F" <> xmobarSegmentSep <> "%r") "date" 10)
-  , Template.val = mempty
   , Template.runnableFormat = fmt
   }
 
@@ -335,18 +331,18 @@ xmobarFmt = Template.Format
   }
 
 
-stdFormat :: Template.Widget -> Template.Seg
+stdFormat :: Template.Widget -> Template.Seg a
 stdFormat w = Template.Plain $ Template.PlainSeg
   { Template.widget = w
   , format = xmobarFmt
   }
 
 
-separatorSeg :: Template.Seg
+separatorSeg :: Template.Seg a
 separatorSeg = stdFormat (Template.Text " | ")
 
 
-bar :: STM.TMVar Xmobar.SignalType -> STM.TQueue String -> Template.Bar
+bar :: STM.TMVar Xmobar.SignalType -> STM.TQueue String -> Template.Bar Template.RunnableWidget
 bar xmobarSignal xmobarQueue = Template.Bar
   { Template.left =
     [ stdFormat (Template.Text "  λ ")
