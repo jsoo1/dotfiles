@@ -6,7 +6,7 @@ window:
     columns: 0
     lines: 0
   padding:
-    x: 11
+    x: 5
     y: 3
   dynamic_padding: true
   decorations: full
