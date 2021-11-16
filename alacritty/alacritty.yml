@@ -30,17 +30,17 @@ iosevka: &iosevka
 
   bold:
     family: Iosevka
-    style: Regular
+    style: Medium
 
   italic:
     family: Iosevka
-    style: Light Italic
+    style: Light Oblique
 
   bold_italic:
     family: Iosevka
-    style: Italic
+    style: Medium Oblique
 
-  size: 13.0
+  size: 12.0
   use_thin_strokes: true
 
 font: *iosevka
