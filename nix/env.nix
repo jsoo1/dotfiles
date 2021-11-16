@@ -1,18 +1,18 @@
-{ lib, pkgs ? import ./pin.nix
-, isDarwin ? builtins.currentSystem == "x86_64-darwin" }:
+{ pkgs ? import ./pin.nix, isDarwin ? builtins.currentSystem == "x86_64-darwin"
+}:
 let
   inherit (pkgs)
     bashCompletion bashInteractive dogdns fd gawk gdb ghcid git
-    haskell-language-server iosevka libressl nix-diff nix-prefetch nixfmt rage
-    restream ripgrep rnix-lsp rr shellcheck socat terraform-lsp watch;
+    haskell-language-server iosevka libressl neovim nix-diff nix-prefetch nixfmt
+    rage restream ripgrep rnix-lsp rr shellcheck socat terraform-lsp watch;
   fonts = [ iosevka ];
   haskell-utilities = [ ghcid haskell-language-server ];
-  c-utilities = [ gdb ] ++ lib.optional (!isDarwin) rr;
+  c-utilities = [ gdb ] ++ pkgs.lib.optional (!isDarwin) rr;
   macos-quirks = [ bashInteractive ];
   nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
   remarkable-utilities = [ restream ];
   shell-utilities =
-    [ bashCompletion dogdns fd gawk git rage ripgrep shellcheck watch ];
+    [ bashCompletion dogdns fd gawk git neovim rage ripgrep shellcheck watch ];
   socket-utilities = [
     libressl # see "nc" in extraOutputsToInstall
     socat
@@ -25,5 +25,5 @@ in builtins.concatLists [
   shell-utilities
   socket-utilities
   terraform-utilities
-  (lib.optionals isDarwin (fonts ++ macos-quirks ++ remarkable-utilities))
+  (pkgs.lib.optionals isDarwin (fonts ++ macos-quirks ++ remarkable-utilities))
 ]

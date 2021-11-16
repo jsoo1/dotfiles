@@ -44,7 +44,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
   home = lib.optionalAttrs isDarwin { inherit activation; } // {
     extraOutputsToInstall = [ "doc" "nc" ];
 
-    packages = import ./env.nix { inherit lib pkgs isDarwin; };
+    packages = import ./env.nix { inherit pkgs isDarwin; };
 
     file = lib.optionalAttrs isDarwin feeds // {
       ".ghci".source = "${dotfiles}/ghci/.ghci";
@@ -64,7 +64,6 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
     gpg.enable = true;
     htop.enable = true;
     jq.enable = true;
-    neovim.enable = true;
     skim.defaultOptions = [ "-m" "--color=bw" ];
     skim.enable = true;
     tmux.enable = true;
