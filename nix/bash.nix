@@ -3,12 +3,10 @@
 let
   username = config.home.username;
   hd = "ssh -q hd 'rm $(gpgconf --list-dirs agent-socket)' && ssh hd";
-  em =
-    "emacsclient -t ${if !isDarwin then "--socket-name=${username}" else ""}";
+  em = "emacsclient -t --socket-name=${username}";
   tm = dir:
-    let emacs-cmd = if isDarwin then "emacs" else em;
-    in ''
-      tmux new-session -A -s $(basename "${dir}" | tr '.' '-') -c "${dir}" ${emacs-cmd} ${dir}'';
+    ''
+      tmux new-session -A -s $(basename "${dir}" | tr '.' '-') -c "${dir}" ${em} ${dir}'';
 
   sessionVariables = {
     EDITOR = em;
@@ -53,12 +51,17 @@ in lib.optionalAttrs (!isDarwin) { enableAutojump = true; } // {
     yellow = text: "\\[\\033[0;33m\\]${text}\\[\\033[0m\\]";
     fmt = style: if !isDarwin then style else lib.id;
   in ''
-    ${if isDarwin then ''
+    ${lib.optionalString isDarwin ''
+      launchctl start org.gnu.emacs
       restart-nix-daemon () {
         sudo launchctl bootout system/org.nixos.nix-daemon \
           && sudo launchctl load /Library/LaunchDaemons/org.nixos.nix-daemon.plist
-      }'' else
-      ""}
+      }
+
+      restart-emacs-daemon () {
+        sudo launchctl stop org.gnu.emacs \
+          && sudo launchctl load ~/Library/LaunchAgents/org.gnu.emacs.plist
+      }''}
 
     # Keybindings
     tmux-projects () {

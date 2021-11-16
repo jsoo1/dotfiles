@@ -1969,7 +1969,4 @@ respectively."
               (user-error
                (message "Unloaded env for %s" (buffer-name))))))
 
-(when (eq 'darwin system-type)
-  (require 'server)
-  (unless (server-running-p) (server-start)))
 ;;; init.el ends here

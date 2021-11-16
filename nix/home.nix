@@ -25,6 +25,11 @@ let
     pinentryFlavor = "curses";
   };
 
+  launchd-agents = {
+    "Library/LaunchAgents/org.gnu.emacs.plist".source =
+      "${dotfiles}/nix/org.gnu.emacs.plist";
+  };
+
   systemd.user.services.emacs = {
     Unit.Description = "Emacs Daemon";
     Unit.Documentation = "man:emacs(1)";
@@ -46,7 +51,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
 
     packages = import ./env.nix { inherit pkgs isDarwin; };
 
-    file = lib.optionalAttrs isDarwin feeds // {
+    file = lib.optionalAttrs isDarwin (feeds // launchd-agents) // {
       ".ghci".source = "${dotfiles}/ghci/.ghci";
       ".haskeline".source = "${dotfiles}/ghci/.haskeline";
       ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
