@@ -394,6 +394,7 @@
    (projectile-project-compilation-cmd . "home-manager switch -f ~/dotfiles/nix/home.nix")
    (projectile-project-compilation-cmd . "cabal new-build")
    (projectile-project-compilation-cmd . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix ")
+   (projectile-project-compilation-cmd . "guix package -m ~/dotfiles/guix/manifest.scm")
    (haskell-process-wrapper-function
     . (lambda (argv)
         (append (list "env" "NO_COLOR=true") argv)))
