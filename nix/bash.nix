@@ -49,7 +49,9 @@ in lib.optionalAttrs (!isDarwin) { enableAutojump = true; } // {
     bold = text: "\\[\\033[0;1m\\]${text}\\[\\033[0m\\]";
     red = text: "\\[\\033[0;1;31m\\]${text}\\[\\033[0m\\]";
     yellow = text: "\\[\\033[0;33m\\]${text}\\[\\033[0m\\]";
-    fmt = style: if !isDarwin then style else lib.id;
+    cyan = text: "\\[\\033[0;36m\\]${text}\\[\\033[0m\\]";
+    purple = text: "\\[\\033[0;35m\\]${text}\\[\\033[0m\\]";
+    fmt = styleLinux: styleDarwin: if isDarwin then styleDarwin else styleLinux;
   in ''
     ${lib.optionalString isDarwin ''
       launchctl start org.gnu.emacs
@@ -87,6 +89,8 @@ in lib.optionalAttrs (!isDarwin) { enableAutojump = true; } // {
       (git branch 2>/dev/null | awk '/^\*/ { $1=""; print $0 }') || echo ""
     }
 
-    PS1="${fmt bold "\\u@"}${fmt red "\\h"} \\w${fmt yellow "\\$(_cbr)"} $ "
+    PS1="${fmt bold bold "\\u@"}${fmt red cyan "\\h"} \\w${
+      fmt yellow purple "\\$(_cbr)"
+    } $ "
   '';
 }
