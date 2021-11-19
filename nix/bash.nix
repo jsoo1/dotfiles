@@ -89,7 +89,7 @@ in lib.optionalAttrs (!isDarwin) { enableAutojump = true; } // {
       (git branch 2>/dev/null | awk '/^\*/ { $1=""; print $0 }') || echo ""
     }
 
-    PS1="${fmt bold bold "\\u@"}${fmt red cyan "\\h"} \\w${
+    PS1="${fmt bold bold "\\u@"}${fmt red cyan "\\h"} \\W${
       fmt yellow purple "\\$(_cbr)"
     } $ "
   '';
