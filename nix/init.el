@@ -286,7 +286,7 @@
             (dired-hide-details-mode)))
 
 (with-eval-after-load 'dired
-  (define-key dired-mode-map ")" #'dired-git-info-mode))
+  (evil-define-key 'normal dired-mode-map ")" #'dired-git-info-mode))
 
 (require 'diredfl)
 (diredfl-global-mode 1)
