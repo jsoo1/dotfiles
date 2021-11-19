@@ -3,6 +3,7 @@ let
     with elpaPackages; [
       csv-mode
       debbugs
+      dired-git-info
       ediprolog
       let-alist
       project
@@ -21,7 +22,6 @@ let
       counsel-projectile
       cql-mode
       dhall-mode
-      dired-git
       editorconfig
       elfeed
       emms

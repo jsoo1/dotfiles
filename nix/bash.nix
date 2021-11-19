@@ -20,7 +20,8 @@ let
     gco = "git checkout";
     gst = "git status";
     glg = "git log";
-    lsa = "ls -lsa";
+    lsa = "exa -la";
+    tree = "exa -Ta";
     vi = "nvim";
     pb = "curl -F c=@- pb";
   };
