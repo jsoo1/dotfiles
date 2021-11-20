@@ -285,7 +285,7 @@
             (auto-revert-mode)
             (dired-hide-details-mode)))
 
-(with-eval-after-load 'dired
+(with-eval-after-load 'evil
   (evil-define-key 'normal dired-mode-map ")" #'dired-git-info-mode))
 
 (require 'diredfl)
