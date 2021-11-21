@@ -40,7 +40,7 @@ iosevka: &iosevka
     family: Iosevka
     style: Medium Oblique
 
-  size: 12.0
+  size: 13.0
   use_thin_strokes: true
 
 font: *iosevka
