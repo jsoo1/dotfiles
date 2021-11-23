@@ -17,12 +17,7 @@ let
 
   services.gpg-agent = {
     enable = true;
-    extraConfig = ''
-      allow-emacs-pinentry
-      allow-loopback-entry
-    '';
     verbose = true;
-    pinentryFlavor = "curses";
   };
 
   launchd-agents = {
@@ -59,7 +54,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
       ".haskeline".source = "${dotfiles}/ghci/.haskeline";
       ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
       ".vimrc".source = "${dotfiles}/minimal/.vimrc";
-      ".tmux.conf".source = "${dotfiles}/tmux/.tmux.conf";
+      ".tmux.conf".source = "${dotfiles}/nix/.tmux.conf";
     };
   };
 
@@ -74,7 +69,6 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
     jq.enable = true;
     skim.defaultOptions = [ "-m" "--color=bw" ];
     skim.enable = true;
-    tmux.enable = true;
     bash = import ./bash.nix { inherit config lib ssh-auth-sock isDarwin; };
   };
 }

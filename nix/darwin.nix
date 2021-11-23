@@ -22,7 +22,7 @@ in {
   system.stateVersion = 4;
 
   users.users."johh.soo" = {
-    name = "John Soo";
+    name = "johh.soo";
     home = "/Users/johh.soo";
   };
   home-manager.useGlobalPkgs = true;
