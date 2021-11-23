@@ -1,10 +1,12 @@
-{ pkgs, config, lib, ... }:
+{ pkgs ? import ./pin.nix { }, config, lib, ... }:
 let
   isDarwin = builtins.currentSystem == "x86_64-darwin";
 
   home = config.home.homeDirectory;
   username = config.home.username;
   dotfiles = "${home}/dotfiles";
+
+  env = import ./env.nix { inherit pkgs isDarwin; };
 
   feeds = {
     ".emacs.d/feeds".recursive = true;
@@ -44,12 +46,13 @@ let
   '';
 
 in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
-  home = lib.optionalAttrs isDarwin { inherit activation; } // {
+  home = lib.optionalAttrs isDarwin {
+    inherit activation;
     enableNixpkgsReleaseCheck = false;
-
+  } // {
     extraOutputsToInstall = [ "doc" "nc" ];
 
-    packages = (import ./env.nix { inherit pkgs isDarwin; }).user;
+    packages = env.user ++ lib.optionals (!isDarwin) env.shell-utilities;
 
     file = lib.optionalAttrs isDarwin (feeds // launchd-agents) // {
       ".ghci".source = "${dotfiles}/ghci/.ghci";
