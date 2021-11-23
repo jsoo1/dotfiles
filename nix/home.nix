@@ -1,7 +1,5 @@
-{ config, lib, ... }:
+{ pkgs, config, lib, ... }:
 let
-  pkgs = import ./pin.nix;
-
   isDarwin = builtins.currentSystem == "x86_64-darwin";
 
   home = config.home.homeDirectory;

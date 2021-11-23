@@ -1,5 +1,5 @@
-{ pkgs ? import ./pin.nix, isDarwin ? builtins.currentSystem == "x86_64-darwin"
-}:
+{ pkgs ? import ./pin.nix { }
+, isDarwin ? builtins.currentSystem == "x86_64-darwin" }:
 let
   inherit (pkgs)
     bashCompletion bashInteractive dogdns exa fd gawk gdb ghcid git
