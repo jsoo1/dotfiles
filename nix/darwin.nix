@@ -1,15 +1,13 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
-{
-  # List packages installed in system profile. To search by name, run:
-  # $ nix-env -qaP | grep wget
-  environment.systemPackages = [ pkgs.vim ];
+let env = import ./env.nix { inherit pkgs; };
+in {
+  imports = [ ];
+  environment.systemPackages = env.shell-utilities;
 
   # Use a custom configuration.nix location.
-  # $ darwin-rebuild switch -I darwin-config=$HOME/.config/nixpkgs/darwin/configuration.nix
   environment.darwinConfig = "$HOME/dotfiles/nix/darwin.nix";
 
-  # Auto upgrade nix package and the daemon service.
   services.nix-daemon = {
     enable = true;
     enableSocketListener = true;

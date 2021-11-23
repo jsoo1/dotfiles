@@ -47,7 +47,7 @@ in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
   home = lib.optionalAttrs isDarwin { inherit activation; } // {
     extraOutputsToInstall = [ "doc" "nc" ];
 
-    packages = import ./env.nix { inherit pkgs isDarwin; };
+    packages = (import ./env.nix { inherit pkgs isDarwin; }).user;
 
     file = lib.optionalAttrs isDarwin (feeds // launchd-agents) // {
       ".ghci".source = "${dotfiles}/ghci/.ghci";

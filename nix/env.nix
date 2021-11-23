@@ -29,12 +29,17 @@ let
     socat
   ];
   terraform-utilities = [ terraform-lsp ];
-in builtins.concatLists [
-  haskell-utilities
-  c-utilities
-  nix-utilities
-  shell-utilities
-  socket-utilities
-  terraform-utilities
-  (pkgs.lib.optionals isDarwin (fonts ++ macos-quirks ++ remarkable-utilities))
-]
+in {
+  inherit fonts haskell-utilities c-utilities macos-quirks nix-utilities
+    remarkable-utilities shell-utilities socket-utilities terraform-utilities;
+
+  user = builtins.concatLists [
+    haskell-utilities
+    c-utilities
+    nix-utilities
+    socket-utilities
+    terraform-utilities
+    (pkgs.lib.optionals isDarwin
+      (fonts ++ macos-quirks ++ remarkable-utilities))
+  ];
+}
