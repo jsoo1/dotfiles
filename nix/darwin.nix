@@ -2,7 +2,7 @@
 
 let env = import ./env.nix { inherit pkgs; };
 in {
-  imports = [ ];
+  imports = [ <home-manager/nix-darwin> ];
   environment.systemPackages = env.shell-utilities;
 
   # Use a custom configuration.nix location.
@@ -20,4 +20,11 @@ in {
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
+
+  users.users."johh.soo" = {
+    name = "John Soo";
+    home = "/Users/johh.soo";
+  };
+  home-manager.useGlobalPkgs = true;
+  home-manager.users."johh.soo" = import ./home.nix;
 }
