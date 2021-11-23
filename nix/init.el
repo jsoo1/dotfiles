@@ -399,6 +399,7 @@
    (haskell-stylish-on-save . t)
    (haskell-stylish-on-save . nil)
    (projectile-project-compilation-cmd . "home-manager switch -f ~/dotfiles/nix/home.nix")
+   (projectile-project-compilation-cmd . "darwin-rebuild -I nixpkgs=./nix/pin.nix switch")
    (projectile-project-compilation-cmd . "cabal new-build")
    (projectile-project-compilation-cmd . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix ")
    (haskell-process-wrapper-function
