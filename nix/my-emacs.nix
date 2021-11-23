@@ -118,7 +118,8 @@ let
   emacs-overlay = (import (builtins.fetchGit {
     url = "https://github.com/nix-community/emacs-overlay";
     ref = "master";
-    rev = "2b083adda6867e7c3812c84a10c04d1476c1ac81";
+    # 2021-11-22
+    rev = "c7f51932424258572ab6790c3250384c8524a4c8";
   }));
   my-emacs-overlay = (self: super: {
     my-emacs = super.emacs-nox.pkgs.emacsWithPackages (epkgs:

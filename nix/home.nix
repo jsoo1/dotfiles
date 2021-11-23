@@ -45,6 +45,8 @@ let
 
 in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
   home = lib.optionalAttrs isDarwin { inherit activation; } // {
+    enableNixpkgsReleaseCheck = false;
+
     extraOutputsToInstall = [ "doc" "nc" ];
 
     packages = (import ./env.nix { inherit pkgs isDarwin; }).user;
