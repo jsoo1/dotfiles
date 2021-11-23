@@ -2,22 +2,25 @@
 , isDarwin ? builtins.currentSystem == "x86_64-darwin" }:
 let
   inherit (pkgs)
-    bashCompletion bashInteractive dogdns exa fd gawk gdb ghcid git
-    haskell-language-server iosevka libressl neovim nix-diff nix-prefetch nixfmt
-    rage restream ripgrep rnix-lsp rr shellcheck socat terraform-lsp tmux watch;
+    bashCompletion bashInteractive ncurses dogdns exa fd gawk gdb ghcid git
+    haskell-language-server home-manager iosevka libressl neovim nix-diff
+    nix-prefetch nixpkgs-fmt rage restream ripgrep rnix-lsp rr shellcheck socat
+    terraform-lsp tmux watch;
   fonts = [ iosevka ];
   haskell-utilities = [ ghcid haskell-language-server ];
   c-utilities = [ gdb ] ++ pkgs.lib.optional (!isDarwin) rr;
   macos-quirks = [ bashInteractive ];
-  nix-utilities = [ nixfmt nix-diff nix-prefetch rnix-lsp ];
+  nix-utilities = [ nixpkgs-fmt nix-diff nix-prefetch rnix-lsp ];
   remarkable-utilities = [ restream ];
   shell-utilities = [
     bashCompletion
+    ncurses
     dogdns
     exa
     fd
     gawk
     git
+    home-manager
     neovim
     rage
     ripgrep

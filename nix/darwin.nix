@@ -1,8 +1,8 @@
 { config, lib, pkgs, ... }:
 
 let env = import ./env.nix { inherit pkgs; };
-in {
-  imports = [ <home-manager/nix-darwin> ];
+in
+{
   environment.systemPackages = env.shell-utilities;
 
   # Use a custom configuration.nix location.
@@ -25,6 +25,4 @@ in {
     name = "johh.soo";
     home = "/Users/johh.soo";
   };
-  home-manager.useGlobalPkgs = true;
-  home-manager.users."johh.soo" = import ./home.nix;
 }

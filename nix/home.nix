@@ -1,6 +1,6 @@
-{ pkgs ? import ./pin.nix { }, config, lib, ... }:
+{ pkgs, config, lib, ... }:
 let
-  isDarwin = builtins.currentSystem == "x86_64-darwin";
+  isDarwin = pkgs.system == "x86_64-darwin";
 
   home = config.home.homeDirectory;
   username = config.home.username;
@@ -40,35 +40,48 @@ let
     $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/nix,.emacs.d}/init.el
   '';
 
-in lib.optionalAttrs (!isDarwin) { inherit systemd services; } // {
-  home = lib.optionalAttrs isDarwin {
-    inherit activation;
-    enableNixpkgsReleaseCheck = false;
-  } // {
-    extraOutputsToInstall = [ "doc" "nc" ];
+  linux-only = {
+    inherit systemd services; home.packages = env.shell-utilities;
+  };
 
-    packages = env.user ++ lib.optionals (!isDarwin) env.shell-utilities;
-
-    file = lib.optionalAttrs isDarwin (feeds // launchd-agents) // {
-      ".ghci".source = "${dotfiles}/ghci/.ghci";
-      ".haskeline".source = "${dotfiles}/ghci/.haskeline";
-      ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
-      ".vimrc".source = "${dotfiles}/minimal/.vimrc";
-      ".tmux.conf".source = "${dotfiles}/nix/.tmux.conf";
+  darwin-only = {
+    home = {
+      inherit activation; file = (feeds // launchd-agents);
     };
+    programs = { autojump.enable = true; };
   };
 
-  programs = lib.optionalAttrs isDarwin { autojump.enable = true; } // {
-    bat.enable = true;
-    direnv.enable = true;
-    direnv.enableBashIntegration = true;
-    emacs.enable = true;
-    emacs.package = pkgs.my-emacs;
-    gpg.enable = true;
-    htop.enable = true;
-    jq.enable = true;
-    skim.defaultOptions = [ "-m" "--color=bw" ];
-    skim.enable = true;
-    bash = import ./bash.nix { inherit config lib ssh-auth-sock isDarwin; };
-  };
-}
+in
+lib.mkMerge [
+  (lib.mkIf (!isDarwin) linux-only)
+  (lib.mkIf isDarwin darwin-only)
+  {
+    home = {
+      extraOutputsToInstall = [ "doc" "nc" ];
+
+      packages = env.user;
+
+      file = {
+        ".ghci".source = "${dotfiles}/ghci/.ghci";
+        ".haskeline".source = "${dotfiles}/ghci/.haskeline";
+        ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
+        ".vimrc".source = "${dotfiles}/minimal/.vimrc";
+        ".tmux.conf".source = "${dotfiles}/nix/.tmux.conf";
+      };
+    };
+
+    programs = {
+      bat.enable = true;
+      direnv.enable = true;
+      direnv.enableBashIntegration = true;
+      emacs.enable = true;
+      emacs.package = pkgs.my-emacs;
+      gpg.enable = true;
+      htop.enable = true;
+      jq.enable = true;
+      skim.defaultOptions = [ "-m" "--color=bw" ];
+      skim.enable = true;
+      bash = import ./bash.nix { inherit config lib ssh-auth-sock isDarwin; };
+    };
+  }
+]
