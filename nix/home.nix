@@ -16,7 +16,12 @@ let
 
   services.gpg-agent = {
     enable = true;
+    extraConfig = ''
+      allow-emacs-pinentry
+      allow-loopback-entry
+    '';
     verbose = true;
+    pinentryFlavor = "curses";
   };
 
   systemd.user.services.emacs = {
@@ -28,6 +33,20 @@ let
       ExecStart = "${pkgs.my-emacs}/bin/emacs --fg-daemon=${username}";
       ExecStop = "${pkgs.coreutils}/bin/kill -9 $MAINPID";
     };
+  };
+
+  gitconfig = {
+    user = {
+      name = "John Soo";
+      email = "john.soo@arista.com";
+      signingkey = "71F4C27CC2540312F69F553FD8A148F8CE4DDBC2";
+    };
+    core = { editor = "nvim"; };
+    diff = { renames = true; };
+    github = { user = "jsoo1"; };
+    commit = { gpgsign = true; };
+    branch = { autoSetupMerge = false; };
+
   };
 
   activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -68,7 +87,6 @@ lib.mkMerge [
     };
 
     xdg.configFile = {
-      "git/config".source = "${dotfiles}/nix/.gitconfig";
       "tmux/tmux.conf".source = "${dotfiles}/nix/.tmux.conf";
     };
 
@@ -79,6 +97,8 @@ lib.mkMerge [
       direnv.enableBashIntegration = true;
       emacs.enable = true;
       emacs.package = pkgs.my-emacs;
+      git.enable = true;
+      git.extraConfig = gitconfig;
       gpg.enable = true;
       htop.enable = true;
       jq.enable = true;
