@@ -1,10 +1,9 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, dotfiles, config, lib, ... }:
 let
   isDarwin = pkgs.system == "x86_64-darwin";
 
   home = config.home.homeDirectory;
   username = config.home.username;
-  dotfiles = "${home}/dotfiles";
 
   env = import ./env.nix { inherit pkgs isDarwin; };
 

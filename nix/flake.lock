@@ -20,6 +20,22 @@
         "type": "github"
       }
     },
+    "dotfiles": {
+      "locked": {
+        "lastModified": 1637814914,
+        "narHash": "sha256-KuRo9uKuH8cLooeABhFv+OMhFVxj1ApY8VKjDP10/+s=",
+        "ref": "release",
+        "rev": "d6715dd26efc232aceb3b909441bc9fc2c23671d",
+        "revCount": 1460,
+        "type": "git",
+        "url": "https://git.sr.ht/~jsoo/dotfiles"
+      },
+      "original": {
+        "ref": "release",
+        "type": "git",
+        "url": "https://git.sr.ht/~jsoo/dotfiles"
+      }
+    },
     "flake-utils": {
       "locked": {
         "lastModified": 1637014545,
@@ -75,6 +91,7 @@
     "root": {
       "inputs": {
         "darwin": "darwin",
+        "dotfiles": "dotfiles",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs"

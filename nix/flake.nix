@@ -1,6 +1,7 @@
 {
   description = "A home-manager/nix-darwin configuration";
   inputs = {
+    dotfiles.url = "git+https://git.sr.ht/~jsoo/dotfiles?ref=release";
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url =
       "github:NixOS/nixpkgs/67e5945d357ffa2d9bf7aa40fa59ddfd99513f12";
@@ -14,7 +15,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { self, nixpkgs, flake-utils, home-manager, darwin }:
+  outputs = { self, dotfiles, nixpkgs, flake-utils, home-manager, darwin }:
     let
       overlays = import ./my-emacs.nix ++ import ./restream.nix;
     in
@@ -41,7 +42,7 @@
           pkgs = import nixpkgs { inherit system; };
         in
         pkgs.writeShellScriptBin "darwin-rebuild" ''
-          ${darwinConfigurations.johhsoo.system}/sw/bin/darwin-rebuild --impure --flake .# "$@"
+          ${darwinConfigurations.johhsoo.system}/sw/bin/darwin-rebuild --flake .# "$@"
         '';
 
       darwinConfigurations.johhsoo = darwin.lib.darwinSystem
@@ -55,6 +56,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.users."johh.soo" = import ./home.nix;
+              home-manager.extraSpecialArgs = { inherit dotfiles; };
             }
             ./darwin.nix
           ];
@@ -70,6 +72,7 @@
             username = "john";
             homeDirectory = "/home/john";
             configuration.imports = [ ./home.nix ];
+            extraSpecialArgs = { inherit dotfiles; };
           };
     };
 }
