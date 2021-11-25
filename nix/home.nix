@@ -20,11 +20,6 @@ let
     verbose = true;
   };
 
-  launchd-agents = {
-    "Library/LaunchAgents/org.gnu.emacs.plist".source =
-      "${dotfiles}/nix/org.gnu.emacs.plist";
-  };
-
   systemd.user.services.emacs = {
     Unit.Description = "Emacs Daemon";
     Unit.Documentation = "man:emacs(1)";
@@ -46,7 +41,7 @@ let
 
   darwin-only = {
     home = {
-      inherit activation; file = (feeds // launchd-agents);
+      inherit activation; file = feeds;
     };
     programs = { autojump.enable = true; };
   };
