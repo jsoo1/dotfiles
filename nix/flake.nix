@@ -24,30 +24,33 @@
       overlays = import ./my-emacs.nix ++ import ./restream.nix;
       devThings = flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ]
         (system:
-          let pkgs = import nixpkgs { inherit system overlays; }; in
+          let packages = import nixpkgs { inherit system overlays; }; in
           {
             # Useful for the following nix repl scenario to replace `nix repl pin.nix`:
             # $ nix repl
             # > fl = builtins.getFlake "*this $PWD here*"
             # > :b fl.pkgs.x86_64-darwin.ncurses
 
-            packages = pkgs;
-            devShell = pkgs.mkShell {
-              buildInputs = [ pkgs.home-manager ];
-            };
+            inherit packages;
           }
         );
     in
-    {
-      inherit (devThings) packages devShell;
+    rec {
+      inherit (devThings) packages;
 
-      defaultPackage.x86_64-linux =
-        (import nixpkgs {
+      devShell.x86_64-linux =
+        let pkgs = import nixpkgs {
+          inherit overlays;
           system = "x86_64-linux";
-        }).writeShellScriptBin
-          "home-manager" ''
-          ${home-manager.defaultPackage.x86_64-linux}/bin/home-manager switch --flake .#homeConfigurations.john
-        '';
+        };
+        in
+        pkgs.mkShell {
+          buildInputs = [
+            (pkgs.writeShellScriptBin "john-home-activation"
+              "${homeConfigurations.john.activationPackage}/activate")
+          ];
+          shellHook = "activate";
+        };
 
       darwinConfigurations.johhsoo = darwin.lib.darwinSystem
         {
@@ -71,13 +74,12 @@
           system = "x86_64-linux";
           pkgs = import nixpkgs { inherit system overlays; };
         in
-        home-manager.lib.homeManagerConfiguration
-          {
-            inherit system;
-            username = "john";
-            homeDirectory = "/home/john";
-            configuration.imports = [ ./home.nix ];
-            extraSpecialArgs = { inherit dotfiles; };
-          };
+        home-manager.lib.homeManagerConfiguration {
+          inherit system pkgs;
+          username = "john";
+          homeDirectory = "/home/john";
+          configuration = ./home.nix;
+          extraSpecialArgs = { inherit dotfiles; };
+        };
     };
 }
