@@ -12,9 +12,6 @@ in
 {
   environment.systemPackages = env.shell-utilities;
 
-  # Use a custom configuration.nix location.
-  environment.darwinConfig = "$HOME/dotfiles/nix/darwin.nix";
-
   environment.variables.TERMINFO = "${pkgs.ncurses}/share/terminfo";
 
   age = {
