@@ -11,7 +11,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
-      url = "github:lnl7/nix-darwin";
+      url = "git+https://github.com/considerate/nix-darwin?ref=age";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

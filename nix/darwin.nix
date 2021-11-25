@@ -1,6 +1,13 @@
 { config, lib, pkgs, ... }:
 
-let env = import ./env.nix { inherit pkgs; };
+let
+  env = import ./env.nix { inherit pkgs; };
+
+  nix-conf = {
+    file = pkgs.copyPathToStore ./nix.conf.age;
+    path = "/Users/johh.soo/.config/nix/nix.conf";
+    owner = "johh.soo";
+  };
 in
 {
   environment.systemPackages = env.shell-utilities;
@@ -10,11 +17,29 @@ in
 
   environment.variables.TERMINFO = "${pkgs.ncurses}/share/terminfo";
 
+  age = {
+    sshKeyPaths = [ "/Users/johh.soo/.ssh/id_rsa" ];
+    secrets = {
+      inherit nix-conf;
+    };
+  };
+
   services.nix-daemon = {
     enable = true;
     enableSocketListener = true;
   };
-  nix = import ./nix-daemon.nix;
+
+  nix = {
+    maxJobs = 16;
+    trustedUsers = [ "johh.soo" ];
+    useDaemon = true;
+    distributedBuilds = true;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+      system-features = benchmark big-parallel local nixos-test
+      builders-use-substitutes = true
+    '';
+  };
 
   fonts = {
     fonts = [ pkgs.iosevka ];

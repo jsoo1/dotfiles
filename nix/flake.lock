@@ -7,17 +7,18 @@
         ]
       },
       "locked": {
-        "lastModified": 1634994402,
-        "narHash": "sha256-xmlCVVOYGpZoxgOqsDOVF0B0ASrnbNGVAEzID9qh2xo=",
-        "owner": "lnl7",
-        "repo": "nix-darwin",
-        "rev": "44da835ac40dab5fd231298b59d83487382d2fab",
-        "type": "github"
+        "lastModified": 1637594117,
+        "narHash": "sha256-bNgVhmrXJPfMq9xiAomrwiIeu/otK7d2K2yS2mbUMrA=",
+        "ref": "age",
+        "rev": "68c422a355f45c328411ec2f23e80c951cd7be1f",
+        "revCount": 1046,
+        "type": "git",
+        "url": "https://github.com/considerate/nix-darwin"
       },
       "original": {
-        "owner": "lnl7",
-        "repo": "nix-darwin",
-        "type": "github"
+        "ref": "age",
+        "type": "git",
+        "url": "https://github.com/considerate/nix-darwin"
       }
     },
     "dotfiles": {
