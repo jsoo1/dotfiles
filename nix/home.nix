@@ -70,6 +70,7 @@ lib.mkMerge [
     };
 
     programs = {
+      bash = import ./bash.nix { inherit config lib ssh-auth-sock isDarwin; };
       bat.enable = true;
       direnv.enable = true;
       direnv.enableBashIntegration = true;
@@ -80,7 +81,8 @@ lib.mkMerge [
       jq.enable = true;
       skim.defaultOptions = [ "-m" "--color=bw" ];
       skim.enable = true;
-      bash = import ./bash.nix { inherit config lib ssh-auth-sock isDarwin; };
+      tmux.enable = true;
+      tmux.package = pkgs.tmux;
     };
   }
 ]

@@ -6,7 +6,7 @@ let
     bashCompletion bashInteractive ncurses dogdns exa fd gawk gdb ghcid git
     haskell-language-server home-manager iosevka libressl neovim nix-diff
     nix-prefetch nixpkgs-fmt rage restream ripgrep rnix-lsp rr shellcheck socat
-    terraform-lsp tmux watch;
+    terraform-lsp watch;
   haskell-utilities = [ ghcid haskell-language-server ];
   c-utilities = [ gdb ] ++ pkgs.lib.optional (!isDarwin) rr;
   macos-quirks = [ bashInteractive ];
@@ -25,7 +25,6 @@ let
     rage
     ripgrep
     shellcheck
-    tmux
     watch
   ];
   socket-utilities = [
