@@ -22,7 +22,7 @@
   outputs = { self, dotfiles, nixpkgs, flake-utils, home-manager, darwin, ... }:
     let
       overlays = import ./my-emacs.nix ++ import ./restream.nix;
-      devThings = flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ]
+      all-systems = flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ]
         (system:
           let packages = import nixpkgs { inherit system overlays; }; in
           {
@@ -35,7 +35,7 @@
         );
     in
     rec {
-      inherit (devThings) packages;
+      inherit (all-systems) packages;
 
       devShell.x86_64-linux =
         let pkgs = import nixpkgs {
