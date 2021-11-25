@@ -14,7 +14,8 @@ let
     ];
   manual = { manualPackages, ... }:
     with manualPackages;
-    [ # cedille - Broken
+    [
+      # cedille - Broken
       agda2-mode
     ];
   melpa = { melpaPackages, ... }:
@@ -124,4 +125,5 @@ let
     my-emacs = super.emacs-nox.pkgs.emacsWithPackages (epkgs:
       (builtins.concatMap (f: f epkgs) [ elpa manual melpa melpaStable ]));
   });
-in [ emacs-overlay my-emacs-overlay ]
+in
+[ emacs-overlay my-emacs-overlay ]

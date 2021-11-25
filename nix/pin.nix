@@ -6,5 +6,6 @@ let
     url = "https://github.com/NixOS/nixpkgs/archive/${nix-rev}.tar.gz";
     sha256 = "03337mz0gjv48kdx0qij9in913m8wqzjjm579iblihanqrij7mxd";
   };
-in import nix-src
-(args // { overlays = import ./restream.nix ++ import ./my-emacs.nix; })
+in
+import nix-src
+  (args // { overlays = import ./restream.nix ++ import ./my-emacs.nix; })
