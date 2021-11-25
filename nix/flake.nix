@@ -36,15 +36,6 @@
           ${home-manager.defaultPackage.x86_64-linux}/bin/home-manager switch --flake .#homeConfigurations.john
         '';
 
-      defaultPackage.x86_64-darwin =
-        let
-          system = "x86_64-darwin";
-          pkgs = import nixpkgs { inherit system; };
-        in
-        pkgs.writeShellScriptBin "darwin-rebuild" ''
-          ${darwinConfigurations.johhsoo.system}/sw/bin/darwin-rebuild --flake .# "$@"
-        '';
-
       darwinConfigurations.johhsoo = darwin.lib.darwinSystem
         {
           system = "x86_64-darwin";
