@@ -23,11 +23,11 @@
     },
     "dotfiles": {
       "locked": {
-        "lastModified": 1637825544,
-        "narHash": "sha256-KfU/DdSgrczr04vxC4FC15oWZ9I+2KIP1LCjRPhsuTM=",
+        "lastModified": 1637832600,
+        "narHash": "sha256-txIhoHcocDNpgErwkM0j301pQQ0eyWktr4UMPvgnyUQ=",
         "ref": "release",
-        "rev": "9d981b75bd250d41631a81d5e73e71db0af950c8",
-        "revCount": 1485,
+        "rev": "dc9d2a2387f0d8a4d7ebf2c8c9e830d1deb47798",
+        "revCount": 1490,
         "type": "git",
         "url": "https://git.sr.ht/~jsoo/dotfiles"
       },
@@ -35,6 +35,22 @@
         "ref": "release",
         "type": "git",
         "url": "https://git.sr.ht/~jsoo/dotfiles"
+      }
+    },
+    "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1627913399,
+        "narHash": "sha256-hY8g6H2KFL8ownSiFeMOjwPC8P0ueXpCVEbxgda3pko=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "12c64ca55c1014cdc1b16ed5a804aa8576601ff2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "type": "github"
       }
     },
     "flake-utils": {
@@ -93,6 +109,7 @@
       "inputs": {
         "darwin": "darwin",
         "dotfiles": "dotfiles",
+        "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs"
