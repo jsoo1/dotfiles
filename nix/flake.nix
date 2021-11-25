@@ -29,8 +29,7 @@
             # Useful for the following nix repl scenario to replace `nix repl pin.nix`:
             # $ nix repl
             # > fl = builtins.getFlake "*this $PWD here*"
-            # > :b fl.pkgs.x86_64-darwin.ncurses
-
+            # > :b fl.packages.x86_64-darwin.ncurses
             inherit packages;
           }
         );
