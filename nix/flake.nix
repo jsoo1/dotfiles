@@ -11,7 +11,7 @@
       "github:NixOS/nixpkgs/67e5945d357ffa2d9bf7aa40fa59ddfd99513f12";
     home-manager = {
       url =
-        "github:nix-community/home-manager/ddcd476603dfd3388b1dc8234fa9d550156a51f5";
+        "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
@@ -79,7 +79,9 @@
           username = "john";
           homeDirectory = "/home/john";
           configuration = ./home.nix;
-          extraSpecialArgs = { inherit dotfiles; };
+          extraSpecialArgs = {
+            inherit dotfiles;
+          };
         };
     };
 }

@@ -39,7 +39,7 @@ let
     '';
   };
 in
-lib.optionalAttrs (!isDarwin) { enableAutojump = true; } // {
+{
   enable = true;
   inherit sessionVariables shellAliases;
   historyControl = [ "erasedups" "ignoredups" "ignorespace" ];

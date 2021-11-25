@@ -61,11 +61,8 @@ let
     ];
   };
 
-  darwin-only = {
-    home = {
-      inherit activation; file = feeds;
-    };
-    programs = { autojump.enable = true; };
+  darwin-only.home = {
+    inherit activation; file = feeds;
   };
 
 in
@@ -74,6 +71,8 @@ lib.mkMerge [
   (lib.mkIf isDarwin darwin-only)
   {
     home = {
+      enableNixpkgsReleaseCheck = false;
+
       extraOutputsToInstall = [ "doc" "nc" ];
 
       packages = env.user;
@@ -91,6 +90,7 @@ lib.mkMerge [
     };
 
     programs = {
+      autojump.enable = true;
       bash = import ./bash.nix { inherit config lib ssh-auth-sock isDarwin; };
       bat.enable = true;
       direnv.enable = true;
