@@ -31,12 +31,6 @@ in
     home = "/Users/johh.soo";
   };
 
-  launchd.user.agents = {
-    emacs = {
-      serviceConfig = {
-        ProgramArguments = [ "${pkgs.my-emacs}/bin/emacs" "--fg-daemon=johh.soo" ];
-        UserName = "johh.soo";
-      };
-    };
-  };
+  launchd.user.agents.emacs.serviceConfig.ProgramArguments =
+    [ "${pkgs.bash}/bin/sh" "-c" "${pkgs.my-emacs}/bin/emacs --fg-daemon=$USER" ];
 }
