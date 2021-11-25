@@ -66,8 +66,12 @@ lib.mkMerge [
         ".haskeline".source = "${dotfiles}/ghci/.haskeline";
         ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
         ".vimrc".source = "${dotfiles}/minimal/.vimrc";
-        ".tmux.conf".source = "${dotfiles}/nix/.tmux.conf";
       };
+    };
+
+    xdg.configFile = {
+      "git/config".source = "${dotfiles}/nix/.gitconfig";
+      "tmux/tmux.conf".source = "${dotfiles}/nix/.tmux.conf";
     };
 
     programs = {

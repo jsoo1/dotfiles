@@ -1,0 +1,14 @@
+[core]
+        editor = nvim
+[user]
+	email = john.soo@arista.com
+	name = John Soo
+	signingKey = 71F4C27CC2540312F69F553FD8A148F8CE4DDBC2
+[diff]
+        renames = true
+[github]
+        user = jsoo1
+[commit]
+        gpgsign = true
+[branch]
+        autoSetupMerge = false
