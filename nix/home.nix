@@ -14,16 +14,6 @@ let
 
   ssh-auth-sock = "${home}/.ssh/auth_sock";
 
-  services.gpg-agent = {
-    enable = true;
-    extraConfig = ''
-      allow-emacs-pinentry
-      allow-loopback-entry
-    '';
-    verbose = true;
-    pinentryFlavor = "curses";
-  };
-
   systemd.user.services.emacs = {
     Unit.Description = "Emacs Daemon";
     Unit.Documentation = "man:emacs(1)";
@@ -54,7 +44,8 @@ let
   '';
 
   linux-only = {
-    inherit systemd services;
+    inherit systemd;
+    services.gpg-agent.enable = true;
     home.packages = env.shell-utilities ++ [
       pkgs.iosevka
       pkgs.home-manager
