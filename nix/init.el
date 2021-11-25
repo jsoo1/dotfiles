@@ -1374,6 +1374,7 @@ when send commands with redis protocol."
         org-agenda-mode
         "^\\*Proced\\*$" proced
         "^\\*Process List\\*$" process-list
+        magit-status-mode
         magit-diff-mode
         magit-process-mode
         Man-mode
