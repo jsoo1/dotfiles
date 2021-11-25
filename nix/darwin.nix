@@ -14,6 +14,11 @@ in
   };
   nix = import ./nix-daemon.nix;
 
+  fonts = {
+    fonts = [ pkgs.iosevka ];
+    enableFontDir = true;
+  };
+
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.bash.enable = true;
 

@@ -6,7 +6,6 @@ let
     haskell-language-server home-manager iosevka libressl neovim nix-diff
     nix-prefetch nixpkgs-fmt rage restream ripgrep rnix-lsp rr shellcheck socat
     terraform-lsp tmux watch;
-  fonts = [ iosevka ];
   haskell-utilities = [ ghcid haskell-language-server ];
   c-utilities = [ gdb ] ++ pkgs.lib.optional (!isDarwin) rr;
   macos-quirks = [ bashInteractive ];
@@ -33,8 +32,9 @@ let
     socat
   ];
   terraform-utilities = [ terraform-lsp ];
-in {
-  inherit fonts haskell-utilities c-utilities macos-quirks nix-utilities
+in
+{
+  inherit haskell-utilities c-utilities macos-quirks nix-utilities
     remarkable-utilities shell-utilities socket-utilities terraform-utilities;
 
   user = builtins.concatLists [
@@ -44,6 +44,6 @@ in {
     socket-utilities
     terraform-utilities
     (pkgs.lib.optionals isDarwin
-      (fonts ++ macos-quirks ++ remarkable-utilities))
+      (macos-quirks ++ remarkable-utilities))
   ];
 }
