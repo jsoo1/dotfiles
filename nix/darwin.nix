@@ -8,6 +8,12 @@ let
     path = "/Users/johh.soo/.config/nix/nix.conf";
     owner = "johh.soo";
   };
+
+  ssh-conf = {
+    file = pkgs.copyPathToStore ./.sshconfig.age;
+    path = "/Users/johh.soo/.ssh/config";
+    owner = "johh.soo";
+  };
 in
 {
   environment.systemPackages = env.shell-utilities;
@@ -16,9 +22,7 @@ in
 
   age = {
     sshKeyPaths = [ "/Users/johh.soo/.ssh/id_rsa" ];
-    secrets = {
-      inherit nix-conf;
-    };
+    secrets = { inherit nix-conf ssh-conf; };
   };
 
   services.nix-daemon = {
