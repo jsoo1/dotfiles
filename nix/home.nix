@@ -36,7 +36,11 @@ let
   '';
 
   linux-only = {
-    inherit systemd services; home.packages = env.shell-utilities ++ [ pkgs.iosevka ];
+    inherit systemd services;
+    home.packages = env.shell-utilities ++ [
+      pkgs.iosevka
+      pkgs.home-manager
+    ];
   };
 
   darwin-only = {
