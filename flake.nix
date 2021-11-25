@@ -1,4 +1,4 @@
 {
   description = "Some dotfiles";
-  outputs = { self }: { };
+  outputs = _: { };
 }
