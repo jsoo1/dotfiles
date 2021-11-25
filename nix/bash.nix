@@ -35,7 +35,7 @@ let
     '';
     files = "fd '.*' '.' --hidden -E '.git*' | sk";
     history = ''
-      history | sk | awk '{$1=""}1'
+      history | sk --tac | awk '{$1=""}1'
     '';
   };
 in
