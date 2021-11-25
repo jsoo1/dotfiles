@@ -59,6 +59,9 @@ in
     home = "/Users/johh.soo";
   };
 
-  launchd.user.agents.emacs.serviceConfig.ProgramArguments =
-    [ "${pkgs.bash}/bin/sh" "-c" "${pkgs.my-emacs}/bin/emacs --fg-daemon=$USER" ];
+  launchd.user.agents.emacs.serviceConfig = {
+    KeepAlive = true;
+    ProgramArguments =
+      [ "${pkgs.bash}/bin/sh" "-c" "${pkgs.my-emacs}/bin/emacs --fg-daemon=$USER" ];
+  };
 }
