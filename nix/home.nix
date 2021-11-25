@@ -82,7 +82,7 @@ lib.mkMerge [
       gpg.enable = true;
       htop.enable = true;
       jq.enable = true;
-      skim.defaultOptions = [ "-m" "--color=bw" ];
+      skim.defaultOptions = [ "-m" "--color=bw" "--layout=reverse" ];
       skim.enable = true;
       tmux.enable = true;
       tmux.package = pkgs.tmux;
