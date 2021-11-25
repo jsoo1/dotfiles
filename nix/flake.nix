@@ -49,7 +49,7 @@
             (pkgs.writeShellScriptBin "john-home-activation"
               "${homeConfigurations.john.activationPackage}/activate")
           ];
-          shellHook = "activate";
+          shellHook = "john-home-activation";
         };
 
       darwinConfigurations.johhsoo = darwin.lib.darwinSystem
