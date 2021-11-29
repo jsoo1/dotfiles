@@ -16,6 +16,8 @@ let
   };
 in
 {
+  networking.hostName = "johhsoo";
+
   environment.systemPackages = env.shell-utilities;
 
   environment.variables.TERMINFO = "${pkgs.ncurses}/share/terminfo";
@@ -33,7 +35,6 @@ in
   nix = {
     maxJobs = 16;
     trustedUsers = [ "johh.soo" ];
-    useDaemon = true;
     distributedBuilds = true;
     extraOptions = ''
       experimental-features = nix-command flakes
