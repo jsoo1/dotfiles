@@ -18,6 +18,10 @@ in
 {
   networking.hostName = "johhsoo";
 
+  environment.extraInit = ''
+    . ${pkgs.bashCompletion}/share/bash-completion/bash_completion
+  '';
+
   environment.systemPackages = env.shell-utilities;
 
   environment.variables.TERMINFO = "${pkgs.ncurses}/share/terminfo";
