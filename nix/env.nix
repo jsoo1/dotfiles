@@ -3,26 +3,29 @@
 }:
 let
   inherit (pkgs)
-    bashCompletion bashInteractive ncurses dogdns exa fd gawk gdb ghcid git
-    haskell-language-server iosevka libressl neovim nix-diff
-    nix-prefetch nixpkgs-fmt rage restream ripgrep rnix-lsp rr shellcheck socat
-    terraform-lsp watch;
+    bashCompletion bashInteractive bottom dogdns exa fd gawk gdb ghcid git
+    haskell-language-server iosevka less libressl neovim nix-diff
+    nix-prefetch nixpkgs-fmt peep rage restream ripgrep rnix-lsp rr shellcheck socat
+    tealdeer terraform-lsp watch;
   haskell-utilities = [ ghcid haskell-language-server ];
   c-utilities = [ gdb ] ++ pkgs.lib.optional (!isDarwin) rr;
-  macos-quirks = [ bashInteractive ];
+  macos-quirks = [ bashInteractive bashCompletion less neovim ripgrep fd git rage dogdns ];
   nix-utilities = [ nixpkgs-fmt nix-diff nix-prefetch rnix-lsp ];
   remarkable-utilities = [ restream ];
   shell-utilities = [
     bashCompletion
+    bottom
     dogdns
     exa
     fd
     gawk
     git
     neovim
+    peep
     rage
     ripgrep
     shellcheck
+    tealdeer
     watch
   ];
   socket-utilities = [
