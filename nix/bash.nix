@@ -27,6 +27,7 @@ let
     tree = "exa -Ta";
     vi = "nvim";
     pb = "curl -F c=@- pb";
+    psg = "ps -eo pid,user,command | rg";
   };
 
   skim-cmds = {
