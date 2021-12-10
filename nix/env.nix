@@ -7,11 +7,17 @@ let
     haskell-language-server iosevka less libressl neovim nix-diff
     nix-prefetch nixpkgs-fmt peep rage restream ripgrep rnix-lsp rr shellcheck socat
     tealdeer terraform-lsp watch;
+
   haskell-utilities = [ ghcid haskell-language-server ];
+
   c-utilities = [ gdb ] ++ pkgs.lib.optional (!isDarwin) rr;
+
   macos-quirks = [ bashInteractive bashCompletion less neovim ripgrep fd git rage dogdns ];
+
   nix-utilities = [ nixpkgs-fmt nix-diff nix-prefetch rnix-lsp ];
+
   remarkable-utilities = [ restream ];
+
   shell-utilities = [
     bashCompletion
     bottom
@@ -28,10 +34,12 @@ let
     tealdeer
     watch
   ];
+
   socket-utilities = [
     libressl # see "nc" in extraOutputsToInstall
     socat
   ];
+
   terraform-utilities = [ terraform-lsp ];
 in
 {
