@@ -33,7 +33,6 @@ in
 
   services.nix-daemon = {
     enable = true;
-    enableSocketListener = true;
   };
 
   nix = {
