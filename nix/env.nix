@@ -3,10 +3,11 @@
 }:
 let
   inherit (pkgs)
-    bashCompletion bashInteractive bottom dogdns du-dust exa fd gawk gdb ghcid git
-    haskell-language-server iosevka less libressl neovim nix-diff
-    nix-prefetch nixpkgs-fmt peep rage recutils restream ripgrep rnix-lsp rr shellcheck socat
-    tealdeer terraform-lsp watch;
+    bashCompletion bashInteractive bottom coreutils dogdns
+    du-dust exa fd gawk gdb ghcid git haskell-language-server
+    iosevka less libressl neovim nix-diff nix-prefetch
+    nixpkgs-fmt peep rage recutils restream ripgrep rnix-lsp
+    rr shellcheck socat tealdeer tee terraform-lsp watch;
 
   haskell-utilities = [ ghcid haskell-language-server ];
 
@@ -21,6 +22,7 @@ let
   shell-utilities = [
     bashCompletion
     bottom
+    coreutils
     dogdns
     du-dust
     exa
