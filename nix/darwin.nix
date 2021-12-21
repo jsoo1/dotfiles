@@ -36,6 +36,8 @@ in
   };
 
   nix = {
+    package = pkgs.nix_2_5;
+
     maxJobs = 16;
     trustedUsers = [ "johh.soo" ];
     distributedBuilds = true;
