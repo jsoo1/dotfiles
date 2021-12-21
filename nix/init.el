@@ -452,10 +452,6 @@
 ;; Helpful
 (require 'helpful)
 
-;; Undo-Tree
-(global-undo-tree-mode)
-(setq undo-tree-history-directory-alist `((".*" . ,(expand-file-name "undo-tree" user-emacs-directory))))
-
 ;; Remove upcase-word (I never use it and it is always pestering me)
 (define-key esc-map (kbd "u") nil)
 (define-key global-map (kbd "M-u") nil)
@@ -545,6 +541,8 @@
 (setq xref-show-xrefs-function #'xref--show-defs-minibuffer)
 
 ;; Magit
+(require 'libgit)
+(require 'magit-libgit)
 (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
 
 ;; Projectile
@@ -1372,8 +1370,8 @@ when send commands with redis protocol."
         helpful-mode
         "^\\*ivy-occur.*\\*$" ivy-occur-mode
         org-agenda-mode
-        "^\\*Proced\\*$" proced
-        "^\\*Process List\\*$" process-list
+        "^\\*Proced\\*$" proced-mode
+        "^\\*Process List\\*$" process-menu-mode
         magit-status-mode
         magit-diff-mode
         magit-process-mode
@@ -1785,7 +1783,6 @@ respectively."
   "o" counsel-org-goto-all
   "p" counsel-popper-buried-popups
   "t" counsel-switch-tab
-  "u" undo-tree-visualize
   "]" evil-jump-to-tag
   "'" counsel-mark-ring
   "\"" counsel-evil-marks

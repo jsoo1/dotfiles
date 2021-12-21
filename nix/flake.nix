@@ -1,27 +1,28 @@
 {
   description = "A home-manager/nix-darwin configuration";
   inputs = {
+    emacs.url = "github:nix-community/emacs-overlay";
     dotfiles.url = "git+https://git.sr.ht/~jsoo/dotfiles?ref=release";
     flake-compat = {
       flake = false;
       url = "github:edolstra/flake-compat";
     };
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs.url =
-      "github:NixOS/nixpkgs/67e5945d357ffa2d9bf7aa40fa59ddfd99513f12";
+    nixpkgs.url = "github:NixOS/nixpkgs";
     home-manager = {
       url =
         "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
-      url = "git+https://github.com/jsoo1/nix-darwin?ref=testing";
+      url = "github:jsoo1/nix-darwin/testing";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs = { self, dotfiles, nixpkgs, flake-utils, home-manager, darwin, ... }:
+
+  outputs = { self, dotfiles, emacs, nixpkgs, flake-utils, home-manager, darwin, ... }:
     let
-      overlays = import ./my-emacs.nix ++ import ./restream.nix;
+      overlays = [ emacs.overlay ] ++ import ./my-emacs.nix ++ import ./restream.nix;
       all-systems = flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ]
         (system:
           let packages = import nixpkgs { inherit system overlays; }; in

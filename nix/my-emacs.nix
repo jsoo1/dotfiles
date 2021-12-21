@@ -5,12 +5,14 @@ let
       debbugs
       dired-git-info
       ediprolog
+      eglot
       let-alist
       project
-      seq
       sml-mode
+      which-key
       xclip
       xref
+      yasnippet
     ];
   manual = { manualPackages, ... }:
     with manualPackages;
@@ -20,40 +22,6 @@ let
     ];
   melpa = { melpaPackages, ... }:
     with melpaPackages; [
-      counsel-projectile
-      cql-mode
-      dhall-mode
-      editorconfig
-      elfeed
-      emms
-      evil-replace-with-register
-      exec-path-from-shell
-      graphql-mode
-      highlight-indent-guides
-      hydra
-      ibuffer-projectile
-      merlin
-      multi-term
-      ob-restclient
-      origami
-      popper
-      projectile
-      proof-general
-      psc-ide
-      pulseaudio-control
-      purescript-mode
-      racket-mode
-      redis
-      restclient
-      shackle
-      systemd
-      terraform-mode
-      tmux-pane
-      vimrc-mode
-      uuidgen
-    ];
-  melpaStable = { melpaStablePackages, ... }:
-    with melpaStablePackages; [
       aio
       anzu
       base16-theme
@@ -61,13 +29,18 @@ let
       company
       company-coq
       company-math
+      counsel-projectile
+      cql-mode
+      dhall-mode
       diredfl
       docker
       dockerfile-mode
-      eglot
+      editorconfig
       elf-mode
+      elfeed
       elpher
       emmet-mode
+      emms
       envrc
       eredis
       eshell-syntax-highlighting
@@ -78,7 +51,9 @@ let
       evil-escape
       evil-leader
       evil-org
+      evil-replace-with-register
       evil-surround
+      exec-path-from-shell
       f
       fill-column-indicator
       fish-completion
@@ -87,43 +62,58 @@ let
       forge
       geiser
       goto-chg
+      graphql-mode
       graphviz-dot-mode
       guix
       haskell-mode
       haskell-snippets
       helpful
+      highlight-indent-guides
+      hydra
+      ibuffer-projectile
       idris-mode
       imenu-list
       ivy
+      ivy-prescient
+      libgit
       magit
+      magit-libgit
       markdown-mode
+      merlin
+      multi-term
       nix-mode
       nodejs-repl
+      ob-restclient
       org-mime
-      ivy-prescient
+      origami
+      popper
+      projectile
+      proof-general
+      psc-ide
+      pulseaudio-control
+      purescript-mode
+      racket-mode
+      redis
       reformatter
+      restclient
       rust-mode
-      s
+      shackle
       slime
       slime-company
-      solarized-theme
+      systemd
       terraform-mode
+      tmux-pane
       tuareg
+      uuidgen
+      vimrc-mode
       web-mode
       wgrep
-      which-key
       xterm-color
       yaml-mode
-      yasnippet
     ];
-  emacs-overlay = (import (builtins.fetchGit {
-    url = "https://github.com/nix-community/emacs-overlay";
-    ref = "master";
-    rev = "2b083adda6867e7c3812c84a10c04d1476c1ac81";
-  }));
   my-emacs-overlay = (self: super: {
     my-emacs = super.emacs-nox.pkgs.emacsWithPackages (epkgs:
-      (builtins.concatMap (f: f epkgs) [ elpa manual melpa melpaStable ]));
+      (builtins.concatMap (f: f epkgs) [ elpa manual melpa ]));
   });
 in
-[ emacs-overlay my-emacs-overlay ]
+[ my-emacs-overlay ]

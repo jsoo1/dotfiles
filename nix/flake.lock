@@ -8,27 +8,27 @@
         ]
       },
       "locked": {
-        "lastModified": 1639094207,
-        "narHash": "sha256-qfEkYG1OnJREDWYtviqqauPJj14tDG1o3uiCbhKXLZs=",
-        "ref": "testing",
-        "rev": "11e5b1c49fa366bd6699afa24cc1926eb62e4312",
-        "revCount": 1051,
-        "type": "git",
-        "url": "https://github.com/jsoo1/nix-darwin"
+        "lastModified": 1640030700,
+        "narHash": "sha256-ceH+9d5R0hd2CTIbVRsz5A3jyECeLcLAOHxSbescL1o=",
+        "owner": "jsoo1",
+        "repo": "nix-darwin",
+        "rev": "805d82593fc520f993a1c9a9eeb3f7da3cb8a562",
+        "type": "github"
       },
       "original": {
+        "owner": "jsoo1",
         "ref": "testing",
-        "type": "git",
-        "url": "https://github.com/jsoo1/nix-darwin"
+        "repo": "nix-darwin",
+        "type": "github"
       }
     },
     "dotfiles": {
       "locked": {
-        "lastModified": 1637839292,
-        "narHash": "sha256-Uxuu0zqsq+MQPj6PO5g2vm+ut1BJPfaNxEkP9J+qa8E=",
+        "lastModified": 1640015929,
+        "narHash": "sha256-rt1h9SrwPDQcEPoVRhQxVW9Am7re41d6WlCoPiX35NY=",
         "ref": "release",
-        "rev": "c754abe23060cd7550da20a10ea5f7981520c394",
-        "revCount": 1497,
+        "rev": "9d875146e82e951dbec3d5c87cd6c681293f5eb7",
+        "revCount": 1513,
         "type": "git",
         "url": "https://git.sr.ht/~jsoo/dotfiles"
       },
@@ -36,6 +36,21 @@
         "ref": "release",
         "type": "git",
         "url": "https://git.sr.ht/~jsoo/dotfiles"
+      }
+    },
+    "emacs": {
+      "locked": {
+        "lastModified": 1640021600,
+        "narHash": "sha256-Qi6j942SpdXuigcY2e9yhiksuYzAcuiKJ1hXu67sFo8=",
+        "owner": "nix-community",
+        "repo": "emacs-overlay",
+        "rev": "83b82b876fb2c7d0a30befedb980f1088931ddfa",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "emacs-overlay",
+        "type": "github"
       }
     },
     "flake-compat": {
@@ -71,11 +86,11 @@
     },
     "flake-utils_2": {
       "locked": {
-        "lastModified": 1637014545,
-        "narHash": "sha256-26IZAc5yzlD9FlDT54io1oqG/bBoyka+FJk5guaX4x4=",
+        "lastModified": 1638122382,
+        "narHash": "sha256-sQzZzAbvKEqN9s0bzWuYmRaA03v40gaJ4+iL1LXjaeI=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "bba5dcc8e0b20ab664967ad83d24d64cb64ec4f4",
+        "rev": "74f7e4319258e287b0f9cb95426c9853b282730b",
         "type": "github"
       },
       "original": {
@@ -91,11 +106,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1637825539,
-        "narHash": "sha256-TmSZRsBA59HHv6Dym3ZGm2eZDa2z5EmfyAA5F5tW03Q=",
+        "lastModified": 1640037534,
+        "narHash": "sha256-lbD5EEqu2tXq3qo6UN3cZkWZA0hEWQkhluctivMtLZY=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "c27c8f49c0bccaff91f5f637ad727d440b769997",
+        "rev": "aef97988dac0541747de8bcc85c7e27726eea4af",
         "type": "github"
       },
       "original": {
@@ -106,17 +121,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1637632227,
-        "narHash": "sha256-rdcjY8ZWwUhXTKdUKT/mqI6QbEwyYtDbRGTLB349Yww=",
+        "lastModified": 1640047336,
+        "narHash": "sha256-8S+p5BsIqL/hcEdBFrFUqN5RpXQ75eCmhiIhDaPJfTU=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "67e5945d357ffa2d9bf7aa40fa59ddfd99513f12",
+        "rev": "cd17ec88e11bf3792ce574715ad8a906b118b47a",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "67e5945d357ffa2d9bf7aa40fa59ddfd99513f12",
         "type": "github"
       }
     },
@@ -124,6 +138,7 @@
       "inputs": {
         "darwin": "darwin",
         "dotfiles": "dotfiles",
+        "emacs": "emacs",
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils_2",
         "home-manager": "home-manager",
