@@ -1,4 +1,3 @@
-emacsFlake:
 let
   elpa = { elpaPackages, ... }:
     with elpaPackages; [
