@@ -68,6 +68,6 @@ in
   launchd.user.agents.emacs.serviceConfig = {
     KeepAlive = true;
     ProgramArguments =
-      [ "${pkgs.bash}/bin/sh" "-c" "${pkgs.my-emacs}/bin/emacs --fg-daemon=$USER" ];
+      [ "${pkgs.my-emacs}/bin/emacs" "--fg-daemon=johh.soo" ];
   };
 }
