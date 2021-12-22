@@ -1,3 +1,4 @@
+emacsFlake:
 let
   elpa = { elpaPackages, ... }:
     with elpaPackages; [
@@ -112,7 +113,11 @@ let
       yaml-mode
     ];
   my-emacs-overlay = (self: super: {
-    my-emacs = (self.emacsGit-nox.override {
+    my-emacs = (self.mkGitEmacs "my-emacs-git-nox" "${emacsFlake}/repos/emacs/emacs-master.json" {
+      withNS = false;
+      withX = false;
+      withGTK2 = false;
+      withGTK3 = false;
       nativeComp = true;
     }).pkgs.emacsWithPackages (epkgs:
       builtins.concatMap (f: f epkgs) [ elpa manual melpa ]);

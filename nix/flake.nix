@@ -1,7 +1,7 @@
 {
   description = "A home-manager/nix-darwin configuration";
   inputs = {
-    emacs.url = "github:jsoo1/emacs-overlay";
+    emacs.url = "github:jsoo1/emacs-overlay/release";
     dotfiles.url = "git+https://git.sr.ht/~jsoo/dotfiles?ref=release";
     flake-compat = {
       flake = false;
@@ -22,7 +22,7 @@
 
   outputs = { self, dotfiles, emacs, nixpkgs, flake-utils, home-manager, darwin, ... }:
     let
-      overlays = [ emacs.overlay ] ++ import ./my-emacs.nix ++ import ./restream.nix;
+      overlays = [ emacs.overlay ] ++ import ./my-emacs.nix emacs ++ import ./restream.nix;
       all-systems = flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ]
         (system:
           let packages = import nixpkgs { inherit system overlays; }; in
