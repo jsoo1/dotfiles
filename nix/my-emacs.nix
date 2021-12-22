@@ -112,15 +112,20 @@ let
       xterm-color
       yaml-mode
     ];
-  my-emacs-overlay = (self: super: {
-    my-emacs = (self.mkGitEmacs "my-emacs-git-nox" "${emacsFlake}/repos/emacs/emacs-master.json" {
-      withNS = false;
-      withX = false;
-      withGTK2 = false;
-      withGTK3 = false;
-      nativeComp = true;
-    }).pkgs.emacsWithPackages (epkgs:
-      builtins.concatMap (f: f epkgs) [ elpa manual melpa ]);
-  });
+  my-emacs-overlay = self: super:
+    let
+      emacs = self.mkGitEmacs "my-emacs-git-nox" ./emacs-rev.json {
+        withNS = false;
+        withX = false;
+        withGTK2 = false;
+        withGTK3 = false;
+        nativeComp = true;
+        withSQLite3 = true;
+      };
+    in
+    {
+      my-emacs = emacs.pkgs.emacsWithPackages (epkgs:
+        builtins.concatMap (f: f epkgs) [ elpa manual melpa ]);
+    };
 in
 [ my-emacs-overlay ]
