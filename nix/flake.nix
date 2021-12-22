@@ -24,16 +24,9 @@
     let
       overlays = [ emacs.overlay ] ++ import ./my-emacs.nix emacs ++ import ./restream.nix;
       all-systems = flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ]
-        (system:
-          let packages = import nixpkgs { inherit system overlays; }; in
-          {
-            # Useful for the following nix repl scenario to replace `nix repl pin.nix`:
-            # $ nix repl
-            # > fl = builtins.getFlake "*this $PWD here*"
-            # > :b fl.packages.x86_64-darwin.ncurses
-            inherit packages;
-          }
-        );
+        (system: {
+          packages = import nixpkgs { inherit system overlays; };
+        });
     in
     rec {
       inherit (all-systems) packages;
