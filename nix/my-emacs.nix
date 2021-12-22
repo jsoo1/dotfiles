@@ -112,8 +112,10 @@ let
       yaml-mode
     ];
   my-emacs-overlay = (self: super: {
-    my-emacs = super.emacs-nox.pkgs.emacsWithPackages (epkgs:
-      (builtins.concatMap (f: f epkgs) [ elpa manual melpa ]));
+    my-emacs = (self.emacsGit-nox.override {
+      nativeComp = true;
+    }).pkgs.emacsWithPackages (epkgs:
+      builtins.concatMap (f: f epkgs) [ elpa manual melpa ]);
   });
 in
 [ my-emacs-overlay ]

@@ -1,7 +1,7 @@
 {
   description = "A home-manager/nix-darwin configuration";
   inputs = {
-    emacs.url = "github:nix-community/emacs-overlay";
+    emacs.url = "github:jsoo1/emacs-overlay";
     dotfiles.url = "git+https://git.sr.ht/~jsoo/dotfiles?ref=release";
     flake-compat = {
       flake = false;
