@@ -3,7 +3,7 @@
 }:
 let
   inherit (pkgs)
-    bashCompletion bashInteractive bottom coreutils dogdns
+    bashCompletion bashInteractive bottom cachix coreutils dogdns
     du-dust exa fd gawk gdb ghcid git haskell-language-server
     iosevka less libressl neovim nix_2_5 nix-diff nix-prefetch
     nix-top nixpkgs-fmt peep rage recutils restream ripgrep
@@ -22,6 +22,7 @@ let
   shell-utilities = [
     bashCompletion
     bottom
+    cachix
     coreutils
     dogdns
     du-dust
