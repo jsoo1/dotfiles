@@ -1362,6 +1362,8 @@ when send commands with redis protocol."
         display-time-world-mode
         "^\\*eshell.*\\*$" eshell-mode
         elfeed-search-mode
+        flycheck-error-list-mode
+        flymake-diagnostics-buffer-mode
         grep-mode
         help-mode
         helpful-mode
