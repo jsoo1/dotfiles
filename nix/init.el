@@ -146,35 +146,32 @@
 
 ;; Erc
 (setq erc-autojoin-channels-alist nil
+      erc-prompt-for-password nil
       erc-rename-buffers t
       erc-hide-list '("JOIN" "PART" "QUIT"))
+
+(defun my-erc (port)
+  "Open my erc configuration using znc on `PORT'."
+  (interactive "nport: ")
+  (erc-tls
+   :server "irc.refl.club"
+   :port port
+   :nick "jsoo"))
 
 (defun my-erc-freenode ()
   "Open erc with my configuration for freenode."
   (interactive)
-  (let ((erc-prompt-for-password nil))
-    (erc-tls
-     :server "irc.refl.club"
-     :port 5555
-     :nick "jsoo")))
+  (my-erc 5555))
 
 (defun my-erc-libera ()
   "Open erc with my configuration for libera."
   (interactive)
-  (let ((erc-prompt-for-password nil))
-    (erc-tls
-     :server "irc.refl.club"
-     :port 5556
-     :nick "jsoo")))
+  (my-erc 5556))
 
 (defun my-erc-oftc ()
   "Open erc with my configuration for oftc."
   (interactive)
-  (let ((erc-prompt-for-password nil))
-    (erc-tls
-     :server "irc.refl.club"
-     :port 5557
-     :nick "jsoo")))
+  (my-erc 5557))
 
 (add-hook 'erc-mode-hook
           (defun toggle-truncate-lines-on ()
