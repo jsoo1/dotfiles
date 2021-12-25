@@ -1752,7 +1752,7 @@ respectively."
 
 (define-prefix-keymap my-flymake-map
   "My bindings for flymake"
-  "l" flymake-show-diagnostics-buffer
+  "l" flymake-show-buffer-diagnostics
   "n" flymake-goto-next-error
   "p" flymake-goto-prev-error)
 
