@@ -478,6 +478,7 @@
 (evil-escape-mode)
 (setq-default evil-escape-key-sequence "jk")
 (setq-default evil-escape-unordered-key-sequence 't)
+(setq-default evil-undo-system 'undo-redo)
 (with-eval-after-load 'magit (evil-collection-magit-setup))
 (with-eval-after-load 'dired (evil-collection-dired-setup))
 (with-eval-after-load 'ibuffer (evil-collection-ibuffer-setup))
