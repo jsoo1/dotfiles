@@ -1311,6 +1311,12 @@ when send commands with redis protocol."
 (setq base16-theme-256-color-source "colors")
 (load-theme 'base16-solarized-dark t)
 
+;; Missing from base theme
+(set-face-attribute
+ 'help-key-binding nil
+ :background 'unspecified
+ :foreground orange)
+
 ;; Transparency in gui
 (set-frame-parameter (selected-frame) 'alpha '(80 . 50))
 (add-to-list 'default-frame-alist '(alpha . (80 . 50)))
