@@ -9,7 +9,7 @@ let
   em = "emacsclient -t --socket-name=${username}";
   tm = dir:
     ''
-      tmux new-session -A -s $(basename "${dir}" | tr '.' '-') -c "${dir}" ${em} ${dir}'';
+      env __NIX_DARWIN_SET_ENVIRONMENT_DONE="" tmux new-session -A -s $(basename "${dir}" | tr '.' '-') -c "${dir}" ${em} ${dir}'';
 
   sessionVariables = {
     EDITOR = em;
