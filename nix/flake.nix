@@ -15,7 +15,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
-      url = "github:jsoo1/nix-darwin/testing";
+      url = "github:jsoo1/nix-darwin/release";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
