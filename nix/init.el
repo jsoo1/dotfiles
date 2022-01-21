@@ -392,6 +392,8 @@
    (haskell-process-type . stack-ghci)
    (haskell-process-type . cabal-repl)
    (haskell-mode-stylish-haskell-path . "ormolu")
+   (haskell-mode-stylish-haskell-path . "fourmolu")
+   (haskell-mode-stylish-haskell-args . '("-m" "inplace"))
    (haskell-mode-stylish-haskell-args . ("--ghc-opt" "TypeApplications"))
    (haskell-stylish-on-save . t)
    (haskell-stylish-on-save . nil)
