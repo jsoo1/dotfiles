@@ -1365,8 +1365,7 @@ when send commands with redis protocol."
 (shackle-mode)
 
 ;; Popper
-(setq popper-group-function 'popper-group-by-project
-      popper-display-control 'user
+(setq popper-display-control 'user
       popper-reference-buffers
       '("\\*Async Shell Command\\*"
         "*\\*.*compile\\*$" compilation-mode
