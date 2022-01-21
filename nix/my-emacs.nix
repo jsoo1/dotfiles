@@ -97,6 +97,8 @@ let
       reformatter
       restclient
       rust-mode
+      sbt-mode
+      scala-mode
       shackle
       slime
       slime-company
