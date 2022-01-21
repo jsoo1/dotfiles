@@ -559,6 +559,7 @@
                                                     #'projectile-root-top-down
                                                     #'projectile-root-bottom-up)
       projectile-ignored-projects '("~" "~/projects/work"))
+(add-to-list 'projectile-globally-ignored-directories "/nix/store")
 
 
 ;; IBuffer
