@@ -9,7 +9,9 @@ let
     nix-top nixpkgs-fmt peep rage recutils restream ripgrep
     rnix-lsp rr shellcheck socat tealdeer terraform-lsp watch;
 
-  haskell-utilities = [ ghcid haskell-language-server ];
+  inherit (pkgs.haskellPackages) fourmolu;
+
+  haskell-utilities = [ fourmolu ghcid haskell-language-server ];
 
   c-utilities = [ gdb ] ++ pkgs.lib.optional (!isDarwin) rr;
 
