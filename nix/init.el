@@ -1643,6 +1643,7 @@ respectively."
 
 (define-prefix-keymap my-process-map
   "my process keybindings"
+  "!" async-shell-command
   "a" pulseaudio-control-hydra/body
   "b" my-debbugs-modes-map
   "d" docker
