@@ -1388,7 +1388,8 @@ when send commands with redis protocol."
         "\\*Messages\\*"
         "Output\\*$"
         reb-mode
-        woman-mode))
+        woman-mode
+        world-clock-mode))
 (popper-mode 1)
 
 (defun counsel-popper-buried-popups ()
