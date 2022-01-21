@@ -17,7 +17,7 @@ let
 
   macos-quirks = [ bashInteractive bashCompletion less neovim ripgrep fd git rage dogdns ];
 
-  nix-utilities = [ nixpkgs-fmt nix-diff nix-prefetch rnix-lsp ];
+  nix-utilities = [ nixpkgs-fmt nix-diff nix-prefetch nix-top rnix-lsp ];
 
   remarkable-utilities = [ restream ];
 
