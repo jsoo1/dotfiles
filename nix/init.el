@@ -1359,9 +1359,9 @@ when send commands with redis protocol."
 
 ;; Shackle
 (setq shackle-rules '((compilation-mode :noselect t :other t)
-                      (Man-mode :select t :popup t :align 'right :size 0.5)
-                      (woman :select t :popup t :align 'right :size 0.5)
-                      (eshell-mode :popup t :select t :align 'right :size 0.5 :other t)))
+                      (Man-mode :select t :popup t :align right :size 0.5)
+                      (woman-mode :select t :popup t :align right :size 0.5)
+                      (eshell-mode :popup t :select t :align right :size 0.5 :other t)))
 (shackle-mode)
 
 ;; Popper
