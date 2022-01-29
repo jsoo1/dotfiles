@@ -373,7 +373,8 @@
                            ("America/New_York" "East Coast")
                            ("America/Chicago" "Chicago")
                            ("Europe/Paris" "Central Europe")
-                           ("Africa/Douala" "Camaroon"))
+                           ("Africa/Douala" "Camaroon")
+                           ("Asia/Calcutta" "Bangalore"))
  display-time-world-time-format "%a, %b %d %I:%M%p %Z")
 
 ;; Backups, lockfiles, auto-saves, local variables
