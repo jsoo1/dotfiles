@@ -59,6 +59,7 @@
 
 ;; Large files
 (setq large-file-warning-threshold (* 1024 1024))
+(global-so-long-mode 1)
 
 ;; Mouse
 (xterm-mouse-mode 1)
