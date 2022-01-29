@@ -5,7 +5,6 @@
 }:
 let
   username = config.home.username;
-  hd = "ssh -q hd 'rm $(gpgconf --list-dirs agent-socket)' && ssh hd";
   em = "emacsclient -t --socket-name=${username}";
   tm = dir:
     ''
@@ -15,7 +14,7 @@ let
     EDITOR = em;
     ALTERNATE_EDITOR = "nvim";
   };
-  shellAliases = lib.optionalAttrs isDarwin { inherit hd; } // {
+  shellAliases = {
     inherit em;
     tm = tm "$PWD";
     tml = "tmux list-sessions";
