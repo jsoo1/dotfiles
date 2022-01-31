@@ -60,18 +60,6 @@ in
       fmt = styleLinux: styleDarwin: if isDarwin then styleDarwin else styleLinux;
     in
     ''
-      ${lib.optionalString isDarwin ''
-        launchctl start org.gnu.emacs
-        restart-nix-daemon () {
-          sudo launchctl bootout system/org.nixos.nix-daemon \
-            && sudo launchctl load /Library/LaunchDaemons/org.nixos.nix-daemon.plist
-        }
-
-        restart-emacs-daemon () {
-          sudo launchctl stop org.gnu.emacs \
-            && sudo launchctl load ~/Library/LaunchAgents/org.gnu.emacs.plist
-        }''}
-
       # Keybindings
       tmux-projects () {
         local proj="$(${skim-cmds.projects})"
