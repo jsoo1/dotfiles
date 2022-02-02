@@ -34,6 +34,7 @@ let
     git
     neovim
     peep
+    perl # for skim (???)
     rage
     recutils
     ripgrep
