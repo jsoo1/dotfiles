@@ -4,10 +4,10 @@
 let
   inherit (pkgs)
     bashCompletion bashInteractive bottom cachix coreutils dogdns
-    du-dust exa fd gawk gdb ghcid git haskell-language-server iosevka
-    less libressl neovim nix-diff nix-prefetch nix-top nixpkgs-fmt
-    peep perl rage recutils restream ripgrep rnix-lsp rr shellcheck
-    socat tealdeer terraform-lsp watch;
+    du-dust exa fd gawk gdb ghcid git graphviz-nox
+    haskell-language-server iosevka less libressl neovim nix-diff
+    nix-prefetch nix-top nixpkgs-fmt peep perl rage recutils restream
+    ripgrep rnix-lsp rr shellcheck socat tealdeer terraform-lsp watch;
 
   inherit (pkgs.haskellPackages) fourmolu;
 
@@ -32,6 +32,7 @@ let
     fd
     gawk
     git
+    graphviz-nox
     neovim
     peep
     perl # for skim (???)
