@@ -89,6 +89,7 @@ let
       popper
       projectile
       proof-general
+      protobuf-mode
       psc-ide
       pulseaudio-control
       purescript-mode
