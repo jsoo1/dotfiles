@@ -1578,7 +1578,6 @@ respectively."
   "TAB" 'evil-switch-to-windows-last-buffer
   "a" 'my-process-map
   "b" 'my-buffer-map
-  "c" 'my-compile-map
   "C" 'my-counsel-map
   "d" 'my-directory-map
   "e" 'my-flycheck-map
@@ -1702,13 +1701,6 @@ respectively."
   "t" (defun switch-to-test-buffer ()
         (interactive)
         (my-switch-to-compile-buffer "test")))
-
-(define-prefix-keymap my-compile-map
-  "my keybindings for compiling"
-  "b" (defun pop-to-compilation-buffer ()
-        (interactive) (pop-to-buffer (get-buffer-create "*compilation*")))
-  "C" counsel-compile
-  "c" recompile)
 
 (define-prefix-keymap my-counsel-map
   "my keybindings to counsel"
