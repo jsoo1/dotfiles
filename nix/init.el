@@ -556,7 +556,10 @@
       projectile-enable-caching 't
       projectile-project-search-path '("~/projects/")
       projectile-globally-unignored-files '(".*\\.projectile$" ".*\\.envrc$" ".*\\.dir-locals.el$")
-      projectile-globally-unignored-directories '("^/scratch/.*")
+      projectile-globally-ignored-files '("\\.git/.*")
+      projectile-globally-unignored-directories '(".github")
+      projectile-globally-ignored-directories nil
+      projectile-globally-unignored-directories '("scratch")
       projectile-project-root-files-functions (list #'projectile-root-local
                                                     #'projectile-root-top-down-recurring
                                                     #'projectile-root-top-down
