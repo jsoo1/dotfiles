@@ -1363,10 +1363,12 @@ when send commands with redis protocol."
            (set-face-background 'line-number base02 (selected-frame))))
 
 ;; Shackle
-(setq shackle-rules '((compilation-mode :noselect t :other t)
+(setq shackle-rules '((compilation-mode :noselect t :align right)
                       (Man-mode :select t :popup t :align right :size 0.5)
                       (woman-mode :select t :popup t :align right :size 0.5)
-                      (eshell-mode :popup t :select t :align right :size 0.5 :other t)))
+                      (eshell-mode :popup t :select t :align right :size 0.5 :other t)
+                      (helpful-mode :align right)
+                      (org-agenda-mode :select 1 :size 1.0)))
 (shackle-mode)
 
 ;; Popper
