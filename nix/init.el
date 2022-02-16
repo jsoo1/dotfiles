@@ -555,7 +555,11 @@
       projectile-indexing-method 'native
       projectile-enable-caching 't
       projectile-project-search-path '("~/projects/")
-      projectile-globally-unignored-files '(".*\\.projectile$" ".*\\.envrc$" ".*\\.dir-locals.el$")
+      projectile-globally-unignored-files '(".*\\.projectile$"
+                                            ".*\\.envrc$"
+                                            ".*\\.dir-locals.el$"
+                                            "\\.git/config"
+                                            "\\.git/info/exclude")
       projectile-globally-ignored-files '("\\.git/.*")
       projectile-globally-unignored-directories '(".github")
       projectile-globally-ignored-directories nil
