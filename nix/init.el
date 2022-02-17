@@ -560,7 +560,7 @@
                                             ".*\\.dir-locals.el$"
                                             "\\.git/config"
                                             "\\.git/info/exclude")
-      projectile-globally-ignored-files '("\\.git/.*")
+      projectile-globally-ignored-files '("\\.git/.*" "dist-newstyle/.*")
       projectile-globally-unignored-directories '(".github")
       projectile-globally-ignored-directories nil
       projectile-globally-unignored-directories '("scratch")
