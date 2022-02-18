@@ -61,6 +61,7 @@ let
       flycheck
       forge
       geiser
+      go-mode
       goto-chg
       graphql-mode
       graphviz-dot-mode

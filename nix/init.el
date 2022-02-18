@@ -1319,6 +1319,9 @@ when send commands with redis protocol."
           (defun disable-c-flycheck ()
             (flycheck-mode -1)))
 
+;; Go
+(require 'go-mode)
+
 ;; Theme
 (require 'base16-solarized-dark-theme)
 (setq base16-theme-256-color-source "colors")
