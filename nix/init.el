@@ -557,9 +557,7 @@
       projectile-project-search-path '("~/projects/")
       projectile-globally-unignored-files '(".*\\.projectile$"
                                             ".*\\.envrc$"
-                                            ".*\\.dir-locals.el$"
-                                            "\\.git/config"
-                                            "\\.git/info/exclude")
+                                            ".*\\.dir-locals.el$")
       projectile-globally-ignored-files '("\\.git/.*" "dist-newstyle/.*")
       projectile-globally-unignored-directories '(".github")
       projectile-globally-ignored-directories nil
