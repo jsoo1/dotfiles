@@ -3,17 +3,18 @@
 }:
 let
   inherit (pkgs)
-    bashCompletion bashInteractive bottom cachix ccls coreutils dogdns
-    du-dust exa fd gawk gdb ghcid git go gopls graphviz-nox
-    haskell-language-server iosevka less libressl neovim nix-diff
-    nix-prefetch nix-top nixpkgs-fmt peep perl rage recutils restream
-    ripgrep rnix-lsp rr shellcheck socat tealdeer terraform-lsp watch;
+    bashCompletion bashInteractive binutils bottom cachix ccls
+    coreutils dogdns du-dust exa fd gawk gdb ghcid git go gopls
+    graphviz-nox haskell-language-server iosevka less libressl neovim
+    nix-diff nix-prefetch nix-top nixpkgs-fmt peep perl rage recutils
+    restream ripgrep rnix-lsp rr shellcheck socat tealdeer
+    terraform-lsp watch;
 
   inherit (pkgs.haskellPackages) fourmolu;
 
   haskell-utilities = [ fourmolu ghcid haskell-language-server ];
 
-  c-utilities = [ ccls gdb ] ++ pkgs.lib.optional (!isDarwin) rr;
+  c-utilities = [ ccls gdb ] ++ pkgs.lib.optionals (!isDarwin) [ binutils rr ];
 
   go-utilities = [ go gopls ];
 
