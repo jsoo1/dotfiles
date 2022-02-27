@@ -3,7 +3,8 @@
 (define-public languages
   '("agda"
     "coq"
-    "idris"
+    ;; FIXME: Broken upstream
+    ;; "idris"
     "ocaml"
     "purescript"
     "racket"))
@@ -25,7 +26,8 @@
     "gdb"
     "global"
     "groff"
-    "lastpass-cli"
+    ;; FIXME: Broken
+    ;; "lastpass-cli"
     "make"
     "mosh"
     "mpv"
@@ -45,7 +47,9 @@
   '("firefox"
     "icecat"
     "lynx"
-    "ungoogled-chromium"))
+    ;; FIXME: Borken
+    ;; "ungoogled-chromium"
+    ))
 
 (define-public desktop-tools
   '("alacritty"
@@ -98,10 +102,12 @@
 (define-public rust-tools
   '("rust"
     "rust:cargo"
-    "rust:rls"
-    "rust:rust-analyzer"
-    "rust:rustfmt"
-    "rust:src"))
+    ;; FIXME: Rebase the patches upstream
+    ;; "rust:rls"
+    ;; "rust:rust-analyzer"
+    ;; "rust:rustfmt"
+    ;; "rust:src"
+    ))
 
 (define-public guile-tools
   '("guile"
@@ -204,7 +210,7 @@
     "emacs-psc-ide"
     "emacs-pulseaudio-control"
     "emacs-racket-mode"
-    "emacs-recutils"
+    "emacs-rec-mode"
     "emacs-redis"
     "emacs-reformatter"
     "emacs-restclient"

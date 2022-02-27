@@ -5,13 +5,13 @@
   (branch "john")
   (introduction
    (make-channel-introduction
-    "40ee6d749f3263fe61252699f673e194cb373cdc"
+    "71a89f1f3501df50bb078b8be87eb29c6dcce317"
     (openpgp-fingerprint
      "5A15 8FAF 406A 748A 81A9  DC4E 4F43 7A76 B448 A23B"))))
  (channel
   (name 'nonguix)
   (url "https://gitlab.com/nonguix/nonguix")
-  (commit "3ec1e7f16590c3b681d6cb3b110b0d9c115586ea")
+  (commit "37f9f8103d87a34a26a8777d3f61e800eb97e0b6")
   (introduction
    (make-channel-introduction
     "897c1a470da759236cc11798f4e0a5f7d4d59fbc"
@@ -23,6 +23,6 @@
   (branch "release")
   (introduction
    (make-channel-introduction
-    "cf22e20eceb112c940d02c3b57e16c7cee1f4a7f"
+    "c8e2830a1418362e3f0981df89a3947b72852683"
     (openpgp-fingerprint
      "5A15 8FAF 406A 748A 81A9  DC4E 4F43 7A76 B448 A23B")))))
