@@ -547,6 +547,7 @@
 (require 'libgit)
 (require 'magit-libgit)
 (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
+(define-key git-commit-mode-map (kbd "C-c M-c") #'git-commit-co-authored)
 
 ;; Projectile
 (require 'projectile)
