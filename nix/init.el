@@ -559,7 +559,7 @@
       projectile-globally-unignored-files '(".*\\.projectile$"
                                             ".*\\.envrc$"
                                             ".*\\.dir-locals.el$")
-      projectile-globally-ignored-files '("\\.git/.*" "dist-newstyle/.*")
+      projectile-globally-ignored-files '("\\.git/.*" "dist-newstyle/.*" "\\.cache/*")
       projectile-globally-unignored-directories '(".github")
       projectile-globally-ignored-directories nil
       projectile-globally-unignored-directories '("scratch")
