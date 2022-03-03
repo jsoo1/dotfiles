@@ -185,7 +185,7 @@
 (electric-pair-mode 1)
 
 ;; Eldoc
-(setq eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
+(setq eldoc-echo-area-use-multiline-p nil)
 
 ;; Elfeed
 (when (eq 'darwin system-type)
@@ -1399,6 +1399,7 @@ when send commands with redis protocol."
       '("\\*Async Shell Command\\*"
         "*\\*.*compile\\*$" compilation-mode
         display-time-world-mode
+        "^\\*eldoc\\*$"
         "^\\*eshell.*\\*$" eshell-mode
         elfeed-search-mode
         flycheck-error-list-mode
@@ -1661,7 +1662,7 @@ respectively."
   "e" my-flymake-map
   "g" my-eglot-find-map
   "f" eglot-format
-  "h" eldoc-doc-buffer
+  "h" eldoc
   "r" eglot-rename
   "X" eglot-signal-didChangeConfiguration)
 
