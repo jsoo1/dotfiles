@@ -1784,6 +1784,7 @@ respectively."
   "my org bindings"
   "a" counsel-projectile-org-agenda
   "c" counsel-projectile-org-capture
+  "d" org-babel-detangle
   "g" counsel-org-goto
   "i" counsel-org-entity
   "l" org-store-link
