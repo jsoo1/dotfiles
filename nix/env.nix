@@ -14,7 +14,8 @@ let
 
   haskell-utilities = [ fourmolu ghcid haskell-language-server ];
 
-  c-utilities = [ ccls gdb ] ++ pkgs.lib.optionals (!isDarwin) [ binutils rr ];
+  c-utilities =
+    [ gdb ] ++ pkgs.lib.optionals (!isDarwin) [ binutils ccls rr ];
 
   go-utilities = [ go gopls ];
 
