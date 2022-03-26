@@ -59,6 +59,7 @@
 
 ;; Large files
 (setq large-file-warning-threshold (* 1024 1024))
+(global-so-long-mode 1)
 
 ;; Mouse
 (xterm-mouse-mode 1)
@@ -104,6 +105,9 @@
                   "~/dotfiles/emacs/"))
 (load-file (expand-file-name "local.el" user-emacs-directory))
 
+;; Tramp
+(with-eval-after-load 'tramp
+  (setq enable-remote-dir-locals t))
 
 ;; Pinentry
 (setf epa-pinentry-mode 'loopback)
@@ -141,36 +145,33 @@
 
 ;; Erc
 (setq erc-autojoin-channels-alist nil
+      erc-prompt-for-password nil
       erc-rename-buffers t
       erc-ignore-list '("{\\^-\\^}")
       erc-hide-list '("JOIN" "PART" "QUIT"))
 
+(defun my-erc (port)
+  "Open my erc configuration using znc on `PORT'."
+  (interactive "nport: ")
+  (erc-tls
+   :server "irc.refl.club"
+   :port port
+   :nick "jsoo"))
+
 (defun my-erc-freenode ()
   "Open erc with my configuration for freenode."
   (interactive)
-  (let ((erc-prompt-for-password nil))
-    (erc-tls
-     :server "irc.refl.club"
-     :port 5555
-     :nick "jsoo")))
+  (my-erc 5555))
 
 (defun my-erc-libera ()
   "Open erc with my configuration for libera."
   (interactive)
-  (let ((erc-prompt-for-password nil))
-    (erc-tls
-     :server "irc.refl.club"
-     :port 5556
-     :nick "jsoo")))
+  (my-erc 5556))
 
 (defun my-erc-oftc ()
   "Open erc with my configuration for oftc."
   (interactive)
-  (let ((erc-prompt-for-password nil))
-    (erc-tls
-     :server "irc.refl.club"
-     :port 5557
-     :nick "jsoo")))
+  (my-erc 5557))
 
 (add-hook 'erc-mode-hook
           (defun toggle-truncate-lines-on ()
@@ -183,21 +184,22 @@
 (electric-pair-mode 1)
 
 ;; Eldoc
-(setq eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
+(setq eldoc-echo-area-use-multiline-p nil)
 
 ;; Elfeed
-(with-eval-after-load 'elfeed
-  (setq elfeed-curl-max-connections 8)
-  (setq-default elfeed-search-filter "@6-months-ago +unread")
-  (seq-each #'elfeed-load-opml
+(when (eq 'darwin system-type)
+  (with-eval-after-load 'elfeed
+    (setq elfeed-curl-max-connections 8)
+    (setq-default elfeed-search-filter "@6-months-ago +unread")
+    (seq-each #'elfeed-load-opml
               (directory-files
                (expand-file-name "feeds" user-emacs-directory)
                t "\\(\\.xml\\|\\.opml\\)$" t))
-  (run-with-timer 0 (* 15 60) 'elfeed-update))
-(defun my-elfeed-podcast-tagger (entry)
-  (when (elfeed-entry-enclosures entry)
-    (elfeed-tag entry 'podcast)))
-(add-hook 'elfeed-new-entry-hook #'my-elfeed-podcast-tagger)
+    (run-with-timer 0 (* 60 60) 'elfeed-update))
+  (defun my-elfeed-podcast-tagger (entry)
+    (when (elfeed-entry-enclosures entry)
+      (elfeed-tag entry 'podcast)))
+  (add-hook 'elfeed-new-entry-hook #'my-elfeed-podcast-tagger))
 
 ;; EMMS
 (emms-all)
@@ -368,7 +370,8 @@
                            ("America/New_York" "East Coast")
                            ("America/Chicago" "Chicago")
                            ("Europe/Paris" "Central Europe")
-                           ("Africa/Douala" "Camaroon"))
+                           ("Africa/Douala" "Camaroon")
+                           ("Asia/Calcutta" "Bangalore"))
  display-time-world-time-format "%a, %b %d %I:%M%p %Z")
 
 ;; Backups, lockfiles, auto-saves, local variables
@@ -388,10 +391,13 @@
    (haskell-process-type . stack-ghci)
    (haskell-process-type . cabal-repl)
    (haskell-mode-stylish-haskell-path . "ormolu")
+   (haskell-mode-stylish-haskell-path . "fourmolu")
+   (haskell-mode-stylish-haskell-args . '("-m" "inplace"))
    (haskell-mode-stylish-haskell-args . ("--ghc-opt" "TypeApplications"))
    (haskell-stylish-on-save . t)
    (haskell-stylish-on-save . nil)
-   (projectile-project-compilation-cmd . "home-manager switch -f ~/dotfiles/nix/home.nix")
+   (projectile-project-compilation-cmd . "darwin-rebuild --flake ./nix")
+   (projectile-project-compilation-cmd . "nix-shell nix/shell.nix")
    (projectile-project-compilation-cmd . "cabal new-build")
    (projectile-project-compilation-cmd . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix ")
    (projectile-project-compilation-cmd . "guix package -m ~/dotfiles/guix/manifest.scm")
@@ -405,7 +411,7 @@
    (projectile-project-compilation-cmd . "cargo build")
    (projectile-project-test-command . "cargo test")
    ;; Guix projects
-   (projectile-project-compilation-cmd . "guix build -f guix.scm")
+   (projectile-compilation-command . "guix build -f guix.scm")
    ;; Eglot-specific
    (eglot-connect-timeout . nil)
    ;; Javascript-specific
@@ -522,21 +528,31 @@
 (setq xref-show-xrefs-function #'xref--show-defs-minibuffer)
 
 ;; Magit
+(require 'libgit)
+(require 'magit-libgit)
 (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
+(with-eval-after-load 'magit
+  (define-key git-commit-mode-map (kbd "C-c M-c") #'git-commit-co-authored))
 
 ;; Projectile
 (projectile-mode +1)
 (setq projectile-completion-system 'ivy
       projectile-indexing-method 'native
       projectile-enable-caching 't
-      projectile-project-search-path "~/projects/"
-      projectile-globally-unignored-files '(".*\\.projectile$" ".*\\.envrc$" ".*\\.dir-locals.el$")
-      projectile-globally-unignored-directories '("^/scratch/.*")
+      projectile-project-search-path '("~/projects/")
+      projectile-globally-unignored-files '(".*\\.projectile$"
+                                            ".*\\.envrc$"
+                                            ".*\\.dir-locals.el$")
+      projectile-globally-ignored-files '("\\.git/.*" "dist-newstyle/.*" "\\.cache/*")
+      projectile-globally-unignored-directories '(".github")
+      projectile-globally-ignored-directories nil
+      projectile-globally-unignored-directories '("scratch")
       projectile-project-root-files-functions (list #'projectile-root-local
                                                     #'projectile-root-top-down-recurring
                                                     #'projectile-root-top-down
                                                     #'projectile-root-bottom-up)
       projectile-ignored-projects '("~" "~/projects/work"))
+(add-to-list 'projectile-globally-ignored-directories "/gnu/store")
 
 
 ;; IBuffer
@@ -1081,6 +1097,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (with-eval-after-load 'nix-mode
   (define-key nix-mode-map (kbd "C-c C-f") 'nix-format-buffer))
 (setf
+ nix-nixfmt-bin "nixpkgs-fmt"
  (alist-get 'nix-mode eglot-server-programs)
  '("rnix-lsp"))
 (defvar nix-format-on-save t
@@ -1294,6 +1311,25 @@ when send commands with redis protocol."
           (defun disable-c-flycheck ()
             (flycheck-mode -1)))
 
+;; Go
+(evil-define-key 'normal go-mode-map (kbd ",") 'my-eglot-mode-map)
+(add-hook 'go-mode-hook #'eglot-ensure)
+(add-hook 'go-mode-hook #'eldoc-mode)
+(add-hook 'go-mode-hook #'eldoc-mode #'company-mode)
+(add-hook 'go-mode-hook
+          (defun disable-go-flycheck ()
+            (flycheck-mode -1)))
+(setf (alist-get 'go-mode eglot-server-programs) '("gopls"))
+
+;; C++
+(evil-define-key 'normal c++-mode-map (kbd ",") 'my-eglot-mode-map)
+(add-hook 'c++-mode-hook #'eglot-ensure)
+(add-hook 'c++-mode-hook #'eldoc-mode)
+(add-hook 'c++-mode-hook #'company-mode)
+(add-hook 'c++-mode-hook
+          (defun disable-c-flycheck ()
+            (flycheck-mode -1)))
+
 ;; Theme
 (require 'base16-solarized-dark-theme)
 (setq base16-theme-256-color-source "colors")
@@ -1336,35 +1372,41 @@ when send commands with redis protocol."
            (set-face-background 'line-number base02 (selected-frame))))
 
 ;; Shackle
-(setq shackle-rules '((compilation-mode :noselect t :other t)
-                      (Man-mode :select t :popup t :align 'right :size 0.5)
-                      (woman :select t :popup t :align 'right :size 0.5)
-                      (eshell-mode :popup t :select t :align 'right :size 0.5 :other t)))
+(setq shackle-rules '((compilation-mode :noselect t :align right :other t)
+                      (Man-mode :select t :popup t :align right :size 0.5 :other t)
+                      (woman-mode :select t :popup t :align right :size 0.5 :other t)
+                      (eshell-mode :popup t :select t :align right :size 0.5 :other t)
+                      (helpful-mode :align right)
+                      (org-agenda-mode :select 1 :size 1.0)))
 (shackle-mode)
 
 ;; Popper
-(setq popper-group-function 'popper-group-by-project
-      popper-display-control 'user
+(setq popper-display-control 'user
       popper-reference-buffers
       '("\\*Async Shell Command\\*"
         "*\\*.*compile\\*$" compilation-mode
         display-time-world-mode
+        "^\\*eldoc\\*$"
         "^\\*eshell.*\\*$" eshell-mode
         elfeed-search-mode
+        flycheck-error-list-mode
+        flymake-diagnostics-buffer-mode
         grep-mode
         help-mode
         helpful-mode
         "^\\*ivy-occur.*\\*$" ivy-occur-mode
         org-agenda-mode
-        "^\\*Proced\\*$" proced
-        "^\\*Process List\\*$" process-list
+        "^\\*Proced\\*$" proced-mode
+        "^\\*Process List\\*$" process-menu-mode
+        magit-status-mode
         magit-diff-mode
         magit-process-mode
         Man-mode
         "\\*Messages\\*"
         "Output\\*$"
         reb-mode
-        woman-mode))
+        woman-mode
+        world-clock-mode))
 (popper-mode 1)
 
 (defun counsel-popper-buried-popups ()
@@ -1546,7 +1588,6 @@ respectively."
   "TAB" 'evil-switch-to-windows-last-buffer
   "a" 'my-process-map
   "b" 'my-buffer-map
-  "c" 'my-compile-map
   "C" 'my-counsel-map
   "d" 'my-directory-map
   "e" 'my-flycheck-map
@@ -1619,6 +1660,7 @@ respectively."
 
 (define-prefix-keymap my-process-map
   "my process keybindings"
+  "!" async-shell-command
   "a" pulseaudio-control-hydra/body
   "b" my-debbugs-modes-map
   "d" docker
@@ -1669,13 +1711,6 @@ respectively."
   "t" (defun switch-to-test-buffer ()
         (interactive)
         (my-switch-to-compile-buffer "test")))
-
-(define-prefix-keymap my-compile-map
-  "my keybindings for compiling"
-  "b" (defun pop-to-compilation-buffer ()
-        (interactive) (pop-to-buffer (get-buffer-create "*compilation*")))
-  "C" counsel-compile
-  "c" recompile)
 
 (define-prefix-keymap my-counsel-map
   "my keybindings to counsel"
