@@ -1646,7 +1646,7 @@ respectively."
   "e" my-flymake-map
   "g" my-eglot-find-map
   "f" eglot-format
-  "h" eldoc-doc-buffer
+  "h" eldoc
   "r" eglot-rename
   "X" eglot-signal-didChangeConfiguration)
 
