@@ -857,9 +857,6 @@ _]_: toggle use of default sink  _n_: control select sink by name
   ("v" pulseaudio-control-set-volume)
   ("x" pulseaudio-toggle-sink-mute-by-index))
 
-;; Proof General
-(load-file "~/.guix-profile/share/emacs/site-lisp/ProofGeneral/pg-init.el")
-
 ;; Editorconfig
 (editorconfig-mode 1)
 
