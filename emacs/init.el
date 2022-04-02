@@ -1026,7 +1026,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 
 ;; Ocaml
 (require 'tuareg)
-(require 'merlin)
+;; (require 'merlin)
 (add-hook 'tuareg-mode-hook #'merlin-mode)
 (add-to-list 'auto-mode-alist '("\\.ml\\'" . tuareg-mode))
 (add-to-list 'auto-mode-alist '("\\.mli\\'" . tuareg-mode))

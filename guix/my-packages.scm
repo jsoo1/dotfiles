@@ -197,7 +197,8 @@
     "emacs-let-alist"
     "emacs-magit"
     "emacs-markdown-mode"
-    "emacs-merlin"
+    ;; Busted?
+    ;; "emacs-merlin"
     "emacs-multi-term"
     "emacs-nix-mode"
     "emacs-nodejs-repl"
