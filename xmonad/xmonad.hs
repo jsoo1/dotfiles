@@ -360,12 +360,12 @@ bar xmobarSignal xmobarQueue = Template.Bar
     [ stdFormat (Template.Text " λ ")
     , queueReaderWidget xmobarQueue
     ]
-  , Template.center = [ dateWidget ]
-  , Template.right = (intersperse separatorSeg
+  , Template.center = (intersperse separatorSeg
     -- [ mpdWidget
     -- , alsaWidget
     [ dynNetworkWidget
     ])
+  , Template.right = [ dateWidget ]
     <> [ stdFormat (Template.Text " ") ]
   }
 
