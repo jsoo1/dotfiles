@@ -27,23 +27,9 @@
              ;; Move expired messages to Gmail's trash.
              (nnmail-expiry-target "nnimap+gmail:[Gmail]/Trash")
              ;; Mails marked as expired can be processed immediately.
-             (nnmail-expiry-wait immediate))
-     (nnimap "consumable"
-             (nnimap-address "imap.gmail.com")
-             (nnimap-port "imaps")
-             (nnimap-stream ssl)
-             (nnimap-search-engime imap)
-             (nnimap-expiry-target "nnimap+gmail:[Gmail]/Trash")
-             (nnimap-expiry-wait immediate)))
+             (nnmail-expiry-wait immediate)))
    gnus-posting-styles
    '((".*" ; Matches all groups of messages
-      (address "John Soo <jsoo1@asu.edu>"))
-     ("consumable" ; Matches Gnus group called "work"
-      (address "John Soo <john@consumable.com>")
-      (signature "
-Software Engineer
-Consumable")
-      (organization "Consumable")
-      ("X-Message-SMTP-Method" "smtp smtp.gmail.com 587 john@consumable.com")))))
+      (address "John Soo <jsoo1@asu.edu>")))))
 
 ;;; .gnus ends here
