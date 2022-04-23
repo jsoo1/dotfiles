@@ -14,6 +14,13 @@ let
     path = "/Users/johh.soo/.ssh/config";
     owner = "johh.soo";
   };
+
+  github = {
+    file = pkgs.copyPathToStore ./github.age;
+    path = "/Users/johh.soo/.config/nix/github";
+    owner = "johh.soo";
+  };
+
 in
 {
   networking.hostName = "johhsoo";
@@ -28,7 +35,7 @@ in
 
   age = {
     sshKeyPaths = [ "/Users/johh.soo/.ssh/id_rsa" ];
-    secrets = { inherit nix-conf ssh-conf; };
+    secrets = { inherit nix-conf ssh-conf github; };
   };
 
   services.nix-daemon = {
