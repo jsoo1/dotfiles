@@ -1603,7 +1603,7 @@ respectively."
   "TAB" 'evil-switch-to-windows-last-buffer
   "a" 'my-process-map
   "b" 'my-buffer-map
-  "C" 'my-counsel-map
+  "c" 'my-counsel-map
   "d" 'my-directory-map
   "e" 'my-flycheck-map
   "f" 'my-file-map
