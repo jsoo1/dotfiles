@@ -1413,9 +1413,9 @@ when send commands with redis protocol."
         org-agenda-mode
         "^\\*Proced\\*$" proced-mode
         "^\\*Process List\\*$" process-menu-mode
-        magit-status-mode
         magit-diff-mode
         magit-process-mode
+        magit-log-mode
         Man-mode
         "\\*Messages\\*"
         "Output\\*$"
