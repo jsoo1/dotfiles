@@ -543,7 +543,7 @@
       projectile-globally-unignored-files '(".*\\.projectile$"
                                             ".*\\.envrc$"
                                             ".*\\.dir-locals.el$")
-      projectile-globally-ignored-files '("\\.git/.*" "dist-newstyle/.*" "\\.cache/*")
+      projectile-globally-ignored-files '("\\.git/.*" "dist-newstyle/.*" "\\.cache/*" "\\.ccls-cache/*")
       projectile-globally-unignored-directories '(".github")
       projectile-globally-ignored-directories nil
       projectile-globally-unignored-directories '("scratch")
@@ -552,6 +552,7 @@
                                                     #'projectile-root-top-down
                                                     #'projectile-root-bottom-up)
       projectile-ignored-projects '("~" "~/projects/work"))
+(add-to-list 'projectile-globally-ignored-directories "/nix/store")
 (add-to-list 'projectile-globally-ignored-directories "/gnu/store")
 
 
@@ -1395,9 +1396,9 @@ when send commands with redis protocol."
         org-agenda-mode
         "^\\*Proced\\*$" proced-mode
         "^\\*Process List\\*$" process-menu-mode
-        magit-status-mode
         magit-diff-mode
         magit-process-mode
+        magit-log-mode
         Man-mode
         "\\*Messages\\*"
         "Output\\*$"
@@ -1415,7 +1416,7 @@ when send commands with redis protocol."
                                                    (mapcar (lambda (x) (cons group x)) xs))
                                                  popper-buried-popup-alist)))
             :action (pcase-lambda (`(_ ,group . ,selection))
-                      (popper-bury-all)
+                      (popper--bury-all)
                       (let ((bufs (alist-get group popper-buried-popup-alist nil nil 'equal)))
                         (setf (alist-get group popper-buried-popup-alist nil nil 'equal)
                               (cons selection
@@ -1585,7 +1586,7 @@ respectively."
   "TAB" 'evil-switch-to-windows-last-buffer
   "a" 'my-process-map
   "b" 'my-buffer-map
-  "C" 'my-counsel-map
+  "c" 'my-counsel-map
   "d" 'my-directory-map
   "e" 'my-flycheck-map
   "f" 'my-file-map
@@ -1760,8 +1761,8 @@ respectively."
 (define-prefix-keymap my-file-map
   "my file keybindings"
   "f" counsel-find-file
+  "g" magit-find-file
   "l" find-file-literally
-  "m" magit-find-file
   "r" counsel-buffer-or-recentf
   "s" save-buffer
   "t" find-file-other-tab
@@ -1865,6 +1866,7 @@ respectively."
 
 (define-prefix-keymap my-project-map
   "my projectile keybindings"
+  "!" projectile-run-async-shell-command-in-root
   "a" counsel-projectile-org-agenda
   "b" counsel-projectile-switch-to-buffer
   "c" my-project-compile-map
