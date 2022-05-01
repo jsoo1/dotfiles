@@ -1881,6 +1881,7 @@ respectively."
 
 (define-prefix-keymap my-project-map
   "my projectile keybindings"
+  "!" projectile-run-async-shell-command-in-root
   "a" counsel-projectile-org-agenda
   "b" counsel-projectile-switch-to-buffer
   "c" my-project-compile-map
