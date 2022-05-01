@@ -3,12 +3,13 @@
 }:
 let
   inherit (pkgs)
+
     bashCompletion bashInteractive binutils bottom cachix ccls
     coreutils dogdns du-dust exa fd gawk gdb ghcid git go gopls
-    graphviz-nox haskell-language-server iosevka less libressl neovim
-    nix-diff nix-prefetch nix-top nixpkgs-fmt peep perl rage recutils
-    restream ripgrep rnix-lsp rr shellcheck socat tealdeer
-    terraform-lsp watch;
+    graphviz-nox gnutar haskell-language-server iosevka less libressl
+    neovim nix-diff nix-prefetch nix-top nixpkgs-fmt peep perl rage
+    recutils restream ripgrep rnix-lsp rr rsync shellcheck socat
+    tealdeer terraform-lsp watch;
 
   inherit (pkgs.haskellPackages) fourmolu;
 
@@ -19,7 +20,19 @@ let
 
   go-utilities = [ go gopls ];
 
-  macos-quirks = [ bashInteractive bashCompletion less neovim ripgrep fd git rage dogdns ];
+  macos-quirks = [
+    bashInteractive
+    bashCompletion
+    gnutar
+    less
+    neovim
+    ripgrep
+    fd
+    git
+    rage
+    rsync
+    dogdns
+  ];
 
   nix-utilities = [ nixpkgs-fmt nix-diff nix-prefetch nix-top rnix-lsp ];
 
