@@ -7,9 +7,9 @@ let
     bashCompletion bashInteractive binutils bottom cachix ccls
     coreutils dogdns du-dust exa fd gawk gdb ghcid git go gopls
     graphviz-nox gnutar haskell-language-server iosevka less libressl
-    neovim nix-diff nix-prefetch nix-top nixpkgs-fmt peep perl rage
-    recutils restream ripgrep rnix-lsp rr rsync shellcheck socat
-    tealdeer terraform-lsp watch;
+    neovim nix-diff nix-prefetch nix-top nix-tree nixpkgs-fmt peep
+    perl rage recutils restream ripgrep rnix-lsp rr rsync shellcheck
+    socat tealdeer terraform-lsp watch;
 
   inherit (pkgs.haskellPackages) fourmolu;
 
@@ -34,7 +34,7 @@ let
     dogdns
   ];
 
-  nix-utilities = [ nixpkgs-fmt nix-diff nix-prefetch nix-top rnix-lsp ];
+  nix-utilities = [ nixpkgs-fmt nix-diff nix-prefetch nix-top nix-tree rnix-lsp ];
 
   remarkable-utilities = [ restream ];
 
