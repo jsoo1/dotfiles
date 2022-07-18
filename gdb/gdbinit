@@ -1,4 +1,5 @@
 add-auto-load-safe-path /nix/store
+add-auto-load-safe-path /home/john/projects/end-to-end/scratch/.gdbinit
 add-auto-load-safe-path /home/john/projects/nix-eval-jobs/.gdbinit
 add-auto-load-safe-path /home/john/projects/trace-locks/.gdbinit
 set history save on
