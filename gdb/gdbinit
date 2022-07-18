@@ -1,0 +1,6 @@
+add-auto-load-safe-path /nix/store
+add-auto-load-safe-path /home/john/projects/nix-eval-jobs/.gdbinit
+add-auto-load-safe-path /home/john/projects/trace-locks/.gdbinit
+set history save on
+set history remove-duplicates 100
+set history filename /home/john/.config/gdb/gdb_history

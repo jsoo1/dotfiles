@@ -79,6 +79,7 @@ lib.mkMerge [
     xdg.configFile = {
       "tmux/tmux.conf".source = "${dotfiles}/nix/.tmux.conf";
       "procps/toprc".source = "${dotfiles}/top/toprc";
+      "gdb/gdbinit".source = "${dotfiles}/gdb/gdbinit";
     };
 
     programs = {
