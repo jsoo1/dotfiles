@@ -233,6 +233,10 @@
               (interactive)
               (define-key eshell-mode-map (kbd "C-l") #'my-eshell-clear-scrollback)))
 
+(when (and (executable-find "fish")
+           (require 'fish-completion nil t))
+  (global-fish-completion-mode))
+
 (setq initial-buffer-choice (lambda () (get-buffer-create "*eshell*"))
       eshell-highlight-prompt nil
       eshell-prompt-regexp "^[^λ]* [λ] "
