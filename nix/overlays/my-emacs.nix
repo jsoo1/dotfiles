@@ -56,7 +56,6 @@ let
       exec-path-from-shell
       f
       fill-column-indicator
-      fish-completion
       fish-mode
       flycheck
       forge
