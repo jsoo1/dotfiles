@@ -2,7 +2,10 @@
   description = "A home-manager/nix-darwin configuration";
   inputs = {
     emacs.url = "github:jsoo1/emacs-overlay/release";
-    dotfiles.url = "git+https://git.sr.ht/~jsoo/dotfiles?ref=release";
+    dotfiles = {
+      flake = false;
+      url = "git+https://git.sr.ht/~jsoo/dotfiles?ref=release";
+    };
     flake-compat = {
       flake = false;
       url = "github:edolstra/flake-compat";

@@ -23,12 +23,13 @@
       }
     },
     "dotfiles": {
+      "flake": false,
       "locked": {
-        "lastModified": 1658528725,
-        "narHash": "sha256-GaNcJftb9OODLi6NrkBz6TUT8R84HvdRP4R1GdO5IBA=",
+        "lastModified": 1658529696,
+        "narHash": "sha256-4VCvOo/96Y38aAmY6yEE9E6gZpel6R+Za+rCoYzz2Ck=",
         "ref": "release",
-        "rev": "6b1fdff7be17720e69936c56ce79074df783e08e",
-        "revCount": 1608,
+        "rev": "05f990656e3d6477df5ec8fef158cd9043fe4efb",
+        "revCount": 1610,
         "type": "git",
         "url": "https://git.sr.ht/~jsoo/dotfiles"
       },
