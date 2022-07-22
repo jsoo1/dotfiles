@@ -53,7 +53,6 @@ let
     neovim
     peep
     perl # for skim (???)
-    procps
     rage
     recutils
     ripgrep
@@ -80,6 +79,7 @@ in
     nix-utilities
     socket-utilities
     terraform-utilities
+    (pkgs.lib.optional (!isDarwin) procps)
     (pkgs.lib.optionals isDarwin
       (macos-quirks ++ remarkable-utilities))
   ];
