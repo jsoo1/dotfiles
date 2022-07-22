@@ -1,6 +1,4 @@
-{ pkgs ? import ./pin.nix { }
-, isDarwin ? builtins.currentSystem == "x86_64-darwin"
-}:
+{ pkgs ? import ./pin.nix { } }:
 let
   inherit (pkgs)
 
@@ -16,7 +14,7 @@ let
   haskell-utilities = [ fourmolu ghcid haskell-language-server ];
 
   c-utilities =
-    [ gdb ] ++ pkgs.lib.optionals (!isDarwin) [ binutils ccls rr ];
+    [ gdb ] ++ pkgs.lib.optionals (!pkgs.stdenv.isDarwin) [ binutils ccls rr ];
 
   go-utilities = [ go gopls ];
 
@@ -79,8 +77,8 @@ in
     nix-utilities
     socket-utilities
     terraform-utilities
-    (pkgs.lib.optional (!isDarwin) procps)
-    (pkgs.lib.optionals isDarwin
+    (pkgs.lib.optional (!pkgs.stdenv.isDarwin) procps)
+    (pkgs.lib.optionals pkgs.stdenv.isDarwin
       (macos-quirks ++ remarkable-utilities))
   ];
 }

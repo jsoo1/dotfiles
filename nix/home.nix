@@ -1,11 +1,9 @@
 { pkgs, dotfiles, config, lib, ... }:
 let
-  isDarwin = pkgs.system == "x86_64-darwin";
-
   home = config.home.homeDirectory;
   username = config.home.username;
 
-  env = import ./env.nix { inherit pkgs isDarwin; };
+  env = import ./env.nix { inherit pkgs; };
 
   feeds = {
     ".emacs.d/feeds".recursive = true;
@@ -58,8 +56,8 @@ let
 
 in
 lib.mkMerge [
-  (lib.mkIf (!isDarwin) linux-only)
-  (lib.mkIf isDarwin darwin-only)
+  (lib.mkIf (!pkgs.stdenv.isDarwin) linux-only)
+  (lib.mkIf pkgs.stdenv.isDarwin darwin-only)
   {
     home = {
       enableNixpkgsReleaseCheck = false;
@@ -79,12 +77,11 @@ lib.mkMerge [
     xdg.configFile = {
       "tmux/tmux.conf".source = "${dotfiles}/nix/.tmux.conf";
       "procps/toprc".source = "${dotfiles}/top/toprc";
-      "gdb/gdbinit".source = "${dotfiles}/gdb/gdbinit";
     };
 
     programs = {
       autojump.enable = true;
-      bash = import ./bash.nix { inherit config lib ssh-auth-sock isDarwin; };
+      bash = import ./bash.nix { inherit config lib ssh-auth-sock pkgs; };
       bat.enable = true;
       direnv.enable = true;
       direnv.enableBashIntegration = true;
@@ -93,7 +90,7 @@ lib.mkMerge [
       git.enable = true;
       git.extraConfig = gitconfig;
       gpg.enable = true;
-      htop.enable = true;
+      htop.enable = pkgs.stdenv.isDarwin;
       jq.enable = true;
       skim.defaultOptions = [ "-m" "--color=bw" "--layout=reverse" ];
       skim.enable = true;

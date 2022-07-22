@@ -1,7 +1,7 @@
 { config
 , lib
 , ssh-auth-sock
-, isDarwin ? builtins.currentSystem == "x86_64-darwin"
+, pkgs
 }:
 let
   username = config.home.username;
@@ -57,7 +57,7 @@ in
       yellow = text: "\\[\\033[0;33m\\]${text}\\[\\033[0m\\]";
       cyan = text: "\\[\\033[0;36m\\]${text}\\[\\033[0m\\]";
       purple = text: "\\[\\033[0;35m\\]${text}\\[\\033[0m\\]";
-      fmt = styleLinux: styleDarwin: if isDarwin then styleDarwin else styleLinux;
+      fmt = styleLinux: styleDarwin: if pkgs.stdenv.isDarwin then styleDarwin else styleLinux;
     in
     ''
       # Keybindings
