@@ -14,20 +14,21 @@ let
     EDITOR = em;
     ALTERNATE_EDITOR = "nvim";
   };
-  shellAliases = {
-    inherit em;
-    tm = tm "$PWD";
-    tml = "tmux list-sessions";
-    tma = "tmux attach-session -t";
-    gco = "git checkout";
-    gst = "git status";
-    glg = "git log";
-    lsa = "exa -la";
-    tree = "exa -Ta";
-    vi = "nvim";
-    pb = "curl -F c=@- pb";
-    psg = "ps -eo pid,user,command | rg";
-  };
+  shellAliases =
+    lib.optionalAttrs pkgs.stdenv.isDarwin { top = "${pkgs.htop}/bin/htop"; } // {
+      inherit em;
+      tm = tm "$PWD";
+      tml = "tmux list-sessions";
+      tma = "tmux attach-session -t";
+      gco = "git checkout";
+      gst = "git status";
+      glg = "git log";
+      lsa = "exa -la";
+      tree = "exa -Ta";
+      vi = "nvim";
+      pb = "curl -F c=@- pb";
+      psg = "ps -eo pid,user,command | rg";
+    };
 
   skim-cmds = {
     projects = ''
