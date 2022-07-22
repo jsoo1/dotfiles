@@ -8,8 +8,8 @@ let
     coreutils dogdns du-dust exa fd gawk gdb ghcid git go gopls
     graphviz-nox gnutar haskell-language-server iosevka less libressl
     neovim nix-diff nix-prefetch nix-top nix-tree nixpkgs-fmt peep
-    perl rage recutils restream ripgrep rnix-lsp rr rsync shellcheck
-    socat tealdeer terraform-lsp watch;
+    perl procps rage recutils restream ripgrep rnix-lsp rr rsync
+    shellcheck socat tealdeer terraform-lsp watch;
 
   inherit (pkgs.haskellPackages) fourmolu;
 
@@ -53,6 +53,7 @@ let
     neovim
     peep
     perl # for skim (???)
+    procps
     rage
     recutils
     ripgrep
