@@ -1328,7 +1328,6 @@ when send commands with redis protocol."
 (add-hook 'go-mode-hook
           (defun disable-go-flycheck ()
             (flycheck-mode -1)))
-(setf (alist-get 'go-mode eglot-server-programs))
 
 ;; C++
 (evil-define-key 'normal c++-mode-map (kbd ",") 'my-eglot-mode-map)
