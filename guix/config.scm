@@ -65,11 +65,7 @@ EndSection\n")
    (bluetooth-service #:auto-enable? #t)
    (service alsa-service-type)
    (service cups-pk-helper-service-type)
-   (service cups-service-type (cups-configuration
-                               (web-interface? #t)
-                               (extensions
-                                `(,cups-filters ,hplip-minimal))
-                               (browsing? #t)))
+   (service cups-service-type (cups-configuration (web-interface? #t)))
    (service dnsmasq-service-type (dnsmasq-configuration
                                   (servers '("1.1.1.1"))))
    (service docker-service-type)
