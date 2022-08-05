@@ -77,7 +77,7 @@ in
     ProgramArguments = [
       "/bin/sh"
       "-c"
-      "/bin/wait4path ${pkgs.my-emacs}/bin/emacs &amp;&amp; exec ${pkgs.my-emacs}/bin/emacs --fg-daemon=johh.soo"
+      "/bin/wait4path ${pkgs.my-emacs}/bin/emacs &amp;&amp; exec ${pkgs.my-emacs}/bin/emacs --fg-daemon=${config.users.users."johh.soo".name}"
     ];
   };
 }
