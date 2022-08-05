@@ -11,7 +11,7 @@
       url = "github:edolstra/flake-compat";
     };
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs.url = "github:NixOS/nixpkgs";
+    nixpkgs.url = "github:jsoo1/nixpkgs/emacs-melpa-pkgs";
     home-manager = {
       url =
         "github:nix-community/home-manager";

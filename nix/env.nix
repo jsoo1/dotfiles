@@ -2,12 +2,12 @@
 let
   inherit (pkgs)
 
-    bashCompletion bashInteractive binutils bottom cachix ccls
+    bash-completion bashInteractive binutils bottom cachix ccls
     coreutils dogdns du-dust exa fd gawk gdb ghcid git go gopls
     graphviz-nox gnutar haskell-language-server iosevka less libressl
     neovim nix-diff nix-prefetch nix-top nix-tree nixpkgs-fmt peep
     perl procps rage recutils restream ripgrep rnix-lsp rr rsync
-    shellcheck socat tealdeer terraform-lsp watch;
+    shellcheck socat tealdeer terraform-ls watch;
 
   inherit (pkgs.haskellPackages) fourmolu;
 
@@ -20,7 +20,7 @@ let
 
   macos-quirks = [
     bashInteractive
-    bashCompletion
+    bash-completion
     gnutar
     less
     neovim
@@ -37,7 +37,7 @@ let
   remarkable-utilities = [ restream ];
 
   shell-utilities = [
-    bashCompletion
+    bash-completion
     bottom
     cachix
     coreutils
@@ -64,7 +64,7 @@ let
     socat
   ];
 
-  terraform-utilities = [ terraform-lsp ];
+  terraform-utilities = [ terraform-ls ];
 in
 {
   inherit haskell-utilities c-utilities macos-quirks nix-utilities

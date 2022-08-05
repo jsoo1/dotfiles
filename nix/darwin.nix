@@ -26,7 +26,7 @@ in
   networking.hostName = "johhsoo";
 
   environment.extraInit = ''
-    . ${pkgs.bashCompletion}/share/bash-completion/bash_completion
+    . ${pkgs.bash-completion}/share/bash-completion/bash_completion
   '';
 
   environment.systemPackages = env.shell-utilities;
@@ -43,8 +43,6 @@ in
   };
 
   nix = {
-    package = pkgs.nix_2_5;
-
     maxJobs = 16;
     trustedUsers = [ "johh.soo" ];
     distributedBuilds = true;
