@@ -40,12 +40,16 @@
       }
     },
     "emacs": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": "nixpkgs"
+      },
       "locked": {
-        "lastModified": 1640133137,
-        "narHash": "sha256-H1qOcERXzpx8g8U5+DEEB9c3hfNogrgi+WEa377OPmM=",
+        "lastModified": 1659656641,
+        "narHash": "sha256-luEIODMVtXnN1LOu2O4ndCSbnEKaWoOuu9IOz4ncfZE=",
         "owner": "jsoo1",
         "repo": "emacs-overlay",
-        "rev": "eddae7d2a3ff3073cad6248241814df73a5ad892",
+        "rev": "ad2ef25e8ad638d85476f6fce42b717dbf7a6fcb",
         "type": "github"
       },
       "original": {
@@ -88,6 +92,21 @@
     },
     "flake-utils_2": {
       "locked": {
+        "lastModified": 1656928814,
+        "narHash": "sha256-RIFfgBuKz6Hp89yRr7+NR5tzIAbn52h8vT6vXkYjZoM=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "7e2a3b3dfd9af950a856d66b0a7d01e3c18aa249",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_3": {
+      "locked": {
         "lastModified": 1638122382,
         "narHash": "sha256-sQzZzAbvKEqN9s0bzWuYmRaA03v40gaJ4+iL1LXjaeI=",
         "owner": "numtide",
@@ -123,6 +142,20 @@
     },
     "nixpkgs": {
       "locked": {
+        "lastModified": 1659606041,
+        "narHash": "sha256-W4/u2ssr3fS4XOtltrsDD9w2kF4jYYZr6JyPGUW2jdI=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "5f9b871b72b24f066b1a1e189efd0669f2888c49",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
         "lastModified": 1640047336,
         "narHash": "sha256-8S+p5BsIqL/hcEdBFrFUqN5RpXQ75eCmhiIhDaPJfTU=",
         "owner": "NixOS",
@@ -142,9 +175,9 @@
         "dotfiles": "dotfiles",
         "emacs": "emacs",
         "flake-compat": "flake-compat",
-        "flake-utils": "flake-utils_2",
+        "flake-utils": "flake-utils_3",
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs_2"
       }
     }
   },
