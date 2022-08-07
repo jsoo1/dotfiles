@@ -1128,6 +1128,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
 (setq
  rust-format-on-save t
+ rust-format-show-buffer nil
  rust-imenu-generic-expression
  (cons
   '("Async Fn" "^[[:space:]]*\\(?:\\<pub\\>[[:space:]]+\\)?\\(?:\\<default\\>[[:space:]]+\\)?\\(?:\\<unsafe\\>[[:space:]]+\\)?\\(?:\\<extern\\>[[:space:]]+\\(?:\"[^\"]+\"[[:space:]]+\\)?\\)?\\<async\\>[[:space:]]+\\<fn\\>[[:space:]]+\\([[:word:][:multibyte:]_][[:word:][:multibyte:]_[:digit:]]*\\)" 1)
