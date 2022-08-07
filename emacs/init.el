@@ -469,6 +469,8 @@
 (setq evil-replace-with-register-key (kbd "gr"))
 (evil-replace-with-register-install)
 (require 'evil-collection)
+(evil-set-undo-system 'undo-redo)
+(setq-default evil-undo-system 'undo-redo)
 (evil-mode 1)
 (global-evil-surround-mode 1)
 (evil-commentary-mode)
@@ -1335,6 +1337,12 @@ when send commands with redis protocol."
 (setq base16-theme-256-color-source "colors")
 (load-theme 'base16-solarized-dark t)
 
+;; Missing from base theme
+(set-face-attribute
+ 'help-key-binding nil
+ :background 'unspecified
+ :foreground orange)
+
 ;; Transparency in gui
 (set-frame-parameter (selected-frame) 'alpha '(80 . 50))
 (add-to-list 'default-frame-alist '(alpha . (80 . 50)))
@@ -1529,7 +1537,7 @@ when send commands with redis protocol."
     (:eval (if (and (featurep 'flycheck) flycheck-mode)
                (my-flycheck-mode-line-status-text)
              ""))
-    (:eval (if flymake-mode flymake--mode-line-format ""))
+    (:eval (if flymake-mode flymake-mode-line-format ""))
     " "
     (:eval anzu--mode-line-format)))
 
@@ -1773,7 +1781,7 @@ respectively."
 
 (define-prefix-keymap my-flymake-map
   "My bindings for flymake"
-  "l" flymake-show-diagnostics-buffer
+  "l" flymake-show-buffer-diagnostics
   "n" flymake-goto-next-error
   "p" flymake-goto-prev-error)
 
@@ -1803,7 +1811,6 @@ respectively."
   "o" counsel-org-goto-all
   "p" counsel-popper-buried-popups
   "t" counsel-switch-tab
-  "u" undo-tree-visualize
   "]" evil-jump-to-tag
   "'" counsel-mark-ring
   "\"" counsel-evil-marks
