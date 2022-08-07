@@ -149,6 +149,7 @@
 (setq erc-autojoin-channels-alist nil
       erc-prompt-for-password nil
       erc-rename-buffers t
+      erc-ignore-list '("{\\^-\\^}")
       erc-hide-list '("JOIN" "PART" "QUIT"))
 
 (defun my-erc (port)
@@ -484,6 +485,7 @@
 (evil-escape-mode)
 (setq-default evil-escape-key-sequence "jk")
 (setq-default evil-escape-unordered-key-sequence 't)
+(with-eval-after-load 'compilation-mode (evil-collection-compile-setup))
 (with-eval-after-load 'magit (evil-collection-magit-setup))
 (with-eval-after-load 'dired (evil-collection-dired-setup))
 (with-eval-after-load 'ibuffer (evil-collection-ibuffer-setup))
@@ -560,7 +562,7 @@
       projectile-globally-unignored-files '(".*\\.projectile$"
                                             ".*\\.envrc$"
                                             ".*\\.dir-locals.el$")
-      projectile-globally-ignored-files '("\\.git/.*" "dist-newstyle/.*" "\\.cache/*" "\\.ccls-cache/*")
+      projectile-globally-ignored-files '("\\.git/.*" "dist-newstyle/.*" "\\.cache/*" "\\.ccls-cache/*" "target/*")
       projectile-globally-unignored-directories '(".github")
       projectile-globally-ignored-directories nil
       projectile-globally-unignored-directories '("scratch")
@@ -1147,6 +1149,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
 (setq
  rust-format-on-save t
+ rust-format-show-buffer nil
  rust-imenu-generic-expression
  (cons
   '("Async Fn" "^[[:space:]]*\\(?:\\<pub\\>[[:space:]]+\\)?\\(?:\\<default\\>[[:space:]]+\\)?\\(?:\\<unsafe\\>[[:space:]]+\\)?\\(?:\\<extern\\>[[:space:]]+\\(?:\"[^\"]+\"[[:space:]]+\\)?\\)?\\<async\\>[[:space:]]+\\<fn\\>[[:space:]]+\\([[:word:][:multibyte:]_][[:word:][:multibyte:]_[:digit:]]*\\)" 1)
@@ -1277,6 +1280,9 @@ when send commands with redis protocol."
 ;; CSV
 (require 'csv-mode)
 
+;; CMake
+(require 'cmake-mode)
+
 ;; ELF
 (add-to-list 'auto-mode-alist '("\\.\\(?:a\\|so\\)\\'" . elf-mode))
 
@@ -1307,7 +1313,8 @@ when send commands with redis protocol."
 (setf (alist-get 'terraform-mode eglot-server-programs)
       '("terraform-lsp"))
 (add-hook 'terraform-mode-hook #'eglot-ensure)
-(define-key terraform-mode-map (kbd "C-c C-f") #'terraform-format-buffer)
+(with-eval-after-load 'terraform-mode
+  (define-key terraform-mode-map (kbd "C-c C-f") #'terraform-format-buffer))
 (evil-define-key 'normal terraform-mode-map (kbd ",") 'my-eglot-mode-map)
 
 ;; C
@@ -1328,6 +1335,7 @@ when send commands with redis protocol."
 (add-hook 'go-mode-hook
           (defun disable-go-flycheck ()
             (flycheck-mode -1)))
+(setf (alist-get 'go-mode eglot-server-programs) '("gopls"))
 
 ;; C++
 (evil-define-key 'normal c++-mode-map (kbd ",") 'my-eglot-mode-map)
@@ -1832,6 +1840,7 @@ respectively."
   "my org bindings"
   "a" counsel-projectile-org-agenda
   "c" counsel-projectile-org-capture
+  "d" org-babel-detangle
   "g" counsel-org-goto
   "i" counsel-org-entity
   "l" org-store-link
