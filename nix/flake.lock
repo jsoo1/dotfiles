@@ -156,16 +156,16 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1659663317,
-        "narHash": "sha256-XPx648QVYjiKuBcC+9Xiw22L5Lf6tPxdpw96JGigjuU=",
+        "lastModified": 1660671103,
+        "narHash": "sha256-tYq99/LDE357ZpX46K4nGm4NKqG2M0+wIjMxUXeFiTc=",
         "owner": "jsoo1",
         "repo": "nixpkgs",
-        "rev": "b4389e919359dedc730f3583c57edc1617592e79",
+        "rev": "5917e8b2b464b62ae9ca8ae71b30a0245bb9307c",
         "type": "github"
       },
       "original": {
         "owner": "jsoo1",
-        "ref": "emacs-melpa-pkgs",
+        "ref": "release",
         "repo": "nixpkgs",
         "type": "github"
       }

@@ -11,7 +11,7 @@
       url = "github:edolstra/flake-compat";
     };
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs.url = "github:jsoo1/nixpkgs/emacs-melpa-pkgs";
+    nixpkgs.url = "github:jsoo1/nixpkgs/release";
     home-manager = {
       url =
         "github:nix-community/home-manager";
@@ -39,10 +39,11 @@
       inherit (all-systems) packages;
 
       devShell.x86_64-linux =
-        let pkgs = import nixpkgs {
-          inherit overlays;
-          system = "x86_64-linux";
-        };
+        let
+          pkgs = import nixpkgs {
+            inherit overlays;
+            system = "x86_64-linux";
+          };
         in
         pkgs.mkShell {
           buildInputs = [
