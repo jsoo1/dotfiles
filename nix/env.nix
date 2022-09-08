@@ -11,6 +11,8 @@ let
 
   inherit (pkgs.haskellPackages) fourmolu;
 
+  inherit (pkgs.linuxPackages) perf;
+
   haskell-utilities = [ fourmolu ghcid haskell-language-server ];
 
   c-utilities =
@@ -36,7 +38,7 @@ let
 
   remarkable-utilities = [ restream ];
 
-  shell-utilities = [
+  shell-utilities = pkgs.lib.optionals (!pkgs.stdenv.isDarwin) [ perf ] ++ [
     bash-completion
     bottom
     cachix
