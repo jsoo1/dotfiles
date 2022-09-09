@@ -73,13 +73,18 @@
       homeConfigurations.john =
         let
           system = "x86_64-linux";
-          pkgs = import nixpkgs { inherit system overlays; };
         in
         home-manager.lib.homeManagerConfiguration {
-          inherit system pkgs;
-          username = "john";
-          homeDirectory = "/home/john";
-          configuration = ./home.nix;
+          pkgs = import nixpkgs { inherit system overlays; };
+          modules = [
+            ./home.nix
+            {
+              home = {
+                username = "john";
+                homeDirectory = "/home/john";
+              };
+            }
+          ];
           extraSpecialArgs = {
             inherit dotfiles;
           };

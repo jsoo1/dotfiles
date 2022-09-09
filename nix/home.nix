@@ -60,9 +60,9 @@ lib.mkMerge [
   (lib.mkIf pkgs.stdenv.isDarwin darwin-only)
   {
     home = {
-      stateVersion = "22.05";
-
       extraOutputsToInstall = [ "doc" "nc" ];
+
+      stateVersion = "22.05";
 
       packages = env.user;
 
