@@ -60,7 +60,7 @@ lib.mkMerge [
   (lib.mkIf pkgs.stdenv.isDarwin darwin-only)
   {
     home = {
-      enableNixpkgsReleaseCheck = false;
+      stateVersion = "22.05";
 
       extraOutputsToInstall = [ "doc" "nc" ];
 
