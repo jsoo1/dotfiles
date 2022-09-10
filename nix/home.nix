@@ -83,7 +83,7 @@ lib.mkMerge [
       "procps/toprc".source = "${dotfiles}/top/toprc";
       "oil/oshrc".text = ''
         ${lib.optionalString pkgs.stdenv.isDarwin ''
-           # Avoids errors in /etc/bashrc_Apple_Terminal
+           # Avoids errors in /etc/bashrc_Apple_Terminal (unused anyways)
            TERM_PROGRAM_OLD="$TERM_PROGRAM"
            TERM_PROGRAM=junk
            source /etc/bashrc
@@ -95,6 +95,10 @@ lib.mkMerge [
 
         ${lib.concatStringsSep "\n" (lib.mapAttrsToList (var: val: "alias ${var}=${lib.escapeShellArg val}")
           programs.bash.shellAliases)}
+
+        export SKIM_DEFAULT_OPTIONS="${lib.concatStringsSep " " programs.skim.defaultOptions}"
+
+        alias tmn='eval "$(tmux-projects)"'
 
         ${programs.bash.initExtra}
 

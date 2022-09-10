@@ -61,18 +61,19 @@ in
       fmt = styleLinux: styleDarwin: if pkgs.stdenv.isDarwin then styleDarwin else styleLinux;
     in
     ''
+      tmux-projects () {
+        local proj="$(${skim-cmds.projects})"
+        [ "" != "$proj" ] && echo ${tm "$proj"}
+      }
+      skim-files () {
+        echo $(${skim-cmds.files})
+      }
+      skim-history () {
+        echo $(${skim-cmds.history})
+      }
+
       if [[ "" != $BASH_VERSION ]]; then # compat testing for bash (moving to osh)
         # Keybindings
-        tmux-projects () {
-          local proj="$(${skim-cmds.projects})"
-          [ "" != "$proj" ] && echo ${tm "$proj"}
-        }
-        skim-files () {
-          echo $(${skim-cmds.files})
-        }
-        skim-history () {
-          echo $(${skim-cmds.history})
-        }
         ${bind-key "eo" (set-prompt-to "tmux-projects")}
         ${bind-key "C-o" (set-prompt-to "tmux-projects")}
         ${bind-key "C-t" (set-prompt-to "skim-files")}
