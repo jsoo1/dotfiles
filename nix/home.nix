@@ -82,7 +82,19 @@ lib.mkMerge [
       "tmux/tmux.conf".source = "${dotfiles}/nix/.tmux.conf";
       "procps/toprc".source = "${dotfiles}/top/toprc";
       "oil/oshrc".text = ''
-        ${lib.optionalString pkgs.stdenv.isDarwin "source /etc/bashrc"}
+        ${lib.optionalString pkgs.stdenv.isDarwin ''
+           # Avoids errors in /etc/bashrc_Apple_Terminal
+           TERM_PROGRAM_OLD="$TERM_PROGRAM"
+           TERM_PROGRAM=junk
+           source /etc/bashrc
+           TERM_PROGRAM="$TERM_PROGRAM_OLD"
+        ''}
+
+        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (var: val: ''export ${var}="${val}"'')
+          programs.bash.sessionVariables)}
+
+        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (var: val: "alias ${var}=${lib.escapeShellArg val}")
+          programs.bash.shellAliases)}
 
         ${programs.bash.initExtra}
 

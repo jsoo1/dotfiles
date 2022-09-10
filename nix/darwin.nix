@@ -68,6 +68,7 @@ in
   users.users."johh.soo" = {
     name = "johh.soo";
     home = "/Users/johh.soo";
+    shell = "/run/current-system/sw/bin/osh";
   };
 
   launchd.user.agents.emacs.serviceConfig = {
