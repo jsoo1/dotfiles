@@ -14,7 +14,7 @@
     nixpkgs.url = "github:jsoo1/nixpkgs/release";
     home-manager = {
       url =
-        "github:nix-community/home-manager";
+        "github:jsoo1/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
