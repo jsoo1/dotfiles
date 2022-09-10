@@ -28,8 +28,7 @@
       overlays =
         [ emacs.overlay ]
         ++ import ./overlays/my-emacs.nix
-        ++ import ./overlays/restream.nix
-        ++ import ./overlays/top.nix;
+        ++ import ./overlays/restream.nix;
       all-systems = flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ]
         (system: {
           packages = import nixpkgs { inherit system overlays; };
