@@ -62,7 +62,7 @@ in
 lib.mkMerge [
   (lib.mkIf (!pkgs.stdenv.isDarwin) linux-only)
   (lib.mkIf pkgs.stdenv.isDarwin darwin-only)
-  {
+  (rec {
     home = {
       extraOutputsToInstall = [ "doc" "nc" ];
 
@@ -81,6 +81,11 @@ lib.mkMerge [
     xdg.configFile = {
       "tmux/tmux.conf".source = "${dotfiles}/nix/.tmux.conf";
       "procps/toprc".source = "${dotfiles}/top/toprc";
+      "oil/oshrc".text = ''
+        source /etc/bashrc
+
+        ${programs.bash.initExtra}
+      '';
     };
 
     programs = {
@@ -101,5 +106,5 @@ lib.mkMerge [
       tmux.enable = true;
       tmux.package = pkgs.tmux;
     };
-  }
+  })
 ]
