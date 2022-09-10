@@ -82,9 +82,11 @@ lib.mkMerge [
       "tmux/tmux.conf".source = "${dotfiles}/nix/.tmux.conf";
       "procps/toprc".source = "${dotfiles}/top/toprc";
       "oil/oshrc".text = ''
-        source /etc/bashrc
+        ${lib.optionalString pkgs.stdenv.isDarwin "source /etc/bashrc"}
 
         ${programs.bash.initExtra}
+
+        PS1="[osh] $PS1"
       '';
     };
 
