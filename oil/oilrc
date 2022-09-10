@@ -1,1 +1,1 @@
-const PS1 = r'\u@\h \W $'
+PS1=r'\u@\h \W $'

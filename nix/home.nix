@@ -41,6 +41,10 @@ let
     $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/nix,.emacs.d}/init.el
   '';
 
+  activation.oil = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/oil,.config/oil}/oilrc
+  '';
+
   linux-only = {
     inherit systemd;
     services.gpg-agent.enable = true;
