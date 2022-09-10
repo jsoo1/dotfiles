@@ -46,11 +46,7 @@
           };
         in
         pkgs.mkShell {
-          buildInputs = [
-            (pkgs.writeShellScriptBin "john-home-activation"
-              "${homeConfigurations.john.activationPackage}/activate")
-          ];
-          shellHook = "john-home-activation; exit $?";
+          shellHook = "${homeConfigurations.john.activationPackage}/activate; exit $?";
         };
 
       darwinConfigurations.johhsoo = darwin.lib.darwinSystem
