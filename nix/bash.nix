@@ -87,7 +87,8 @@ in
         (git branch 2>/dev/null | awk '/^\*/ { $1=""; print $0 }') || echo ""
       }
 
-      PS1="${fmt bold bold "\\u@"}${fmt red cyan "\\h"} \\W${
+      PS0='\D{%F %T%z}\n'
+      PS1='\D{%F %T%z}\n'"${fmt bold bold "\\u@"}${fmt red cyan "\\h"} \\W${
         fmt yellow purple "\\$(_cbr)"
       } $ "
     '';
