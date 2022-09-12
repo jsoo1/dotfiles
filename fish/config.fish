@@ -27,6 +27,9 @@ set -x CARGO_HOME "$HOME/.cargo"
 # bat
 set -xg BAT_THEME "Solarized (dark)"
 
+# skim
+set -xg SKIM_DEFAULT_OPTIONS '-m' '--color=bw' '--reverse'
+
 # fish cwd color
 set -x fish_color_cwd yellow
 
