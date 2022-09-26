@@ -10,4 +10,6 @@ if status is-login
         rm "$pidfile" "$MY_SHEP_SOCK"
         eval "$shep_cmd" 2>&1 >> "$logfile"
     end 2>/dev/null 1>/dev/null
+
+    eval (ssh-agent -c) >/dev/null
 end
