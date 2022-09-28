@@ -13,12 +13,15 @@ set bg=dark
 set number
 set noruler
 syntax enable
-set tabstop=4
+set expandtab
+set tabstop=2
 set softtabstop=4
 set shiftwidth=4
-set expandtab
 set hlsearch
 set incsearch
+set backupdir=~/.local/share/vim/backup
+set splitright
+system('mkdir -p ~/local/share/vim/backup')
 
 if executable("rg")
   set grepprg=rg\ --vimgrep\ --smart-case\ --hidden
