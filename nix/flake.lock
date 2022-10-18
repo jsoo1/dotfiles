@@ -48,11 +48,11 @@
     "dotfiles": {
       "flake": false,
       "locked": {
-        "lastModified": 1664399896,
-        "narHash": "sha256-PYQh8xWD1eN9GQp4nOYH8xtD0Ee3XIkvjNc0YOYpvCU=",
+        "lastModified": 1666080494,
+        "narHash": "sha256-nHqAtgaIGQ0DvWW0uHQDMJ34GowfRs/JgBh9f7hs7q0=",
         "ref": "release",
-        "rev": "a91eab460be13612b3251c4939ab284099dc5b29",
-        "revCount": 1653,
+        "rev": "f48f8649ed499c4685782887533fd7f68c3895cd",
+        "revCount": 1658,
         "type": "git",
         "url": "https://git.sr.ht/~jsoo/dotfiles"
       },
