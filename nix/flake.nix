@@ -30,7 +30,7 @@
   outputs = { self, deadnix, dotfiles, emacs, nixpkgs, flake-utils, home-manager, darwin, ... }:
     let
       overlays =
-        [ deadnix.overlay emacs.overlay ]
+        [ deadnix.overlays.default emacs.overlay ]
         ++ import ./overlays/my-emacs.nix
         ++ import ./overlays/restream.nix;
       all-systems = flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ]
