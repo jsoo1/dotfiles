@@ -21,12 +21,16 @@
       url = "github:jsoo1/nix-darwin/release";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    deadnix = {
+      url = "github:astro/deadnix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, dotfiles, emacs, nixpkgs, flake-utils, home-manager, darwin, ... }:
+  outputs = { self, deadnix, dotfiles, emacs, nixpkgs, flake-utils, home-manager, darwin, ... }:
     let
       overlays =
-        [ emacs.overlay ]
+        [ deadnix.overlay emacs.overlay ]
         ++ import ./overlays/my-emacs.nix
         ++ import ./overlays/restream.nix;
       all-systems = flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ]
