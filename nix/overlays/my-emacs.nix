@@ -116,7 +116,7 @@ let
       xterm-color
       yaml-mode
     ];
-  my-emacs-overlay = self: super:
+  my-emacs-overlay = self: _:
     let
       emacs = self.mkGitEmacs "my-emacs-git-nox" ./emacs-rev.json {
         withNS = false;

@@ -1,5 +1,5 @@
 [
-  (self: super: {
+  (_: super: {
     restream = super.restream.overrideAttrs (_: {
       installPhase = ''
         runHook preInstall
