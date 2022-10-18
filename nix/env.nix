@@ -3,11 +3,11 @@ let
   inherit (pkgs)
 
     bash-completion bashInteractive binutils bottom cachix ccls
-    coreutils dogdns du-dust exa fd gawk gdb ghcid git go gopls
-    graphviz-nox gnutar haskell-language-server iosevka less libressl
-    neovim nix-diff nix-prefetch nix-top nix-tree nixpkgs-fmt oil peep
-    perl procps rage recutils restream ripgrep rnix-lsp rr rsync
-    shellcheck socat tealdeer terraform-ls watch;
+    coreutils deadnix dogdns du-dust exa fd gawk gdb ghcid git go
+    gopls graphviz-nox gnutar haskell-language-server iosevka less
+    libressl neovim nix-diff nix-prefetch nix-top nix-tree nixpkgs-fmt
+    oil peep perl procps rage recutils restream ripgrep rnix-lsp rr
+    rsync shellcheck socat tealdeer terraform-ls watch;
 
   inherit (pkgs.haskellPackages) fourmolu;
 
@@ -34,7 +34,15 @@ let
     dogdns
   ];
 
-  nix-utilities = [ nixpkgs-fmt nix-diff nix-prefetch nix-top nix-tree rnix-lsp ];
+  nix-utilities = [
+    deadnix
+    nixpkgs-fmt
+    nix-diff
+    nix-prefetch
+    nix-top
+    nix-tree
+    rnix-lsp
+  ];
 
   remarkable-utilities = [ restream ];
 
