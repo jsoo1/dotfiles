@@ -107,7 +107,7 @@ lib.mkMerge [
     };
 
     programs = {
-      autojump.enable = true;
+      autojump.enable = pkgs.stdenv.isLinux;
       bash = import ./bash.nix { inherit config lib ssh-auth-sock pkgs; };
       bat.enable = true;
       direnv.enable = true;
