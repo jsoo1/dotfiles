@@ -60,6 +60,7 @@ in
 
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.bash.enable = true;
+  programs.bash.enableCompletion = false; # breaks with osh
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

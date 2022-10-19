@@ -42,6 +42,7 @@ let
 in
 {
   enable = true;
+  enableCompletion = pkgs.stdenv.isLinux;
   inherit sessionVariables shellAliases;
   historyControl = [ "erasedups" "ignoredups" "ignorespace" ];
   historyIgnore = [ "ls" "cd" "tmux" ];
