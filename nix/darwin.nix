@@ -31,6 +31,12 @@ in
 
   environment.systemPackages = env.shell-utilities;
 
+  environment.shells = [
+    pkgs.bashInteractive
+    "${pkgs.oil}/bin/osh"
+    "${pkgs.oil}/bin/oil"
+  ];
+
   environment.variables.TERMINFO = "${pkgs.ncurses}/share/terminfo";
 
   age = {
