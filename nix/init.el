@@ -631,7 +631,8 @@
 (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading))
 (evil-org-agenda-set-keys)
 (with-eval-after-load 'org-agenda
-  (define-key org-agenda-mode-map (kbd "C-c RET") #'org-agenda-switch-to))
+  (define-key org-agenda-mode-map (kbd "C-c RET") #'org-agenda-switch-to)
+  (setq org-agenda-window-setup 'only-window))
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
                                (haskell . t)
