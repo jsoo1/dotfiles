@@ -85,13 +85,9 @@ in
       # Git stuff
       [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ${ssh-auth-sock}
 
-      function _cbr {
-        (git branch 2>/dev/null | awk '/^\*/ { $1=""; print $0 }') || echo ""
-      }
-
       PS0=$([[ "" != $BASH_VERSION ]] && echo -n '\D{%F %T%z}\n' || echo $PS0)
       PS1="$([[ "" != $BASH_VERSION ]] && echo -n '\D{%F %T%z}\n' || echo -n "")${fmt bold bold "\\u@"}${fmt red cyan "\\h"} \\W${
-        fmt yellow purple "\\$(_cbr)"
-      } $ "
+        fmt yellow purple " \\$(echo \\$(git branch --show-current 2>/dev/null)' ' || true)"
+      }$ "
     '';
 }
