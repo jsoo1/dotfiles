@@ -33,6 +33,8 @@ in
 
   environment.shells = [
     pkgs.bashInteractive
+    "/run/current-system/sw/bin/osh"
+    "/run/current-system/sw/bin/oil"
     "${pkgs.oil}/bin/osh"
     "${pkgs.oil}/bin/oil"
   ];
