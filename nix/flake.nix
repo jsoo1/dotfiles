@@ -1,7 +1,11 @@
 {
   description = "A home-manager/nix-darwin configuration";
   inputs = {
-    emacs.url = "github:jsoo1/emacs-overlay/release";
+    emacs = {
+      url = "github:jsoo1/emacs-overlay/release";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
     dotfiles = {
       flake = false;
       url = "git+https://git.sr.ht/~jsoo/dotfiles?ref=release";
@@ -20,10 +24,12 @@
     darwin = {
       url = "github:jsoo1/nix-darwin/release";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
     };
     deadnix = {
       url = "github:astro/deadnix";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.utils.follows = "flake-utils";
     };
   };
 
