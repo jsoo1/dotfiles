@@ -25,10 +25,6 @@ in
 {
   networking.hostName = "johhsoo";
 
-  environment.extraInit = ''
-    . ${pkgs.bash-completion}/share/bash-completion/bash_completion
-  '';
-
   environment.systemPackages = env.shell-utilities;
 
   environment.shells = [
