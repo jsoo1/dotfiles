@@ -35,6 +35,10 @@ in
     "${pkgs.oil}/bin/oil"
   ];
 
+  environment.etc.shells.knownSha256Hashes = [
+    "9d5aa72f807091b481820d12e693093293ba33c73854909ad7b0fb192c2db193"
+  ];
+
   environment.variables.TERMINFO = "${pkgs.ncurses}/share/terminfo";
 
   age = {
