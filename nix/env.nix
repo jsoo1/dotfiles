@@ -13,16 +13,18 @@ let
 
   inherit (pkgs.linuxPackages) perf;
 
-  haskell-utilities = [ fourmolu ghcid haskell-language-server ];
+in
 
+rec {
   c-utilities =
     [ gdb ] ++ pkgs.lib.optionals (!pkgs.stdenv.isDarwin) [ binutils ccls rr ];
+
+  haskell-utilities = [ fourmolu ghcid haskell-language-server ];
 
   go-utilities = [ go gopls ];
 
   macos-quirks = [
     bashInteractive
-    bash-completion
     gnutar
     less
     neovim
@@ -45,6 +47,11 @@ let
   ];
 
   remarkable-utilities = [ restream ];
+
+  socket-utilities = [
+    libressl # see "nc" in extraOutputsToInstall
+    socat
+  ];
 
   shell-utilities = pkgs.lib.optionals (!pkgs.stdenv.isDarwin) [ perf ] ++ [
     bash-completion
@@ -70,16 +77,7 @@ let
     watch
   ];
 
-  socket-utilities = [
-    libressl # see "nc" in extraOutputsToInstall
-    socat
-  ];
-
   terraform-utilities = [ terraform-ls ];
-in
-{
-  inherit haskell-utilities c-utilities macos-quirks nix-utilities
-    remarkable-utilities shell-utilities socket-utilities terraform-utilities;
 
   user = builtins.concatLists [
     haskell-utilities
@@ -88,7 +86,7 @@ in
     nix-utilities
     socket-utilities
     terraform-utilities
-    (pkgs.lib.optional (!pkgs.stdenv.isDarwin) procps)
+    (pkgs.lib.optionals (!pkgs.stdenv.isDarwin) [ procps ])
     (pkgs.lib.optionals pkgs.stdenv.isDarwin
       (macos-quirks ++ remarkable-utilities))
   ];
