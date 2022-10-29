@@ -77,7 +77,14 @@
 (setq tab-width 4)
 
 ;; Trailing whitespace
-(add-hook 'before-save-hook #'delete-trailing-whitespace)
+(defvar delete-trailing-whitespace-on-save t
+  "Whether to delete trailing whitespace on save.")
+
+(defun delete-trailing-whitespace-hook ()
+  "Delete trailing whitespace on save."
+  (when delete-trailing-whitespace-on-save (delete-trailing-whitespace)))
+
+(add-hook 'before-save-hook #'delete-trailing-whitespace-hook)
 
 ;; GC Threshold
 (setq gc-cons-threshold (* 2 1000 1000 10))
@@ -285,7 +292,9 @@
  split-width-threshold 160)
 
 ;; Dired
-(setq dired-listing-switches "-al"
+(setq dired-listing-switches (if (not (eq 'gnu/linux system-type))
+                                 "-al"
+                               "-al --group-directories-first")
       dired-use-ls-dired nil)
 (add-hook 'dired-mode-hook
           (defun my-dired-hook ()
