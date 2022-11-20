@@ -74,7 +74,10 @@
 
       homeConfigurations.john = home-manager.lib.homeManagerConfiguration {
         pkgs = packages.x86_64-linux;
-        modules = [ ./home.nix ];
+        modules = [
+          ./home.nix
+          { home = { username = "john"; homeDirectory = "/home/john"; }; }
+        ];
         extraSpecialArgs = { inherit dotfiles; };
       };
 
