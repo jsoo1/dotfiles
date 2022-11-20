@@ -48,78 +48,83 @@
       inherit (all-systems) packages;
 
       devShell.x86_64-linux = packages.x86_64-linux.mkShell {
-          shellHook = "${homeConfigurations.john.activationPackage}/activate; exit $?";
-        };
+        shellHook = "${homeConfigurations.john.activationPackage}/activate; exit $?";
+      };
 
-      darwinConfigurations.johhsoo = darwin.lib.darwinSystem
-        {
-          system = "x86_64-darwin";
-          modules = [
-            ({ pkgs, ... }: {
-              nixpkgs = { inherit overlays; };
-            })
-            home-manager.darwinModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.users."johh.soo" = import ./home.nix;
-              home-manager.extraSpecialArgs = { inherit dotfiles; };
-            }
-            ./darwin.nix
-          ];
-        };
+      darwinConfigurations.johhsoo = darwin.lib.darwinSystem {
+        system = "x86_64-darwin";
+        modules = [
+          ({ pkgs, ... }: {
+            nixpkgs = { inherit overlays; };
+          })
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.users."johh.soo" = import ./home.nix;
+            home-manager.extraSpecialArgs = { inherit dotfiles; };
+          }
+          ./darwin.nix
+        ];
+      };
 
       homeConfigurations.john = home-manager.lib.homeManagerConfiguration {
-          pkgs = packages.x86_64-linux;
-          modules = [
-            ./home.nix
-            {
-              home = {
-                username = "john";
-                homeDirectory = "/home/john";
-              };
-            }
-          ];
-          extraSpecialArgs = {
-            inherit dotfiles;
-          };
+        pkgs = packages.x86_64-linux;
+        modules = [
+          ./home.nix
+          {
+            home = {
+              username = "john";
+              homeDirectory = "/home/john";
+            };
+          }
+        ];
+        extraSpecialArgs = {
+          inherit dotfiles;
         };
+      };
 
-        nixosConfigurations.vbox = packages.x86_64-linux.nixos {
-          imports = [
-            "${nixpkgs}/nixos/modules/virtualisation/virtualbox-image.nix"
-	    ({ lib, pkgs, ... }: {
-              # cribbed from  installer/virtualbox-demo.nix
-              # FIXME: UUID detection is currently broken
-              boot.loader.grub.fsIdentifier = "provided";
-              
-              # Add some more video drivers to give X11 a shot at working in
-              # VMware and QEMU.
-              services.xserver.videoDrivers = lib.mkOverride 40 [ "virtualbox" "vmware" "cirrus" "vesa" "modesetting" ];
-              
-              powerManagement.enable = false;
-              
-              system.stateVersion = "22.05";
+      nixosConfigurations.vbox = packages.x86_64-linux.nixos {
+        imports = [
+          "${nixpkgs}/nixos/modules/virtualisation/virtualbox-image.nix"
+          ({ lib, pkgs, ... }: {
+            # cribbed from  installer/virtualbox-demo.nix
+            # FIXME: UUID detection is currently broken
+            boot.loader.grub.fsIdentifier = "provided";
 
-	      networking.hostName = "nixos";
-            })
-	    {
-              boot.kernelPatches = [{
-                name = "bpf-config";
-                patch = null;
-                extraConfig = ''
-                  LOCKDEP y
-                  LOCK_STAT y
-                '';
-              }];
-	    }
-	    ./module.nix
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.users."john" = import ./home.nix;
-              home-manager.extraSpecialArgs = { inherit dotfiles; };
-            }
-          ];
-        };
+            # Add some more video drivers to give X11 a shot at working in
+            # VMware and QEMU.
+            services.xserver.videoDrivers = lib.mkOverride 40 [
+              "virtualbox"
+              "vmware"
+              "cirrus"
+              "vesa"
+              "modesetting"
+            ];
+
+            powerManagement.enable = false;
+
+            system.stateVersion = "22.05";
+
+            networking.hostName = "nixos";
+          })
+          {
+            boot.kernelPatches = [{
+              name = "bpf-config";
+              patch = null;
+              extraConfig = ''
+                LOCKDEP y
+                LOCK_STAT y
+              '';
+            }];
+          }
+          ./module.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.users."john" = import ./home.nix;
+            home-manager.extraSpecialArgs = { inherit dotfiles; };
+          }
+        ];
+      };
     };
 }
