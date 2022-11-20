@@ -47,14 +47,7 @@
     rec {
       inherit (all-systems) packages;
 
-      devShell.x86_64-linux =
-        let
-          pkgs = import nixpkgs {
-            inherit overlays;
-            system = "x86_64-linux";
-          };
-        in
-        pkgs.mkShell {
+      devShell.x86_64-linux = packages.x86_64-linux.mkShell {
           shellHook = "${homeConfigurations.john.activationPackage}/activate; exit $?";
         };
 
@@ -75,12 +68,8 @@
           ];
         };
 
-      homeConfigurations.john =
-        let
-          system = "x86_64-linux";
-        in
-        home-manager.lib.homeManagerConfiguration {
-          pkgs = import nixpkgs { inherit system overlays; };
+      homeConfigurations.john = home-manager.lib.homeManagerConfiguration {
+          pkgs = packages.x86_64-linux;
           modules = [
             ./home.nix
             {
@@ -93,6 +82,44 @@
           extraSpecialArgs = {
             inherit dotfiles;
           };
+        };
+
+        nixosConfigurations.vbox = packages.x86_64-linux.nixos {
+          imports = [
+            "${nixpkgs}/nixos/modules/virtualisation/virtualbox-image.nix"
+	    ({ lib, pkgs, ... }: {
+              # cribbed from  installer/virtualbox-demo.nix
+              # FIXME: UUID detection is currently broken
+              boot.loader.grub.fsIdentifier = "provided";
+              
+              # Add some more video drivers to give X11 a shot at working in
+              # VMware and QEMU.
+              services.xserver.videoDrivers = lib.mkOverride 40 [ "virtualbox" "vmware" "cirrus" "vesa" "modesetting" ];
+              
+              powerManagement.enable = false;
+              
+              system.stateVersion = "22.05";
+
+	      networking.hostName = "nixos";
+            })
+	    {
+              boot.kernelPatches = [{
+                name = "bpf-config";
+                patch = null;
+                extraConfig = ''
+                  LOCKDEP y
+                  LOCK_STAT y
+                '';
+              }];
+	    }
+	    ./module.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.users."john" = import ./home.nix;
+              home-manager.extraSpecialArgs = { inherit dotfiles; };
+            }
+          ];
         };
     };
 }
