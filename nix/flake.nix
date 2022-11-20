@@ -69,18 +69,8 @@
 
       homeConfigurations.john = home-manager.lib.homeManagerConfiguration {
         pkgs = packages.x86_64-linux;
-        modules = [
-          ./home.nix
-          {
-            home = {
-              username = "john";
-              homeDirectory = "/home/john";
-            };
-          }
-        ];
-        extraSpecialArgs = {
-          inherit dotfiles;
-        };
+        modules = [ ./home.nix ];
+        extraSpecialArgs = { inherit dotfiles; };
       };
 
       nixosConfigurations.vbox = packages.x86_64-linux.nixos {
@@ -105,7 +95,7 @@
 
             system.stateVersion = "22.05";
 
-            networking.hostName = "nixos";
+            networking.hostName = "vbox";
           })
           {
             boot.kernelPatches = [{
@@ -120,8 +110,9 @@
           ./module.nix
           home-manager.nixosModules.home-manager
           {
+            home-manager.verbose = true;
             home-manager.useGlobalPkgs = true;
-            home-manager.users."john" = import ./home.nix;
+            home-manager.users.john = import ./home.nix;
             home-manager.extraSpecialArgs = { inherit dotfiles; };
           }
         ];
