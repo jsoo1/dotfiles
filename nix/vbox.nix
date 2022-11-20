@@ -29,6 +29,7 @@
       builders-use-substitutes = true
       require-sigs = false
       experimental-features = nix-command flakes recursive-nix
+      sandbox-paths = /etc/nix-serve/nix-serve.sec=/etc/nix-serve/signing-key.sec
     '';
   };
 

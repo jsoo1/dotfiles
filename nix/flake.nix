@@ -47,6 +47,11 @@
     rec {
       inherit (all-systems) packages;
 
+      overlay = pkgsFinal: pkgsPrev:
+        pkgsPrev.lib.composeManyExtensions overlays pkgsFinal pkgsPrev;
+
+      # Single home-manager reconfigure command for flakeless systems.
+      # Usage: `nix-shell ~/dotfiles/nix/shell.nix`
       devShell.x86_64-linux = packages.x86_64-linux.mkShell {
         shellHook = "${homeConfigurations.john.activationPackage}/activate; exit $?";
       };
@@ -107,7 +112,7 @@
               '';
             }];
           }
-          ./module.nix
+          ./vbox.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.verbose = true;

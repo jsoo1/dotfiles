@@ -39,8 +39,6 @@ let
 
   linux-only = {
     inherit systemd;
-    home.homeDirectory = "/home/john";
-    home.username = "john";
     services.gpg-agent.enable = true;
     home.packages = env.shell-utilities ++ [
       pkgs.iosevka
