@@ -43,6 +43,9 @@
     enable = true;
     passwordAuthentication = true;
     openFirewall = true;
+    extraConfig = ''
+      StreamLocalBindUnlink yes
+    '';
   };
 
   environment = {
