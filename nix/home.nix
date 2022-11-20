@@ -37,16 +37,10 @@ let
 
   };
 
-  activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/nix,.emacs.d}/init.el
-  '';
-
-  activation.oil = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    $DRY_RUN_CMD ln -sf $VERBOSE_ARG $HOME/{dotfiles/oil,.config/oil}/oilrc
-  '';
-
   linux-only = {
     inherit systemd;
+    home.homeDirectory = "/home/john";
+    home.username = "john";
     services.gpg-agent.enable = true;
     home.packages = env.shell-utilities ++ [
       pkgs.iosevka
@@ -54,10 +48,7 @@ let
     ];
   };
 
-  darwin-only.home = {
-    inherit activation; file = feeds;
-  };
-
+  darwin-only.home.file = feeds;
 in
 lib.mkMerge [
   (lib.mkIf (!pkgs.stdenv.isDarwin) linux-only)
@@ -76,6 +67,14 @@ lib.mkMerge [
         ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
         ".vimrc".source = "${dotfiles}/minimal/.vimrc";
       };
+
+      activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        $DRY_RUN_CMD ln -sfv $VERBOSE_ARG ${config.home.homeDirectory}/{dotfiles/nix,.emacs.d}/init.el
+      '';
+
+      activation.oil = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        $DRY_RUN_CMD ln -sfv $VERBOSE_ARG ${config.home.homeDirectory}/{dotfiles/oil,.config/oil}/oilrc
+      '';
     };
 
     xdg.configFile = {
