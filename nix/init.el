@@ -1823,6 +1823,8 @@ respectively."
   "b" magit-blame
   "c" counsel-git-checkout
   "g" magit-file-dispatch
+  "O" magit-reset
+  "p" magit-push
   "r" magit-refresh-all
   "s" magit-status
   "l" magit-log-buffer-file)
