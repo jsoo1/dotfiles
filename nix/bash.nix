@@ -32,7 +32,7 @@ let
 
   skim-cmds = {
     projects = ''
-      fd '.git$' ~ -I -t d -d 3 -H -x dirname | sk | tr -d '\n'
+      fd '.git$' ~ -I -t d -t f -d 3 -H -x dirname | sk | tr -d '\n'
     '';
     files = "fd '.*' '.' --hidden -E '.git*' | sk";
     history = ''
