@@ -22,7 +22,8 @@ set incsearch
 set backupdir=~/.local/share/vim/backup
 set splitright
 system('mkdir -p ~/local/share/vim/backup')
-if executable("rg")
+
+if executable('rg')
   set grepprg=rg\ --vimgrep\ --smart-case\ --hidden
   set grepformat=%f:%l:%c:%m
 endif
