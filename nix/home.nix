@@ -76,6 +76,7 @@ lib.mkMerge [
     };
 
     xdg.configFile = {
+      "nvim/init.vim".source = "${dotfiles}/minimal/.vimrc";
       "tmux/tmux.conf".source = "${dotfiles}/nix/.tmux.conf";
       "procps/toprc".source = "${dotfiles}/top/toprc";
       "oil/oshrc".text = ''
