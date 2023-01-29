@@ -1855,17 +1855,19 @@ respectively."
   "D" (defun switch-to-projectile-project-root ()
         (interactive)
         (dired (projectile-project-root)))
-  "e" projectile-edit-dir-locals
-  "f" counsel-projectile-find-file
-  "I" projectile-invalidate-cache
-  "o" (defun switch-to-projectile-todos ()
+  "e" (defun switch-to-project-dir-locals ()
         (interactive)
-        (find-file (format "%sTODOs.org" (projectile-project-root))))
+        (find-file (format "%s.dir-locals.el" (project-root (project-current t)))))
+  "f" project-find-file
+  "I" projectile-invalidate-cache
+  "o" (defun switch-to-project-todos ()
+        (interactive)
+        (project-find-file (format "%sTODOs.org" (project-root (project-current t)))))
   "p" switch-project-workspace
-  "'" (defun projectle-run-eshell-other-window ()
+  "'" (defun project-eshell-other-window ()
         (interactive)
         (switch-to-buffer-other-window (current-buffer))
-        (projectile-run-eshell nil))
+        (project-eshell))
   "]" projectile-find-tag)
 
 (define-prefix-keymap my-quit-map
