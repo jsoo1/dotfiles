@@ -237,9 +237,9 @@
   (eshell-send-input nil nil t))
 
 (add-hook 'eshell-mode-hook
-            (defun my-eshell-set-keybindings ()
-              (interactive)
-              (define-key eshell-mode-map (kbd "C-l") #'my-eshell-clear-scrollback)))
+          (defun my-eshell-set-keybindings ()
+            (interactive)
+            (define-key eshell-mode-map (kbd "C-l") #'my-eshell-clear-scrollback)))
 
 (when (and (executable-find "fish")
            (require 'fish-completion nil t))
@@ -545,7 +545,6 @@
 (setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
 
 ;; Projectile
-(projectile-mode +1)
 (setq projectile-completion-system 'ivy
       projectile-indexing-method 'native
       projectile-enable-caching 't
@@ -694,13 +693,17 @@
 (setq anzu-cons-mode-line-p nil)
 (with-eval-after-load 'evil (require 'evil-anzu))
 
-;; Ivy
-(ivy-mode 1)
-(counsel-mode 1)
-(setq ivy-use-virtual-buffers t
-      ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
-(setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
-(ivy-prescient-mode)
+;; Vertico
+(vertico-mode)
+(setq enable-recursive-minibuffers t)
+
+;; Orderless
+(setq completion-styles '(orderless basic)
+      completion-category-overrides '((file (styles basic partial-completion))))
+
+;; Consult
+(global-set-key (kbd "M-y") 'consult-yank-pop)
+(global-set-key (kbd "C-s") 'consult-line)
 
 ;; Line numbers
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
@@ -746,18 +749,6 @@
 ;; Comint
 (define-key comint-mode-map (kbd "C-c C-k" ) #'comint-clear-buffer)
 (define-key comint-mode-map (kbd "C-d") nil)
-
-;; Swiper
-(define-key evil-normal-state-map (kbd "C-s") #'swiper)
-(global-set-key (kbd "C-s") 'swiper)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "M-y") 'counsel-yank-pop)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-(global-set-key (kbd "<f1> l") 'counsel-find-library)
-(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 
 ;; Compilation and shell ansi colors
 (require 'xterm-color)
@@ -1591,7 +1582,7 @@ respectively."
 (evil-leader/set-leader "<SPC>")
 
 (evil-leader/set-key
-  "<SPC>" 'counsel-M-x
+  "<SPC>" 'execute-extended-command
   "TAB" 'evil-switch-to-windows-last-buffer
   "a" 'my-process-map
   "b" 'my-buffer-map
@@ -1613,7 +1604,7 @@ respectively."
   "y" 'my-yank-map
   "z" 'zoom/body
   "'" 'eshell
-  "/" 'counsel-projectile-rg)
+  "/" 'consult-ripgrep)
 
 (define-key help-map (kbd "w") #'woman)
 (define-key help-map (kbd "W") #'man)
@@ -1698,7 +1689,7 @@ respectively."
 
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
-  "b" ivy-switch-buffer
+  "b" switch-to-buffer
   "c" my-switch-to-compile-buffer
   "d" kill-current-buffer
   "i" ibuffer
@@ -1717,7 +1708,7 @@ respectively."
   "b" counsel-switch-buffer
   "c" counsel-colors-emacs
   "d" counsel-dired
-  "g" counsel-git
+  "g" project-find-file
   "h" counsel-command-history
   "i" counsel-ibuffer
   "I" counsel-info-lookup-symbol
@@ -1801,13 +1792,12 @@ respectively."
 
 (define-prefix-keymap my-jump-map
   "my jump keybindings"
-  "i" counsel-imenu
-  "o" counsel-org-goto-all
+  "i" consult-imenu
+  "o" consult-org-heading
   "p" counsel-popper-buried-popups
   "t" counsel-switch-tab
   "]" evil-jump-to-tag
-  "'" counsel-mark-ring
-  "\"" counsel-evil-marks
+  "'" consult-mark
   "=" indent-region-or-buffer)
 
 (define-prefix-keymap my-org-mime-map
@@ -1861,8 +1851,8 @@ respectively."
 (define-prefix-keymap my-search-map
   "my searching keybindings"
   "g" grep-find
-  "s" swiper
-  "p" counsel-projectile-rg)
+  "s" consult-line
+  "p" consult-ripgrep)
 
 (define-prefix-keymap my-text-map
   "my text keybindings"
@@ -1933,7 +1923,7 @@ respectively."
 
 (define-prefix-keymap my-yank-map
   "my yanking keybindings"
-  "y" counsel-yank-pop)
+  "y" consult-yank-pop)
 
 ;; Reset these to have all the configuration we just did
 (with-current-buffer (get-buffer "*Messages*") (normal-mode))
