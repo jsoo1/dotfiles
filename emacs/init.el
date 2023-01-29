@@ -929,7 +929,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
     (set-face-attribute
      'proof-locked-face nil
      :underline nil
-     :background base02)
+     :background "unspecified")
     (add-hook 'coq-mode-hook #'company-coq-mode)
     (define-key coq-mode-map (kbd "C-c RET") #'proof-goto-point)))
 
