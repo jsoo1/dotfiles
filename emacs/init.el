@@ -186,6 +186,15 @@
 ;; Eldoc
 (setq eldoc-echo-area-use-multiline-p nil)
 
+;; VC
+(with-eval-after-load 'vc
+  (defadvice vc-mode-line (after strip-backend () activate)
+    (when (stringp vc-mode)
+      (let ((noback (replace-regexp-in-string
+                     (format "^ %s." (vc-backend buffer-file-name))
+                     " " vc-mode)))
+        (setq vc-mode noback)))))
+
 ;; Elfeed
 (when (eq 'darwin system-type)
   (with-eval-after-load 'elfeed
@@ -1778,6 +1787,8 @@ respectively."
   "b" magit-blame
   "c" counsel-git-checkout
   "g" magit-file-dispatch
+  "O" magit-reset
+  "p" magit-push
   "r" magit-refresh-all
   "s" magit-status
   "l" magit-log-buffer-file)
