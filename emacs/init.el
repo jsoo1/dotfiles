@@ -1663,7 +1663,7 @@ respectively."
 
 (define-prefix-keymap my-process-map
   "my process keybindings"
-  "!" async-shell-command
+  "&" async-shell-command
   "a" pulseaudio-control-hydra/body
   "b" my-debbugs-modes-map
   "d" docker
@@ -1706,7 +1706,7 @@ respectively."
   "R" revert-buffer
   "s" (defun switch-to-scratch-buffer ()
         (interactive)
-        (switch-to-buffer (get-buffer-create "*Scratch*"))))
+        (switch-to-buffer (get-buffer-create "*scratch*"))))
 
 (define-prefix-keymap my-counsel-map
   "my keybindings to counsel"
