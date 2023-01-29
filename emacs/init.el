@@ -130,6 +130,9 @@
 (defvar orange  "#cb4b16" "Theme orange.")
 (defvar violet  "#6c71c4" "Theme violet.")
 
+;; Recentf
+(recentf-mode 1)
+
 ;; Grep
 (with-eval-after-load 'grep
   (grep-apply-setting 'grep-find-command '("rg --no-heading -nIH ''" . 23)))
