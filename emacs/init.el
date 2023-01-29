@@ -537,6 +537,9 @@
 (with-eval-after-load 'magit
   (define-key git-commit-mode-map (kbd "C-c M-c") #'git-commit-co-authored))
 
+;; Project.el
+(setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
+
 ;; Projectile
 (projectile-mode +1)
 (setq projectile-completion-system 'ivy
@@ -581,31 +584,23 @@
 ;; Don't always ask me to reload the tags table
 (setq tags-revert-without-query 1)
 
-(defun my-projectile-compile-buffer-name (project kind)
-  "Get the name for `PROJECT's command `KIND' (`RUN' | `TEST' | `COMPILE')."
-  (concat "*" project "-" kind "*"))
-
-(defun my-projectile-command (kind)
-  "Do command `KIND' (`RUN' | `TEST' | `COMPILE') the projectile project in a compilation buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'*."
+(defun my-project-recompile ()
+  "Recompile project."
+  (declare (interactive-only compile))
   (interactive)
-  (let* ((old-compile-buffer (get-buffer "*compilation*"))
-         (buffer-name (my-projectile-compile-buffer-name (projectile-project-name) kind))
-         (old-cmd-buffer (get-buffer buffer-name)))
-    (when old-compile-buffer (kill-buffer old-compile-buffer))
-    (funcall (intern (concat "projectile-" kind "-project")) nil)
-    (with-current-buffer (get-buffer "*compilation*")
-      (when old-cmd-buffer (kill-buffer old-cmd-buffer))
-      (rename-buffer buffer-name))
-    (balance-windows)))
+  (let* ((default-directory (project-root (project-current t)))
+         (buf (get-buffer (funcall project-compilation-buffer-name-function "compilation"))))
+    (if buf (with-current-buffer buf (recompile))
+      (project-compile))))
 
-(defun my-project-recompile (cmd)
-  "Recompile project `CMD' (one of \"run\", \"compile\" or \"test\")."
-  (with-current-buffer (get-buffer (format "*%s-%s*" (projectile-project-name) cmd))
-    (recompile)))
-
-(defun my-switch-to-compile-buffer (kind)
-  "Switch to compile buffer named *`PROJECTILE-PROJECT-NAME'-`KIND'."
-  (switch-to-buffer-other-window (get-buffer-create (concat "*" (projectile-project-name) "-" kind "*"))))
+(defun my-switch-to-compile-buffer ()
+  "Switch to project compilation buffer."
+  (declare (interactive-only compile))
+  (interactive)
+  (let* ((default-directory (project-root (project-current t)))
+         (buf (get-buffer (funcall project-compilation-buffer-name-function "compilation"))))
+    (if buf (switch-to-buffer-other-window buf)
+      (project-compile))))
 
 ;; Org
 (require 'org-tempo)
@@ -1700,8 +1695,7 @@ respectively."
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
   "b" ivy-switch-buffer
-  "c" (defun switch-to-compile-buffer ()
-        (interactive) (my-switch-to-compile-buffer "compile"))
+  "c" my-switch-to-compile-buffer
   "d" kill-current-buffer
   "i" ibuffer
   "k" kill-buffer
@@ -1709,16 +1703,10 @@ respectively."
         (interactive)
         (switch-to-buffer (get-buffer-create "*Messages*")))
   "n" normal-mode
-  "r" (defun switch-to-run-buffer ()
-        (interactive)
-        (my-switch-to-compile-buffer "run"))
   "R" revert-buffer
   "s" (defun switch-to-scratch-buffer ()
         (interactive)
-        (switch-to-buffer (get-buffer-create "*Scratch*")))
-  "t" (defun switch-to-test-buffer ()
-        (interactive)
-        (my-switch-to-compile-buffer "test")))
+        (switch-to-buffer (get-buffer-create "*Scratch*"))))
 
 (define-prefix-keymap my-counsel-map
   "my keybindings to counsel"
@@ -1854,30 +1842,13 @@ respectively."
 
 (define-prefix-keymap my-project-compile-map
   "my project compilation keybindings"
-  "c" (defun projectile-recompile ()
-        (interactive)
-        (my-project-recompile "compile"))
-  "C" (defun projectile-compile ()
-        (interactive)
-        (my-projectile-command "compile"))
-  "r" (defun projectile-rerun ()
-        (interactive)
-        (my-project-recompile "run"))
-  "R" (defun projectile-run ()
-        (interactive)
-        (my-projectile-command "run"))
-  "t" (defun projectile-retest ()
-        (interactive)
-        (my-project-recompile "test"))
-  "T" (defun projectile-test ()
-        (interactive)
-        (my-projectile-command "test")))
+  "c" my-project-recompile
+  "C" project-compile)
 
 (define-prefix-keymap my-project-map
   "my projectile keybindings"
-  "!" projectile-run-async-shell-command-in-root
-  "a" counsel-projectile-org-agenda
-  "b" counsel-projectile-switch-to-buffer
+  "&" project-async-shell-command
+  "b" project-switch-to-buffer
   "c" my-project-compile-map
   "C" counsel-projectile-org-capture
   "d" counsel-projectile-find-dir
