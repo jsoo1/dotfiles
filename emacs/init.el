@@ -450,9 +450,6 @@
 (with-eval-after-load 'highlight-indent-guides
   (set-face-foreground 'highlight-indent-guides-character-face base01))
 
-;; Undo-Tree
-(global-undo-tree-mode)
-(setq undo-tree-history-directory-alist `((".*" . ,(expand-file-name "undo-tree" user-emacs-directory))))
 
 ;; Remove upcase-word (I never use it and it is always pestering me)
 (define-key esc-map (kbd "u") nil)
