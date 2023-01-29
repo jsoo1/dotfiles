@@ -5,7 +5,7 @@
   (branch "john")
   (introduction
    (make-channel-introduction
-    "95efb25def1422d09f3f959f7fe890f757ad0fe8"
+    "aac8a7047a5a4133ddb2bdc263d503b8117892bd"
     (openpgp-fingerprint
      "5A15 8FAF 406A 748A 81A9  DC4E 4F43 7A76 B448 A23B"))))
  (channel
