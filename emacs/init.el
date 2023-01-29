@@ -956,7 +956,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (with-eval-after-load 'agda2-mode
   (progn
     (define-key agda2-mode-map (kbd "C-c C-SPC") #'agda2-give)
-    (define-key agda2-mode-map (kbd "C-c C-u") #'counsel-unicode-char)
+    (define-key agda2-mode-map (kbd "C-c C-u") #'insert-char)
     (define-key agda2-mode-map (kbd "C-c ,") #'agda2-goal-and-context)
     (define-key agda2-mode-map (kbd "C-c .") #'agda2-goal-and-context-and-inferred)
     (define-key agda2-mode-map (kbd "C-c ;") #'agda2-goal-and-context-and-checked)
@@ -1589,7 +1589,7 @@ respectively."
   "TAB" 'evil-switch-to-windows-last-buffer
   "a" 'my-process-map
   "b" 'my-buffer-map
-  "c" 'my-counsel-map
+  "c" 'my-consult-map
   "d" 'my-directory-map
   "e" 'my-flycheck-map
   "f" 'my-file-map
@@ -1611,7 +1611,7 @@ respectively."
 
 (define-key help-map (kbd "w") #'woman)
 (define-key help-map (kbd "W") #'man)
-(define-key help-map (kbd "i") #'counsel-info-lookup-symbol)
+(define-key help-map (kbd "i") #'info-lookup-symbol)
 (define-key help-map (kbd "I") #'info-apropos)
 
 (define-prefix-keymap my-directory-map
@@ -1706,28 +1706,18 @@ respectively."
         (interactive)
         (switch-to-buffer (get-buffer-create "*scratch*"))))
 
-(define-prefix-keymap my-counsel-map
+(define-prefix-keymap my-consult-map
   "my keybindings to counsel"
-  "b" counsel-switch-buffer
-  "c" counsel-colors-emacs
-  "d" counsel-dired
   "g" project-find-file
-  "h" counsel-command-history
-  "i" counsel-ibuffer
-  "I" counsel-info-lookup-symbol
-  "m" counsel-minor
-  "M" counsel-major
-  "p" counsel-projectile
-  "v" counsel-set-variable
-  "w" counsel-colors-web)
+  "m" consult-minor-mode-menu)
 
 (define-prefix-keymap my-describe-map
   "my describe keybindings"
-  "a" counsel-apropos
+  "a" consult-apropos
   "b" describe-bindings
   "c" describe-char
   "f" helpful-function
-  "F" counsel-describe-face
+  "F" describe-face
   "k" helpful-key
   "m" describe-mode
   "s" describe-symbol
@@ -1756,10 +1746,10 @@ respectively."
 
 (define-prefix-keymap my-file-map
   "my file keybindings"
-  "f" counsel-find-file
+  "f" consult-find
   "g" magit-find-file
   "l" find-file-literally
-  "r" counsel-buffer-or-recentf
+  "r" consult-recent-file
   "s" save-buffer
   "t" find-file-other-tab
   "y" (defun kill-file-name
@@ -1774,7 +1764,7 @@ respectively."
 (define-prefix-keymap my-git-map
   "my git keybindings"
   "b" magit-blame
-  "c" counsel-git-checkout
+  "c" magit-checkout
   "g" magit-file-dispatch
   "O" magit-reset
   "p" magit-push
@@ -1790,8 +1780,7 @@ respectively."
   "t" (defun insert-time-now-as-iso-8601 ()
         (interactive) (insert (iso-8601-string)))
   "T" (defun insert-time-now-as-iso-8601-full ()
-        (interactive) (insert (iso-8601-string-full)))
-  "u" counsel-unicode-char)
+        (interactive) (insert (iso-8601-string-full))))
 
 (define-prefix-keymap my-jump-map
   "my jump keybindings"
@@ -1814,8 +1803,7 @@ respectively."
   "a" counsel-projectile-org-agenda
   "c" counsel-projectile-org-capture
   "d" org-babel-detangle
-  "g" counsel-org-goto
-  "i" counsel-org-entity
+  "g" consult-org-heading
   "l" org-store-link
   "m" my-org-mime-map
   "t" counsel-org-tag)
@@ -1840,7 +1828,7 @@ respectively."
   "I" projectile-invalidate-cache
   "o" (defun switch-to-project-todos ()
         (interactive)
-        (project-find-file (format "%sTODOs.org" (project-root (project-current t)))))
+        (find-file (format "%sTODOs.org" (project-root (project-current t)))))
   "p" project-switch-project
   "'" (defun project-eshell-other-window ()
         (interactive)
@@ -1887,7 +1875,7 @@ respectively."
   "p" popper-cycle
   "P" popper-toggle-type
   "t" tab-bar-mode
-  "T" counsel-load-theme
+  "T" consult-theme
   "w" whitespace-mode
   "x" toggle-xclip-mode)
 
