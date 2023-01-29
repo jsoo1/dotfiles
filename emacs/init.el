@@ -591,7 +591,7 @@
   (let* ((default-directory (project-root (project-current t)))
          (buf (get-buffer (funcall project-compilation-buffer-name-function "compilation"))))
     (if buf (with-current-buffer buf (recompile))
-      (project-compile))))
+      (call-interactively #'project-compile))))
 
 (defun my-switch-to-compile-buffer ()
   "Switch to project compilation buffer."
@@ -600,7 +600,7 @@
   (let* ((default-directory (project-root (project-current t)))
          (buf (get-buffer (funcall project-compilation-buffer-name-function "compilation"))))
     (if buf (switch-to-buffer-other-window buf)
-      (project-compile))))
+      (call-interactively #'project-compile))))
 
 ;; Org
 (require 'org-tempo)
@@ -1821,25 +1821,6 @@ respectively."
   "m" my-org-mime-map
   "t" counsel-org-tag)
 
-(defun get-tab-by-name-create (name)
-  "Get or create tab for `NAME'."
-  (let* ((tabs (funcall tab-bar-tabs-function))
-         (tab-names (seq-map #'my-tab-bar-name tabs)))
-    (if (seq-contains-p tab-names name #'string-equal)
-        (tab-bar-select-tab-by-name name)
-      (tab-new))))
-
-(defun find-file-in-project-tab (project-root)
-  "Find file in `PROJECT-ROOT' in a new or existing tab."
-  (get-tab-by-name-create (file-name-base (directory-file-name project-root)))
-  (counsel-projectile-switch-project-action-find-file project-root))
-
-(defun switch-project-workspace ()
-  "Switch to a known projectile project in a new workspace."
-  (interactive)
-  (let* ((counsel-projectile-switch-project-action #'find-file-in-project-tab))
-    (counsel-projectile-switch-project)))
-
 (define-prefix-keymap my-project-compile-map
   "my project compilation keybindings"
   "c" my-project-recompile
@@ -1851,10 +1832,8 @@ respectively."
   "b" project-switch-to-buffer
   "c" my-project-compile-map
   "C" counsel-projectile-org-capture
-  "d" counsel-projectile-find-dir
-  "D" (defun switch-to-projectile-project-root ()
-        (interactive)
-        (dired (projectile-project-root)))
+  "d" project-find-dir
+  "D" project-dired
   "e" (defun switch-to-project-dir-locals ()
         (interactive)
         (find-file (format "%s.dir-locals.el" (project-root (project-current t)))))
@@ -1863,12 +1842,11 @@ respectively."
   "o" (defun switch-to-project-todos ()
         (interactive)
         (project-find-file (format "%sTODOs.org" (project-root (project-current t)))))
-  "p" switch-project-workspace
+  "p" project-switch-project
   "'" (defun project-eshell-other-window ()
         (interactive)
         (switch-to-buffer-other-window (current-buffer))
-        (project-eshell))
-  "]" projectile-find-tag)
+        (project-eshell)))
 
 (define-prefix-keymap my-quit-map
   "my quit keybindings"
