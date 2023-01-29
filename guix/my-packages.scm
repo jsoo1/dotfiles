@@ -225,9 +225,6 @@
     "emacs-systemd-mode"
     "emacs-terraform-mode"
     "emacs-tuareg"
-    ;; Remove undo-tree and use undo-redo for evil-undo-system with
-    ;; emacs 28
-    "emacs-undo-tree"
     "emacs-uuidgen-el"
     "emacs-vimrc-mode"
     "emacs-web-mode"
