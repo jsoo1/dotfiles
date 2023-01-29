@@ -1366,8 +1366,8 @@ when send commands with redis protocol."
 (when (or (string= "base" (daemonp))
           (string= "term" (daemonp))
           (not (display-graphic-p (selected-frame))))
-    (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-           (set-face-background 'line-number base02 (selected-frame))))
+  (progn (set-face-background 'default "unspecified-bg" (selected-frame))
+         (set-face-background 'line-number base02 (selected-frame))))
 
 ;; Shackle
 (setq shackle-rules '((compilation-mode :noselect t :align right :other t)
