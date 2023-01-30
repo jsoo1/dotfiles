@@ -146,7 +146,7 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 ;; even with with-eval-after-load 'mm-uu
 ;; or in a hook
 (defface mm-uu-extract
-  `((,t . (:foreground ,blue :background unspecified)))
+  `((,t . (:foreground ,my-blue :background unspecified)))
   "Face for extracted buffers."
   :group 'gnus-article-mime)
 
@@ -1345,7 +1345,7 @@ when send commands with redis protocol."
 (set-face-attribute
  'help-key-binding nil
  :background 'unspecified
- :foreground orange)
+ :foreground my-orange)
 
 ;; Transparency in gui
 (set-frame-parameter (selected-frame) 'alpha '(80 . 50))
@@ -1429,15 +1429,15 @@ when send commands with redis protocol."
 
 (set-face-attribute
  'tab-bar nil
- :foreground base01
+ :foreground my-base01
  :background "unspecified")
 (set-face-attribute
  'tab-bar-tab nil
- :foreground base0
+ :foreground my-base0
  :background "unspecified")
 (set-face-attribute
  'tab-bar-tab-inactive nil
- :foreground base01
+ :foreground my-base01
  :background "unspecified")
 
 ;; Mode Line
@@ -1445,27 +1445,27 @@ when send commands with redis protocol."
  'mode-line nil
  :underline nil
  :overline nil
- :foreground base0
- :background base02
- :box `(:line-width 1 :color ,base02 :style unspecified))
+ :foreground my-base0
+ :background my-base02
+ :box `(:line-width 1 :color ,my-base02 :style unspecified))
 
 (set-face-attribute
  'mode-line-inactive nil
  :overline nil
  :underline nil
- :foreground base01
+ :foreground my-base01
  :background "unspecified"
- :box `(:line-width 1 :color ,base03 :style unspecified))
+ :box `(:line-width 1 :color ,my-base03 :style unspecified))
 
 (defun evil-state-foreground (state)
   "The mode line color for evil-state `STATE'."
   (pcase state
-    ('normal  green)
-    ('insert  yellow)
-    ('emacs   cyan)
-    ('replace red)
-    ('visual  blue)
-    ('motion  cyan)))
+    ('normal  my-green)
+    ('insert  my-yellow)
+    ('emacs   my-cyan)
+    ('replace my-red)
+    ('visual  my-blue)
+    ('motion  my-cyan)))
 
 (defun my-flycheck-error-str (n fg)
   "Properties string for a number of errors `N' with foreground color `FG'."
