@@ -516,9 +516,9 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 ;; Tmux
 (require 'tmux-pane)
 (tmux-pane-mode)
-(with-eval-after-load 'xdg
-  (when (eq 'gnu/linux system-type)
-    (setenv "TMUX_TMPDIR" (xdg-runtime-dir))))
+(when (eq 'gnu/linux system-type)
+  (require 'xdg)
+  (setenv "TMUX_TMPDIR" (xdg-runtime-dir)))
 
 ;; Vinegar and friends
 (define-key evil-normal-state-map "-" #'dired-jump)
@@ -1718,15 +1718,17 @@ respectively."
 
 (define-prefix-keymap my-git-map
   "my git keybindings"
-  "b" magit-blame
+  "A" magit-cherry-pick
+  "b" magit-branch
   "c" magit-checkout
   "d" magit-diff
+  "f" magit-fetch
   "g" magit-file-dispatch
   "O" magit-reset
   "p" magit-push
-  "r" magit-refresh-all
+  "r" magit-rebase
   "s" magit-status
-  "l" magit-log-buffer-file
+  "l" magit-log
   "z" magit-stash)
 
 (define-prefix-keymap my-insert-map
