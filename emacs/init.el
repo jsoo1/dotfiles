@@ -400,7 +400,6 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
  safe-local-variable-values
  `(;; Haskell-specific
    (before-save-hook . nil)
-   (projectile-indexing-method . hybrid)
    (haskell-stylish-on-save . nil)
    (nix-format-buffer . nil)
    (nix-format-on-save . nil)
@@ -412,22 +411,11 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
    (haskell-mode-stylish-haskell-args . ("--ghc-opt" "TypeApplications"))
    (haskell-stylish-on-save . t)
    (haskell-stylish-on-save . nil)
-   (projectile-project-compilation-cmd . "darwin-rebuild --flake ./nix")
-   (projectile-project-compilation-cmd . "nix-shell nix/shell.nix")
-   (projectile-project-compilation-cmd . "cabal new-build")
-   (projectile-project-compilation-cmd . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix ")
-   (projectile-project-compilation-cmd . "guix package -m ~/dotfiles/guix/manifest.scm")
    (haskell-process-wrapper-function
     . (lambda (argv)
         (append (list "env" "NO_COLOR=true") argv)))
    ;; Ocaml-specific
    (smie-indent-basic . 2)
-   ;; Rust-specific
-   (projectile-project-run-cmd . "cargo run")
-   (projectile-project-compilation-cmd . "cargo build")
-   (projectile-project-test-command . "cargo test")
-   ;; Guix projects
-   (projectile-compilation-command . "guix build -f guix.scm")
    ;; Eglot-specific
    (eglot-connect-timeout . nil)
    ;; Javascript-specific
@@ -552,32 +540,12 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 ;; Project.el
 (setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
 
-;; Projectile
-(setq projectile-completion-system 'ivy
-      projectile-indexing-method 'native
-      projectile-enable-caching 't
-      projectile-project-search-path '("~/projects/")
-      projectile-globally-unignored-files '(".*\\.projectile$"
-                                            ".*\\.envrc$"
-                                            ".*\\.dir-locals.el$")
-      projectile-globally-ignored-files '("\\.git/.*" "dist-newstyle/.*" "\\.cache/*" "\\.ccls-cache/*" "target/*")
-      projectile-globally-unignored-directories '(".github")
-      projectile-globally-ignored-directories nil
-      projectile-globally-unignored-directories '("scratch")
-      projectile-project-root-files-functions (list #'projectile-root-local
-                                                    #'projectile-root-top-down-recurring
-                                                    #'projectile-root-top-down
-                                                    #'projectile-root-bottom-up)
-      projectile-ignored-projects '("~" "~/projects/work"))
-(add-to-list 'projectile-globally-ignored-directories "/nix/store")
-(add-to-list 'projectile-globally-ignored-directories "/gnu/store")
-
-
 ;; IBuffer
+
 (defun my-set-ibuffer-filter-groups ()
   "Create my ibuffer filter groupings."
-  (ibuffer-projectile-set-filter-groups)
-  (setq ibuffer-filter-groups `(,@(ibuffer-projectile-generate-filter-groups)
+  (setq ibuffer-filter-groups `(,@(mapcar (lambda (r) `(,r (directory . ,(expand-file-name r))))
+                                          (project-known-project-roots))
                                 ("ERC" (mode . erc-mode))
                                 ("Coq" (or (mode . coq-shell-mode)
                                            (mode . coq-response-mode)
