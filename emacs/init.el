@@ -1412,35 +1412,8 @@ when send commands with redis protocol."
         world-clock-mode))
 (popper-mode 1)
 
-(defun counsel-popper-buried-popups ()
-  "Ivy search for popper buried popups."
-  (interactive)
-  (ivy-read "Buffer: " (mapcar (pcase-lambda (`(,group ,win . ,buf))
-                                 `(,(format "%s: %s" group (buffer-name buf)) . (,group ,win . ,buf)))
-                               (seq-uniq (mapcan (pcase-lambda (`(,group . ,xs))
-                                                   (mapcar (lambda (x) (cons group x)) xs))
-                                                 popper-buried-popup-alist)))
-            :action (pcase-lambda (`(_ ,group . ,selection))
-                      (popper--bury-all)
-                      (let ((bufs (alist-get group popper-buried-popup-alist nil nil 'equal)))
-                        (setf (alist-get group popper-buried-popup-alist nil nil 'equal)
-                              (cons selection
-                                    (seq-filter (lambda (x) (not (equal selection x))) bufs))))
-                      (popper-open-latest group))
-            :require-match t
-            :caller 'counsel-popper-buried-popups))
-
 ;; Tab bar
-(setq
- tab-bar-show nil
- tab-bar-tab-name-function
- (defun my-window-project-name ()
-   "Projectile project name of current window"
-   (with-current-buffer (window-buffer (minibuffer-selected-window))
-     (let ((project-name (projectile-project-name)))
-       (if (string-equal "-" project-name)
-           (buffer-name (current-buffer))
-         project-name)))))
+(setq tab-bar-show nil)
 
 (set-face-attribute
  'tab-bar nil
@@ -1454,20 +1427,6 @@ when send commands with redis protocol."
  'tab-bar-tab-inactive nil
  :foreground base01
  :background "unspecified")
-
-(defun my-tab-bar-name (tab)
-  "Get `NAME' and `BUFFER' from `TAB'."
-  (pcase tab
-    (`(,tag . ,fields) (alist-get 'name fields))))
-
-(defun counsel-switch-tab ()
-  "Select a tab to switch to with ivy."
-  (interactive)
-  (ivy-read "tab: "
-            (seq-map #'my-tab-bar-name (funcall tab-bar-tabs-function))
-            :initial-input ""
-            :action #'tab-bar-select-tab-by-name
-            :require-match t))
 
 ;; Mode Line
 (set-face-attribute
@@ -1788,8 +1747,7 @@ respectively."
   "my jump keybindings"
   "i" consult-imenu
   "o" consult-org-agenda
-  "p" counsel-popper-buried-popups
-  "t" counsel-switch-tab
+  "t" tab-switch
   "]" evil-jump-to-tag
   "'" consult-mark
   "=" indent-region-or-buffer)
@@ -1818,7 +1776,7 @@ respectively."
 (define-prefix-keymap my-project-map
   "my projectile keybindings"
   "&" project-async-shell-command
-  "b" project-switch-to-buffer
+  "b" consult-project-buffer
   "c" my-project-compile-map
   "C" my-project-org-capture
   "d" project-find-dir
