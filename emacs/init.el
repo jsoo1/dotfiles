@@ -1384,6 +1384,7 @@ when send commands with redis protocol."
 
 ;; Popper
 (setq popper-display-control 'user
+      popper-group-function #'popper-group-by-project
       popper-reference-buffers
       '("\\*Async Shell Command\\*"
         "*\\*.*compile\\*$" compilation-mode
