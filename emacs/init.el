@@ -1758,7 +1758,6 @@ respectively."
         (interactive)
         (find-file (format "%s.dir-locals.el" (project-root (project-current t)))))
   "f" project-find-file
-  "I" projectile-invalidate-cache
   "o" (defun switch-to-project-todos ()
         (interactive)
         (find-file (format "%sTODOs.org" (project-root (project-current t)))))
