@@ -1810,12 +1810,14 @@ respectively."
   "my git keybindings"
   "b" magit-blame
   "c" counsel-git-checkout
+  "d" magit-diff
   "g" magit-file-dispatch
   "O" magit-reset
   "p" magit-push
   "r" magit-refresh-all
   "s" magit-status
-  "l" magit-log-buffer-file)
+  "l" magit-log-buffer-file
+  "z" magit-stash)
 
 (define-prefix-keymap my-insert-map
   "my insertion keybindings"
