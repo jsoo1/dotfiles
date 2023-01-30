@@ -1326,7 +1326,7 @@ when send commands with redis protocol."
           (string= "base" (daemonp))
           (string= "term" (daemonp)))
       (progn (set-face-background 'default "unspecified-bg" frame)
-             (set-face-background 'line-number base02 frame))))
+             (set-face-background 'line-number my-base02 frame))))
 
 (defun my-make-this-frame-transparent ()
   "Make `selected-frame' transparent."
@@ -1341,7 +1341,7 @@ when send commands with redis protocol."
   "Setup transparency in terminal."
   (unless (display-graphic-p (selected-frame))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-           (set-face-background 'line-number base02 (selected-frame)))))
+           (set-face-background 'line-number my-base02 (selected-frame)))))
 
 (add-hook 'window-setup-hook #'on-after-init)
 
@@ -1349,7 +1349,7 @@ when send commands with redis protocol."
           (string= "term" (daemonp))
           (not (display-graphic-p (selected-frame))))
   (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-         (set-face-background 'line-number base02 (selected-frame))))
+         (set-face-background 'line-number my-base02 (selected-frame))))
 
 ;; Shackle
 (setq shackle-rules '((compilation-mode :noselect t :align right :other t)
