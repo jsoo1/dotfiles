@@ -32,8 +32,7 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
       initial-scratch-message ""
-      focus-follows-mouse t
-      vc-follow-symlinks 't)
+      focus-follows-mouse t)
 (setq-default truncate-lines 't)
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(font . "Iosevka 12"))
@@ -194,6 +193,7 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 (setq eldoc-echo-area-use-multiline-p nil)
 
 ;; VC
+(setq vc-follow-symlinks 't)
 (with-eval-after-load 'vc
   (defadvice vc-mode-line (after strip-backend () activate)
     (when (stringp vc-mode)
@@ -538,7 +538,8 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
   (define-key git-commit-mode-map (kbd "C-c M-c") #'git-commit-co-authored))
 
 ;; Project.el
-(setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
+(setq project-vc-merge-submodules nil
+      project-compilation-buffer-name-function #'project-prefixed-buffer-name)
 
 ;; IBuffer
 
