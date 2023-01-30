@@ -442,6 +442,7 @@
 (setq imenu-list-size 0.2)
 
 ;; Winner
+(setq winner-dont-bind-my-keys t)
 (winner-mode t)
 
 ;; Eshell syntax highlighting
@@ -708,6 +709,9 @@
 ;; Consult
 (global-set-key (kbd "M-y") 'consult-yank-pop)
 (global-set-key (kbd "C-s") 'consult-line)
+
+;; Embark
+(define-key vertico-map (kbd "C-c C-c") #'embark-act)
 
 ;; Line numbers
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
@@ -1654,6 +1658,7 @@ respectively."
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
   "b" switch-to-buffer
+  "B" switch-to-buffer-other-window
   "c" my-switch-to-compile-buffer
   "d" kill-current-buffer
   "i" ibuffer
@@ -1685,12 +1690,7 @@ respectively."
   "t" describe-theme
   "v" helpful-variable)
 
-(load-file "~/dotfiles/emacs/counsel-info-apropos.el")
-(require 'counsel-info-apropos)
-
 (define-key help-map (kbd "D") my-describe-map)
-(define-key help-map (kbd "i") #'counsel-info-manual-apropos)
-(define-key help-map (kbd "I") #'counsel-info-apropos)
 (define-key help-map (kbd "f") #'helpful-symbol)
 (define-key help-map (kbd "v") #'helpful-variable)
 (define-key help-map (kbd "k") #'helpful-key)
@@ -1747,6 +1747,7 @@ respectively."
   "my jump keybindings"
   "i" consult-imenu
   "o" consult-org-agenda
+  "p" switch-to-buffer-other-window
   "t" tab-switch
   "]" evil-jump-to-tag
   "'" consult-mark
