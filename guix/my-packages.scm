@@ -31,7 +31,6 @@
     "make"
     "mosh"
     "mpv"
-    "pijul"
     "pinentry"
     "qemu"
     "recutils"
