@@ -629,21 +629,22 @@
                                (sql . t)))
 (setq org-todo-keywords
       '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELLED"))
-      counsel-projectile-org-capture-templates
-      '(("t" "[${name}] Todo" entry
-         (file+headline "${root}/TODOs.org" "Todos")
+      org-capture-templates
+      '(("t" "Todo" entry (file+headline "" "Todos")
          "* TODO %U %?
   %a")
-        ("pt" "[${name}] Plain Todo" entry
-         (file+headline "${root}/TODOs.org" "Todos")
+        ("p" "Plain Todo" entry (file+headline "" "Todos")
          "* TODO %?")
-        ("bt" "[${name}] Note" entry
-         (file+headline "${root}/TODOs.org" "Notes")
+        ("n" "Note" entry (file+headline "" "Notes")
          "* %U %?
   %a")))
 
 (setq org-directory "~")
 
+(defun my-project-org-capture ()
+        (interactive)
+        (let ((org-default-notes-file (format "%sTODOs.org" (project-root (project-current t)))))
+          (org-capture)))
 ;; todos
 (setq org-enforce-todo-dependencies t)
 
@@ -1785,7 +1786,7 @@ respectively."
 (define-prefix-keymap my-jump-map
   "my jump keybindings"
   "i" consult-imenu
-  "o" consult-org-heading
+  "o" consult-org-agenda
   "p" counsel-popper-buried-popups
   "t" counsel-switch-tab
   "]" evil-jump-to-tag
@@ -1800,8 +1801,8 @@ respectively."
 
 (define-prefix-keymap my-org-map
   "my org bindings"
-  "a" counsel-projectile-org-agenda
-  "c" counsel-projectile-org-capture
+  "a" org-agenda
+  "c" my-project-org-capture
   "d" org-babel-detangle
   "g" consult-org-heading
   "l" org-store-link
@@ -1818,7 +1819,7 @@ respectively."
   "&" project-async-shell-command
   "b" project-switch-to-buffer
   "c" my-project-compile-map
-  "C" counsel-projectile-org-capture
+  "C" my-project-org-capture
   "d" project-find-dir
   "D" project-dired
   "e" (defun switch-to-project-dir-locals ()

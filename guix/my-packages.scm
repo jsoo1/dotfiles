@@ -145,7 +145,6 @@
     "emacs-company-coq"
     "emacs-company-math"
     "emacs-consult"
-    "emacs-counsel-projectile"
     "emacs-csv-mode"
     "emacs-cql-mode"
     "emacs-dash"
