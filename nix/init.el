@@ -11,7 +11,10 @@
 
 (require 'seq)
 (defmacro define-prefix-keymap (name docstring &rest bindings)
-  "Define a keymap named `NAME' and docstring `DOCSTRING' with many `BINDINGS' at once using `define-key'."
+  "Declaratively create prefix keymaps.
+
+Define a keymap named `NAME' and docstring `DOCSTRING' with many
+`BINDINGS' at once using `define-key'."
   `(,#'progn
      (defvar ,name (make-sparse-keymap) ,docstring)
      (define-prefix-command (quote ,name))
@@ -29,8 +32,7 @@
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
       initial-scratch-message ""
-      focus-follows-mouse t
-      vc-follow-symlinks 't)
+      focus-follows-mouse t)
 (setq-default truncate-lines 't)
 (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
 (add-to-list 'default-frame-alist '(font . "Iosevka 12"))
@@ -91,6 +93,7 @@
 
 ;; Paths
 (defun package-manager-user-profile ()
+  "Setup env for nix/guix."
   (let* ((guix-profile (getenv "GUIX_PROFILE"))
          (nix-profile (getenv "NIX_PROFILE"))
          (nix-profiles* (getenv "NIX_PROFILES"))
@@ -122,22 +125,25 @@
 (setf epa-pinentry-mode 'loopback)
 
 ;; Color setup
-(defvar base03  "#002b36" "Theme base03.")
-(defvar base02  "#073642" "Theme base02.")
-(defvar base01  "#586e75" "Theme base01.")
-(defvar base00  "#657b83" "Theme base00.")
-(defvar base3   "#fdf6e3" "Theme base3.")
-(defvar base2   "#eee8d5" "Theme base2.")
-(defvar base1   "#93a1a1" "Theme cyan.")
-(defvar base0   "#839496" "Theme base0.")
-(defvar yellow  "#b58900" "Theme yellow.")
-(defvar red     "#dc322f" "Theme red.")
-(defvar green   "#859900" "Theme green.")
-(defvar blue    "#286bd2" "Theme blue.")
-(defvar cyan    "#2aa198" "Theme cyan.")
-(defvar magenta "#d33682" "Theme magenta.")
-(defvar orange  "#cb4b16" "Theme orange.")
-(defvar violet  "#6c71c4" "Theme violet.")
+(defvar my-base03  "#002b36" "Theme base03.")
+(defvar my-base02  "#073642" "Theme base02.")
+(defvar my-base01  "#586e75" "Theme base01.")
+(defvar my-base00  "#657b83" "Theme base00.")
+(defvar my-base3   "#fdf6e3" "Theme base3.")
+(defvar my-base2   "#eee8d5" "Theme base2.")
+(defvar my-base1   "#93a1a1" "Theme cyan.")
+(defvar my-base0   "#839496" "Theme base0.")
+(defvar my-yellow  "#b58900" "Theme yellow.")
+(defvar my-red     "#dc322f" "Theme red.")
+(defvar my-green   "#859900" "Theme green.")
+(defvar my-blue    "#286bd2" "Theme blue.")
+(defvar my-cyan    "#2aa198" "Theme cyan.")
+(defvar my-magenta "#d33682" "Theme magenta.")
+(defvar my-orange  "#cb4b16" "Theme orange.")
+(defvar my-violet  "#6c71c4" "Theme violet.")
+
+;; Recentf
+(recentf-mode 1)
 
 ;; Grep
 (with-eval-after-load 'grep
@@ -148,7 +154,7 @@
 ;; even with with-eval-after-load 'mm-uu
 ;; or in a hook
 (defface mm-uu-extract
-  `((,t . (:foreground ,blue :background unspecified)))
+  `((,t . (:foreground ,my-blue :background unspecified)))
   "Face for extracted buffers."
   :group 'gnus-article-mime)
 
@@ -158,29 +164,6 @@
       erc-rename-buffers t
       erc-ignore-list '("{\\^-\\^}")
       erc-hide-list '("JOIN" "PART" "QUIT"))
-
-(defun my-erc (port)
-  "Open my erc configuration using znc on `PORT'."
-  (interactive "nport: ")
-  (erc-tls
-   :server "irc.refl.club"
-   :port port
-   :nick "jsoo"))
-
-(defun my-erc-freenode ()
-  "Open erc with my configuration for freenode."
-  (interactive)
-  (my-erc 5555))
-
-(defun my-erc-libera ()
-  "Open erc with my configuration for libera."
-  (interactive)
-  (my-erc 5556))
-
-(defun my-erc-oftc ()
-  "Open erc with my configuration for oftc."
-  (interactive)
-  (my-erc 5557))
 
 (add-hook 'erc-mode-hook
           (defun toggle-truncate-lines-on ()
@@ -196,6 +179,7 @@
 (setq eldoc-echo-area-use-multiline-p nil)
 
 ;; VC
+(setq vc-follow-symlinks 't)
 (with-eval-after-load 'vc
   (defadvice vc-mode-line (after strip-backend () activate)
     (when (stringp vc-mode)
@@ -246,9 +230,9 @@
   (eshell-send-input nil nil t))
 
 (add-hook 'eshell-mode-hook
-            (defun my-eshell-set-keybindings ()
-              (interactive)
-              (define-key eshell-mode-map (kbd "C-l") #'my-eshell-clear-scrollback)))
+          (defun my-eshell-set-keybindings ()
+            (interactive)
+            (define-key eshell-mode-map (kbd "C-l") #'my-eshell-clear-scrollback)))
 
 (when (and (executable-find "fish")
            (require 'fish-completion nil t))
@@ -261,19 +245,19 @@
       eshell-prompt-function
       (defun make-my-eshell-prompt ()
         (concat
-         (propertize (eshell/whoami) 'face `(:foreground ,base1))
+         (propertize (eshell/whoami) 'face `(:foreground ,my-base1))
          " "
          (propertize (replace-regexp-in-string (concat "^" (getenv "HOME")) "~" (eshell/pwd))
-                     'face `(:foreground ,blue))
+                     'face `(:foreground ,my-blue))
          " "
          (propertize (condition-case nil
                          (let ((curr-branch (magit-get-current-branch)))
                            (if curr-branch curr-branch
                              (substring (magit-rev-parse "HEAD") 0 7)))
                        (error ""))
-                     'face `(:foreground ,green))
+                     'face `(:foreground ,my-green))
          " "
-         (propertize "λ" 'face `(:foreground ,yellow :weight normal))
+         (propertize "λ" 'face `(:foreground ,my-yellow :weight normal))
          " ")))
 
 (defun my-side-eshell (props)
@@ -309,79 +293,79 @@
 (diredfl-global-mode 1)
 (set-face-attribute
  diredfl-dir-heading nil
- :foreground blue
+ :foreground my-blue
  :background "unspecified")
 (set-face-attribute
  diredfl-number nil
- :foreground green
+ :foreground my-green
  :background "unspecified")
 (set-face-attribute
  diredfl-date-time nil
- :foreground yellow
+ :foreground my-yellow
  :background "unspecified")
 (set-face-attribute
  diredfl-file-name nil
- :foreground base0
+ :foreground my-base0
  :background "unspecified")
 (set-face-attribute
  diredfl-file-suffix nil
- :foreground green
+ :foreground my-green
  :background "unspecified")
 (set-face-attribute
  diredfl-dir-name nil
- :foreground blue
+ :foreground my-blue
  :background "unspecified")
 (set-face-attribute
  diredfl-symlink nil
- :foreground cyan
+ :foreground my-cyan
  :background "unspecified")
 (set-face-attribute
  diredfl-no-priv nil
- :foreground base0
+ :foreground my-base0
  :background "unspecified")
 (set-face-attribute
  diredfl-dir-priv nil
- :foreground blue
+ :foreground my-blue
  :background "unspecified")
 (set-face-attribute
  diredfl-read-priv nil
- :foreground base0
+ :foreground my-base0
  :background "unspecified")
 (set-face-attribute
  diredfl-write-priv nil
- :foreground cyan
+ :foreground my-cyan
  :background "unspecified")
 (set-face-attribute
  diredfl-exec-priv nil
- :foreground magenta
+ :foreground my-magenta
  :background "unspecified")
 (set-face-attribute
  diredfl-rare-priv nil
- :foreground magenta
+ :foreground my-magenta
  :background "unspecified")
 (set-face-attribute
  diredfl-other-priv nil
- :foreground orange
+ :foreground my-orange
  :background "unspecified")
 (set-face-attribute
  diredfl-deletion nil
- :foreground red
+ :foreground my-red
  :background "unspecified")
 (set-face-attribute
  diredfl-deletion-file-name nil
- :foreground red
+ :foreground my-red
  :background "unspecified")
 (set-face-attribute
  diredfl-flag-mark nil
- :foreground violet
+ :foreground my-violet
  :background "unspecified")
 (set-face-attribute
  diredfl-flag-mark-line nil
- :foreground violet
+ :foreground my-violet
  :background "unspecified")
 (set-face-attribute
  diredfl-ignored-file-name nil
- :foreground base01
+ :foreground my-base01
  :background "unspecified")
 
 ;; World times to display
@@ -406,7 +390,6 @@
  safe-local-variable-values
  `(;; Haskell-specific
    (before-save-hook . nil)
-   (projectile-indexing-method . hybrid)
    (haskell-stylish-on-save . nil)
    (nix-format-buffer . nil)
    (nix-format-on-save . nil)
@@ -418,27 +401,11 @@
    (haskell-mode-stylish-haskell-args . ("--ghc-opt" "TypeApplications"))
    (haskell-stylish-on-save . t)
    (haskell-stylish-on-save . nil)
-   (projectile-project-compilation-cmd . "darwin-rebuild --flake ./nix")
-   (projectile-project-compilation-cmd . "nix-shell nix/shell.nix")
-   (projectile-project-compilation-cmd . "cabal new-build")
-   (projectile-project-compilation-cmd . "guix environment guix --ad-hoc git -- make && ./pre-inst-env guix ")
    (haskell-process-wrapper-function
     . (lambda (argv)
         (append (list "env" "NO_COLOR=true") argv)))
-   ;; Project s
-   ,@(seq-mapcat (pcase-lambda (`(,f . _)) `((when (eq 'darwin system-type)
-                                               (projectile-project-root . ,(format "/ssh:hd:/home/john/projects/%s/" f)))
-                                             (projectile-project-root . ,(format "%s/projects/%s/" (getenv "HOME") f))))
-              (seq-filter (pcase-lambda (`(_ . (,dir? . _))) (eq t dir?))
-                          (directory-files-and-attributes "~/projects" nil "[^\(\\/\\.\\.$\)|\(\\/\\.$\)]")))
    ;; Ocaml-specific
    (smie-indent-basic . 2)
-   ;; Rust-specific
-   (projectile-project-run-cmd . "cargo run")
-   (projectile-project-compilation-cmd . "cargo build")
-   (projectile-project-test-command . "cargo test")
-   ;; Guix projects
-   (projectile-compilation-command . "guix build -f guix.scm")
    ;; Eglot-specific
    (eglot-connect-timeout . nil)
    ;; Javascript-specific
@@ -457,6 +424,7 @@
 (setq imenu-list-size 0.2)
 
 ;; Winner
+(setq winner-dont-bind-my-keys t)
 (winner-mode t)
 
 ;; Eshell syntax highlighting
@@ -467,7 +435,7 @@
 (setq highlight-indent-guides-method 'character
       highlight-indent-guides-auto-enabled nil)
 (with-eval-after-load 'highlight-indent-guides
-  (set-face-foreground 'highlight-indent-guides-character-face base01))
+  (set-face-foreground 'highlight-indent-guides-character-face my-base01))
 
 ;; Helpful
 (require 'helpful)
@@ -571,42 +539,18 @@
   (define-key git-commit-mode-map (kbd "C-c M-c") #'git-commit-co-authored))
 
 ;; Project.el
-(setq project-compilation-buffer-name-function #'project-prefixed-buffer-name)
-
-;; Projectile
-(require 'projectile)
-(projectile-mode +1)
-(setq projectile-completion-system 'ivy
-      projectile-indexing-method 'native
-      projectile-enable-caching 't
-      projectile-project-search-path '("~/projects/")
-      projectile-globally-unignored-files '(".*\\.projectile$"
-                                            ".*\\.envrc$"
-                                            ".*\\.dir-locals.el$")
-      projectile-globally-ignored-files '("\\.git/.*" "dist-newstyle/.*" "\\.cache/*" "\\.ccls-cache/*" "target/*")
-      projectile-globally-unignored-directories '(".github")
-      projectile-globally-ignored-directories nil
-      projectile-globally-unignored-directories '("scratch")
-      projectile-project-root-files-functions (list #'projectile-root-local
-                                                    #'projectile-root-top-down-recurring
-                                                    #'projectile-root-top-down
-                                                    #'projectile-root-bottom-up)
-      projectile-ignored-projects '("~" "~/projects/work"))
-(add-to-list 'projectile-globally-ignored-directories "/nix/store")
-
+(setq project-vc-merge-submodules nil
+      project-compilation-buffer-name-function #'project-prefixed-buffer-name)
 
 ;; IBuffer
 (defun my-set-ibuffer-filter-groups ()
   "Create my ibuffer filter groupings."
-  (ibuffer-projectile-set-filter-groups)
-  (setq
-   ibuffer-filter-groups
-   (append
-    (ibuffer-projectile-generate-filter-groups)
-    '(("ERC" (mode . erc-mode))
-      ("Coq" (or (mode . coq-shell-mode)
-                 (mode . coq-response-mode)
-                 (mode .  coq-goals-mode))))))
+  (setq ibuffer-filter-groups `(,@(mapcar (lambda (r) `(,r (directory . ,(expand-file-name r))))
+                                          (project-known-project-roots))
+                                ("ERC" (mode . erc-mode))
+                                ("Coq" (or (mode . coq-shell-mode)
+                                           (mode . coq-response-mode)
+                                           (mode .  coq-goals-mode)))))
   (unless (eq ibuffer-sorting-mode 'alphabetic)
     (ibuffer-do-sort-by-alphabetic))
   (ibuffer-update nil t))
@@ -657,26 +601,31 @@
                                (sql . t)))
 (setq org-todo-keywords
       '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELLED"))
-      counsel-projectile-org-capture-templates
-      '(("t" "[${name}] Todo" entry
-         (file+headline "${root}/TODOs.org" "Todos")
+      org-capture-templates
+      '(("t" "Todo" entry (file+headline "" "Todos")
          "* TODO %U %?
   %a")
-        ("pt" "[${name}] Plain Todo" entry
-         (file+headline "${root}/TODOs.org" "Todos")
+        ("p" "Plain Todo" entry (file+headline "" "Todos")
          "* TODO %?")
-        ("bt" "[${name}] Note" entry
-         (file+headline "${root}/TODOs.org" "Notes")
+        ("n" "Note" entry (file+headline "" "Notes")
          "* %U %?
   %a")))
 
 (setq org-directory "~")
 
+(defun my-project-org-capture ()
+  "Org-capture in project TODOs.org."
+  (interactive)
+  (let ((org-default-notes-file (format "%sTODOs.org" (project-root (project-current t)))))
+    (org-capture)))
+
 ;; todos
 (setq org-enforce-todo-dependencies t)
 
 (defun str-to-org-dirs (repo-dir string)
-  "Take newline delimited `STRING' and return list of all directories with org files in `REPO-DIR'."
+  "Find org directories.
+Take newline delimited `STRING' and return list of all
+ directories with org files in `REPO-DIR'."
   (seq-map
    (lambda (x) (concat repo-dir "/" (or (file-name-directory x) "")))
    (seq-filter
@@ -725,17 +674,21 @@
 (setq anzu-cons-mode-line-p nil)
 (with-eval-after-load 'evil (require 'evil-anzu))
 
-;; Ivy
-(require 'ivy)
-(ivy-mode 1)
-(require 'counsel)
-(require 'counsel-projectile)
-(counsel-mode 1)
-(setq ivy-use-virtual-buffers t
-      ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
-(setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) "")
-(require 'ivy-prescient)
-(ivy-prescient-mode)
+;; Vertico
+(vertico-mode)
+(setq enable-recursive-minibuffers t)
+
+;; Orderless
+(setq completion-styles '(orderless basic)
+      completion-category-overrides '((file (styles basic partial-completion))))
+
+;; Consult
+(global-set-key (kbd "M-y") 'consult-yank-pop)
+(global-set-key (kbd "C-s") 'consult-line)
+
+;; Embark
+(require 'embark-consult)
+(define-key vertico-map (kbd "C-c C-c") #'embark-act)
 
 ;; Line numbers
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
@@ -772,7 +725,8 @@
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 ;; Compilation
-(define-key compilation-mode-map (kbd "C-c C-l") #'recompile)
+(with-eval-after-load 'compile
+  (define-key compilation-mode-map (kbd "C-c C-l") #'recompile))
 (add-hook 'compilation-mode-hook
           (defun toggle-truncate-lines-off ()
             (toggle-truncate-lines -1)))
@@ -780,18 +734,6 @@
 ;; Comint
 (define-key comint-mode-map (kbd "C-c C-k" ) #'comint-clear-buffer)
 (define-key comint-mode-map (kbd "C-d") nil)
-
-;; Swiper
-(define-key evil-normal-state-map (kbd "C-s") #'swiper)
-(global-set-key (kbd "C-s") 'swiper)
-(global-set-key (kbd "M-x") 'counsel-M-x)
-(global-set-key (kbd "M-y") 'counsel-yank-pop)
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "<f1> f") 'counsel-describe-function)
-(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-(global-set-key (kbd "<f1> l") 'counsel-find-library)
-(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
 
 ;; Compilation and shell ansi colors
 (require 'xterm-color)
@@ -908,13 +850,13 @@ _]_: toggle use of default sink  _n_: control select sink by name
         (expand-file-name "bin/idris" (package-manager-user-profile))))
 
 
-(dolist (f `((idris-active-term-face        ,base00)
-             (idris-semantic-type-face      ,yellow)
-             (idris-semantic-data-face      ,red)
+(dolist (f `((idris-active-term-face        ,my-base00)
+             (idris-semantic-type-face      ,my-yellow)
+             (idris-semantic-data-face      ,my-red)
              (idris-semantic-function-face  "unspecified")
-             (idris-semantic-bound-face     ,violet)
-             (idris-semantic-module-face    ,yellow)
-             (idris-identifier-face         ,base01)))
+             (idris-semantic-bound-face     ,my-violet)
+             (idris-semantic-module-face    ,my-yellow)
+             (idris-identifier-face         ,my-base01)))
   (set-face-foreground (car f) (cadr f)))
 
 (define-key idris-repl-mode-map (kbd "C-c C-k" ) #'idris-repl-clear-buffer)
@@ -988,6 +930,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 ;; (add-hook 'haskell-mode-hook #'eglot-ensure)
 (defvar eww-hoogle-url "https://hoogle.haskell.org")
 (defun eww-hoogle (query)
+  "Hoogle `QUERY' in eww."
   (interactive "sQuery: ")
   (eww (format "%s/?hoogle=%s" eww-hoogle-url (url-encode-url query))))
 (define-key haskell-mode-map (kbd "C-c C-h") #'eww-hoogle)
@@ -998,7 +941,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 ;; (with-eval-after-load 'agda2-mode
 ;;   (progn
 ;;     (define-key agda2-mode-map (kbd "C-c C-SPC") #'agda2-give)
-;;     (define-key agda2-mode-map (kbd "C-c C-u") #'counsel-unicode-char)
+;;     (define-key agda2-mode-map (kbd "C-c C-u") #'insert-char)
 ;;     (define-key agda2-mode-map (kbd "C-c ,") #'agda2-goal-and-context)
 ;;     (define-key agda2-mode-map (kbd "C-c .") #'agda2-goal-and-context-and-inferred)
 ;;     (define-key agda2-mode-map (kbd "C-c ;") #'agda2-goal-and-context-and-checked)
@@ -1369,7 +1312,7 @@ when send commands with redis protocol."
 (set-face-attribute
  'help-key-binding nil
  :background 'unspecified
- :foreground orange)
+ :foreground my-orange)
 
 ;; Transparency in gui
 (set-frame-parameter (selected-frame) 'alpha '(80 . 50))
@@ -1382,7 +1325,7 @@ when send commands with redis protocol."
           (string= "base" (daemonp))
           (string= "term" (daemonp)))
       (progn (set-face-background 'default "unspecified-bg" frame)
-             (set-face-background 'line-number base02 frame))))
+             (set-face-background 'line-number my-base02 frame))))
 
 (defun my-make-this-frame-transparent ()
   "Make `selected-frame' transparent."
@@ -1397,15 +1340,15 @@ when send commands with redis protocol."
   "Setup transparency in terminal."
   (unless (display-graphic-p (selected-frame))
     (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-           (set-face-background 'line-number base02 (selected-frame)))))
+           (set-face-background 'line-number my-base02 (selected-frame)))))
 
 (add-hook 'window-setup-hook #'on-after-init)
 
 (when (or (string= "base" (daemonp))
           (string= "term" (daemonp))
           (not (display-graphic-p (selected-frame))))
-    (progn (set-face-background 'default "unspecified-bg" (selected-frame))
-           (set-face-background 'line-number base02 (selected-frame))))
+  (progn (set-face-background 'default "unspecified-bg" (selected-frame))
+         (set-face-background 'line-number my-base02 (selected-frame))))
 
 ;; Shackle
 (setq shackle-rules '((compilation-mode :noselect t :align right :other t)
@@ -1418,8 +1361,11 @@ when send commands with redis protocol."
 
 ;; Popper
 (setq popper-display-control 'user
+      popper-group-function #'popper-group-by-project
       popper-reference-buffers
       '("\\*Async Shell Command\\*"
+        "*Warnings*"
+        "\\*Async-native-compile-log\\*"
         "*\\*.*compile\\*$" compilation-mode
         display-time-world-mode
         "^\\*eldoc\\*$"
@@ -1445,89 +1391,48 @@ when send commands with redis protocol."
         world-clock-mode))
 (popper-mode 1)
 
-(defun counsel-popper-buried-popups ()
-  "Ivy search for popper buried popups."
-  (interactive)
-  (ivy-read "Buffer: " (mapcar (pcase-lambda (`(,group ,win . ,buf))
-                                 `(,(format "%s: %s" group (buffer-name buf)) . (,group ,win . ,buf)))
-                               (seq-uniq (mapcan (pcase-lambda (`(,group . ,xs))
-                                                   (mapcar (lambda (x) (cons group x)) xs))
-                                                 popper-buried-popup-alist)))
-            :action (pcase-lambda (`(_ ,group . ,selection))
-                      (popper--bury-all)
-                      (let ((bufs (alist-get group popper-buried-popup-alist nil nil 'equal)))
-                        (setf (alist-get group popper-buried-popup-alist nil nil 'equal)
-                              (cons selection
-                                    (seq-filter (lambda (x) (not (equal selection x))) bufs))))
-                      (popper-open-latest group))
-            :require-match t
-            :caller 'counsel-popper-buried-popups))
-
 ;; Tab bar
-(setq
- tab-bar-show nil
- tab-bar-tab-name-function
- (defun my-window-project-name ()
-   "Projectile project name of current window"
-   (with-current-buffer (window-buffer (minibuffer-selected-window))
-     (let ((project-name (projectile-project-name)))
-       (if (string-equal "-" project-name)
-           (buffer-name (current-buffer))
-         project-name)))))
+(setq tab-bar-show nil)
 
 (set-face-attribute
  'tab-bar nil
- :foreground base01
+ :foreground my-base01
  :background "unspecified")
 (set-face-attribute
  'tab-bar-tab nil
- :foreground base0
+ :foreground my-base0
  :background "unspecified")
 (set-face-attribute
  'tab-bar-tab-inactive nil
- :foreground base01
+ :foreground my-base01
  :background "unspecified")
-
-(defun my-tab-bar-name (tab)
-  "Get `NAME' and `BUFFER' from `TAB'."
-  (pcase tab
-    (`(,tag . ,fields) (alist-get 'name fields))))
-
-(defun counsel-switch-tab ()
-  "Select a tab to switch to with ivy."
-  (interactive)
-  (ivy-read "tab: "
-            (seq-map #'my-tab-bar-name (funcall tab-bar-tabs-function))
-            :initial-input ""
-            :action #'tab-bar-select-tab-by-name
-            :require-match t))
 
 ;; Mode Line
 (set-face-attribute
  'mode-line nil
  :underline nil
  :overline nil
- :foreground base0
- :background base02
- :box `(:line-width 1 :color ,base02 :style unspecified))
+ :foreground my-base0
+ :background my-base02
+ :box `(:line-width 1 :color ,my-base02 :style unspecified))
 
 (set-face-attribute
  'mode-line-inactive nil
  :overline nil
  :underline nil
- :foreground base01
+ :foreground my-base01
  :background "unspecified"
- :box `(:line-width 1 :color ,base03 :style unspecified))
+ :box `(:line-width 1 :color ,my-base03 :style unspecified))
 
 (defun evil-state-foreground (state)
   "The mode line color for evil-state `STATE'."
   (pcase state
-    ('normal  green)
-    ('insert  yellow)
-    ('emacs   cyan)
-    ('replace red)
-    ('visual  blue)
-    ('motion  cyan)))
+    ('normal  my-green)
+    ('insert  my-yellow)
+    ('emacs   my-cyan)
+    ('replace my-red)
+    ('visual  my-blue)
+    ('motion  my-cyan)))
 
 (defun my-flycheck-error-str (n fg)
   "Properties string for a number of errors `N' with foreground color `FG'."
@@ -1536,10 +1441,10 @@ when send commands with redis protocol."
 (defun my-flycheck-error-format (errors)
   "Format `ERRORS', if there are any of type warning or error."
   (let-alist errors
-    `(,(if .error (my-flycheck-error-str .error red)
+    `(,(if .error (my-flycheck-error-str .error my-red)
          "")
       " "
-      ,(if .warning (my-flycheck-error-str .warning  yellow)
+      ,(if .warning (my-flycheck-error-str .warning my-yellow)
          ""))))
 
 (defun my-flycheck-mode-line-status-text ()
@@ -1590,7 +1495,8 @@ when send commands with redis protocol."
 
 ;; ISO 8601
 (defun iso-8601-string (&optional time zone)
-  "Make a short ISO 8601 formatted date string for `TIME' and
+  "Make short ISO date string.
+Make a short ISO 8601 formatted date string for `TIME' and
 `ZONE' - defaulting to `CURRENT-TIME' and `CURRENT-TIME-ZONE',
 respectively."
   (let ((time* (or time (current-time)))
@@ -1598,7 +1504,8 @@ respectively."
     (format-time-string "%Y-%m-%d" time* zone*)))
 
 (defun iso-8601-string-full (&optional time zone)
-  "Make full ISO 8601 formatted date string for `TIME' and `ZONE'
+  "Make longer ISO date string.
+Make full ISO 8601 formatted date string for `TIME' and `ZONE.'
 - defaulting to `CURRENT-TIME' and `CURRENT-TIME-ZONE',
 respectively."
   (let ((time* (or time (current-time)))
@@ -1620,11 +1527,11 @@ respectively."
 (evil-leader/set-leader "<SPC>")
 
 (evil-leader/set-key
-  "<SPC>" 'counsel-M-x
+  "<SPC>" 'execute-extended-command
   "TAB" 'evil-switch-to-windows-last-buffer
   "a" 'my-process-map
   "b" 'my-buffer-map
-  "c" 'my-counsel-map
+  "c" 'my-consult-map
   "d" 'my-directory-map
   "e" 'my-flycheck-map
   "f" 'my-file-map
@@ -1642,11 +1549,11 @@ respectively."
   "y" 'my-yank-map
   "z" 'zoom/body
   "'" 'eshell
-  "/" 'counsel-projectile-rg)
+  "/" 'consult-ripgrep)
 
 (define-key help-map (kbd "w") #'woman)
 (define-key help-map (kbd "W") #'man)
-(define-key help-map (kbd "i") #'counsel-info-lookup-symbol)
+(define-key help-map (kbd "i") #'info-lookup-symbol)
 (define-key help-map (kbd "I") #'info-apropos)
 
 (define-prefix-keymap my-directory-map
@@ -1719,15 +1626,33 @@ respectively."
   "o" debbugs-org
   "b" debbugs-gnu)
 
+(defun my-erc (port)
+  "Open my erc configuration using znc on `PORT'."
+  (interactive "nport: ")
+  (erc-tls
+   :server "irc.refl.club"
+   :port port
+   :nick "jsoo"))
+
 (define-prefix-keymap my-erc-map
   "my erc keybindings"
-  "f" my-erc-freenode
-  "l" my-erc-libera
-  "o" my-erc-oftc)
+  "f" (defun my-erc-freenode ()
+        "Open erc with my configuration for freenode."
+        (interactive)
+        (my-erc 5555))
+  "l" (defun my-erc-libera ()
+        "Open erc with my configuration for libera."
+        (interactive)
+        (my-erc 5556))
+  "o" (defun my-erc-oftc ()
+        "Open erc with my configuration for oftc."
+        (interactive)
+        (my-erc 5557)))
 
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
-  "b" ivy-switch-buffer
+  "b" switch-to-buffer
+  "B" switch-to-buffer-other-window
   "c" my-switch-to-compile-buffer
   "d" kill-current-buffer
   "i" ibuffer
@@ -1741,43 +1666,28 @@ respectively."
         (interactive)
         (switch-to-buffer (get-buffer-create "*scratch*"))))
 
-(define-prefix-keymap my-counsel-map
-  "my keybindings to counsel"
-  "b" counsel-switch-buffer
-  "c" counsel-colors-emacs
-  "d" counsel-dired
-  "g" counsel-git
-  "h" counsel-command-history
-  "i" counsel-ibuffer
-  "I" counsel-info-lookup-symbol
-  "m" counsel-minor
-  "M" counsel-major
-  "p" counsel-projectile
-  "v" counsel-set-variable
-  "w" counsel-colors-web)
+(define-prefix-keymap my-consult-map
+  "my keybindings to consult"
+  "g" project-find-file
+  "m" consult-minor-mode-menu)
 
 (define-prefix-keymap my-describe-map
   "my describe keybindings"
-  "a" counsel-apropos
+  "a" consult-apropos
   "b" describe-bindings
-  "c" describe-char
   "f" helpful-function
-  "F" counsel-describe-face
+  "F" describe-face
   "k" helpful-key
   "m" describe-mode
   "s" describe-symbol
   "t" describe-theme
   "v" helpful-variable)
 
-(load-file "~/dotfiles/emacs/counsel-info-apropos.el")
-(require 'counsel-info-apropos)
-
 (define-key help-map (kbd "D") my-describe-map)
-(define-key help-map (kbd "i") #'counsel-info-manual-apropos)
-(define-key help-map (kbd "I") #'counsel-info-apropos)
 (define-key help-map (kbd "f") #'helpful-symbol)
 (define-key help-map (kbd "v") #'helpful-variable)
 (define-key help-map (kbd "k") #'helpful-key)
+(define-key help-map (kbd "c") #'describe-char)
 
 (define-prefix-keymap my-flycheck-map
   "my flycheck keybindings"
@@ -1791,10 +1701,10 @@ respectively."
 
 (define-prefix-keymap my-file-map
   "my file keybindings"
-  "f" counsel-find-file
+  "f" consult-find
   "g" magit-find-file
   "l" find-file-literally
-  "r" counsel-buffer-or-recentf
+  "r" consult-recent-file
   "s" save-buffer
   "t" find-file-other-tab
   "y" (defun kill-file-name
@@ -1809,7 +1719,7 @@ respectively."
 (define-prefix-keymap my-git-map
   "my git keybindings"
   "b" magit-blame
-  "c" counsel-git-checkout
+  "c" magit-checkout
   "d" magit-diff
   "g" magit-file-dispatch
   "O" magit-reset
@@ -1827,18 +1737,16 @@ respectively."
   "t" (defun insert-time-now-as-iso-8601 ()
         (interactive) (insert (iso-8601-string)))
   "T" (defun insert-time-now-as-iso-8601-full ()
-        (interactive) (insert (iso-8601-string-full)))
-  "u" counsel-unicode-char)
+        (interactive) (insert (iso-8601-string-full))))
 
 (define-prefix-keymap my-jump-map
   "my jump keybindings"
-  "i" counsel-imenu
-  "o" counsel-org-goto-all
-  "p" counsel-popper-buried-popups
-  "t" counsel-switch-tab
+  "i" consult-imenu
+  "o" consult-org-agenda
+  "p" switch-to-buffer-other-window
+  "t" tab-switch
   "]" evil-jump-to-tag
-  "'" counsel-mark-ring
-  "\"" counsel-evil-marks
+  "'" consult-mark
   "=" indent-region-or-buffer)
 
 (define-prefix-keymap my-org-mime-map
@@ -1849,14 +1757,12 @@ respectively."
 
 (define-prefix-keymap my-org-map
   "my org bindings"
-  "a" counsel-projectile-org-agenda
-  "c" counsel-projectile-org-capture
+  "a" org-agenda
+  "c" my-project-org-capture
   "d" org-babel-detangle
-  "g" counsel-org-goto
-  "i" counsel-org-entity
+  "g" consult-org-heading
   "l" org-store-link
-  "m" my-org-mime-map
-  "t" counsel-org-tag)
+  "m" my-org-mime-map)
 
 (define-prefix-keymap my-project-compile-map
   "my project compilation keybindings"
@@ -1864,21 +1770,20 @@ respectively."
   "C" project-compile)
 
 (define-prefix-keymap my-project-map
-  "my projectile keybindings"
+  "my project keybindings"
   "&" project-async-shell-command
-  "b" project-switch-to-buffer
+  "b" consult-project-buffer
   "c" my-project-compile-map
-  "C" counsel-projectile-org-capture
+  "C" my-project-org-capture
   "d" project-find-dir
   "D" project-dired
   "e" (defun switch-to-project-dir-locals ()
         (interactive)
         (find-file (format "%s.dir-locals.el" (project-root (project-current t)))))
   "f" project-find-file
-  "I" projectile-invalidate-cache
   "o" (defun switch-to-project-todos ()
         (interactive)
-        (project-find-file (format "%sTODOs.org" (project-root (project-current t)))))
+        (find-file (format "%sTODOs.org" (project-root (project-current t)))))
   "p" project-switch-project
   "'" (defun project-eshell-other-window ()
         (interactive)
@@ -1892,8 +1797,8 @@ respectively."
 (define-prefix-keymap my-search-map
   "my searching keybindings"
   "g" grep-find
-  "s" swiper
-  "p" counsel-projectile-rg)
+  "s" consult-line
+  "p" consult-ripgrep)
 
 (define-prefix-keymap my-text-map
   "my text keybindings"
@@ -1925,7 +1830,7 @@ respectively."
   "p" popper-cycle
   "P" popper-toggle-type
   "t" tab-bar-mode
-  "T" counsel-load-theme
+  "T" consult-theme
   "w" whitespace-mode
   "x" toggle-xclip-mode)
 
@@ -1964,7 +1869,7 @@ respectively."
 
 (define-prefix-keymap my-yank-map
   "my yanking keybindings"
-  "y" counsel-yank-pop)
+  "y" consult-yank-pop)
 
 ;; Reset these to have all the configuration we just did
 (with-current-buffer (get-buffer "*Messages*") (normal-mode))

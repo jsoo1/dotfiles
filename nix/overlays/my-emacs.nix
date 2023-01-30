@@ -1,6 +1,7 @@
 let
   elpa = { elpaPackages, ... }:
     with elpaPackages; [
+      consult
       csv-mode
       debbugs
       dired-git-info
@@ -9,6 +10,7 @@ let
       let-alist
       project
       sml-mode
+      vertico
       which-key
       xclip
       xref
@@ -30,7 +32,6 @@ let
       company
       company-coq
       company-math
-      counsel-projectile
       cql-mode
       dhall-mode
       diredfl
@@ -40,6 +41,8 @@ let
       elf-mode
       elfeed
       elpher
+      embark
+      embark-consult
       emmet-mode
       emms
       envrc
@@ -55,7 +58,6 @@ let
       evil-replace-with-register
       evil-surround
       exec-path-from-shell
-      f
       fill-column-indicator
       fish-completion
       fish-mode
@@ -72,11 +74,8 @@ let
       helpful
       highlight-indent-guides
       hydra
-      ibuffer-projectile
       idris-mode
       imenu-list
-      ivy
-      ivy-prescient
       libgit
       magit
       magit-libgit
@@ -86,10 +85,10 @@ let
       nix-mode
       nodejs-repl
       ob-restclient
+      orderless
       org-mime
       origami
       popper
-      projectile
       proof-general
       protobuf-mode
       psc-ide
