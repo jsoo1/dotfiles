@@ -1669,9 +1669,9 @@ respectively."
 
 (define-key help-map (kbd "D") my-describe-map)
 (define-key help-map (kbd "c") #'describe-char)
-(define-key help-map (kbd "f") #'helpful-symbol)
-(define-key help-map (kbd "v") #'helpful-variable)
-(define-key help-map (kbd "k") #'helpful-key)
+;; (define-key help-map (kbd "f") #'helpful-symbol)
+;; (define-key help-map (kbd "v") #'helpful-variable)
+;; (define-key help-map (kbd "k") #'helpful-key)
 
 (define-prefix-keymap my-flycheck-map
   "my flycheck keybindings"
