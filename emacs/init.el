@@ -1668,7 +1668,7 @@ respectively."
         (switch-to-buffer (get-buffer-create "*scratch*"))))
 
 (define-prefix-keymap my-consult-map
-  "my keybindings to counsel"
+  "my keybindings to consult"
   "g" project-find-file
   "m" consult-minor-mode-menu)
 
@@ -1765,8 +1765,7 @@ respectively."
   "d" org-babel-detangle
   "g" consult-org-heading
   "l" org-store-link
-  "m" my-org-mime-map
-  "t" counsel-org-tag)
+  "m" my-org-mime-map)
 
 (define-prefix-keymap my-project-compile-map
   "my project compilation keybindings"
