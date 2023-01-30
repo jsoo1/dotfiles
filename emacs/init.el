@@ -1681,7 +1681,6 @@ respectively."
   "my describe keybindings"
   "a" consult-apropos
   "b" describe-bindings
-  "c" describe-char
   "f" helpful-function
   "F" describe-face
   "k" helpful-key
@@ -1691,6 +1690,7 @@ respectively."
   "v" helpful-variable)
 
 (define-key help-map (kbd "D") my-describe-map)
+(define-key help-map (kbd "c") #'describe-char)
 (define-key help-map (kbd "f") #'helpful-symbol)
 (define-key help-map (kbd "v") #'helpful-variable)
 (define-key help-map (kbd "k") #'helpful-key)
