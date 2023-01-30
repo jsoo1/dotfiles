@@ -11,7 +11,10 @@
 
 (require 'seq)
 (defmacro define-prefix-keymap (name docstring &rest bindings)
-  "Define a keymap named `NAME' and docstring `DOCSTRING' with many `BINDINGS' at once using `define-key'."
+  "Declaratively create prefix keymaps.
+
+Define a keymap named `NAME' and docstring `DOCSTRING' with many
+`BINDINGS' at once using `define-key'."
   `(,#'progn
      (defvar ,name (make-sparse-keymap) ,docstring)
      (define-prefix-command (quote ,name))
@@ -84,6 +87,7 @@
 
 ;; Paths
 (defun package-manager-user-profile ()
+  "Setup env for nix/guix."
   (let* ((guix-profile (getenv "GUIX_PROFILE"))
          (nix-profile (getenv "NIX_PROFILE"))
          (nix-profiles* (getenv "NIX_PROFILES"))
@@ -113,22 +117,22 @@
 (setf epa-pinentry-mode 'loopback)
 
 ;; Color setup
-(defvar base03  "#002b36" "Theme base03.")
-(defvar base02  "#073642" "Theme base02.")
-(defvar base01  "#586e75" "Theme base01.")
-(defvar base00  "#657b83" "Theme base00.")
-(defvar base3   "#fdf6e3" "Theme base3.")
-(defvar base2   "#eee8d5" "Theme base2.")
-(defvar base1   "#93a1a1" "Theme cyan.")
-(defvar base0   "#839496" "Theme base0.")
-(defvar yellow  "#b58900" "Theme yellow.")
-(defvar red     "#dc322f" "Theme red.")
-(defvar green   "#859900" "Theme green.")
-(defvar blue    "#286bd2" "Theme blue.")
-(defvar cyan    "#2aa198" "Theme cyan.")
-(defvar magenta "#d33682" "Theme magenta.")
-(defvar orange  "#cb4b16" "Theme orange.")
-(defvar violet  "#6c71c4" "Theme violet.")
+(defvar my-base03  "#002b36" "Theme base03.")
+(defvar my-base02  "#073642" "Theme base02.")
+(defvar my-base01  "#586e75" "Theme base01.")
+(defvar my-base00  "#657b83" "Theme base00.")
+(defvar my-base3   "#fdf6e3" "Theme base3.")
+(defvar my-base2   "#eee8d5" "Theme base2.")
+(defvar my-base1   "#93a1a1" "Theme cyan.")
+(defvar my-base0   "#839496" "Theme base0.")
+(defvar my-yellow  "#b58900" "Theme yellow.")
+(defvar my-red     "#dc322f" "Theme red.")
+(defvar my-green   "#859900" "Theme green.")
+(defvar my-blue    "#286bd2" "Theme blue.")
+(defvar my-cyan    "#2aa198" "Theme cyan.")
+(defvar my-magenta "#d33682" "Theme magenta.")
+(defvar my-orange  "#cb4b16" "Theme orange.")
+(defvar my-violet  "#6c71c4" "Theme violet.")
 
 ;; Recentf
 (recentf-mode 1)
@@ -255,19 +259,19 @@
       eshell-prompt-function
       (defun make-my-eshell-prompt ()
         (concat
-         (propertize (eshell/whoami) 'face `(:foreground ,base1))
+         (propertize (eshell/whoami) 'face `(:foreground ,my-base1))
          " "
          (propertize (replace-regexp-in-string (concat "^" (getenv "HOME")) "~" (eshell/pwd))
-                     'face `(:foreground ,blue))
+                     'face `(:foreground ,my-blue))
          " "
          (propertize (condition-case nil
                          (let ((curr-branch (magit-get-current-branch)))
                            (if curr-branch curr-branch
                              (substring (magit-rev-parse "HEAD") 0 7)))
                        (error ""))
-                     'face `(:foreground ,green))
+                     'face `(:foreground ,my-green))
          " "
-         (propertize "λ" 'face `(:foreground ,yellow :weight normal))
+         (propertize "λ" 'face `(:foreground ,my-yellow :weight normal))
          " ")))
 
 (defun my-side-eshell (props)
@@ -299,79 +303,79 @@
 (diredfl-global-mode 1)
 (set-face-attribute
  diredfl-dir-heading nil
- :foreground blue
+ :foreground my-blue
  :background "unspecified")
 (set-face-attribute
  diredfl-number nil
- :foreground green
+ :foreground my-green
  :background "unspecified")
 (set-face-attribute
  diredfl-date-time nil
- :foreground yellow
+ :foreground my-yellow
  :background "unspecified")
 (set-face-attribute
  diredfl-file-name nil
- :foreground base0
+ :foreground my-base0
  :background "unspecified")
 (set-face-attribute
  diredfl-file-suffix nil
- :foreground green
+ :foreground my-green
  :background "unspecified")
 (set-face-attribute
  diredfl-dir-name nil
- :foreground blue
+ :foreground my-blue
  :background "unspecified")
 (set-face-attribute
  diredfl-symlink nil
- :foreground cyan
+ :foreground my-cyan
  :background "unspecified")
 (set-face-attribute
  diredfl-no-priv nil
- :foreground base0
+ :foreground my-base0
  :background "unspecified")
 (set-face-attribute
  diredfl-dir-priv nil
- :foreground blue
+ :foreground my-blue
  :background "unspecified")
 (set-face-attribute
  diredfl-read-priv nil
- :foreground base0
+ :foreground my-base0
  :background "unspecified")
 (set-face-attribute
  diredfl-write-priv nil
- :foreground cyan
+ :foreground my-cyan
  :background "unspecified")
 (set-face-attribute
  diredfl-exec-priv nil
- :foreground magenta
+ :foreground my-magenta
  :background "unspecified")
 (set-face-attribute
  diredfl-rare-priv nil
- :foreground magenta
+ :foreground my-magenta
  :background "unspecified")
 (set-face-attribute
  diredfl-other-priv nil
- :foreground orange
+ :foreground my-orange
  :background "unspecified")
 (set-face-attribute
  diredfl-deletion nil
- :foreground red
+ :foreground my-red
  :background "unspecified")
 (set-face-attribute
  diredfl-deletion-file-name nil
- :foreground red
+ :foreground my-red
  :background "unspecified")
 (set-face-attribute
  diredfl-flag-mark nil
- :foreground violet
+ :foreground my-violet
  :background "unspecified")
 (set-face-attribute
  diredfl-flag-mark-line nil
- :foreground violet
+ :foreground my-violet
  :background "unspecified")
 (set-face-attribute
  diredfl-ignored-file-name nil
- :foreground base01
+ :foreground my-base01
  :background "unspecified")
 
 ;; World times to display
@@ -452,7 +456,7 @@
 (setq highlight-indent-guides-method 'character
       highlight-indent-guides-auto-enabled nil)
 (with-eval-after-load 'highlight-indent-guides
-  (set-face-foreground 'highlight-indent-guides-character-face base01))
+  (set-face-foreground 'highlight-indent-guides-character-face my-base01))
 
 
 ;; Remove upcase-word (I never use it and it is always pestering me)
@@ -573,14 +577,11 @@
 (defun my-set-ibuffer-filter-groups ()
   "Create my ibuffer filter groupings."
   (ibuffer-projectile-set-filter-groups)
-  (setq
-   ibuffer-filter-groups
-   (append
-    (ibuffer-projectile-generate-filter-groups)
-    '(("ERC" (mode . erc-mode))
-      ("Coq" (or (mode . coq-shell-mode)
-                 (mode . coq-response-mode)
-                 (mode .  coq-goals-mode))))))
+  (setq ibuffer-filter-groups `(,@(ibuffer-projectile-generate-filter-groups)
+                                ("ERC" (mode . erc-mode))
+                                ("Coq" (or (mode . coq-shell-mode)
+                                           (mode . coq-response-mode)
+                                           (mode .  coq-goals-mode)))))
   (unless (eq ibuffer-sorting-mode 'alphabetic)
     (ibuffer-do-sort-by-alphabetic))
   (ibuffer-update nil t))
@@ -643,14 +644,18 @@
 (setq org-directory "~")
 
 (defun my-project-org-capture ()
-        (interactive)
-        (let ((org-default-notes-file (format "%sTODOs.org" (project-root (project-current t)))))
-          (org-capture)))
+  "Org-capture in project TODOs.org."
+  (interactive)
+  (let ((org-default-notes-file (format "%sTODOs.org" (project-root (project-current t)))))
+    (org-capture)))
+
 ;; todos
 (setq org-enforce-todo-dependencies t)
 
 (defun str-to-org-dirs (repo-dir string)
-  "Take newline delimited `STRING' and return list of all directories with org files in `REPO-DIR'."
+  "Find org directories.
+Take newline delimited `STRING' and return list of all
+ directories with org files in `REPO-DIR'."
   (seq-map
    (lambda (x) (concat repo-dir "/" (or (file-name-directory x) "")))
    (seq-filter
@@ -871,13 +876,13 @@ _]_: toggle use of default sink  _n_: control select sink by name
         (expand-file-name "bin/idris" (package-manager-user-profile))))
 
 
-(dolist (f `((idris-active-term-face        ,base00)
-             (idris-semantic-type-face      ,yellow)
-             (idris-semantic-data-face      ,red)
+(dolist (f `((idris-active-term-face        ,my-base00)
+             (idris-semantic-type-face      ,my-yellow)
+             (idris-semantic-data-face      ,my-red)
              (idris-semantic-function-face  "unspecified")
-             (idris-semantic-bound-face     ,violet)
-             (idris-semantic-module-face    ,yellow)
-             (idris-identifier-face         ,base01)))
+             (idris-semantic-bound-face     ,my-violet)
+             (idris-semantic-module-face    ,my-yellow)
+             (idris-identifier-face         ,my-base01)))
   (set-face-foreground (car f) (cadr f)))
 
 (define-key idris-repl-mode-map (kbd "C-c C-k" ) #'idris-repl-clear-buffer)
@@ -951,6 +956,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 ;; (add-hook 'haskell-mode-hook #'eglot-ensure)
 (defvar eww-hoogle-url "https://hoogle.haskell.org")
 (defun eww-hoogle (query)
+  "Hoogle `QUERY' in eww."
   (interactive "sQuery: ")
   (eww (format "%s/?hoogle=%s" eww-hoogle-url (url-encode-url query))))
 (define-key haskell-mode-map (kbd "C-c C-h") #'eww-hoogle)
@@ -1391,6 +1397,8 @@ when send commands with redis protocol."
       popper-group-function #'popper-group-by-project
       popper-reference-buffers
       '("\\*Async Shell Command\\*"
+        "*Warnings*"
+        "\\*Async-native-compile-log\\*"
         "*\\*.*compile\\*$" compilation-mode
         display-time-world-mode
         "^\\*eldoc\\*$"
@@ -1520,7 +1528,8 @@ when send commands with redis protocol."
 
 ;; ISO 8601
 (defun iso-8601-string (&optional time zone)
-  "Make a short ISO 8601 formatted date string for `TIME' and
+  "Make short ISO date string.
+Make a short ISO 8601 formatted date string for `TIME' and
 `ZONE' - defaulting to `CURRENT-TIME' and `CURRENT-TIME-ZONE',
 respectively."
   (let ((time* (or time (current-time)))
@@ -1528,7 +1537,8 @@ respectively."
     (format-time-string "%Y-%m-%d" time* zone*)))
 
 (defun iso-8601-string-full (&optional time zone)
-  "Make full ISO 8601 formatted date string for `TIME' and `ZONE'
+  "Make longer ISO date string.
+Make full ISO 8601 formatted date string for `TIME' and `ZONE.'
 - defaulting to `CURRENT-TIME' and `CURRENT-TIME-ZONE',
 respectively."
   (let ((time* (or time (current-time)))
@@ -1774,7 +1784,7 @@ respectively."
   "C" project-compile)
 
 (define-prefix-keymap my-project-map
-  "my projectile keybindings"
+  "my project keybindings"
   "&" project-async-shell-command
   "b" consult-project-buffer
   "c" my-project-compile-map
