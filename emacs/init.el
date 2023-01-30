@@ -1443,10 +1443,10 @@ when send commands with redis protocol."
 (defun my-flycheck-error-format (errors)
   "Format `ERRORS', if there are any of type warning or error."
   (let-alist errors
-    `(,(if .error (my-flycheck-error-str .error red)
+    `(,(if .error (my-flycheck-error-str .error my-red)
          "")
       " "
-      ,(if .warning (my-flycheck-error-str .warning  yellow)
+      ,(if .warning (my-flycheck-error-str .warning my-yellow)
          ""))))
 
 (defun my-flycheck-mode-line-status-text ()
