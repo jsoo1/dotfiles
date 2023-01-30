@@ -156,29 +156,6 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
       erc-ignore-list '("{\\^-\\^}")
       erc-hide-list '("JOIN" "PART" "QUIT"))
 
-(defun my-erc (port)
-  "Open my erc configuration using znc on `PORT'."
-  (interactive "nport: ")
-  (erc-tls
-   :server "irc.refl.club"
-   :port port
-   :nick "jsoo"))
-
-(defun my-erc-freenode ()
-  "Open erc with my configuration for freenode."
-  (interactive)
-  (my-erc 5555))
-
-(defun my-erc-libera ()
-  "Open erc with my configuration for libera."
-  (interactive)
-  (my-erc 5556))
-
-(defun my-erc-oftc ()
-  "Open erc with my configuration for oftc."
-  (interactive)
-  (my-erc 5557))
-
 (add-hook 'erc-mode-hook
           (defun toggle-truncate-lines-on ()
             (toggle-truncate-lines 1)))
@@ -1628,11 +1605,28 @@ respectively."
   "o" debbugs-org
   "b" debbugs-gnu)
 
+(defun my-erc (port)
+  "Open my erc configuration using znc on `PORT'."
+  (interactive "nport: ")
+  (erc-tls
+   :server "irc.refl.club"
+   :port port
+   :nick "jsoo"))
+
 (define-prefix-keymap my-erc-map
   "my erc keybindings"
-  "f" my-erc-freenode
-  "l" my-erc-libera
-  "o" my-erc-oftc)
+  "f" (defun my-erc-freenode ()
+        "Open erc with my configuration for freenode."
+        (interactive)
+        (my-erc 5555))
+  "l" (defun my-erc-libera ()
+        "Open erc with my configuration for libera."
+        (interactive)
+        (my-erc 5556))
+  "o" (defun my-erc-oftc ()
+        "Open erc with my configuration for oftc."
+        (interactive)
+        (my-erc 5557)))
 
 (define-prefix-keymap my-buffer-map
   "my buffer keybindings"
