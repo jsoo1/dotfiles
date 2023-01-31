@@ -69,10 +69,6 @@ lib.mkMerge [
       activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         $DRY_RUN_CMD ln -sfv $VERBOSE_ARG ${config.home.homeDirectory}/{dotfiles/nix,.emacs.d}/init.el
       '';
-
-      activation.oil = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        $DRY_RUN_CMD ln -sfv $VERBOSE_ARG ${config.home.homeDirectory}/{dotfiles/oil,.config/oil}/oilrc
-      '';
     };
 
     xdg.configFile = {
