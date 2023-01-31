@@ -106,6 +106,7 @@ let
       tmux-pane
       tuareg
       uuidgen
+      vertico-prescient
       vimrc-mode
       web-mode
       wgrep
