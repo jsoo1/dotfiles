@@ -689,6 +689,7 @@ Take newline delimited `STRING' and return list of all
 
 ;; Vertico
 (vertico-mode)
+(vertico-prescient-mode)
 (setq enable-recursive-minibuffers t)
 
 ;; Orderless
