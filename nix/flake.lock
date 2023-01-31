@@ -76,8 +76,8 @@
         ]
       },
       "locked": {
-        "lastModified": 1659656641,
-        "narHash": "sha256:1p8bq1g8aar8vx3s9j0k87jm2xv34vg73xdypy3g402y5wwj5fik",
+        "lastModified": 1675185954,
+        "narHash": "sha256-M7oiOS9eAPKGv771cd4mY3dR5UETyKRH3ygrhV7AC90=",
         "owner": "jsoo1",
         "repo": "emacs-overlay",
         "rev": "9b69a8df2c3ddbc1b4d8c9c71eedb6e7916be788",
@@ -85,7 +85,7 @@
       },
       "original": {
         "owner": "jsoo1",
-        "ref": "release",
+        "ref": "2023-01-31",
         "repo": "emacs-overlay",
         "type": "github"
       }
