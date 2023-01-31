@@ -187,19 +187,24 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
         (setq vc-mode noback)))))
 
 ;; Elfeed
-(when (eq 'darwin system-type)
-  (with-eval-after-load 'elfeed
-    (setq elfeed-curl-max-connections 8)
-    (setq-default elfeed-search-filter "@6-months-ago +unread")
-    (seq-each #'elfeed-load-opml
-              (directory-files
-               (expand-file-name "feeds" user-emacs-directory)
-               t "\\(\\.xml\\|\\.opml\\)$" t))
-    (run-with-timer 0 (* 60 60) 'elfeed-update))
-  (defun my-elfeed-podcast-tagger (entry)
-    (when (elfeed-entry-enclosures entry)
-      (elfeed-tag entry 'podcast)))
-  (add-hook 'elfeed-new-entry-hook #'my-elfeed-podcast-tagger))
+(setq elfeed-curl-max-connections 8)
+(setq-default elfeed-search-filter "@6-months-ago +unread")
+;; https://github.com/skeeto/elfeed/issues/466
+(define-advice elfeed-search--header (:around (oldfun &rest args))
+  (if elfeed-db
+      (apply oldfun args)
+    "No database loaded yet"))
+(seq-each #'elfeed-load-opml
+          (directory-files
+           (expand-file-name "feeds" user-emacs-directory)
+           t "\\(\\.xml\\|\\.opml\\)$" t))
+(run-with-timer 0 (* 60 60) 'elfeed-update)
+
+(defun my-elfeed-podcast-tagger (entry)
+  (when (elfeed-entry-enclosures entry)
+    (elfeed-tag entry 'podcast)))
+
+(add-hook 'elfeed-new-entry-hook #'my-elfeed-podcast-tagger)
 
 ;; EMMS
 (emms-all)
