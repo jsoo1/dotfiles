@@ -65,7 +65,6 @@ let
       forge
       geiser
       go-mode
-      goto-chg
       graphql-mode
       graphviz-dot-mode
       guix
@@ -93,7 +92,6 @@ let
       purescript-mode
       racket-mode
       redis
-      reformatter
       restclient
       rust-mode
       sbt-mode
