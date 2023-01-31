@@ -113,7 +113,7 @@ let
     ];
   my-emacs-overlay = self: _:
     let
-      emacs = (self.emacsGit.override {
+      emacs = self.mkGitEmacs "my-emacs-nox" ./emacs-rev.json {
         withNS = false;
         withX = false;
         withGTK2 = false;
@@ -121,12 +121,7 @@ let
         nativeComp = true;
         withSQLite3 = true;
         withWebP = false;
-      }).overrideAttrs (o: {
-        src = o.src // {
-          rev = "49b61405582edaa1cda05ea37b056d46b423271b";
-          sha256 = "sha256-dJUlaNQhKGYhd474JQ5pk8naqLLI958U8Y3CPDffF2U=";
-        };
-      });
+      };
     in
     {
       my-emacs = emacs.pkgs.emacsWithPackages (epkgs:

@@ -1,1 +1,7 @@
-{"type": "savannah", "repo": "emacs", "rev": "f484da5fcba2c362ef4511db9d11f825bcea16e4", "sha256": "sha256-dJUlaNQhKGYhd474JQ5pk8naqLLI958U8Y3CPDffF2U=", "version": "20220804.0"}
+{
+  "type": "savannah",
+  "repo": "emacs",
+  "rev": "47ab9ba55d77746a666bfa0819ccb465184949dc",
+  "sha256": "sha256-dJUlaNQhKGYhd474JQ5pk8naqLLI958U8Y3CPDffF2U=",
+  "version": "20230131.0"
+}
