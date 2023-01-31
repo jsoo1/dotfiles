@@ -79,7 +79,14 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 (setq tab-width 4)
 
 ;; Trailing whitespace
-(add-hook 'before-save-hook #'delete-trailing-whitespace)
+(defvar delete-trailing-whitespace-on-save t
+  "Whether to delete trailing whitespace on save.")
+
+(defun delete-trailing-whitespace-hook ()
+  "Delete trailing whitespace on save."
+  (when delete-trailing-whitespace-on-save (delete-trailing-whitespace)))
+
+(add-hook 'before-save-hook #'delete-trailing-whitespace-hook)
 
 ;; GC Threshold
 (setq gc-cons-threshold (* 2 1000 1000 10))
@@ -519,20 +526,34 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
       project-compilation-buffer-name-function #'project-prefixed-buffer-name)
 
 ;; IBuffer
+(defvar my-ibuffer-filter-groups
+  `(,@(mapcar (lambda (r)
+                (let ((expanded-root (expand-file-name r)))
+                  `(,r (or (filename . ,expanded-root)
+                           (directory . ,expanded-root)
+                           ;; FIXME: I think this should work...
+                           ;; (predicate . (string-match-p ,r (ibuffer-buffer-file-name)))
+                           ))))
+              (project-known-project-roots))
+    ("Nix Store" (filename . "/nix/store"))
+    ("Nix Build" (filename . "/tmp/nix-build"))
+    ("Help" (or (mode . helpful-mode) (mode . help-mode)))
+    ("ERC" (mode . erc-mode))
+    ("Coq" (or (mode . coq-shell-mode)
+               (mode . coq-response-mode)
+               (mode .  coq-goals-mode))))
+  "Filter groups for iBuffer.")
+
+(setq ibuffer-saved-filter-groups `(("main" . ,my-ibuffer-filter-groups)))
 
 (defun my-set-ibuffer-filter-groups ()
-  "Create my ibuffer filter groupings."
-  (setq ibuffer-filter-groups `(,@(mapcar (lambda (r) `(,r (directory . ,(expand-file-name r))))
-                                          (project-known-project-roots))
-                                ("ERC" (mode . erc-mode))
-                                ("Coq" (or (mode . coq-shell-mode)
-                                           (mode . coq-response-mode)
-                                           (mode .  coq-goals-mode)))))
-  (unless (eq ibuffer-sorting-mode 'alphabetic)
-    (ibuffer-do-sort-by-alphabetic))
-  (ibuffer-update nil t))
+  "Set my ibuffer filter groups."
+  (interactive)
+  (setq ibuffer-filter-groups my-ibuffer-filter-groups)
+  (ibuffer-do-sort-by-alphabetic)
+  (ibuffer-update nil nil))
 
-(add-hook 'ibuffer-hook #'my-set-ibuffer-filter-groups)
+(add-hook 'ibuffer-mode-hook #'my-set-ibuffer-filter-groups)
 (setq ibuffer-show-empty-filter-groups nil)
 
 ;; Don't always ask me to reload the tags table
@@ -565,7 +586,8 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 (evil-org-set-key-theme '(textobjects insert navigation additional shift todo heading))
 (evil-org-agenda-set-keys)
 (with-eval-after-load 'org-agenda
-  (define-key org-agenda-mode-map (kbd "C-c RET") #'org-agenda-switch-to))
+  (define-key org-agenda-mode-map (kbd "C-c RET") #'org-agenda-switch-to)
+  (setq org-agenda-window-setup 'only-window))
 (org-babel-do-load-languages 'org-babel-load-languages
                              '((js . t)
                                (haskell . t)
@@ -700,7 +722,8 @@ Take newline delimited `STRING' and return list of all
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 ;; Compilation
-(define-key compilation-mode-map (kbd "C-c C-l") #'recompile)
+(with-eval-after-load 'compile
+  (define-key compilation-mode-map (kbd "C-c C-l") #'recompile))
 (add-hook 'compilation-mode-hook
           (defun toggle-truncate-lines-off ()
             (toggle-truncate-lines -1)))
@@ -1663,10 +1686,10 @@ respectively."
   "v" helpful-variable)
 
 (define-key help-map (kbd "D") my-describe-map)
+(define-key help-map (kbd "f") #'helpful-symbol)
+(define-key help-map (kbd "v") #'helpful-variable)
+(define-key help-map (kbd "k") #'helpful-key)
 (define-key help-map (kbd "c") #'describe-char)
-;; (define-key help-map (kbd "f") #'helpful-symbol)
-;; (define-key help-map (kbd "v") #'helpful-variable)
-;; (define-key help-map (kbd "k") #'helpful-key)
 
 (define-prefix-keymap my-flycheck-map
   "my flycheck keybindings"
@@ -1697,14 +1720,19 @@ respectively."
 
 (define-prefix-keymap my-git-map
   "my git keybindings"
-  "b" magit-blame
+  "A" magit-cherry-pick
+  "b" magit-branch
   "c" magit-checkout
+  "d" magit-diff
+  "f" magit-fetch
   "g" magit-file-dispatch
+  "G" magit-dispatch
   "O" magit-reset
   "p" magit-push
-  "r" magit-refresh-all
+  "r" magit-rebase
   "s" magit-status
-  "l" magit-log-buffer-file)
+  "l" magit-log
+  "z" magit-stash)
 
 (define-prefix-keymap my-insert-map
   "my insertion keybindings"
