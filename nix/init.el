@@ -532,8 +532,6 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 (setq xref-show-xrefs-function #'xref--show-defs-minibuffer)
 
 ;; Magit
-(require 'libgit)
-(require 'magit-libgit)
 (setq magit-display-buffer-function #'magit-display-buffer-fullcolumn-most-v1)
 (with-eval-after-load 'magit
   (define-key git-commit-mode-map (kbd "C-c M-c") #'git-commit-co-authored))
@@ -827,30 +825,6 @@ Take newline delimited `STRING' and return list of all
 
 ;; Restclient
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
-
-;; Pulseaudio
-(require 'hydra)
-(require 'pulseaudio-control)
-(defhydra pulseaudio-control-hydra (:hint nil)
-  "
-pulseaudio (pactl)
-_+_: increase volume             _d_: control display volume            _v_: control set volume
-_-_: decrease volume             _e_: control toggle sink mute by name  _x_: toggle sink mute by index
-_m_: mute default sink           _i_: control sink by index
-_]_: toggle use of default sink  _n_: control select sink by name
-"
-  ("+" pulseaudio-control-increase-volume)
-  ("=" pulseaudio-control-increase-volume)
-  ("-" pulseaudio-control-decrease-volume)
-  ("_" pulseaudio-control-decrease-volume)
-  ("m" pulseaudio-control-toggle-current-sink-mute)
-  ("]" pulseaudio-control-toggle-use-of-default-sink)
-  ("d" pulseaudio-control-display-volume)
-  ("e" pulseaudio-control-toggle-sink-mute-by-name)
-  ("i" pulseaudio-control-select-sink-by-index)
-  ("n" pulseaudio-control-select-sink-by-name)
-  ("v" pulseaudio-control-set-volume)
-  ("x" pulseaudio-toggle-sink-mute-by-index))
 
 ;; Editorconfig
 (require 'editorconfig)

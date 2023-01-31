@@ -76,9 +76,7 @@ let
       hydra
       idris-mode
       imenu-list
-      libgit
       magit
-      magit-libgit
       markdown-mode
       merlin
       multi-term
@@ -92,7 +90,6 @@ let
       proof-general
       protobuf-mode
       psc-ide
-      pulseaudio-control
       purescript-mode
       racket-mode
       redis
@@ -117,14 +114,20 @@ let
     ];
   my-emacs-overlay = self: _:
     let
-      emacs = self.mkGitEmacs "my-emacs-git-nox" ./emacs-rev.json {
+      emacs = (self.emacsGit.override {
         withNS = false;
         withX = false;
         withGTK2 = false;
         withGTK3 = false;
         nativeComp = true;
         withSQLite3 = true;
-      };
+        withWebP = false;
+      }).overrideAttrs (o: {
+        src = o.src // {
+          rev = "49b61405582edaa1cda05ea37b056d46b423271b";
+          sha256 = "sha256-dJUlaNQhKGYhd474JQ5pk8naqLLI958U8Y3CPDffF2U=";
+        };
+      });
     in
     {
       my-emacs = emacs.pkgs.emacsWithPackages (epkgs:
