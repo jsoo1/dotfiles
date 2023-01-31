@@ -17,8 +17,7 @@
     flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:jsoo1/nixpkgs/release";
     home-manager = {
-      url =
-        "github:jsoo1/home-manager";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
