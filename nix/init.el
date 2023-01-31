@@ -1739,6 +1739,7 @@ respectively."
   "d" magit-diff
   "f" magit-fetch
   "g" magit-file-dispatch
+  "G" magit-dispatch
   "O" magit-reset
   "p" magit-push
   "r" magit-rebase
