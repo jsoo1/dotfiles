@@ -543,19 +543,34 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
       project-compilation-buffer-name-function #'project-prefixed-buffer-name)
 
 ;; IBuffer
-(defun my-set-ibuffer-filter-groups ()
-  "Create my ibuffer filter groupings."
-  (setq ibuffer-filter-groups `(,@(mapcar (lambda (r) `(,r (directory . ,(expand-file-name r))))
-                                          (project-known-project-roots))
-                                ("ERC" (mode . erc-mode))
-                                ("Coq" (or (mode . coq-shell-mode)
-                                           (mode . coq-response-mode)
-                                           (mode .  coq-goals-mode)))))
-  (unless (eq ibuffer-sorting-mode 'alphabetic)
-    (ibuffer-do-sort-by-alphabetic))
-  (ibuffer-update nil t))
+(defvar my-ibuffer-filter-groups
+  `(,@(mapcar (lambda (r)
+                (let ((expanded-root (expand-file-name r)))
+                  `(,r (or (filename . ,expanded-root)
+                           (directory . ,expanded-root)
+                           ;; FIXME: I think this should work...
+                           ;; (predicate . (string-match-p ,r (ibuffer-buffer-file-name)))
+                           ))))
+              (project-known-project-roots))
+    ("Nix Store" (filename . "/nix/store"))
+    ("Nix Build" (filename . "/tmp/nix-build"))
+    ("Help" (or (mode . helpful-mode) (mode . help-mode)))
+    ("ERC" (mode . erc-mode))
+    ("Coq" (or (mode . coq-shell-mode)
+               (mode . coq-response-mode)
+               (mode .  coq-goals-mode))))
+  "Filter groups for iBuffer.")
 
-(add-hook 'ibuffer-hook #'my-set-ibuffer-filter-groups)
+(setq ibuffer-saved-filter-groups `(("main" . ,my-ibuffer-filter-groups)))
+
+(defun my-set-ibuffer-filter-groups ()
+  "Set my ibuffer filter groups."
+  (interactive)
+  (setq ibuffer-filter-groups my-ibuffer-filter-groups)
+  (ibuffer-do-sort-by-alphabetic)
+  (ibuffer-update nil nil))
+
+(add-hook 'ibuffer-mode-hook #'my-set-ibuffer-filter-groups)
 (setq ibuffer-show-empty-filter-groups nil)
 
 ;; Don't always ask me to reload the tags table
