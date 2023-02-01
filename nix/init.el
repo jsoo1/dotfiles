@@ -1687,7 +1687,7 @@ respectively."
 
 (define-prefix-keymap my-file-map
   "my file keybindings"
-  "f" consult-find
+  "f" find-file
   "g" magit-find-file
   "l" find-file-literally
   "r" consult-recent-file
