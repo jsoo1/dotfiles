@@ -6,9 +6,6 @@ let
       debbugs
       dired-git-info
       ediprolog
-      eglot
-      let-alist
-      project
       sml-mode
       vertico
       which-key
@@ -59,7 +56,6 @@ let
       evil-surround
       exec-path-from-shell
       fill-column-indicator
-      fish-completion
       fish-mode
       flycheck
       forge
@@ -78,7 +74,6 @@ let
       magit
       markdown-mode
       merlin
-      multi-term
       nix-mode
       nodejs-repl
       ob-restclient
