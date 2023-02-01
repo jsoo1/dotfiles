@@ -1378,8 +1378,6 @@ when send commands with redis protocol."
 (popper-mode 1)
 
 ;; Tab bar
-(setq tab-bar-show nil)
-
 (set-face-attribute
  'tab-bar nil
  :foreground my-base01
