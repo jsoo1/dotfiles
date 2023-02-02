@@ -1519,7 +1519,8 @@ respectively."
   "d" 'my-directory-map
   "e" 'my-flycheck-map
   "f" 'my-file-map
-  "g" 'my-git-map
+  "g" 'magit-dispatch
+  "G" 'magit-status
   "h" help-map
   "i" 'my-insert-map
   "j" 'my-jump-map
