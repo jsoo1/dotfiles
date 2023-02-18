@@ -1529,7 +1529,7 @@ respectively."
   "q" 'my-quit-map
   "s" 'my-search-map
   "t" 'my-toggle-map
-  "w" 'my-window-map
+  "w" 'evil-window-map
   "x" 'my-text-map
   "y" 'my-yank-map
   "z" 'zoom/body
@@ -1826,34 +1826,35 @@ respectively."
   "org specific toggles"
   "l" org-toggle-link-display)
 
-(define-prefix-keymap my-window-map
-  "my window keybindings"
-  "/" (defun my-vsplit ()
-        (interactive)
-        (progn (split-window-horizontally) (balance-windows)))
-  "-" (defun my-split ()
-        (interactive)
-        (progn (split-window-vertically) (balance-windows)))
-  "'" (defun pop-to-eshell ()
-        (interactive)
-        (my-side-eshell '((side . right) (slot . 1))) (balance-windows))
-  "c" make-frame
-  "d" (defun my-delete-window ()
-        (interactive) (progn (delete-window) (balance-windows)))
-  "D" delete-frame
-  "h" tmux-pane-omni-window-left
-  "j" tmux-pane-omni-window-down
-  "k" tmux-pane-omni-window-up
-  "l" tmux-pane-omni-window-right
-  "H" evil-window-move-far-left
-  "J" evil-window-move-very-bottom
-  "K" evil-window-move-very-top
-  "L" evil-window-move-far-right
-  "m" delete-other-windows
-  "p" popper-toggle-latest
-  "r" winner-redo
-  "u" winner-undo
-  "=" balance-windows)
+(pcase-dolist
+    (`(,key . ,fn)
+     `(("/" . ,(defun my-vsplit ()
+                 (interactive)
+                 (progn (split-window-horizontally) (balance-windows))))
+       ("-" . ,(defun my-split ()
+                 (interactive)
+                 (progn (split-window-vertically) (balance-windows))))
+       ("'" . ,(defun pop-to-eshell ()
+                 (interactive)
+                 (my-side-eshell '((side . right) (slot . 1))) (balance-windows)))
+       ("c" . make-frame)
+       ("d" . ,(defun my-delete-window ()
+                 (interactive) (progn (delete-window) (balance-windows))))
+       ("D" . delete-frame)
+       ("h" . tmux-pane-omni-window-left)
+       ("j" . tmux-pane-omni-window-down)
+       ("k" . tmux-pane-omni-window-up)
+       ("l" . tmux-pane-omni-window-right)
+       ("H" . evil-window-move-far-left)
+       ("J" . evil-window-move-very-bottom)
+       ("K" . evil-window-move-very-top)
+       ("L" . evil-window-move-far-right)
+       ("m" . delete-other-windows)
+       ("p" . popper-toggle-latest)
+       ("r" . winner-redo)
+       ("u" . winner-undo)
+       ("=" . balance-windows)))
+  (define-key evil-window-map (kbd key) fn))
 
 (define-prefix-keymap my-yank-map
   "my yanking keybindings"
