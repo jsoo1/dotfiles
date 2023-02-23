@@ -387,7 +387,6 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
  `(;; Haskell-specific
    (before-save-hook . nil)
    (haskell-stylish-on-save . nil)
-   (nix-format-buffer . nil)
    (nix-format-on-save . nil)
    (haskell-process-type . stack-ghci)
    (haskell-process-type . cabal-repl)
@@ -402,11 +401,14 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
         (append (list "env" "NO_COLOR=true") argv)))
    ;; Ocaml-specific
    (smie-indent-basic . 2)
+   ;; C-specific
+   (c-block-comment-prefix . "  ")
    ;; Eglot-specific
    (eglot-connect-timeout . nil)
    ;; Javascript-specific
    (js-indent-level . 2)
    ;; Builtins
+   (indicate-empty-lines . t)
    (tab-width . 4)))
 
 ;; Compilation
@@ -1056,8 +1058,6 @@ Take newline delimited `STRING' and return list of all
 ;; Nix
 (require 'nix-mode)
 (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
-(with-eval-after-load 'nix-mode
-  (define-key nix-mode-map (kbd "C-c C-f") 'nix-format-buffer))
 (setf
  nix-nixfmt-bin "nixpkgs-fmt"
  (alist-get 'nix-mode eglot-server-programs)
@@ -1069,7 +1069,7 @@ Take newline delimited `STRING' and return list of all
 (add-hook 'before-save-hook
           (defun my-nix-format-buffer ()
             (when (and nix-format-on-save (eq major-mode 'nix-mode))
-              (nix-format-buffer))))
+              (eglot-format))))
 (evil-define-key 'normal nix-mode-map (kbd ",") 'my-eglot-mode-map)
 
 ;; Common Lisp
