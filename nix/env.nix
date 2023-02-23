@@ -3,11 +3,12 @@ let
   inherit (pkgs)
 
     bash-completion bashInteractive binutils bottom cachix ccls
-    coreutils deadnix dogdns du-dust exa fd gawk gdb ghcid git go
-    gopls graphviz-nox gnutar haskell-language-server iosevka less
-    libressl man-pages neovim nix-diff nix-prefetch nix-top nix-tree
-    nixpkgs-fmt oil peep perl procps rage recutils restream ripgrep
-    rnix-lsp rr rsync shellcheck socat tealdeer terraform-ls watch;
+    coreutils deadnix dogdns du-dust exa fd gawk gdb
+    ghcid git go gopls graphviz-nox gnutar haskell-language-server
+    iosevka less libressl man-pages neovim nix-diff nix-prefetch
+    nix-top nix-tree nixpkgs-fmt oil peep perl procps rage recutils
+    restream ripgrep rnix-lsp rr rsync shellcheck socat tealdeer terraform-ls
+    unar watch;
 
   inherit (pkgs.haskellPackages) fourmolu;
 
@@ -80,6 +81,7 @@ rec {
     ripgrep
     shellcheck
     tealdeer
+    unar
     watch
   ];
 
