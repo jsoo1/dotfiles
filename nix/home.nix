@@ -31,7 +31,6 @@ let
     };
     core = { editor = "${pkgs.neovim}/bin/nvim"; };
     diff = { renames = true; };
-    fetch = { parallel = 4; };
     github = { user = "jsoo1"; };
     commit = { gpgsign = true; };
     branch = { autoSetupMerge = false; };
