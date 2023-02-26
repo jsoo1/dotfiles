@@ -390,7 +390,6 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
  `(;; Haskell-specific
    (before-save-hook . nil)
    (haskell-stylish-on-save . nil)
-   (nix-format-buffer . nil)
    (nix-format-on-save . nil)
    (haskell-process-type . stack-ghci)
    (haskell-process-type . cabal-repl)
@@ -405,11 +404,14 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
         (append (list "env" "NO_COLOR=true") argv)))
    ;; Ocaml-specific
    (smie-indent-basic . 2)
+   ;; C-specific
+   (c-block-comment-prefix . "  ")
    ;; Eglot-specific
    (eglot-connect-timeout . nil)
    ;; Javascript-specific
    (js-indent-level . 2)
    ;; Builtins
+   (indicate-empty-lines . t)
    (tab-width . 4)))
 
 ;; Compilation
@@ -678,6 +680,7 @@ Take newline delimited `STRING' and return list of all
 
 ;; Vertico
 (vertico-mode)
+(vertico-prescient-mode)
 (setq enable-recursive-minibuffers t)
 
 ;; Orderless
@@ -1073,8 +1076,6 @@ _]_: toggle use of default sink  _n_: control select sink by name
 
 ;; Nix
 (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
-(with-eval-after-load 'nix-mode
-  (define-key nix-mode-map (kbd "C-c C-f") 'nix-format-buffer))
 (setf
  nix-nixfmt-bin "nixpkgs-fmt"
  (alist-get 'nix-mode eglot-server-programs)
@@ -1086,7 +1087,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (add-hook 'before-save-hook
           (defun my-nix-format-buffer ()
             (when (and nix-format-on-save (eq major-mode 'nix-mode))
-              (nix-format-buffer))))
+              (eglot-format))))
 (evil-define-key 'normal nix-mode-map (kbd ",") 'my-eglot-mode-map)
 
 ;; Common Lisp
@@ -1399,8 +1400,6 @@ when send commands with redis protocol."
 (popper-mode 1)
 
 ;; Tab bar
-(setq tab-bar-show nil)
-
 (set-face-attribute
  'tab-bar nil
  :foreground my-base01
@@ -1542,7 +1541,8 @@ respectively."
   "d" 'my-directory-map
   "e" 'my-flycheck-map
   "f" 'my-file-map
-  "g" 'my-git-map
+  "g" 'magit-dispatch
+  "G" 'magit-status
   "h" help-map
   "i" 'my-insert-map
   "j" 'my-jump-map
@@ -1551,7 +1551,7 @@ respectively."
   "q" 'my-quit-map
   "s" 'my-search-map
   "t" 'my-toggle-map
-  "w" 'my-window-map
+  "w" 'evil-window-map
   "x" 'my-text-map
   "y" 'my-yank-map
   "z" 'zoom/body
@@ -1708,7 +1708,7 @@ respectively."
 
 (define-prefix-keymap my-file-map
   "my file keybindings"
-  "f" consult-find
+  "f" find-file
   "g" magit-find-file
   "l" find-file-literally
   "r" consult-recent-file
@@ -1848,34 +1848,35 @@ respectively."
   "org specific toggles"
   "l" org-toggle-link-display)
 
-(define-prefix-keymap my-window-map
-  "my window keybindings"
-  "/" (defun my-vsplit ()
-        (interactive)
-        (progn (split-window-horizontally) (balance-windows)))
-  "-" (defun my-split ()
-        (interactive)
-        (progn (split-window-vertically) (balance-windows)))
-  "'" (defun pop-to-eshell ()
-        (interactive)
-        (my-side-eshell '((side . right) (slot . 1))) (balance-windows))
-  "c" make-frame
-  "d" (defun my-delete-window ()
-        (interactive) (progn (delete-window) (balance-windows)))
-  "D" delete-frame
-  "h" (defun tmux-left () (interactive) (tmux-navigate "left"))
-  "j" (defun tmux-down () (interactive) (tmux-navigate "down"))
-  "k" (defun tmux-up () (interactive) (tmux-navigate "up"))
-  "l" (defun tmux-right () (interactive) (tmux-navigate "right"))
-  "H" evil-window-move-far-left
-  "J" evil-window-move-very-bottom
-  "K" evil-window-move-very-top
-  "L" evil-window-move-far-right
-  "m" delete-other-windows
-  "p" popper-toggle-latest
-  "r" winner-redo
-  "u" winner-undo
-  "=" balance-windows)
+(pcase-dolist
+    (`(,key . ,fn)
+     `(("/" . ,(defun my-vsplit ()
+                 (interactive)
+                 (progn (split-window-horizontally) (balance-windows))))
+       ("-" . ,(defun my-split ()
+                 (interactive)
+                 (progn (split-window-vertically) (balance-windows))))
+       ("'" . ,(defun pop-to-eshell ()
+                 (interactive)
+                 (my-side-eshell '((side . right) (slot . 1))) (balance-windows)))
+       ("c" . make-frame)
+       ("d" . ,(defun my-delete-window ()
+                 (interactive) (progn (delete-window) (balance-windows))))
+       ("D" . delete-frame)
+       ("h" . tmux-pane-omni-window-left)
+       ("j" . tmux-pane-omni-window-down)
+       ("k" . tmux-pane-omni-window-up)
+       ("l" . tmux-pane-omni-window-right)
+       ("H" . evil-window-move-far-left)
+       ("J" . evil-window-move-very-bottom)
+       ("K" . evil-window-move-very-top)
+       ("L" . evil-window-move-far-right)
+       ("m" . delete-other-windows)
+       ("p" . popper-toggle-latest)
+       ("r" . winner-redo)
+       ("u" . winner-undo)
+       ("=" . balance-windows)))
+  (define-key evil-window-map (kbd key) fn))
 
 (define-prefix-keymap my-yank-map
   "my yanking keybindings"
