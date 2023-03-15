@@ -94,16 +94,12 @@ in
 
     paste-listener = {
       script = ''
-        ${pkgs.socat}/bin/socat -ddd -u \
+        ${pkgs.socat}/bin/socat -u \
           UNIX-LISTEN:${config.home-manager.users."johh.soo".xdg.stateHome}/${config.pasteSock} \
           - \
           | pbcopy
       '';
-      serviceConfig = {
-        KeepAlive = true;
-        StandardErrorPath =
-          "${config.home-manager.users."johh.soo".xdg.stateHome}/paste-listener/socat.log";
-      };
+      serviceConfig.KeepAlive = true;
     };
   };
 }
