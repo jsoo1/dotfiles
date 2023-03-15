@@ -43,6 +43,13 @@ let
     home.packages = env.shell-utilities ++ [
       pkgs.iosevka
       pkgs.home-manager
+      (pkgs.writeShellApplication {
+        name = "netclip";
+        runtimeInputs = [ pkgs.socat ];
+        text = ''
+          ${pkgs.socat}/bin/socat -u - UNIX-CLIENT:${config.xdg.stateHome}/${config.pasteSock}
+        '';
+      })
     ];
   };
 
