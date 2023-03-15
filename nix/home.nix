@@ -87,7 +87,7 @@ in
             set -s copy-command '${
               if pkgs.stdenv.hostPlatform.isDarwin
               then "pbcopy"
-              else "${pkgs.socat}/bin/socat -u - UNIX-CLIENT:${config.home.xdg.stateDir}/${config.pasteSocket}"}'
+              else "${pkgs.socat}/bin/socat -u - UNIX-CLIENT:${config.home.xdg.stateHome}/${config.pasteSocket}"}'
             EOF
           '';
           "procps/toprc".source = "${dotfiles}/top/toprc";
