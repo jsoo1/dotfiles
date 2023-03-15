@@ -95,7 +95,7 @@ in
     paste-listener = {
       script = ''
         ${pkgs.socat}/bin/socat -u \
-          UNIX-LISTEN:${config.home-manager.users."johh.soo".xdg.stateHome}/${config.pasteSock}" \
+          UNIX-LISTEN:${config.home-manager.users."johh.soo".xdg.stateHome}/${config.pasteSock} \
           - \
           | pbcopy
       '';
