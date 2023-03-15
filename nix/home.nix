@@ -84,10 +84,12 @@ in
         "tmux/tmux.conf".source = pkgs.runCommand "tmux.conf" { } ''
           cat <<EOF > $out
           $(cat "${dotfiles}/nix/.tmux.conf")
-          ${lib.optionalString pkgs.stdenv.hostPlatform.isLinux ''
-              # clipboard for remotes
-              set -s copy-command '${pkgs.socat}/bin/socat -u - UNIX-CLIENT:${config.xdg.stateHome}/${config.pasteSock}'
-            ''}
+
+          # clipboard for remotes
+          set -g copy-command '${
+            if pkgs.stdenv.hostPlatform.isDarwin
+            then "pbcopy"
+            else "${pkgs.socat}/bin/socat -u - UNIX-CLIENT:${config.xdg.stateHome}/${config.pasteSock}"}'
           EOF
         '';
         "procps/toprc ".source = "${dotfiles}/top/toprc";
