@@ -86,7 +86,7 @@ in
           $(cat "${dotfiles}/nix/.tmux.conf")
 
           # clipboard for remotes
-          set -g copy-command '${
+          set -s copy-command '${
             if pkgs.stdenv.hostPlatform.isDarwin
             then "pbcopy"
             else "${pkgs.socat}/bin/socat -u - UNIX-CLIENT:${config.xdg.stateHome}/${config.pasteSock}"}'
