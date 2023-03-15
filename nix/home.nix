@@ -110,7 +110,7 @@ in
 
             alias tmn='eval "$(tmux-projects)"'
 
-            {programs.bash.initExtra}
+            ${programs.bash.initExtra}
 
             PS1="[osh] $PS1"
           '';
