@@ -6,9 +6,9 @@ let
     coreutils deadnix dogdns du-dust exa fd findutils gawk gdb
     ghcid git go gopls graphviz-nox gnutar haskell-language-server
     iosevka less libressl man-pages neovim nix-diff nix-prefetch
-    nix-top nix-tree nixpkgs-fmt oil peep perl procps rage recutils
-    restream ripgrep rnix-lsp rr rsync shellcheck socat tealdeer terraform-ls
-    unar watch;
+    nix-top nix-tree nixpkgs-fmt oil peep perl procps pv
+    rage recutils restream ripgrep rnix-lsp rr rsync shellcheck
+    socat tealdeer terraform-ls unar watch;
 
   inherit (pkgs.haskellPackages) fourmolu;
 
@@ -77,6 +77,7 @@ rec {
     oil
     peep
     perl # for skim (???)
+    pv
     rage
     recutils
     ripgrep
