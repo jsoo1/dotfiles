@@ -79,7 +79,7 @@ in
 
         xdg.configFile = {
           "nvim/init.vim".source = "${dotfiles}/minimal/.vimrc";
-          "tmux/tmux.conf".source = pkgs.runCommand "tmux.conf" ''
+          "tmux/tmux.conf".source = pkgs.runCommand "tmux.conf" { } ''
             cat <<EOF > $out
             $(cat "${dotfiles}/nix/.tmux.conf")
 
@@ -90,7 +90,7 @@ in
               else "${pkgs.socat}/bin/socat -u - UNIX-CLIENT:${config.home.xdg.stateHome}/${config.pasteSocket}"}'
             EOF
           '';
-          "procps/toprc".source = "${dotfiles}/top/toprc";
+          "procps/toprc ".source = "${dotfiles}/top/toprc";
           "oil/oshrc".text = ''
             ${lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
                # Avoids errors in /etc/bashrc_Apple_Terminal (unused anyways)
