@@ -23,6 +23,8 @@ let
 
 in
 {
+  imports = [ ./options.nix ];
+
   networking.hostName = "johhsoo";
 
   environment.systemPackages = env.shell-utilities;
@@ -80,12 +82,28 @@ in
     shell = "/run/current-system/sw/bin/osh";
   };
 
-  launchd.user.agents.emacs.serviceConfig = {
-    KeepAlive = true;
-    ProgramArguments = [
-      "/bin/sh"
-      "-c"
-      "/bin/wait4path ${pkgs.my-emacs}/bin/emacs &amp;&amp; exec ${pkgs.my-emacs}/bin/emacs --fg-daemon=${config.users.users."johh.soo".name}"
-    ];
+  launchd.user.agents = {
+    emacs.serviceConfig = {
+      KeepAlive = true;
+      ProgramArguments = [
+        "/bin/sh"
+        "-c"
+        "/bin/wait4path ${pkgs.my-emacs}/bin/emacs &amp;&amp; exec ${pkgs.my-emacs}/bin/emacs --fg-daemon=${config.users.users."johh.soo".name}"
+      ];
+    };
+
+    paste-listener = {
+      script = ''
+        ${pkgs.socat}/bin/socat -ddd -u \
+          UNIX-LISTEN:${config.home-manager.users."johh.soo".xdg.stateDir}/${config.pasteSock} \
+          - \
+          | pbcopy
+      '';
+      serviceConfig = {
+        KeepAlive = true;
+        StandardErrorPath =
+          "${config.home-manager.users."johh.soo".xdg.stateDir}/paste-listener/socat.log";
+      };
+    };
   };
 }
