@@ -77,7 +77,7 @@ in
           '';
 
           activation.paste-listener = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            $DRY_RUN_CMD mkdir -p $VERBOSE_ARG ${builtins.dirOf "${config.home.xdg.stateHome}/${config.pasteSocket}"}
+            $DRY_RUN_CMD mkdir -p $VERBOSE_ARG ${builtins.dirOf "${config.xdg.stateHome}/${config.pasteSocket}"}
           '';
         };
 
@@ -91,7 +91,7 @@ in
             set -s copy-command '${
               if pkgs.stdenv.hostPlatform.isDarwin
               then "pbcopy"
-              else "${pkgs.socat}/bin/socat -u - UNIX-CLIENT:${config.home.xdg.stateHome}/${config.pasteSocket}"}'
+              else "${pkgs.socat}/bin/socat -u - UNIX-CLIENT:${config.xdg.stateHome}/${config.pasteSocket}"}'
             EOF
           '';
           "procps/toprc ".source = "${dotfiles}/top/toprc";
