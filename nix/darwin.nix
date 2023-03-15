@@ -65,7 +65,7 @@ in
 
   fonts = {
     fonts = [ pkgs.iosevka ];
-    enableFontDir = true;
+    fontDir.enable = true;
   };
 
   # Create /etc/bashrc that loads the nix-darwin environment.
