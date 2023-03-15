@@ -53,8 +53,8 @@ in
   };
 
   nix = {
-    maxJobs = 16;
-    trustedUsers = [ "johh.soo" ];
+    settings.max-jobs = 16;
+    settings.trusted-users = [ "johh.soo" ];
     distributedBuilds = true;
     extraOptions = ''
       experimental-features = nix-command flakes
