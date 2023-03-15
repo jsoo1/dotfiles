@@ -92,14 +92,14 @@ in
       ];
     };
 
-    paste-listener.serviceConfig = {
-      ProgramArguments = [
-        "${pkgs.socat}/bin/socat"
-        "-u"
-        "UNIX-LISTEN:${config.home-manager.users."johh.soo".xdg.stateHome}/${config.pasteSock}"
-        "EXEC:pbcopy"
-      ];
-      KeepAlive = true;
+    paste-listener = {
+      script = ''
+        ${pkgs.socat}/bin/socat -u \
+          UNIX-LISTEN:${config.home-manager.users."johh.soo".xdg.stateHome}/${config.pasteSock}" \
+          - \
+          | pbcopy
+      '';
+      serviceConfig.KeepAlive = true;
     };
   };
 }
