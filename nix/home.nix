@@ -48,91 +48,93 @@ let
 
   darwin-only.home.file = feeds;
 
-
 in
-lib.mkMerge [
-  (lib.mkIf (!pkgs.stdenv.hostPlatform.isDarwin) linux-only)
-  (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin darwin-only)
-  (rec {
-    home = {
-      extraOutputsToInstall = [ "doc" "nc" ];
+{
+  imports = [ ./options.nix ];
 
-      stateVersion = "22.05";
+  config = lib.mkMerge [
+    (lib.mkIf (!pkgs.stdenv.hostPlatform.isDarwin) linux-only)
+    (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin darwin-only)
+    (rec {
+      home = {
+        extraOutputsToInstall = [ "doc" "nc" ];
 
-      packages = env.user;
+        stateVersion = "22.05";
 
-      file = {
-        ".ghci".source = "${dotfiles}/ghci/.ghci";
-        ".haskeline".source = "${dotfiles}/ghci/.haskeline";
-        ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
-        ".vimrc".source = "${dotfiles}/minimal/.vimrc";
+        packages = env.user;
+
+        file = {
+          ".ghci".source = "${dotfiles}/ghci/.ghci";
+          ".haskeline".source = "${dotfiles}/ghci/.haskeline";
+          ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
+          ".vimrc".source = "${dotfiles}/minimal/.vimrc";
+        };
+
+        activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          $DRY_RUN_CMD ln -sfv $VERBOSE_ARG ${config.home.homeDirectory}/{dotfiles/nix,.emacs.d}/init.el
+        '';
+
+        activation.paste-listener = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          $DRY_RUN_CMD mkdir -p $VERBOSE_ARG ${builtins.dirOf "${config.xdg.stateHome}/${config.pasteSock}"}
+        '';
       };
 
-      activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        $DRY_RUN_CMD ln -sfv $VERBOSE_ARG ${config.home.homeDirectory}/{dotfiles/nix,.emacs.d}/init.el
-      '';
+      xdg.configFile = {
+        "nvim/init.vim".source = "${dotfiles}/minimal/.vimrc";
+        "tmux/tmux.conf".source = pkgs.runCommand "tmux.conf" { } ''
+          cat <<EOF > $out
+          $(cat "${dotfiles}/nix/.tmux.conf")
+          ${lib.optionalString pkgs.stdenv.hostPlatform.isLinux ''
+              # clipboard for remotes
+              set -s copy-command '${pkgs.socat}/bin/socat -u - UNIX-CLIENT:${config.xdg.stateHome}/${config.pasteSock}'
+            ''}
+          EOF
+        '';
+        "procps/toprc ".source = "${dotfiles}/top/toprc";
+        "oil/oshrc".text = ''
+          ${lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
+             # Avoids errors in /etc/bashrc_Apple_Terminal (unused anyways)
+             TERM_PROGRAM_OLD="$TERM_PROGRAM"
+             TERM_PROGRAM=junk
+             source /etc/bashrc
+             TERM_PROGRAM="$TERM_PROGRAM_OLD"
+          ''}
 
-      activation.paste-listener = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        $DRY_RUN_CMD mkdir -p $VERBOSE_ARG ${builtins.dirOf "${config.xdg.stateHome}/${config.pasteSocket}"}
-      '';
-    };
+          ${lib.concatStringsSep "\n" (lib.mapAttrsToList (var: val: ''export ${var}="${val}"'')
+            programs.bash.sessionVariables)}
 
-    xdg.configFile = {
-      "nvim/init.vim".source = "${dotfiles}/minimal/.vimrc";
-      "tmux/tmux.conf".source = pkgs.runCommand "tmux.conf" { } ''
-        cat <<EOF > $out
-        $(cat "${dotfiles}/nix/.tmux.conf")
+          ${lib.concatStringsSep "\n" (lib.mapAttrsToList (var: val: "alias ${var}=${lib.escapeShellArg val}")
+            programs.bash.shellAliases)}
 
-        # clipboard for local/remotes
-        set -s copy-command '${
-          if pkgs.stdenv.hostPlatform.isDarwin
-          then "pbcopy"
-          else "${pkgs.socat}/bin/socat -u - UNIX-CLIENT:${config.xdg.stateHome}/${config.pasteSocket}"}'
-        EOF
-      '';
-      "procps/toprc ".source = "${dotfiles}/top/toprc";
-      "oil/oshrc".text = ''
-        ${lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
-           # Avoids errors in /etc/bashrc_Apple_Terminal (unused anyways)
-           TERM_PROGRAM_OLD="$TERM_PROGRAM"
-           TERM_PROGRAM=junk
-           source /etc/bashrc
-           TERM_PROGRAM="$TERM_PROGRAM_OLD"
-        ''}
+          export SKIM_DEFAULT_OPTIONS="${lib.concatStringsSep " " programs.skim.defaultOptions}"
 
-        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (var: val: ''export ${var}="${val}"'')
-          programs.bash.sessionVariables)}
+          alias tmn='eval "$(tmux-projects)"'
 
-        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (var: val: "alias ${var}=${lib.escapeShellArg val}")
-          programs.bash.shellAliases)}
+          ${programs.bash.initExtra}
 
-        export SKIM_DEFAULT_OPTIONS="${lib.concatStringsSep " " programs.skim.defaultOptions}"
+          PS1="[osh] $PS1"
+        '';
+      };
 
-        alias tmn='eval "$(tmux-projects)"'
+      programs = {
+        autojump.enable = pkgs.stdenv.hostPlatform.isLinux;
+        bash = import ./bash.nix { inherit config lib ssh-auth-sock pkgs; };
+        bat.enable = true;
+        direnv.enable = true;
+        direnv.enableBashIntegration = true;
+        emacs.enable = true;
+        emacs.package = pkgs.my-emacs;
+        git.enable = true;
+        git.extraConfig = gitconfig;
+        gpg.enable = true;
+        htop.enable = pkgs.stdenv.hostPlatform.isDarwin;
+        jq.enable = true;
+        skim.defaultOptions = [ "-m" "--color=bw" "--layout=reverse" ];
+        skim.enable = true;
+        tmux.enable = true;
+        tmux.package = pkgs.tmux;
+      };
+    })
+  ];
 
-        ${programs.bash.initExtra}
-
-        PS1="[osh] $PS1"
-      '';
-    };
-
-    programs = {
-      autojump.enable = pkgs.stdenv.hostPlatform.isLinux;
-      bash = import ./bash.nix { inherit config lib ssh-auth-sock pkgs; };
-      bat.enable = true;
-      direnv.enable = true;
-      direnv.enableBashIntegration = true;
-      emacs.enable = true;
-      emacs.package = pkgs.my-emacs;
-      git.enable = true;
-      git.extraConfig = gitconfig;
-      gpg.enable = true;
-      htop.enable = pkgs.stdenv.hostPlatform.isDarwin;
-      jq.enable = true;
-      skim.defaultOptions = [ "-m" "--color=bw" "--layout=reverse" ];
-      skim.enable = true;
-      tmux.enable = true;
-      tmux.package = pkgs.tmux;
-    };
-  })
-];
+}
