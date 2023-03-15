@@ -75,6 +75,10 @@ in
           activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             $DRY_RUN_CMD ln -sfv $VERBOSE_ARG ${config.home.homeDirectory}/{dotfiles/nix,.emacs.d}/init.el
           '';
+
+          activation.paste-listener = lib.mkIf lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            $DRY_RUN_CMD mkdir -p $VERBOSE_ARG ${builtins.dirOf "${config.home.xdg.stateHome}/${config.pasteSocket}"}
+          '';
         };
 
         xdg.configFile = {
