@@ -1,8 +1,4 @@
-{ config
-, lib
-, ssh-auth-sock
-, pkgs
-}:
+{ config, lib, pkgs, ... }:
 let
   username = config.home.username;
   em = "emacsclient -t --socket-name=${username}";
@@ -41,57 +37,61 @@ let
   };
 in
 {
-  enable = true;
-  enableCompletion = pkgs.stdenv.isLinux;
-  inherit sessionVariables shellAliases;
-  historyControl = [ "erasedups" "ignoredups" "ignorespace" ];
-  historyIgnore = [ "ls" "cd" "tmux" ];
-  initExtra =
-    let
-      set-prompt-to = cmd:
-        ''
-          " \C-b\C-k \C-u`${cmd}`\e\C-e\er\C-a\C-y\C-h\C-e\e \C-y\ey\C-x\C-x\C-f"'';
-      bind-key = kbd: val: ''
-        bind -m emacs-standard '"\${kbd}": ${val}'
+  imports = [ ./ssh-auth-sock.nix ];
+
+  config.programs.bash = {
+    enable = true;
+    enableCompletion = pkgs.stdenv.isLinux;
+    inherit sessionVariables shellAliases;
+    historyControl = [ "erasedups" "ignoredups" "ignorespace" ];
+    historyIgnore = [ "ls" "cd" "tmux" ];
+    initExtra =
+      let
+        set-prompt-to = cmd:
+          ''
+            " \C-b\C-k \C-u`${cmd}`\e\C-e\er\C-a\C-y\C-h\C-e\e \C-y\ey\C-x\C-x\C-f"'';
+        bind-key = kbd: val: ''
+          bind -m emacs-standard '"\${kbd}": ${val}'
+        '';
+        bold = text: "\\[\\033[0;1m\\]${text}\\[\\033[0m\\]";
+        red = text: "\\[\\033[0;1;31m\\]${text}\\[\\033[0m\\]";
+        yellow = text: "\\[\\033[0;33m\\]${text}\\[\\033[0m\\]";
+        cyan = text: "\\[\\033[0;36m\\]${text}\\[\\033[0m\\]";
+        purple = text: "\\[\\033[0;35m\\]${text}\\[\\033[0m\\]";
+        fmt = styleLinux: styleDarwin: if pkgs.stdenv.isDarwin then styleDarwin else styleLinux;
+      in
+      ''
+        tmux-projects () {
+          local proj="$(${skim-cmds.projects})"
+          [ "" != "$proj" ] && echo ${tm "$proj"}
+        }
+        skim-files () {
+          echo $(${skim-cmds.files})
+        }
+        skim-history () {
+          echo $(${skim-cmds.history})
+        }
+
+        if [[ "" != $BASH_VERSION ]]; then # compat testing for bash (moving to osh)
+          # Keybindings
+          ${bind-key "eo" (set-prompt-to "tmux-projects")}
+          ${bind-key "C-o" (set-prompt-to "tmux-projects")}
+          ${bind-key "C-t" (set-prompt-to "skim-files")}
+          ${bind-key "C-r" (set-prompt-to "skim-history")}
+          bind -r '\ec'
+        fi
+
+        # Git stuff
+        [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ${config.ssh-auth-sock}
+
+        function _cbr {
+          (git branch 2>/dev/null | awk '/^\*/ { $1=""; print $0 }') || echo ""
+        }
+
+        PS0=$([[ "" != $BASH_VERSION ]] && echo -n '\D{%F %T%z}\n' || echo $PS0)
+        PS1="$([[ "" != $BASH_VERSION ]] && echo -n '\D{%F %T%z}\n' || echo -n "")${fmt bold bold "\\u@"}${fmt red cyan "\\h"} \\W${
+          fmt yellow purple "\\$(_cbr)"
+        } $ "
       '';
-      bold = text: "\\[\\033[0;1m\\]${text}\\[\\033[0m\\]";
-      red = text: "\\[\\033[0;1;31m\\]${text}\\[\\033[0m\\]";
-      yellow = text: "\\[\\033[0;33m\\]${text}\\[\\033[0m\\]";
-      cyan = text: "\\[\\033[0;36m\\]${text}\\[\\033[0m\\]";
-      purple = text: "\\[\\033[0;35m\\]${text}\\[\\033[0m\\]";
-      fmt = styleLinux: styleDarwin: if pkgs.stdenv.isDarwin then styleDarwin else styleLinux;
-    in
-    ''
-      tmux-projects () {
-        local proj="$(${skim-cmds.projects})"
-        [ "" != "$proj" ] && echo ${tm "$proj"}
-      }
-      skim-files () {
-        echo $(${skim-cmds.files})
-      }
-      skim-history () {
-        echo $(${skim-cmds.history})
-      }
-
-      if [[ "" != $BASH_VERSION ]]; then # compat testing for bash (moving to osh)
-        # Keybindings
-        ${bind-key "eo" (set-prompt-to "tmux-projects")}
-        ${bind-key "C-o" (set-prompt-to "tmux-projects")}
-        ${bind-key "C-t" (set-prompt-to "skim-files")}
-        ${bind-key "C-r" (set-prompt-to "skim-history")}
-        bind -r '\ec'
-      fi
-
-      # Git stuff
-      [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ${ssh-auth-sock}
-
-      function _cbr {
-        (git branch 2>/dev/null | awk '/^\*/ { $1=""; print $0 }') || echo ""
-      }
-
-      PS0=$([[ "" != $BASH_VERSION ]] && echo -n '\D{%F %T%z}\n' || echo $PS0)
-      PS1="$([[ "" != $BASH_VERSION ]] && echo -n '\D{%F %T%z}\n' || echo -n "")${fmt bold bold "\\u@"}${fmt red cyan "\\h"} \\W${
-        fmt yellow purple "\\$(_cbr)"
-      } $ "
-    '';
+  };
 }

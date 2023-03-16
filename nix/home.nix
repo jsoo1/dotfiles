@@ -1,27 +1,8 @@
 { pkgs, dotfiles, config, lib, ... }:
 let
-  home = config.home.homeDirectory;
-  username = config.home.username;
+  inherit (pkgs.stdenv.hostPlatform) isLinux isDarwin;
 
   env = import ./env.nix { inherit pkgs; };
-
-  feeds = {
-    ".emacs.d/feeds".recursive = true;
-    ".emacs.d/feeds".source = "${dotfiles}/rss";
-  };
-
-  ssh-auth-sock = "${home}/.ssh/auth_sock";
-
-  systemd.user.services.emacs = {
-    Unit.Description = "Emacs Daemon";
-    Unit.Documentation = "man:emacs(1)";
-    Install.WantedBy = [ "default.target" ];
-    Service = {
-      Environment = ''SSH_AUTH_SOCK="${ssh-auth-sock}"'';
-      ExecStart = "${pkgs.my-emacs}/bin/emacs --fg-daemon=${username}";
-      ExecStop = "${pkgs.coreutils}/bin/kill -9 $MAINPID";
-    };
-  };
 
   gitconfig = {
     user = {
@@ -34,116 +15,124 @@ let
     github = { user = "jsoo1"; };
     commit = { gpgsign = true; };
     branch = { autoSetupMerge = false; };
-
   };
-
-  linux-only = {
-    inherit systemd;
-    services.gpg-agent.enable = true;
-    home.packages = env.shell-utilities ++ [
-      pkgs.iosevka
-      pkgs.home-manager
-      (pkgs.writeShellApplication {
-        name = "netclip";
-        runtimeInputs = [ pkgs.socat ];
-        text = ''
-          ${pkgs.socat}/bin/socat -u - UNIX-CLIENT:${config.xdg.stateHome}/${config.pasteSock}
-        '';
-      })
-    ];
-  };
-
-  darwin-only.home.file = feeds;
 
 in
 {
-  imports = [ ./options.nix ];
-
-  config = lib.mkMerge [
-    (lib.mkIf (!pkgs.stdenv.hostPlatform.isDarwin) linux-only)
-    (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin darwin-only)
-    (rec {
-      home = {
-        extraOutputsToInstall = [ "doc" "nc" ];
-
-        stateVersion = "22.05";
-
-        packages = env.user;
-
-        file = {
-          ".ghci".source = "${dotfiles}/ghci/.ghci";
-          ".haskeline".source = "${dotfiles}/ghci/.haskeline";
-          ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
-          ".vimrc".source = "${dotfiles}/minimal/.vimrc";
-        };
-
-        activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          $DRY_RUN_CMD ln -sfv $VERBOSE_ARG ${config.home.homeDirectory}/{dotfiles/nix,.emacs.d}/init.el
-        '';
-
-        activation.paste-listener = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          $DRY_RUN_CMD mkdir -p $VERBOSE_ARG ${builtins.dirOf "${config.xdg.stateHome}/${config.pasteSock}"}
-        '';
-      };
-
-      xdg.configFile = {
-        "nvim/init.vim".source = "${dotfiles}/minimal/.vimrc";
-        "tmux/tmux.conf".source = pkgs.runCommand "tmux.conf" { } ''
-          cat <<EOF > $out
-          $(cat "${dotfiles}/nix/.tmux.conf")
-
-          # clipboard for remotes
-          set -s copy-command '${
-            if pkgs.stdenv.hostPlatform.isDarwin
-            then "pbcopy"
-            else "${pkgs.socat}/bin/socat -u - UNIX-CLIENT:${config.xdg.stateHome}/${config.pasteSock}"}'
-          EOF
-        '';
-        "procps/toprc ".source = "${dotfiles}/top/toprc";
-        "oil/oshrc".text = ''
-          ${lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
-             # Avoids errors in /etc/bashrc_Apple_Terminal (unused anyways)
-             TERM_PROGRAM_OLD="$TERM_PROGRAM"
-             TERM_PROGRAM=junk
-             source /etc/bashrc
-             TERM_PROGRAM="$TERM_PROGRAM_OLD"
-          ''}
-
-          ${lib.concatStringsSep "\n" (lib.mapAttrsToList (var: val: ''export ${var}="${val}"'')
-            programs.bash.sessionVariables)}
-
-          ${lib.concatStringsSep "\n" (lib.mapAttrsToList (var: val: "alias ${var}=${lib.escapeShellArg val}")
-            programs.bash.shellAliases)}
-
-          export SKIM_DEFAULT_OPTIONS="${lib.concatStringsSep " " programs.skim.defaultOptions}"
-
-          alias tmn='eval "$(tmux-projects)"'
-
-          ${programs.bash.initExtra}
-
-          PS1="[osh] $PS1"
-        '';
-      };
-
-      programs = {
-        autojump.enable = pkgs.stdenv.hostPlatform.isLinux;
-        bash = import ./bash.nix { inherit config lib ssh-auth-sock pkgs; };
-        bat.enable = true;
-        direnv.enable = true;
-        direnv.enableBashIntegration = true;
-        emacs.enable = true;
-        emacs.package = pkgs.my-emacs;
-        git.enable = true;
-        git.extraConfig = gitconfig;
-        gpg.enable = true;
-        htop.enable = pkgs.stdenv.hostPlatform.isDarwin;
-        jq.enable = true;
-        skim.defaultOptions = [ "-m" "--color=bw" "--layout=reverse" ];
-        skim.enable = true;
-        tmux.enable = true;
-        tmux.package = pkgs.tmux;
-      };
-    })
+  imports = [
+    ./bash.nix
+    ./netclip.nix
+    ./ssh-auth-sock.nix
   ];
 
+  home = {
+    extraOutputsToInstall = [ "doc" "nc" ];
+
+    stateVersion = "22.05";
+
+    packages = env.user ++ lib.optionals isLinux [
+      pkgs.iosevka
+      pkgs.home-manager
+    ];
+
+    file = {
+      ".ghci".source = "${dotfiles}/ghci/.ghci";
+      ".haskeline".source = "${dotfiles}/ghci/.haskeline";
+      ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
+      ".vimrc".source = "${dotfiles}/minimal/.vimrc";
+      ".emacs.d/feeds" = lib.mkIf isDarwin {
+        recursive = true;
+        source = "${dotfiles}/rss";
+      };
+    };
+
+    activation.emacs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      $DRY_RUN_CMD ln -sfv $VERBOSE_ARG ${config.home.homeDirectory}/{dotfiles/nix,.emacs.d}/init.el
+    '';
+  };
+
+  xdg.enable = true;
+
+  xdg.configFile = {
+    "nvim/init.vim".source = "${dotfiles}/minimal/.vimrc";
+    "tmux/tmux.conf".source = pkgs.runCommand "tmux.conf" { } ''
+      cat <<EOF > $out
+      $(cat "${dotfiles}/nix/.tmux.conf")
+
+      # clipboard for remotes
+      set -s copy-command '${if isDarwin then "pbcopy" else "netclip"}'
+      EOF
+    '';
+    "procps/toprc ".source = "${dotfiles}/top/toprc";
+    "oil/oshrc".text = ''
+      ${lib.optionalString isDarwin ''
+         # Avoids errors in /etc/bashrc_Apple_Terminal (unused anyways)
+         TERM_PROGRAM_OLD="$TERM_PROGRAM"
+         TERM_PROGRAM=junk
+         source /etc/bashrc
+         TERM_PROGRAM="$TERM_PROGRAM_OLD"
+      ''}
+
+      ${lib.concatStringsSep "\n" (lib.mapAttrsToList (var: val: ''export ${var}="${val}"'')
+        config.programs.bash.sessionVariables)}
+
+      ${lib.concatStringsSep "\n" (lib.mapAttrsToList (var: val: "alias ${var}=${lib.escapeShellArg val}")
+        config.programs.bash.shellAliases)}
+
+      export SKIM_DEFAULT_OPTIONS="${lib.concatStringsSep " " config.programs.skim.defaultOptions}"
+
+      alias tmn='eval "$(tmux-projects)"'
+
+      ${config.programs.bash.initExtra}
+
+      PS1="[osh] $PS1"
+    '';
+  };
+
+  programs = {
+    autojump.enable = isLinux;
+    bat.enable = true;
+    direnv.enable = true;
+    direnv.enableBashIntegration = true;
+    emacs.enable = true;
+    emacs.package = pkgs.my-emacs;
+    git.enable = true;
+    git.extraConfig = gitconfig;
+    gpg.enable = true;
+    htop.enable = isDarwin;
+    jq.enable = true;
+    netclip.enable = isLinux;
+    skim.defaultOptions = [ "-m" "--color=bw" "--layout=reverse" ];
+    skim.enable = true;
+    tmux.enable = true;
+    tmux.package = pkgs.tmux;
+  };
+
+  services.netclip.enable = isDarwin;
+
+  services.gpg-agent.enable = isLinux;
+
+  systemd.user.services.emacs = {
+    Unit.Description = "Emacs Daemon";
+    Unit.Documentation = "man:emacs(1)";
+    Install.WantedBy = [ "default.target" ];
+    Service = {
+      Environment = ''SSH_AUTH_SOCK="${config.ssh-auth-sock}"'';
+      ExecStart = "${pkgs.my-emacs}/bin/emacs --fg-daemon=${config.home.username}";
+      ExecStop = "${pkgs.coreutils}/bin/kill -9 $MAINPID";
+    };
+  };
+
+  launchd.agents.emacs = {
+    enable = true;
+
+    config = {
+      KeepAlive = true;
+      ProgramArguments = [
+        "/bin/sh"
+        "-c"
+        "/bin/wait4path ${pkgs.my-emacs}/bin/emacs &amp;&amp; exec ${pkgs.my-emacs}/bin/emacs --fg-daemon=${config.home.username}"
+      ];
+    };
+  };
 }
