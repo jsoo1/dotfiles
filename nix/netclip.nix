@@ -36,7 +36,13 @@ in
       };
     }
 
-    (lib.mkIf cfg.enable { launchd.agents.netclip.enable = true; })
+    (lib.mkIf cfg.enable {
+      launchd.agents.netclip.enable = true;
+
+      home.activation.netclip = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        $DRY_RUN_CMD mkdir -p $VERBOSE_ARG ${builtins.dirOf "${config.xdg.stateHome}/${cfg.socketPath}"}
+      '';
+    })
 
     (lib.mkIf netclipCfg.enable {
       home.packages = [
