@@ -2,8 +2,6 @@
 let
   inherit (pkgs.stdenv.hostPlatform) isLinux isDarwin;
 
-  env = import ./env.nix { inherit pkgs; };
-
   gitconfig = {
     user = {
       name = "John Soo";
@@ -20,6 +18,7 @@ let
 in
 {
   imports = [
+    ./env.nix
     ./bash.nix
     ./netclip.nix
     ./ssh-auth-sock.nix
@@ -29,11 +28,6 @@ in
     extraOutputsToInstall = [ "doc" "nc" ];
 
     stateVersion = "22.05";
-
-    packages = env.user ++ lib.optionals isLinux [
-      pkgs.iosevka
-      pkgs.home-manager
-    ];
 
     file = {
       ".ghci".source = "${dotfiles}/ghci/.ghci";

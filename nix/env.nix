@@ -1,5 +1,7 @@
-{ pkgs ? import ./pin.nix { } }:
+{ config, lib, pkgs, ... }:
 let
+  inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
+
   inherit (pkgs)
 
     bash-completion bashInteractive binutils bottom cachix ccls
@@ -16,88 +18,132 @@ let
 
 in
 
-rec {
-  c-utilities = [
-    gdb
-    man-pages
-  ] ++ pkgs.lib.optionals (!pkgs.stdenv.isDarwin) [
-    binutils
-    ccls
-    rr
-  ];
+{
+  options = {
+    c-utilities = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
+    };
 
-  haskell-utilities = [ fourmolu ghcid haskell-language-server ];
+    haskell-utilities = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
+    };
 
-  go-utilities = [ go gopls ];
+    go-utilities = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
+    };
 
-  macos-quirks = [
-    bashInteractive
-    gnutar
-    less
-    neovim
-    ripgrep
-    findutils
-    fd
-    git
-    rage
-    rsync
-    dogdns
-  ];
+    macos-quirks = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
+    };
 
-  nix-utilities = [
-    deadnix
-    nixpkgs-fmt
-    nix-diff
-    nix-prefetch
-    nix-top
-    nix-tree
-    rnix-lsp
-  ];
+    nix-utilities = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
+    };
 
-  remarkable-utilities = [ restream ];
+    remarkable-utilities = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
+    };
 
-  socket-utilities = [
-    libressl # see "nc" in extraOutputsToInstall
-    socat
-  ];
+    socket-utilities = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
+    };
 
-  shell-utilities = pkgs.lib.optionals (!pkgs.stdenv.isDarwin) [ perf ] ++ [
-    bash-completion
-    bottom
-    cachix
-    coreutils
-    dogdns
-    du-dust
-    exa
-    fd
-    gawk
-    git
-    graphviz-nox
-    neovim
-    oil
-    peep
-    perl # for skim (???)
-    pv
-    rage
-    recutils
-    ripgrep
-    shellcheck
-    tealdeer
-    unar
-    watch
-  ];
+    shell-utilities = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
+    };
 
-  terraform-utilities = [ terraform-ls ];
+    terraform-utilities = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
+    };
+  };
 
-  user = builtins.concatLists [
-    haskell-utilities
-    c-utilities
-    go-utilities
-    nix-utilities
-    socket-utilities
-    terraform-utilities
-    (pkgs.lib.optionals (!pkgs.stdenv.isDarwin) [ procps ])
-    (pkgs.lib.optionals pkgs.stdenv.isDarwin
-      (macos-quirks ++ remarkable-utilities))
-  ];
+  config = lib.mkMerge [{
+    c-utilities = [
+      gdb
+      man-pages
+    ] ++ lib.optionals isLinux [
+      binutils
+      ccls
+      rr
+    ];
+
+    haskell-utilities = [ fourmolu ghcid haskell-language-server ];
+
+    go-utilities = [ go gopls ];
+
+    macos-quirks = [
+      bashInteractive
+      gnutar
+      less
+      neovim
+      ripgrep
+      findutils
+      fd
+      git
+      rage
+      rsync
+      dogdns
+    ];
+
+    nix-utilities = [
+      deadnix
+      nixpkgs-fmt
+      nix-diff
+      nix-prefetch
+      nix-top
+      nix-tree
+      rnix-lsp
+    ];
+
+    remarkable-utilities = [ restream ];
+
+    socket-utilities = [
+      libressl # see "nc" in extraOutputsToInstall
+      socat
+    ];
+
+    shell-utilities = lib.optionals isLinux [ perf ] ++ [
+      bash-completion
+      bottom
+      cachix
+      coreutils
+      dogdns
+      du-dust
+      exa
+      fd
+      gawk
+      git
+      graphviz-nox
+      neovim
+      oil
+      peep
+      perl # for skim (???)
+      pv
+      rage
+      recutils
+      ripgrep
+      shellcheck
+      tealdeer
+      unar
+      watch
+    ];
+
+    terraform-utilities = [ terraform-ls ];
+  }
+    (lib.mkIf (config ? home) {
+      home.packages = lib.concatLists [
+        config.haskell-utilities
+        config.c-utilities
+        config.go-utilities
+        config.nix-utilities
+        config.socket-utilities
+        config.terraform-utilities
+      ] ++ lib.optionals isLinux (lib.concatLists [
+        config.shell-utilities
+        [ iosevka procps ]
+      ]) ++ lib.optionals isDarwin (lib.concatLists [
+        config.macos-quirks
+        config.remarkable-utilities
+      ]);
+    })];
 }

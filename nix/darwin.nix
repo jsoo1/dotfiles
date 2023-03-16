@@ -1,8 +1,6 @@
 { config, lib, pkgs, ... }:
 
 let
-  env = import ./env.nix { inherit pkgs; };
-
   nix-conf = {
     file = pkgs.copyPathToStore ./nix.conf.age;
     path = "/Users/johh.soo/.config/nix/nix.conf";
@@ -23,9 +21,11 @@ let
 
 in
 {
+  imports = [ ./env.nix ];
+
   networking.hostName = "johhsoo";
 
-  environment.systemPackages = env.shell-utilities;
+  environment.systemPackages = config.shell-utilities;
 
   environment.shells = [
     pkgs.bashInteractive
