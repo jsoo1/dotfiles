@@ -29,6 +29,21 @@ in
 
     stateVersion = "22.05";
 
+    packages = lib.concatLists [
+      config.haskell-utilities
+      config.c-utilities
+      config.go-utilities
+      config.nix-utilities
+      config.socket-utilities
+      config.terraform-utilities
+    ] ++ lib.optionals isLinux (lib.concatLists [
+      config.shell-utilities
+      [ pkgs.iosevka pkgs.procps ]
+    ]) ++ lib.optionals isDarwin (lib.concatLists [
+      config.macos-quirks
+      config.remarkable-utilities
+    ]);
+
     file = {
       ".ghci".source = "${dotfiles}/ghci/.ghci";
       ".haskeline".source = "${dotfiles}/ghci/.haskeline";
