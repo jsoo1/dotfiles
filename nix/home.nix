@@ -20,7 +20,7 @@ in
   imports = [
     ./env.nix
     ./bash.nix
-    ./netclip.nix
+    ./soclip.nix
     ./ssh-auth-sock.nix
   ];
 
@@ -110,14 +110,14 @@ in
     gpg.enable = true;
     htop.enable = isDarwin;
     jq.enable = true;
-    netclip.enable = isLinux;
+    soclip.enable = isLinux;
     skim.defaultOptions = [ "-m" "--color=bw" "--layout=reverse" ];
     skim.enable = true;
     tmux.enable = true;
     tmux.package = pkgs.tmux;
   };
 
-  services.netclip.enable = isDarwin;
+  services.soclip.enable = isDarwin;
 
   services.gpg-agent.enable = isLinux;
 

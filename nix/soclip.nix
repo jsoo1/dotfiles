@@ -1,16 +1,16 @@
 { lib, pkgs, config, ... }:
 let
-  cfg = config.services.netclip;
+  cfg = config.services.soclip;
 
-  netclipCfg = config.programs.netclip;
+  soclipCfg = config.programs.soclip;
 in
 {
-  options.services.netclip = {
-    enable = lib.mkEnableOption "netclip";
+  options.services.soclip = {
+    enable = lib.mkEnableOption "soclip";
 
     socketPath = lib.mkOption {
       type = lib.types.str;
-      default = "netclip/sock";
+      default = "soclip/sock";
       example = "paste-sock";
       description = ''
         Socket path for clipboard relative to $XDG_STATE_HOME.
@@ -18,36 +18,37 @@ in
     };
   };
 
-  options.programs.netclip.enable =
-    lib.mkEnableOption "netclip";
+  options.programs.soclip.enable =
+    lib.mkEnableOption "soclip";
 
   config = lib.mkMerge [
     {
-      launchd.agents.netclip.config = {
-        Program = let netclipd = pkgs.writeShellApplication {
-          name = "netclipd";
+      launchd.agents.soclip.config = {
+        Program = let soclipd = pkgs.writeShellApplication {
+          name = "soclipd";
           runtimeInputs = [ pkgs.socat ];
           text = ''
-            socat -u UNIX-LISTEN:${config.xdg.stateHome}/${cfg.socketPath},fork - \
-              | pbcopy
+            pbpaste | socat -ddd UNIX-LISTEN:${config.xdg.stateHome}/${cfg.socketPath},fork EXEC:pbcopy
           '';
-        }; in "${netclipd}/bin/netclipd";
+        }; in "${soclipd}/bin/soclipd";
         KeepAlive = true;
+        StandardErrorPath =
+          "${config.xdg.stateHome}/soclip/soclip.log";
       };
     }
 
     (lib.mkIf cfg.enable {
-      launchd.agents.netclip.enable = true;
+      launchd.agents.soclip.enable = true;
 
-      home.activation.netclip = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      home.activation.soclip = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         $DRY_RUN_CMD mkdir -p $VERBOSE_ARG ${builtins.dirOf "${config.xdg.stateHome}/${cfg.socketPath}"}
       '';
     })
 
-    (lib.mkIf netclipCfg.enable {
+    (lib.mkIf soclipCfg.enable {
       home.packages = [
         (pkgs.writeShellApplication {
-          name = "netclip";
+          name = "soclip";
           runtimeInputs = [ pkgs.socat ];
           text = ''
             socat -u - UNIX-CLIENT:${config.xdg.stateHome}/${cfg.socketPath} 
@@ -55,7 +56,7 @@ in
         })
       ];
 
-      home.activation.netclip = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      home.activation.soclip = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         $DRY_RUN_CMD mkdir -p $VERBOSE_ARG ${builtins.dirOf "${config.xdg.stateHome}/${cfg.socketPath}"}
       '';
     })
