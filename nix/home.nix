@@ -72,7 +72,7 @@ in
       set -s copy-command '${if isDarwin then "pbcopy" else "netclip"}'
       EOF
     '';
-    "procps/toprc ".source = "${dotfiles}/top/toprc";
+    "procps/toprc".source = "${dotfiles}/top/toprc";
     "oil/oshrc".text = ''
       ${lib.optionalString isDarwin ''
          # Avoids errors in /etc/bashrc_Apple_Terminal (unused anyways)
