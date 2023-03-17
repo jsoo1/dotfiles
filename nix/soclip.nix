@@ -23,22 +23,36 @@ in
 
   config = lib.mkMerge [
     {
-      launchd.agents.soclip.config = {
-        Program = let soclipd = pkgs.writeShellApplication {
-          name = "soclipd";
+      launchd.agents.soclip-copy.config = {
+        Program = let soclipd-copy = pkgs.writeShellApplication {
+          name = "soclipd-copy";
           runtimeInputs = [ pkgs.socat ];
           text = ''
-            pbpaste | socat -ddd UNIX-LISTEN:${config.xdg.stateHome}/${cfg.socketPath},fork EXEC:pbcopy
+            rm UNIX-LISTEN:${config.xdg.stateHome}/${cfg.socketPath}-copy || :
+            socat -u UNIX-LISTEN:${config.xdg.stateHome}/${cfg.socketPath}-copy,fork EXEC:pbcopy
           '';
-        }; in "${soclipd}/bin/soclipd";
+        }; in "${soclipd-copy}/bin/soclipd-copy";
         KeepAlive = true;
-        StandardErrorPath =
-          "${config.xdg.stateHome}/soclip/soclip.log";
+      };
+
+      launchd.agents.soclip-paste.config = {
+        Program = let soclipd-paste = pkgs.writeShellApplication {
+          name = "soclipd-paste";
+          runtimeInputs = [ pkgs.socat ];
+          text = ''
+            rm ${config.xdg.stateHome}/${cfg.socketPath}-paste || :
+            socat UNIX-LISTEN:${config.xdg.stateHome}/${cfg.socketPath}-paste EXEC:pbpaste
+          '';
+        }; in "${soclipd-paste}/bin/soclipd-paste";
+        KeepAlive = true;
+        ThrottleInterval = 0;
       };
     }
 
     (lib.mkIf cfg.enable {
-      launchd.agents.soclip.enable = true;
+      launchd.agents.soclip-copy.enable = true;
+
+      launchd.agents.soclip-paste.enable = true;
 
       home.activation.soclip = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         $DRY_RUN_CMD mkdir -p $VERBOSE_ARG ${builtins.dirOf "${config.xdg.stateHome}/${cfg.socketPath}"}
@@ -48,10 +62,17 @@ in
     (lib.mkIf soclipCfg.enable {
       home.packages = [
         (pkgs.writeShellApplication {
-          name = "soclip";
+          name = "socopy";
           runtimeInputs = [ pkgs.socat ];
           text = ''
-            socat -u - UNIX-CLIENT:${config.xdg.stateHome}/${cfg.socketPath} 
+            socat -u - UNIX-CLIENT:${config.xdg.stateHome}/${cfg.socketPath}-copy
+          '';
+        })
+        (pkgs.writeShellApplication {
+          name = "sopaste";
+          runtimeInputs = [ pkgs.socat ];
+          text = ''
+            socat -u UNIX-CLIENT:${config.xdg.stateHome}/${cfg.socketPath}-paste -
           '';
         })
       ];
