@@ -69,7 +69,7 @@ in
       $(cat "${dotfiles}/nix/.tmux.conf")
 
       # clipboard for remotes
-      set -s copy-command '${if isDarwin then "pbcopy" else "netclip"}'
+      set -s copy-command '${if isDarwin then "pbcopy" else "socopy"}'
       EOF
     '';
     "procps/toprc".source = "${dotfiles}/top/toprc";
