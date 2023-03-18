@@ -41,11 +41,10 @@ in
           runtimeInputs = [ pkgs.socat ];
           text = ''
             rm ${config.xdg.stateHome}/${svcCfg.socketPath}-paste || :
-            socat UNIX-LISTEN:${config.xdg.stateHome}/${svcCfg.socketPath}-paste EXEC:pbpaste
+            socat UNIX-LISTEN:${config.xdg.stateHome}/${svcCfg.socketPath}-paste,fork EXEC:pbpaste
           '';
         }; in "${soclipd-paste}/bin/soclipd-paste";
         KeepAlive = true;
-        ThrottleInterval = 0;
       };
     }
 
