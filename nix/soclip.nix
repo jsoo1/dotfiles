@@ -54,7 +54,7 @@ in
 
       launchd.agents.soclip-paste.enable = true;
 
-      home.activation.soclip = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      home.activation.soclipd = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         $DRY_RUN_CMD mkdir -p $VERBOSE_ARG ${builtins.dirOf "${config.xdg.stateHome}/${svcCfg.socketPath}"}
       '';
     })
@@ -77,7 +77,7 @@ in
         })
       ];
 
-      home.activation.soclip = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      home.activation.soclip-progs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         $DRY_RUN_CMD mkdir -p $VERBOSE_ARG ${builtins.dirOf "${config.xdg.stateHome}/${svcCfg.socketPath}"}
       '';
     })
