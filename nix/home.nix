@@ -20,7 +20,7 @@ in
   imports = [
     ./env.nix
     ./bash.nix
-    ./soclip.nix
+    ./soclip
     ./ssh-auth-sock.nix
   ];
 
