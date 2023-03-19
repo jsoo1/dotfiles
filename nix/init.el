@@ -724,13 +724,12 @@ Take newline delimited `STRING' and return list of all
 (setq which-key-idle-delay 0.1)
 
 ;; Clipboard
-(when (eq 'darwin system-type)
-  (require 'xclip)
-  (xclip-mode 1)
-  (defun toggle-xclip-mode ()
-    "Toggle `xclip-mode'."
-    (interactive)
-    (xclip-mode (if xclip-mode -1 1))))
+(require 'xclip)
+(xclip-mode 1)
+(defun toggle-xclip-mode ()
+  "Toggle `xclip-mode'."
+  (interactive)
+  (xclip-mode (if xclip-mode -1 1)))
 
 ;; GNUTLS issues
 ;; Skip v1.3 per https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341#19
