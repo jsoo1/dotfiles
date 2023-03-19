@@ -3,6 +3,48 @@ let
   svcCfg = config.services.soclip;
 
   prgCfg = config.programs.soclip;
+
+  soclip = pkgs.symlinkJoin {
+    name = "soclip";
+    paths = [
+      (pkgs.writeShellApplication {
+        name = "socopy";
+        runtimeInputs = [ pkgs.socat ];
+        text = ''
+          socat -u - UNIX-CLIENT:${config.xdg.stateHome}/${svcCfg.socketPath}-copy
+        '';
+      })
+      (pkgs.writeShellApplication {
+        name = "sopaste";
+        runtimeInputs = [ pkgs.socat ];
+        text = ''
+          socat -u UNIX-CLIENT:${config.xdg.stateHome}/${svcCfg.socketPath}-paste -
+        '';
+      })
+    ];
+  };
+
+  soclipd = pkgs.symlinkJoin {
+    name = "soclipd";
+    paths = [
+      (pkgs.writeShellApplication {
+        name = "soclipd-copy";
+        runtimeInputs = [ pkgs.socat ];
+        text = ''
+          rm UNIX-LISTEN:${config.xdg.stateHome}/${svcCfg.socketPath}-copy || :
+          socat -u UNIX-LISTEN:${config.xdg.stateHome}/${svcCfg.socketPath}-copy,fork EXEC:pbcopy
+        '';
+      })
+      (pkgs.writeShellApplication {
+        name = "soclipd-paste";
+        runtimeInputs = [ pkgs.socat ];
+        text = ''
+          rm ${config.xdg.stateHome}/${svcCfg.socketPath}-paste || :
+          socat UNIX-LISTEN:${config.xdg.stateHome}/${svcCfg.socketPath}-paste,fork EXEC:pbpaste
+        '';
+      })
+    ];
+  };
 in
 {
   options.services.soclip = {
@@ -21,64 +63,27 @@ in
   options.programs.soclip.enable =
     lib.mkEnableOption "soclip";
 
-  config = lib.mkMerge [
-    {
-      launchd.agents.soclip-copy.config = {
-        Program = let soclipd-copy = pkgs.writeShellApplication {
-          name = "soclipd-copy";
-          runtimeInputs = [ pkgs.socat ];
-          text = ''
-            rm UNIX-LISTEN:${config.xdg.stateHome}/${svcCfg.socketPath}-copy || :
-            socat -u UNIX-LISTEN:${config.xdg.stateHome}/${svcCfg.socketPath}-copy,fork EXEC:pbcopy
-          '';
-        }; in "${soclipd-copy}/bin/soclipd-copy";
+  config = {
+    launchd.agents.soclip-copy = {
+      enable = svcCfg.enable;
+      config = {
+        Program = "${soclipd}/bin/soclipd-copy";
         KeepAlive = true;
       };
+    };
 
-      launchd.agents.soclip-paste.config = {
-        Program = let soclipd-paste = pkgs.writeShellApplication {
-          name = "soclipd-paste";
-          runtimeInputs = [ pkgs.socat ];
-          text = ''
-            rm ${config.xdg.stateHome}/${svcCfg.socketPath}-paste || :
-            socat UNIX-LISTEN:${config.xdg.stateHome}/${svcCfg.socketPath}-paste,fork EXEC:pbpaste
-          '';
-        }; in "${soclipd-paste}/bin/soclipd-paste";
+    launchd.agents.soclip-paste = {
+      enable = svcCfg.enable;
+      config = {
+        Program = "${soclipd}/bin/soclipd-paste";
         KeepAlive = true;
       };
-    }
+    };
 
-    (lib.mkIf svcCfg.enable {
-      launchd.agents.soclip-copy.enable = true;
+    home.activation.soclip = lib.mkIf (svcCfg.enable || prgCfg.enable) (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      $DRY_RUN_CMD mkdir -p $VERBOSE_ARG ${builtins.dirOf "${config.xdg.stateHome}/${svcCfg.socketPath}"}
+    '');
 
-      launchd.agents.soclip-paste.enable = true;
-
-      home.activation.soclipd = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        $DRY_RUN_CMD mkdir -p $VERBOSE_ARG ${builtins.dirOf "${config.xdg.stateHome}/${svcCfg.socketPath}"}
-      '';
-    })
-
-    (lib.mkIf prgCfg.enable {
-      home.packages = [
-        (pkgs.writeShellApplication {
-          name = "socopy";
-          runtimeInputs = [ pkgs.socat ];
-          text = ''
-            socat -u - UNIX-CLIENT:${config.xdg.stateHome}/${svcCfg.socketPath}-copy
-          '';
-        })
-        (pkgs.writeShellApplication {
-          name = "sopaste";
-          runtimeInputs = [ pkgs.socat ];
-          text = ''
-            socat -u UNIX-CLIENT:${config.xdg.stateHome}/${svcCfg.socketPath}-paste -
-          '';
-        })
-      ];
-
-      home.activation.soclip-progs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        $DRY_RUN_CMD mkdir -p $VERBOSE_ARG ${builtins.dirOf "${config.xdg.stateHome}/${svcCfg.socketPath}"}
-      '';
-    })
-  ];
+    home.packages = lib.mkIf prgCfg.enable [ soclip ];
+  };
 }
