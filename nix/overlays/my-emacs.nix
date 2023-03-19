@@ -1,5 +1,5 @@
 let
-  elpa = { elpaPackages, ... }:
+  elpa = pkgs: { elpaPackages, ... }:
     with elpaPackages; [
       consult
       csv-mode
@@ -9,7 +9,18 @@ let
       sml-mode
       vertico
       which-key
-      xclip
+      (xclip.overrideAttrs (o: {
+        src = pkgs.stdenv.mkDerivation {
+          name = o.src.name;
+          src = o.src;
+          patches = [ ./xclip-soclip-support.patch ];
+          installPhase = ''
+            mkdir xclip-${o.version}
+            mv *.el xclip-${o.version}
+            tar -cf $out xclip-${o.version}
+          '';
+        };
+      }))
       xref
       yasnippet
     ];
@@ -106,7 +117,7 @@ let
       xterm-color
       yaml-mode
     ];
-  my-emacs-overlay = self: _:
+  my-emacs-overlay = self: super:
     let
       emacs = self.mkGitEmacs "my-emacs-nox" ./emacs-rev.json {
         withNS = false;
@@ -119,8 +130,8 @@ let
       };
     in
     {
-      my-emacs = emacs.pkgs.emacsWithPackages (epkgs:
-        builtins.concatMap (f: f epkgs) [ elpa manual melpa ]);
+      my-emacs = (emacs.pkgs.emacsWithPackages (epkgs:
+        builtins.concatMap (f: f epkgs) [ (elpa super) manual melpa ]));
     };
 in
 [ my-emacs-overlay ]
