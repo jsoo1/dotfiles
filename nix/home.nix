@@ -110,7 +110,7 @@ in
     gpg.enable = true;
     htop.enable = isDarwin;
     jq.enable = true;
-    soclip.enable = isLinux;
+    soclip.enable = true;
     skim.defaultOptions = [ "-m" "--color=bw" "--layout=reverse" ];
     skim.enable = true;
     tmux.enable = true;
