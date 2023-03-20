@@ -35,10 +35,15 @@
 
   outputs = { self, deadnix, dotfiles, emacs, nixpkgs, flake-utils, home-manager, darwin, soclip, ... }:
     let
-      overlays =
-        [ deadnix.overlays.default emacs.overlay soclip.overlays.default ]
-        ++ import ./overlays/my-emacs.nix
-        ++ import ./overlays/restream.nix;
+      overlays = [
+        deadnix.overlays.default
+        emacs.overlay
+        soclip.overlays.default
+      ] ++ [
+        (_: _:
+          { emacs-xclip-soclip-support = soclip.patches.emacs-xclip-support; }
+        )
+      ] ++ import ./overlays/my-emacs.nix ++ import ./overlays/restream.nix;
       all-systems = flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ]
         (system: {
           packages = import nixpkgs { inherit system overlays; };

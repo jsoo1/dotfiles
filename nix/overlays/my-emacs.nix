@@ -13,7 +13,7 @@ let
         src = pkgs.stdenv.mkDerivation {
           name = o.src.name;
           src = o.src;
-          patches = [ ./xclip-soclip-support.patch ];
+          patches = [ pkgs.emacs-xclip-soclip-support ];
           installPhase = ''
             mkdir xclip-${o.version}
             mv *.el xclip-${o.version}
