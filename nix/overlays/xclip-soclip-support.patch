@@ -4,7 +4,7 @@
     (and (executable-find "xclip") 'xclip)
     (and (executable-find "xsel") 'xsel)
     (and (executable-find "wl-copy") 'wl-copy) ;github.com/bugaevc/wl-clipboard
-+   (and (executable-find "sopaste") 'soclip)
++   (and (executable-find "sopaste") 'sopaste)
     (and (executable-find "termux-clipboard-get") 'termux-clipboard-get)
     (and (fboundp 'x-create-frame) (getenv "DISPLAY") 'emacs)
     (and (eq system-type 'gnu/linux) ;FIXME: How do we detect WSL?
@@ -12,7 +12,7 @@
            (const :tag "X11: xclip" xclip)
            (const :tag "X11: xsel" xsel)
            (const :tag "Wayland: wl-copy" wl-copy)
-+          (const :tag "soclip: soclip" soclip)
++          (const :tag "sopaste: sopaste" sopaste)
            (const :tag "Termux: termux-clipboard-get/set" termux-clipboard-get)
            (const :tag "WSL: clip.exe/powershell.exe" powershell)
            (const :tag "X11: Emacs" emacs)))
@@ -20,9 +20,9 @@
                   (apply #'start-process
                          "wl-copy" nil xclip-program
                          (if (memq type '(primary PRIMARY)) '("-p")))))
-+              (`soclip
++              (`sopaste
 +               (start-process
-+                "soclip" nil (replace-regexp-in-string
++                "socopy" nil (replace-regexp-in-string
 +                              "\\(.*\\)sopaste" "\\1socopy"
 +                              xclip-program 'fixedcase)))
                (`termux-clipboard-get
@@ -32,7 +32,7 @@
                    ;;    automatically enabled for non-text content types and
                    ;;    when using the --watch mode.
                    "-n" (if (memq type '(primary PRIMARY)) '("-p")))))
-+        (`soclip
++        (`sopaste
 +         (call-process xclip-program nil standard-output nil))
          (`termux-clipboard-get
           (when (memq type '(clipboard CLIPBOARD))
