@@ -234,7 +234,8 @@
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
-        "nixpkgs": "nixpkgs_3"
+        "nixpkgs": "nixpkgs_3",
+        "soclip": "soclip"
       }
     },
     "rust-analyzer-src": {
@@ -252,6 +253,22 @@
         "ref": "nightly",
         "repo": "rust-analyzer",
         "type": "github"
+      }
+    },
+    "soclip": {
+      "locked": {
+        "lastModified": 1679273517,
+        "narHash": "sha256-mG55FcUpfemR0SnfGP2j8mhV2IcuC3ONnAgQHrDag9Q=",
+        "ref": "release",
+        "rev": "99bdc673c7364f82f80872e8432918278e5f63a8",
+        "revCount": 1,
+        "type": "git",
+        "url": "https://git.sr.ht/~jsoo/soclip"
+      },
+      "original": {
+        "ref": "release",
+        "type": "git",
+        "url": "https://git.sr.ht/~jsoo/soclip"
       }
     },
     "utils": {

@@ -30,12 +30,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.utils.follows = "flake-utils";
     };
+    soclip.url = "git+https://git.sr.ht/~jsoo/soclip?ref=release";
   };
 
-  outputs = { self, deadnix, dotfiles, emacs, nixpkgs, flake-utils, home-manager, darwin, ... }:
+  outputs = { self, deadnix, dotfiles, emacs, nixpkgs, flake-utils, home-manager, darwin, soclip, ... }:
     let
       overlays =
-        [ deadnix.overlays.default emacs.overlay (import ./soclip/overlay.nix) ]
+        [ deadnix.overlays.default emacs.overlay soclip.overlays.default ]
         ++ import ./overlays/my-emacs.nix
         ++ import ./overlays/restream.nix;
       all-systems = flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ]
@@ -65,7 +66,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.users."johh.soo" = import ./home.nix;
-            home-manager.extraSpecialArgs = { inherit dotfiles; };
+            home-manager.extraSpecialArgs = { inherit dotfiles soclip; };
           }
           ./darwin.nix
         ];
@@ -77,7 +78,7 @@
           ./home.nix
           { home = { username = "john"; homeDirectory = "/home/john"; }; }
         ];
-        extraSpecialArgs = { inherit dotfiles; };
+        extraSpecialArgs = { inherit dotfiles soclip; };
       };
 
       nixosConfigurations.vbox = packages.x86_64-linux.nixos {
@@ -120,7 +121,7 @@
             home-manager.verbose = true;
             home-manager.useGlobalPkgs = true;
             home-manager.users.john = import ./home.nix;
-            home-manager.extraSpecialArgs = { inherit dotfiles; };
+            home-manager.extraSpecialArgs = { inherit dotfiles soclip; };
           }
         ];
       };

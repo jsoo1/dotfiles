@@ -1,4 +1,4 @@
-{ pkgs, dotfiles, config, lib, ... }:
+{ pkgs, dotfiles, soclip, config, lib, ... }:
 let
   inherit (pkgs.stdenv.hostPlatform) isLinux isDarwin;
 
@@ -20,7 +20,7 @@ in
   imports = [
     ./env.nix
     ./bash.nix
-    ./soclip
+    soclip.homeManagerModules.default
     ./ssh-auth-sock.nix
   ];
 
