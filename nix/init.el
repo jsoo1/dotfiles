@@ -55,6 +55,9 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 ;; No tabs
 (setq-default indent-tabs-mode nil)
 
+;;; Enable narrow-to-region
+(put 'narrow-to-region 'disabled nil)
+
 ;; Cursor
 (setq cursor-type 'box)
 (blink-cursor-mode 0)
