@@ -434,6 +434,8 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
                     :background "unspecified-bg")
 (set-face-attribute 'smerge-lower nil
                     :background "unspecified-bg")
+(set-face-attribute 'smerge-markers nil
+                    :background "unspecified-bg")
 (set-face-attribute 'smerge-refined-added nil
                     :foreground my-green
                     :background "unspecified-bg"
