@@ -429,6 +429,20 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 (require 'eshell-syntax-highlighting)
 (eshell-syntax-highlighting-global-mode 1)
 
+;; Smerge
+(set-face-attribute 'smerge-upper nil
+                    :background "unspecified-bg")
+(set-face-attribute 'smerge-lower nil
+                    :background "unspecified-bg")
+(set-face-attribute 'smerge-refined-added nil
+                    :foreground my-green
+                    :background "unspecified-bg"
+                    :weight 'bold)
+(set-face-attribute 'smerge-refined-removed nil
+                    :foreground my-red
+                    :background "unspecified-bg"
+                    :weight 'bold)
+
 ;; Indentation guides
 (setq highlight-indent-guides-method 'character
       highlight-indent-guides-auto-enabled nil)
