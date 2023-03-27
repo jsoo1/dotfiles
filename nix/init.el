@@ -267,6 +267,12 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
     (eshell-mode))
   (pop-to-buffer eshell-buffer-name))
 
+(with-eval-after-load 'term
+  (set-face-attribute 'term nil
+                      :background "unspecified-bg")
+  (set-face-attribute 'term-color-black nil
+                      :background "unspecified-bg"))
+
 ;; Window management
 ;; Split windows vertically by default, see:
 ;; https://stackoverflow.com/questions/20167246/emacs-open-buffer-in-vertical-split-by-default
@@ -515,6 +521,7 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 (evil-set-initial-state 'org-agenda-mode 'motion)
 (evil-set-initial-state 'erc-mode 'normal)
 (evil-set-initial-state 'eshell-mode 'insert)
+(evil-set-initial-state 'term-mode 'normal)
 (evil-set-initial-state 'tab-switcher-mode 'emacs)
 (evil-set-initial-state 'reb-mode 'normal)
 (evil-set-initial-state 'tar-mode 'motion)
