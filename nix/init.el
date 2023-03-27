@@ -246,7 +246,7 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
         (concat
          (propertize (eshell/whoami) 'face `(:foreground ,my-base1))
          " "
-         (propertize (replace-regexp-in-string (concat "^" (getenv "HOME")) "~" (eshell/pwd))
+         (propertize (eshell/basename (eshell/pwd))
                      'face `(:foreground ,my-blue))
          " "
          (propertize (condition-case nil
