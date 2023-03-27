@@ -232,7 +232,10 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 (add-hook 'eshell-mode-hook
           (defun my-eshell-set-keybindings ()
             (interactive)
-            (define-key eshell-mode-map (kbd "C-l") #'my-eshell-clear-scrollback)))
+            (evil-define-key 'insert eshell-mode-map (kbd "M-C-l") #'my-eshell-clear-scrollback)
+            (evil-define-key 'normal eshell-mode-map (kbd "M-C-l") #'my-eshell-clear-scrollback)
+            (evil-define-key 'insert eshell-mode-map (kbd "M-C-d") #'kill-buffer-and-window)
+            (evil-define-key 'normal eshell-mode-map (kbd "M-C-d") #'kill-buffer-and-window)))
 
 (setq initial-buffer-choice (lambda () (get-buffer-create "*eshell*"))
       eshell-highlight-prompt nil
@@ -510,7 +513,7 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 (evil-set-initial-state 'comint-mode 'normal)
 (evil-set-initial-state 'org-agenda-mode 'motion)
 (evil-set-initial-state 'erc-mode 'normal)
-(evil-set-initial-state 'eshell-mode 'normal)
+(evil-set-initial-state 'eshell-mode 'insert)
 (evil-set-initial-state 'tab-switcher-mode 'emacs)
 (evil-set-initial-state 'reb-mode 'normal)
 (evil-set-initial-state 'tar-mode 'motion)
@@ -1355,7 +1358,6 @@ when send commands with redis protocol."
 (setq shackle-rules '((compilation-mode :noselect t :align right :other t)
                       (Man-mode :select t :popup t :align right :size 0.5 :other t)
                       (woman-mode :select t :popup t :align right :size 0.5 :other t)
-                      (eshell-mode :popup t :select t :align right :size 0.5 :other t)
                       (helpful-mode :align right)
                       (org-agenda-mode :select 1 :size 1.0)))
 (shackle-mode)
@@ -1654,7 +1656,7 @@ respectively."
   "b" switch-to-buffer
   "B" switch-to-buffer-other-window
   "c" my-switch-to-compile-buffer
-  "d" kill-current-buffer
+  "d" kill-buffer-and-window
   "i" ibuffer
   "k" kill-buffer
   "m" (defun switch-to-messages-buffer ()
@@ -1851,7 +1853,9 @@ respectively."
                  (progn (split-window-vertically) (balance-windows))))
        ("'" . ,(defun pop-to-eshell ()
                  (interactive)
-                 (my-side-eshell '((side . right) (slot . 1))) (balance-windows)))
+                 (if (project-current)
+                     (project-eshell-other-window)
+                   (my-side-eshell '((side . right) (slot . 1))) (balance-windows))))
        ("c" . make-frame)
        ("d" . ,(defun my-delete-window ()
                  (interactive) (progn (delete-window) (balance-windows))))
