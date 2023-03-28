@@ -132,7 +132,7 @@ EndSection\n")
 
 (operating-system
   (host-name "ecenter")
-  (timezone "America/Los_Angeles")
+  (timezone "America/Denver")
   (locale "en_US.utf8")
   (keyboard-layout ctrl-nocaps)
   (initrd-modules %base-initrd-modules)
