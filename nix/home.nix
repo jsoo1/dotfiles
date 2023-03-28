@@ -49,6 +49,7 @@ in
       ".haskeline".source = "${dotfiles}/ghci/.haskeline";
       ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
       ".vimrc".source = "${dotfiles}/minimal/.vimrc";
+      ".emacs.d/eshell/aliases".source = "${dotfiles}/emacs/eshell/alias";
       ".emacs.d/feeds" = lib.mkIf isDarwin {
         recursive = true;
         source = "${dotfiles}/rss";
