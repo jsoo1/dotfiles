@@ -235,7 +235,10 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 (add-hook 'eshell-mode-hook
           (defun my-eshell-set-keybindings ()
             (interactive)
-            (define-key eshell-mode-map (kbd "C-l") #'my-eshell-clear-scrollback)))
+            (evil-define-key 'insert eshell-mode-map (kbd "M-C-l") #'my-eshell-clear-scrollback)
+            (evil-define-key 'normal eshell-mode-map (kbd "M-C-l") #'my-eshell-clear-scrollback)
+            (evil-define-key 'insert eshell-mode-map (kbd "M-C-d") #'kill-buffer-and-window)
+            (evil-define-key 'normal eshell-mode-map (kbd "M-C-d") #'kill-buffer-and-window)))
 
 (when (and (executable-find "fish")
            (require 'fish-completion nil t))
@@ -250,7 +253,7 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
         (concat
          (propertize (eshell/whoami) 'face `(:foreground ,my-base1))
          " "
-         (propertize (replace-regexp-in-string (concat "^" (getenv "HOME")) "~" (eshell/pwd))
+         (propertize (eshell/basename (eshell/pwd))
                      'face `(:foreground ,my-blue))
          " "
          (propertize (condition-case nil
@@ -270,6 +273,12 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
     (display-buffer-in-side-window (current-buffer) props)
     (eshell-mode))
   (pop-to-buffer eshell-buffer-name))
+
+(with-eval-after-load 'term
+  (set-face-attribute 'term nil
+                      :background "unspecified-bg")
+  (set-face-attribute 'term-color-black nil
+                      :background "unspecified-bg"))
 
 ;; Window management
 ;; Split windows vertically by default, see:
@@ -431,6 +440,23 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 ;; Eshell syntax highlighting
 (eshell-syntax-highlighting-global-mode 1)
 
+;; Smerge
+(with-eval-after-load 'smerge
+  (set-face-attribute 'smerge-upper nil
+                      :background "unspecified-bg")
+  (set-face-attribute 'smerge-lower nil
+                      :background "unspecified-bg")
+  (set-face-attribute 'smerge-markers nil
+                      :background "unspecified-bg")
+  (set-face-attribute 'smerge-refined-added nil
+                      :foreground my-green
+                      :background "unspecified-bg"
+                      :weight 'bold)
+  (set-face-attribute 'smerge-refined-removed nil
+                      :foreground my-red
+                      :background "unspecified-bg"
+                      :weight 'bold))
+
 ;; Indentation guides
 (setq highlight-indent-guides-method 'character
       highlight-indent-guides-auto-enabled nil)
@@ -495,7 +521,8 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 (evil-set-initial-state 'comint-mode 'normal)
 (evil-set-initial-state 'org-agenda-mode 'motion)
 (evil-set-initial-state 'erc-mode 'normal)
-(evil-set-initial-state 'eshell-mode 'normal)
+(evil-set-initial-state 'eshell-mode 'insert)
+(evil-set-initial-state 'term-mode 'normal)
 (evil-set-initial-state 'tab-switcher-mode 'emacs)
 (evil-set-initial-state 'reb-mode 'normal)
 (evil-set-initial-state 'tar-mode 'motion)
@@ -1362,7 +1389,6 @@ when send commands with redis protocol."
 (setq shackle-rules '((compilation-mode :noselect t :align right :other t)
                       (Man-mode :select t :popup t :align right :size 0.5 :other t)
                       (woman-mode :select t :popup t :align right :size 0.5 :other t)
-                      (eshell-mode :popup t :select t :align right :size 0.5 :other t)
                       (helpful-mode :align right)
                       (org-agenda-mode :select 1 :size 1.0)))
 (shackle-mode)
@@ -1661,7 +1687,7 @@ respectively."
   "b" switch-to-buffer
   "B" switch-to-buffer-other-window
   "c" my-switch-to-compile-buffer
-  "d" kill-current-buffer
+  "d" kill-buffer-and-window
   "i" ibuffer
   "k" kill-buffer
   "m" (defun switch-to-messages-buffer ()
@@ -1858,7 +1884,9 @@ respectively."
                  (progn (split-window-vertically) (balance-windows))))
        ("'" . ,(defun pop-to-eshell ()
                  (interactive)
-                 (my-side-eshell '((side . right) (slot . 1))) (balance-windows)))
+                 (if (project-current)
+                     (project-eshell-other-window)
+                   (my-side-eshell '((side . right) (slot . 1))) (balance-windows))))
        ("c" . make-frame)
        ("d" . ,(defun my-delete-window ()
                  (interactive) (progn (delete-window) (balance-windows))))
