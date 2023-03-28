@@ -237,6 +237,8 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
             (evil-define-key 'insert eshell-mode-map (kbd "M-C-d") #'kill-buffer-and-window)
             (evil-define-key 'normal eshell-mode-map (kbd "M-C-d") #'kill-buffer-and-window)))
 
+(add-hook 'eshell-mode-hook #'toggle-truncate-lines-off)
+
 (setq initial-buffer-choice (lambda () (get-buffer-create "*eshell*"))
       eshell-highlight-prompt nil
       eshell-prompt-regexp "^[^λ]* [λ] "
