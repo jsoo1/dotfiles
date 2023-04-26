@@ -19,6 +19,12 @@ let
     owner = "johh.soo";
   };
 
+  machines = {
+    file = pkgs.copyPathToStore ./machines.age;
+    path = "/etc/nix/machines";
+    owner = "root";
+  };
+
 in
 {
   imports = [ ./env.nix ];
@@ -43,7 +49,7 @@ in
 
   age = {
     sshKeyPaths = [ "/Users/johh.soo/.ssh/id_rsa" ];
-    secrets = { inherit nix-conf ssh-conf github; };
+    secrets = { inherit nix-conf ssh-conf github machines; };
   };
 
   services.nix-daemon = {
@@ -58,6 +64,7 @@ in
       experimental-features = nix-command flakes
       system-features = benchmark big-parallel local nixos-test
       builders-use-substitutes = true
+      builders = @/etc/nix/machines
     '';
   };
 
