@@ -25,6 +25,13 @@ let
     owner = "root";
   };
 
+  ssh-known-hosts = {
+    file = pkgs.copyPathToStore ./ssh_known_hosts.age;
+    path = "/etc/ssh/ssh_known_hosts";
+    owner = "root";
+    group = "root";
+    mode = "0444";
+  };
 in
 {
   imports = [ ./env.nix ];
@@ -49,7 +56,7 @@ in
 
   age = {
     sshKeyPaths = [ "/Users/johh.soo/.ssh/id_rsa" ];
-    secrets = { inherit nix-conf ssh-conf github machines; };
+    secrets = { inherit nix-conf ssh-conf github machines ssh-known-hosts; };
   };
 
   services.nix-daemon = {
