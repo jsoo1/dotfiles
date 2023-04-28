@@ -28,10 +28,6 @@ in
       type = lib.types.listOf lib.types.package;
     };
 
-    go-utilities = lib.mkOption {
-      type = lib.types.listOf lib.types.package;
-    };
-
     macos-quirks = lib.mkOption {
       type = lib.types.listOf lib.types.package;
     };
@@ -69,8 +65,6 @@ in
     ];
 
     haskell-utilities = [ fourmolu ghcid haskell-language-server ];
-
-    go-utilities = [ ];
 
     macos-quirks = [
       bashInteractive

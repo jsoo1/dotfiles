@@ -33,7 +33,6 @@ in
     packages = lib.concatLists [
       config.haskell-utilities
       config.c-utilities
-      config.go-utilities
       config.nix-utilities
       config.socket-utilities
       config.terraform-utilities
