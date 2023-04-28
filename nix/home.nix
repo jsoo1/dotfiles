@@ -8,11 +8,12 @@ let
       email = "john.soo@arista.com";
       signingkey = "71F4C27CC2540312F69F553FD8A148F8CE4DDBC2";
     };
-    core = { editor = "${pkgs.neovim}/bin/nvim"; };
-    diff = { renames = true; };
-    github = { user = "jsoo1"; };
-    commit = { gpgsign = true; };
-    branch = { autoSetupMerge = false; };
+    core.editor = "${pkgs.neovim}/bin/nvim";
+    diff.renames = true;
+    github.user = "jsoo1";
+    commit.gpgsign = true;
+    branch.autoSetupMerge = false;
+    advice.detachedHead = false;
   };
 
 in
