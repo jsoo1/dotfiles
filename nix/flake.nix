@@ -52,7 +52,7 @@
     , ...
     }:
     let
-      overlays = [
+      overlays' = [
         deadnix.overlays.default
         emacs.overlay
         soclip.overlays.default
@@ -64,14 +64,14 @@
       ] ++ import ./overlays/my-emacs.nix ++ import ./overlays/restream.nix;
       all-systems = flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ]
         (system: {
-          packages = import nixpkgs { inherit system overlays; };
+          packages = import nixpkgs { inherit system; overlays = overlays'; };
         });
     in
     rec {
       inherit (all-systems) packages;
 
       overlays.default = pkgsFinal: pkgsPrev:
-        pkgsPrev.lib.composeManyExtensions overlays pkgsFinal pkgsPrev;
+        pkgsPrev.lib.composeManyExtensions overlays' pkgsFinal pkgsPrev;
 
       # Single home-manager reconfigure command for flakeless systems.
       # Usage: `nix-shell ~/dotfiles/nix/shell.nix`
