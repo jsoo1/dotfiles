@@ -70,7 +70,7 @@
     rec {
       inherit (all-systems) packages;
 
-      overlay = pkgsFinal: pkgsPrev:
+      overlays.default = pkgsFinal: pkgsPrev:
         pkgsPrev.lib.composeManyExtensions overlays pkgsFinal pkgsPrev;
 
       # Single home-manager reconfigure command for flakeless systems.
@@ -83,7 +83,7 @@
         system = "x86_64-darwin";
         modules = [
           ({ pkgs, ... }: {
-            nixpkgs = { inherit overlays; };
+            nixpkgs.overlays = overlays.default;
           })
           home-manager.darwinModules.home-manager
           {
