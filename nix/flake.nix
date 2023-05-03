@@ -30,15 +30,33 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.utils.follows = "flake-utils";
     };
+    nil = {
+      url = "github:oxalica/nil";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
     soclip.url = "git+https://git.sr.ht/~jsoo/soclip?ref=release";
   };
 
-  outputs = { self, deadnix, dotfiles, emacs, nixpkgs, flake-utils, home-manager, darwin, soclip, ... }:
+  outputs =
+    { self
+    , deadnix
+    , dotfiles
+    , emacs
+    , nil
+    , nixpkgs
+    , flake-utils
+    , home-manager
+    , darwin
+    , soclip
+    , ...
+    }:
     let
       overlays = [
         deadnix.overlays.default
         emacs.overlay
         soclip.overlays.default
+        nil.overlays.nil
       ] ++ [
         (_: _:
           { emacs-xclip-soclip-support = soclip.patches.emacs-xclip-support; }
