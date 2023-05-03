@@ -15,7 +15,7 @@
       url = "github:edolstra/flake-compat";
     };
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs.url = "github:jsoo1/nixpkgs/release";
+    nixpkgs.url = "github:jsoo1/nixpkgs/release-2023-05-03";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
