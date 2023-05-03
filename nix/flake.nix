@@ -21,7 +21,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
-      url = "github:jsoo1/nix-darwin/2023-01-31";
+      url = "github:jsoo1/nix-darwin/2023-05-03";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
