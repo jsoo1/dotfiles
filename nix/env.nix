@@ -7,7 +7,7 @@ let
     bash-completion bashInteractive binutils bottom cachix ccls
     coreutils deadnix dogdns du-dust exa fd findutils gawk gdb ghcid
     git graphviz-nox gnutar haskell-language-server iosevka
-    less libressl man-pages man-pages-posix neovim nix-diff
+    less libressl man-pages man-pages-posix neovim nil nix-diff
     nix-prefetch nix-top nix-tree nixpkgs-fmt oil peep perl procps pv
     rage recutils restream ripgrep rnix-lsp rr rsync shellcheck socat
     tealdeer terraform-ls unar watch;
@@ -82,6 +82,7 @@ in
 
     nix-utilities = [
       deadnix
+      nil
       nixpkgs-fmt
       nix-diff
       nix-prefetch
