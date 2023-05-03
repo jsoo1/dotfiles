@@ -29,7 +29,6 @@ let
     file = pkgs.copyPathToStore ./ssh_known_hosts.age;
     path = "/etc/ssh/ssh_known_hosts";
     owner = "root";
-    group = "root";
     mode = "0444";
   };
 in
