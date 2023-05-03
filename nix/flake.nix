@@ -83,7 +83,7 @@
         system = "x86_64-darwin";
         modules = [
           ({ pkgs, ... }: {
-            nixpkgs.overlays = overlays.default;
+            nixpkgs.overlays = [ overlays.default ];
           })
           home-manager.darwinModules.home-manager
           {
