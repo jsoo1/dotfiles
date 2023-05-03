@@ -70,7 +70,7 @@ in
 
     haskell-utilities = [ fourmolu ghcid haskell-language-server ];
 
-    go-utilities = [ go gopls ];
+    go-utilities = [ ];
 
     macos-quirks = [
       bashInteractive
