@@ -27,13 +27,9 @@ let
     };
 
   skim-cmds = {
-    projects = ''
-      fd '.git$' ~ -I -t d -t f -d 3 -H -x dirname | sk | tr -d '\n'
-    '';
+    projects = "fd '.git$' ~ -I -t d -t f -d 3 -H -x dirname | sk | tr -d '\n'";
     files = "fd '.*' '.' --hidden -E '.git*' | sk";
-    history = ''
-      history | sk --tac --no-sort | awk '{$1=""}1'
-    '';
+    history = "history | sk --tac --no-sort | awk '{$1=\"\"}1'";
   };
 in
 {
