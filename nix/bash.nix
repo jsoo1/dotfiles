@@ -84,10 +84,14 @@ in
           (git branch 2>/dev/null | awk '/^\*/ { $1=""; print $0 }') || echo ""
         }
 
-        PS0=$([[ "" != $BASH_VERSION ]] && echo -n '\D{%F %T%z}\n' || echo $PS0)
-        PS1="$([[ "" != $BASH_VERSION ]] && echo -n '\D{%F %T%z}\n' || echo -n "")${fmt bold bold "\\u@"}${fmt red cyan "\\h"} \\W${
+        PS1="${fmt bold bold "\\u@"}${fmt red cyan "\\h"} \\W${
           fmt yellow purple "\\$(_cbr)"
         } $ "
+
+        if [[ "" != $BASH_VERSION ]]; then
+          PS0="$(echo -n '\D{%F %T%z}\n')"
+          PS1="$(echo -n '\D{%F %T%z}\n')$PS1"
+        fi
       '';
   };
 }
