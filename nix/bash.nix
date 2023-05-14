@@ -78,7 +78,7 @@ in
           ${bind-key "C-o" (set-prompt-to "tmux-projects")}
           ${bind-key "C-t" (set-prompt-to "skim-files")}
           ${bind-key "C-r" (set-prompt-to "skim-history")}
-          ${bind-key "C-/" (set-prompt-to "skim-rg")}
+          ${bind-key "e/" (set-prompt-to "skim-rg")}
           bind -r '\ec'
         fi
 
