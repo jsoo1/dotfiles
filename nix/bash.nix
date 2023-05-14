@@ -30,6 +30,7 @@ let
     projects = "fd '.git$' ~ -I -t d -t f -d 3 -H -x dirname | sk | tr -d '\n'";
     files = "fd '.*' '.' --hidden -E '.git*' | sk";
     history = "history | sk --tac --no-sort | awk '{$1=\"\"}1'";
+    rg = "sk --ansi -i -c 'rg --color=never --line-number \"{}\" .'";
   };
 in
 {
@@ -67,6 +68,9 @@ in
         skim-history () {
           echo $(${skim-cmds.history})
         }
+        skim-rg () {
+          echo $(${skim-cmds.rg})
+        }
 
         if [[ "" != $BASH_VERSION ]]; then # compat testing for bash (moving to osh)
           # Keybindings
@@ -74,6 +78,7 @@ in
           ${bind-key "C-o" (set-prompt-to "tmux-projects")}
           ${bind-key "C-t" (set-prompt-to "skim-files")}
           ${bind-key "C-r" (set-prompt-to "skim-history")}
+          ${bind-key "C-/" (set-prompt-to "skim-rg")}
           bind -r '\ec'
         fi
 
