@@ -96,6 +96,17 @@ in
       ${config.programs.bash.initExtra}
 
       PS1="[osh] $PS1"
+
+      # direnv breaks in osh because of
+      # https://github.com/oilshell/oil/issues/1607
+      _direnv_hook() {
+        local previous_exit_status=$?;
+        eval "$("/Users/johh.soo/.nix-profile/bin/direnv" export bash)";
+        return $previous_exit_status;
+      };
+      if ! [[ "''${PROMPT_COMMAND:-}" =~ _direnv_hook ]]; then
+        PROMPT_COMMAND="_direnv_hook''${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
+      fi
     '';
   };
 
@@ -103,7 +114,7 @@ in
     autojump.enable = isLinux;
     bat.enable = true;
     direnv.enable = true;
-    direnv.enableBashIntegration = true;
+    direnv.enableBashIntegration = isLinux;
     emacs.enable = true;
     emacs.package = pkgs.my-emacs;
     git.enable = true;
