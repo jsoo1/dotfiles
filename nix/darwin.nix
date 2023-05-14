@@ -31,6 +31,13 @@ let
     owner = "root";
     mode = "0444";
   };
+
+  searches = {
+    file = pkgs.copyPathToStore ./searches.age;
+    path = "/etc/resolver/searches";
+    owner = "root";
+    mode = "0644";
+  };
 in
 {
   imports = [ ./env.nix ];
@@ -55,7 +62,16 @@ in
 
   age = {
     sshKeyPaths = [ "/Users/johh.soo/.ssh/id_rsa" ];
-    secrets = { inherit nix-conf ssh-conf github machines ssh-known-hosts; };
+    secrets = {
+      inherit
+        nix-conf
+        ssh-conf
+        github
+        machines
+        searches
+        ssh-known-hosts
+      ;
+    };
   };
 
   services.nix-daemon = {
