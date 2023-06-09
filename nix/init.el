@@ -534,6 +534,9 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 (evil-declare-not-repeat #'flycheck-next-error)
 (evil-declare-not-repeat #'flycheck-previous-error)
 
+(evil-declare-not-repeat #'flymake-goto-next-error)
+(evil-declare-not-repeat #'flymake-goto-prev-error)
+
 ;; Evil tab motions
 (add-hook 'dired-mode-hook
           (defun fix-dired-tab-motions ()
