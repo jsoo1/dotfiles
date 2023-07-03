@@ -82,6 +82,7 @@ let
       hydra
       idris-mode
       imenu-list
+      jq-mode
       magit
       markdown-mode
       merlin

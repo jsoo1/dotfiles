@@ -444,21 +444,22 @@ Define a keymap named `NAME' and docstring `DOCSTRING' with many
 (eshell-syntax-highlighting-global-mode 1)
 
 ;; Smerge
-(with-eval-after-load 'smerge
-  (set-face-attribute 'smerge-upper nil
-                      :background "unspecified-bg")
-  (set-face-attribute 'smerge-lower nil
-                      :background "unspecified-bg")
-  (set-face-attribute 'smerge-markers nil
-                      :background "unspecified-bg")
-  (set-face-attribute 'smerge-refined-added nil
-                      :foreground my-green
-                      :background "unspecified-bg"
-                      :weight 'bold)
-  (set-face-attribute 'smerge-refined-removed nil
-                      :foreground my-red
-                      :background "unspecified-bg"
-                      :weight 'bold))
+(add-hook 'smerge-mode-hook
+          (defun my-smerge-faces-hook ()
+            (set-face-attribute 'smerge-upper nil
+                                :background "unspecified-bg")
+            (set-face-attribute 'smerge-lower nil
+                                :background "unspecified-bg")
+            (set-face-attribute 'smerge-markers nil
+                                :background "unspecified-bg")
+            (set-face-attribute 'smerge-refined-added nil
+                                :foreground my-green
+                                :background "unspecified-bg"
+                                :weight 'bold)
+            (set-face-attribute 'smerge-refined-removed nil
+                                :foreground my-red
+                                :background "unspecified-bg"
+                                :weight 'bold)))
 
 ;; Indentation guides
 (setq highlight-indent-guides-method 'character
@@ -1095,7 +1096,7 @@ Take newline delimited `STRING' and return list of all
 (setf
  nix-nixfmt-bin "nixpkgs-fmt"
  (alist-get 'nix-mode eglot-server-programs)
- '("rnix-lsp"))
+ '("nil"))
 (defvar nix-format-on-save t
   "Format the nix buffer with nixfmt before saving.")
 (add-hook 'nix-mode-hook #'eglot-ensure)
@@ -1133,6 +1134,11 @@ Take newline delimited `STRING' and return list of all
   rust-imenu-generic-expression))
 
 ;; SQL
+(require 'origami)
+
+(add-hook 'sql-mode-hook #'origami-mode)
+
+(setq sql-sqlite-program "sqlite3")
 ;; Inspired by:
 ;; https://github.com/alezost/emacs-config/blob/master/utils/al-sql.el#L47
 (defun my-sql-password-from-auth-source (_ _ user server _ _)
@@ -1208,6 +1214,10 @@ when send commands with redis protocol."
     (defun clear-redis-buffer ()
       (interactive)
       (with-current-buffer (get-buffer "*redis*") (comint-clear-buffer)))))
+
+;; jq
+(require 'jq-mode)
+(add-to-list 'auto-mode-alist '("\\.jq\\'" . jq-mode))
 
 ;; Xml
 (add-hook 'nxml-mode-hook #'origami-mode)
@@ -1406,6 +1416,7 @@ when send commands with redis protocol."
         "\\*Messages\\*"
         "Output\\*$"
         reb-mode
+        term-mode
         woman-mode
         world-clock-mode))
 (popper-mode 1)
