@@ -86,6 +86,7 @@ let
       magit
       markdown-mode
       merlin
+      meson-mode
       nix-mode
       nodejs-repl
       ob-restclient

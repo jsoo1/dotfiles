@@ -1313,6 +1313,9 @@ when send commands with redis protocol."
           (defun disable-c-flycheck ()
             (flycheck-mode -1)))
 
+;; Meson
+(require 'meson-mode)
+
 ;; Go
 (require 'go-mode)
 (evil-define-key 'normal go-mode-map (kbd ",") 'my-eglot-mode-map)
