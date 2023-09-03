@@ -10,16 +10,42 @@
         ]
       },
       "locked": {
-        "lastModified": 1683148471,
-        "narHash": "sha256-+C6vXQO6kWzAIiRsMRWYcRFuJPsGN/B9qUMkls5kdrc=",
+        "lastModified": 1693756423,
+        "narHash": "sha256-S6pzGIUJDkn+YaznT7ShrUFsJ3skclj33EJYO/3XQ8w=",
         "owner": "jsoo1",
         "repo": "nix-darwin",
-        "rev": "c3557ba7a7472013b48e91800325ce74804b15ae",
+        "rev": "cd7105c6e13c62f1129b860a7536695df2fd27eb",
         "type": "github"
       },
       "original": {
         "owner": "jsoo1",
-        "ref": "2023-05-03",
+        "ref": "jsoo1/release-next",
+        "repo": "nix-darwin",
+        "type": "github"
+      }
+    },
+    "darwin_2": {
+      "inputs": {
+        "flake-utils": [
+          "end-to-end",
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "end-to-end",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1681157331,
+        "narHash": "sha256-oBhw+zDHjL84GbdreC61PAGdh3AIQMCXQQ1iA9uYiCo=",
+        "owner": "jsoo1",
+        "repo": "nix-darwin",
+        "rev": "8c5378f84f10c0e96612740326929d81955f95a5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jsoo1",
+        "ref": "release-99d4187",
         "repo": "nix-darwin",
         "type": "github"
       }
@@ -90,6 +116,26 @@
         "type": "github"
       }
     },
+    "end-to-end": {
+      "inputs": {
+        "darwin": "darwin_2",
+        "flake-utils": "flake-utils",
+        "nixpkgs": "nixpkgs_3"
+      },
+      "locked": {
+        "lastModified": 1685652804,
+        "narHash": "sha256-N1POHMb5VyuNz8S8hkwKYb6MMaM4WaLh8B6AC+w7dQw=",
+        "ref": "8c76a1c8c81d23089d2a6f5a30cb4e1f7c803cf2",
+        "rev": "8c76a1c8c81d23089d2a6f5a30cb4e1f7c803cf2",
+        "revCount": 38069,
+        "type": "git",
+        "url": "file:///Users/johh.soo/projects/end-to-end"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:///Users/johh.soo/projects/end-to-end"
+      }
+    },
     "fenix": {
       "inputs": {
         "nixpkgs": "nixpkgs",
@@ -126,6 +172,21 @@
       }
     },
     "flake-utils": {
+      "locked": {
+        "lastModified": 1649676176,
+        "narHash": "sha256-OWKJratjt2RW151VUlJPRALb7OU2S5s+f0vLj4o1bHM=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "a4b154ebbdc88c8498a5c7b01589addc9e9cb678",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flake-utils_2": {
       "locked": {
         "lastModified": 1659877975,
         "narHash": "sha256-zllb8aq3YO3h8B/U0/J1WBgAL8EX5yWf5pMj3G0NAmc=",
@@ -234,6 +295,22 @@
     },
     "nixpkgs_3": {
       "locked": {
+        "lastModified": 1675226252,
+        "narHash": "sha256-bqx1i5BjFUtZ40Rl0JSho1it5EuYjXUlb5E1/Wt2Tjk=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "03385e36c83abd48821af2a133532a6caedeac75",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "03385e36c83abd48821af2a133532a6caedeac75",
+        "type": "github"
+      }
+    },
+    "nixpkgs_4": {
+      "locked": {
         "lastModified": 1683134765,
         "narHash": "sha256-ZUlkzgQRa9W1Ra2Kdjlu7cToAwz5LIoEAKN8RX1caDg=",
         "owner": "jsoo1",
@@ -254,11 +331,12 @@
         "deadnix": "deadnix",
         "dotfiles": "dotfiles",
         "emacs": "emacs",
+        "end-to-end": "end-to-end",
         "flake-compat": "flake-compat",
-        "flake-utils": "flake-utils",
+        "flake-utils": "flake-utils_2",
         "home-manager": "home-manager",
         "nil": "nil",
-        "nixpkgs": "nixpkgs_3",
+        "nixpkgs": "nixpkgs_4",
         "soclip": "soclip"
       }
     },
@@ -306,11 +384,11 @@
     },
     "soclip": {
       "locked": {
-        "lastModified": 1679510538,
-        "narHash": "sha256-CeNaV4Hf2GJXe9oYICK9WJ220M98o2033fE/gSA0fAo=",
+        "lastModified": 1689022539,
+        "narHash": "sha256-uMQmzMWyjihnocJed8cx2oEuqf0PkwS8qM1sGGqRnDU=",
         "ref": "release",
-        "rev": "2325e95f04b173aa393c298b8cb39207dede91d7",
-        "revCount": 28,
+        "rev": "2cd308b2a5610693b4a49877eaa55c49c324235c",
+        "revCount": 30,
         "type": "git",
         "url": "https://git.sr.ht/~jsoo/soclip"
       },
