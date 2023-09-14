@@ -118,6 +118,7 @@ in
     emacs.enable = true;
     emacs.package = pkgs.my-emacs;
     git.enable = true;
+    git.package = pkgs.gitFull;
     git.extraConfig = gitconfig;
     gpg.enable = true;
     htop.enable = isDarwin;

@@ -1,21 +1,6 @@
-{ config, lib, pkgs, ... }:
+{ lib, pkgs, ... }:
 let
-  inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
-
-  inherit (pkgs)
-
-    bash-completion bashInteractive binutils bottom cachix ccls
-    coreutils deadnix dogdns du-dust exa fd findutils gawk gdb ghcid
-    git graphviz-nox gnutar haskell-language-server iftop iosevka
-    less libressl man-pages man-pages-posix neovim nil nix-diff
-    nix-prefetch nix-top nix-tree nixpkgs-fmt oil peep perl procps pv
-    rage recutils restream ripgrep rnix-lsp rr rsync shellcheck socat
-    tealdeer terraform-ls unar watch;
-
-  inherit (pkgs.haskellPackages) fourmolu;
-
-  inherit (pkgs.linuxPackages) perf;
-
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
 in
 
 {
@@ -54,7 +39,7 @@ in
   };
 
   config = {
-    c-utilities = [
+    c-utilities = with pkgs; [
       gdb
       man-pages
       man-pages-posix
@@ -64,9 +49,9 @@ in
       rr
     ];
 
-    haskell-utilities = [ fourmolu ghcid haskell-language-server ];
+    haskell-utilities = with pkgs; [ haskellPackages.fourmolu ghcid haskell-language-server ];
 
-    macos-quirks = [
+    macos-quirks = with pkgs; [
       bashInteractive
       gnutar
       less
@@ -74,13 +59,12 @@ in
       ripgrep
       findutils
       fd
-      git
       rage
       rsync
       dogdns
     ];
 
-    nix-utilities = [
+    nix-utilities = with pkgs; [
       deadnix
       nil
       nixpkgs-fmt
@@ -91,14 +75,14 @@ in
       rnix-lsp
     ];
 
-    remarkable-utilities = [ restream ];
+    remarkable-utilities = with pkgs; [ restream ];
 
-    socket-utilities = [
+    socket-utilities = with pkgs; [
       libressl # see "nc" in extraOutputsToInstall
       socat
     ];
 
-    shell-utilities = lib.optionals isLinux [ iftop perf ] ++ [
+    shell-utilities = with pkgs; lib.optionals isLinux [ iftop linuxPackages.perf ] ++ [
       bash-completion
       bottom
       cachix
@@ -108,7 +92,7 @@ in
       exa
       fd
       gawk
-      git
+      gitFull
       graphviz-nox
       neovim
       oil
@@ -124,6 +108,6 @@ in
       watch
     ];
 
-    terraform-utilities = [ terraform-ls ];
+    terraform-utilities = with pkgs; [ terraform-ls ];
   };
 }

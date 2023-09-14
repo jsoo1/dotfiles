@@ -34,6 +34,7 @@
   };
 
   programs.git = {
+    package = pkgs.gitFull;
     enable = true;
     config.init.defaultBranch = "main";
   };
@@ -52,24 +53,24 @@
   environment = {
     enableDebugInfo = true;
     variables.EDITOR = "${pkgs.neovim}/bin/nvim";
-    defaultPackages = [
-      pkgs.curl
-      pkgs.direnv
-      pkgs.du-dust
-      pkgs.fd
-      pkgs.git
-      pkgs.htop
-      pkgs.lsof
-      pkgs.man-pages
-      pkgs.man-pages-posix
-      pkgs.neovim
-      pkgs.nixpkgs-fmt
-      pkgs.linuxPackages.perf
-      pkgs.ripgrep
-      pkgs.rr
-      pkgs.strace
-      pkgs.tmux
-      pkgs.watch
+    defaultPackages = with pkgs; [
+      curl
+      direnv
+      du-dust
+      fd
+      gitFull
+      htop
+      lsof
+      man-pages
+      man-pages-posix
+      neovim
+      nixpkgs-fmt
+      linuxPackages.perf
+      ripgrep
+      rr
+      strace
+      tmux
+      watch
     ];
   };
 
