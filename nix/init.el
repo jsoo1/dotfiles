@@ -1092,6 +1092,46 @@ Take newline delimited `STRING' and return list of all
 
 ;; Nix
 (require 'nix-mode)
+
+(defvar my-nix-format-cmd "nixpkgs-fmt")
+
+;; Cribbed from haskell-mode/haskell-commands.el::haskell-mode-buffer-apply-command
+(defun my-nix-format-buffer ()
+  (interactive)
+  (set-buffer-modified-p t)
+  (let* ((out-file (make-temp-file "nixpkgs-fmt-output"))
+         (err-file (make-temp-file "nixpkgs-fmt-error"))
+         (coding-system-for-read 'utf-8)
+         (coding-system-for-write 'utf-8)
+         (cmd (executable-find my-nix-format-cmd)))
+    (if (not cmd)
+        (message "%s not found, doing nothing" my-nix-format-cmd)
+      (unwind-protect
+          (let* ((_errcode
+                  (apply 'call-process-region (point-min) (point-max) cmd nil
+                         `((:file ,out-file) ,err-file)
+                         nil nil))
+                 (err-file-empty-p
+                  (equal 0 (nth 7 (file-attributes err-file))))
+                 (out-file-empty-p
+                  (equal 0 (nth 7 (file-attributes out-file)))))
+            (if err-file-empty-p
+                (if out-file-empty-p
+                    (message "Error: %s produced no output and no error information, leaving buffer alone" cmd)
+                  (insert-file-contents out-file nil nil nil t))
+              (progn
+                (with-current-buffer (get-buffer-create "*my-nix-mode*")
+                  (insert-file-contents err-file)
+                  (buffer-string))
+                (message "Error: %s ended with errors, leaving buffer alone, see *my-nix-mode* buffer for stderr" cmd)
+                (with-temp-buffer
+                  (insert-file-contents err-file)
+                  (display-warning cmd
+                                   (buffer-substring-no-properties (point-min) (point-max))
+                                   :debug)))))
+        (ignore-errors (delete-file err-file))
+        (ignore-errors (delete-file out-file))))))
+
 (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
 (setf
  nix-nixfmt-bin "nixpkgs-fmt"
@@ -1101,11 +1141,9 @@ Take newline delimited `STRING' and return list of all
   "Format the nix buffer with nixfmt before saving.")
 (add-hook 'nix-mode-hook #'eglot-ensure)
 (add-hook 'nix-mode-hook #'highlight-indent-guides-mode)
-(add-hook 'before-save-hook
-          (defun my-nix-format-buffer ()
-            (when (and nix-format-on-save (eq major-mode 'nix-mode))
-              (eglot-format))))
+(add-hook 'before-save-hook #'my-nix-format-buffer)
 (evil-define-key 'normal nix-mode-map (kbd ",") 'my-eglot-mode-map)
+(evil-define-key 'normal nix-mode-map (kbd "C-c C-f") #'my-nix-format-buffer)
 
 ;; Common Lisp
 (with-eval-after-load 'geiser-guile
