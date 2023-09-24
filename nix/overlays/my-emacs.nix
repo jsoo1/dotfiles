@@ -126,14 +126,24 @@ let
         withX = false;
         withGTK2 = false;
         withGTK3 = false;
-        nativeComp = true;
+        withNativeCompilation = true;
         withSQLite3 = true;
         withWebP = false;
+        withTreeSitter = true;
       };
     in
     {
       my-emacs = (emacs.pkgs.emacsWithPackages (epkgs:
-        builtins.concatMap (f: f epkgs) [ (elpa super) manual melpa ]));
+        builtins.concatMap (f: f epkgs) [
+          (elpa super)
+          manual
+          melpa
+        ] ++ [
+          epkgs.nix-ts-mode
+        ] ++ (with super.tree-sitter-grammars; [
+          tree-sitter-nix
+          tree-sitter-haskell
+        ])));
     };
 in
 [ my-emacs-overlay ]
