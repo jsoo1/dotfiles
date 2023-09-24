@@ -1,0 +1,20 @@
+diff --git b/launchk/src/main.rs a/launchk/src/main.rs
+index 453cb4e..1299ac9 100644
+--- b/launchk/src/main.rs
++++ a/launchk/src/main.rs
+@@ -12,7 +12,6 @@ extern crate plist;
+ use clearscreen;
+ use cursive::view::Resizable;
+ use cursive::views::{NamedView, Panel};
+-use git_version::git_version;
+ use std::process::exit;
+
+ use crate::launchd::plist::{init_plist_map, PLIST_MAP_INIT};
+@@ -40,7 +39,7 @@ fn main() {
+     let root_layout = NamedView::new("root_layout", root_layout);
+
+     let panel = Panel::new(root_layout)
+-        .title(format!("launchk ({})", git_version!()))
++        .title(format!("launchk ({})", "@version@"))
+         .full_width()
+         .full_height();

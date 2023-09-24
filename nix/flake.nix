@@ -57,6 +57,9 @@
         emacs.overlay
         soclip.overlays.default
         nil.overlays.nil
+        (self: super: {
+          launchk = super.callPackage ./launchk.nix { };
+        })
       ] ++ [
         (_: _:
           { emacs-xclip-soclip-support = soclip.patches.emacs-xclip-support; }
