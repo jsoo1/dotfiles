@@ -77,8 +77,18 @@
 
       # Single home-manager reconfigure command for flakeless systems.
       # Usage: `nix-shell ~/dotfiles/nix/shell.nix`
-      devShell.x86_64-linux = packages.x86_64-linux.mkShell {
-        shellHook = "${homeConfigurations.john.activationPackage}/activate; exit $?";
+      apps.x86_64-linux.default = {
+        type = "app";
+        program =
+          let
+            activate = packages.x86_64-linux.writeShellApplication {
+              name = "activate-john";
+              text = ''
+                ${homeConfigurations.john.activationPackage}/activate
+              '';
+            };
+          in
+          "${packages.x86_64-linux.lib.getExe activate}";
       };
 
       darwinConfigurations.johhsoo = darwin.lib.darwinSystem {
