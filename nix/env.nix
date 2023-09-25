@@ -54,6 +54,7 @@ in
     macos-quirks = with pkgs; [
       bashInteractive
       gnutar
+      launchk
       less
       neovim
       ripgrep
