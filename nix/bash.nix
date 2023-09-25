@@ -19,8 +19,8 @@ let
       gco = "git checkout";
       gst = "git status";
       glg = "git log";
-      lsa = "exa -la";
-      tree = "exa -Ta";
+      lsa = "eza -la";
+      tree = "eza -Ta";
       vi = "nvim";
       pb = "curl -F c=@- pb";
       psg = "ps -eo pid,user,command | rg";

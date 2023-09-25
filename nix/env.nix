@@ -89,7 +89,7 @@ in
       coreutils
       dogdns
       du-dust
-      exa
+      eza
       fd
       gawk
       gitFull
