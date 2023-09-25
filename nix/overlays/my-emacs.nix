@@ -142,7 +142,8 @@ let
         withX = false;
         withGTK2 = false;
         withGTK3 = false;
-        withNativeCompilation = self.stdenv.hostPlatform.isLinux;
+        # Workaround for https://github.com/nix-community/emacs-overlay/issues/318
+        withNativeCompilation = false;
         withSQLite3 = true;
         withWebP = false;
         withTreeSitter = true;
