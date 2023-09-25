@@ -303,10 +303,10 @@
     },
     "soclip": {
       "locked": {
-        "lastModified": 1689022539,
-        "narHash": "sha256-uMQmzMWyjihnocJed8cx2oEuqf0PkwS8qM1sGGqRnDU=",
+        "lastModified": 1689024070,
+        "narHash": "sha256-fvb9BSfok28VSWcsucv1izj9ijGZAnNv+QfgCFapCE8=",
         "ref": "release",
-        "rev": "2cd308b2a5610693b4a49877eaa55c49c324235c",
+        "rev": "3e7f9e67a9846c413b7529553bab2ad17d71dc26",
         "revCount": 30,
         "type": "git",
         "url": "https://git.sr.ht/~jsoo/soclip"
