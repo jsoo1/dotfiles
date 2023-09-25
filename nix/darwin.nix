@@ -27,7 +27,7 @@ let
 
   ssh-known-hosts = {
     file = pkgs.copyPathToStore ./ssh_known_hosts.age;
-    path = "/etc/ssh/ssh_known_hosts";
+    path = "/etc/ssh/ssh_known_hosts2";
     owner = "root";
     mode = "0444";
   };
