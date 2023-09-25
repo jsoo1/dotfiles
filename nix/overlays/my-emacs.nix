@@ -82,7 +82,16 @@ let
       graphql-mode
       graphviz-dot-mode
       guix
-      haskell-mode
+      (haskell-mode.overrideAttrs (o: {
+        # Fixes use of removed function.
+        # Check this next update
+        src = pkgs.fetchFromGitHub {
+          owner = "jsoo1";
+          repo = "haskell-mode";
+          rev = "3ece1f3c40b7428c976596e805a3384fa0673ee8";
+          hash = "sha256-H1H26Kepxp1+cP9ysUUaBtHEnXwLL5icpfbOvNhnpNQ=";
+        };
+      }))
       haskell-snippets
       helpful
       highlight-indent-guides
