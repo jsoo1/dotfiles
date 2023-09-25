@@ -30,7 +30,7 @@ let
       # cedille - Broken
       agda2-mode
     ];
-  melpa = { melpaPackages, ... }:
+  melpa = pkgs: { melpaPackages, ... }:
     with melpaPackages; [
       aio
       anzu
@@ -56,7 +56,14 @@ let
       envrc
       eredis
       eshell-syntax-highlighting
-      evil
+      (evil.overrideAttrs (o: {
+        src = pkgs.fetchFromGitHub {
+          owner = "jsoo1";
+          repo = "evil";
+          rev = "dc48c6917b05040815f6cafc3ae25f550f1cd11d";
+          hash = "sha256-qap0zbqaf/uPt0IbyyG99G5kzcX0odta8jlr/y+1FRQ=";
+        };
+      }))
       evil-anzu
       evil-collection
       evil-commentary
@@ -126,7 +133,7 @@ let
         withX = false;
         withGTK2 = false;
         withGTK3 = false;
-        withNativeCompilation = true;
+        withNativeCompilation = self.stdenv.hostPlatform.isLinux;
         withSQLite3 = true;
         withWebP = false;
         withTreeSitter = true;
@@ -137,7 +144,7 @@ let
         builtins.concatMap (f: f epkgs) [
           (elpa super)
           manual
-          melpa
+          (melpa super)
         ] ++ [
           epkgs.nix-ts-mode
         ] ++ (with super.tree-sitter-grammars; [
