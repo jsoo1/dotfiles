@@ -97,6 +97,7 @@ in
       graphviz-nox
       neovim
       oil
+      parallel
       peep
       perl # for skim (???)
       pv
