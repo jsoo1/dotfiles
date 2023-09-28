@@ -1812,7 +1812,7 @@ respectively."
   "C-o" #'elfeed-load-opml)
 
 (define-keymap :prefix 'my-eglot-mode-map
-  "a" 'eglot-code-actions
+  "a" #'eglot-code-actions
   "b" (define-keymap :prefix 'my-eglot-buffer-map
         "e" #'eglot-events-buffer
         "d" #'eglot-stderr-buffer)
