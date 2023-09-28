@@ -1092,33 +1092,31 @@ Take newline delimited `STRING' and return list of all
          (coding-system-for-read 'utf-8)
          (coding-system-for-write 'utf-8)
          (cmd (executable-find my-nix-format-cmd)))
-    (if (not cmd)
-        (message "%s not found, doing nothing" my-nix-format-cmd)
-      (unwind-protect
-          (let* ((_errcode
-                  (apply 'call-process-region (point-min) (point-max) cmd nil
-                         `((:file ,out-file) ,err-file)
-                         nil nil))
-                 (err-file-empty-p
-                  (equal 0 (nth 7 (file-attributes err-file))))
-                 (out-file-empty-p
-                  (equal 0 (nth 7 (file-attributes out-file)))))
-            (if err-file-empty-p
-                (if out-file-empty-p
-                    (message "Error: %s produced no output and no error information, leaving buffer alone" cmd)
-                  (insert-file-contents out-file nil nil nil t))
-              (progn
-                (with-current-buffer (get-buffer-create "*my-nix-mode*")
-                  (insert-file-contents err-file)
-                  (buffer-string))
-                (message "Error: %s ended with errors, leaving buffer alone, see *my-nix-mode* buffer for stderr" cmd)
-                (with-temp-buffer
-                  (insert-file-contents err-file)
-                  (display-warning cmd
-                                   (buffer-substring-no-properties (point-min) (point-max))
-                                   :debug)))))
-        (ignore-errors (delete-file err-file))
-        (ignore-errors (delete-file out-file))))))
+    (unwind-protect
+        (let* ((_errcode
+                (apply 'call-process-region (point-min) (point-max) cmd nil
+                       `((:file ,out-file) ,err-file)
+                       nil nil))
+               (err-file-empty-p
+                (equal 0 (nth 7 (file-attributes err-file))))
+               (out-file-empty-p
+                (equal 0 (nth 7 (file-attributes out-file)))))
+          (if err-file-empty-p
+              (if out-file-empty-p
+                  (message "Error: %s produced no output and no error information, leaving buffer alone" cmd)
+                (insert-file-contents out-file nil nil nil t))
+            (progn
+              (with-current-buffer (get-buffer-create "*my-nix-mode*")
+                (insert-file-contents err-file)
+                (buffer-string))
+              (message "Error: %s ended with errors, leaving buffer alone, see *my-nix-mode* buffer for stderr" cmd)
+              (with-temp-buffer
+                (insert-file-contents err-file)
+                (display-warning cmd
+                                 (buffer-substring-no-properties (point-min) (point-max))
+                                 :debug)))))
+      (ignore-errors (delete-file err-file))
+      (ignore-errors (delete-file out-file)))))
 
 (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
 (setf
@@ -1129,9 +1127,15 @@ Take newline delimited `STRING' and return list of all
   "Format the nix buffer with nixfmt before saving.")
 (add-hook 'nix-mode-hook #'eglot-ensure)
 (add-hook 'nix-mode-hook #'highlight-indent-guides-mode)
-(add-hook 'before-save-hook #'my-nix-format-buffer)
+(add-hook 'nix-mode-hook (defun my-nix-mode-setup ()
+                           (add-hook 'before-save-hook
+                                     (defun maybe-nix-format-buffer ()
+                                       (when nix-format-on-save
+                                         (my-nix-format-buffer)))
+                                     nil
+                                     t)))
 (evil-define-key 'normal nix-mode-map (kbd ",") 'my-eglot-mode-map)
-(evil-define-key 'normal nix-mode-map (kbd "C-c C-f") #'my-nix-format-buffer)
+(define-key nix-mode-map (kbd "C-c C-f") #'my-nix-format-buffer)
 
 ;; Common Lisp
 (with-eval-after-load 'geiser-guile
