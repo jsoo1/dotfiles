@@ -1757,7 +1757,36 @@ respectively."
         "T" #'consult-theme
         "w" #'whitespace-mode
         "x" #'toggle-xclip-mode)
-  "w" 'evil-window-map
+  "w" (define-keymap :keymap evil-window-map
+        "/" (defun my-vsplit ()
+              (interactive)
+              (progn (split-window-horizontally) (balance-windows)))
+        "-" (defun my-split ()
+              (interactive)
+              (progn (split-window-vertically) (balance-windows)))
+        "'" (defun pop-to-eshell ()
+              (interactive)
+              (if (project-current)
+                  (project-eshell-other-window)
+                (my-side-eshell '((side . right) (slot . 1))) (balance-windows)))
+        "c" #'make-frame
+        "d" (defun my-delete-window ()
+              (interactive) (progn (delete-window) (balance-windows)))
+        "D" #'delete-frame
+        "h" #'tmux-pane-omni-window-left
+        "j" #'tmux-pane-omni-window-down
+        "k" #'tmux-pane-omni-window-up
+        "l" #'tmux-pane-omni-window-right
+        "H" #'evil-window-move-far-left
+        "J" #'evil-window-move-very-bottom
+        "K" #'evil-window-move-very-top
+        "L" #'evil-window-move-far-right
+        "m" #'delete-other-windows
+        "p" (defun my-popper-toggle-latest ()
+              (interactive) (popper-toggle-latest) (delete-window))
+        "r" #'winner-redo
+        "u" #'winner-undo
+        "=" #'balance-windows)
   "x" (define-keymap :prefix 'my-text-map
         "d" #'delete-trailing-whitespace
         "p" (define-keymap :prefix 'my-print-map
@@ -1817,39 +1846,6 @@ respectively."
   "s" #'magit-status
   "l" #'magit-log
   "z" #'magit-stash)
-
-(pcase-dolist
-    (`(,key . ,fn)
-     `(("/" . ,(defun my-vsplit ()
-                 (interactive)
-                 (progn (split-window-horizontally) (balance-windows))))
-       ("-" . ,(defun my-split ()
-                 (interactive)
-                 (progn (split-window-vertically) (balance-windows))))
-       ("'" . ,(defun pop-to-eshell ()
-                 (interactive)
-                 (if (project-current)
-                     (project-eshell-other-window)
-                   (my-side-eshell '((side . right) (slot . 1))) (balance-windows))))
-       ("c" . make-frame)
-       ("d" . ,(defun my-delete-window ()
-                 (interactive) (progn (delete-window) (balance-windows))))
-       ("D" . delete-frame)
-       ("h" . tmux-pane-omni-window-left)
-       ("j" . tmux-pane-omni-window-down)
-       ("k" . tmux-pane-omni-window-up)
-       ("l" . tmux-pane-omni-window-right)
-       ("H" . evil-window-move-far-left)
-       ("J" . evil-window-move-very-bottom)
-       ("K" . evil-window-move-very-top)
-       ("L" . evil-window-move-far-right)
-       ("m" . delete-other-windows)
-       ("p" . ,(defun my-popper-toggle-latest ()
-                 (interactive) (popper-toggle-latest) (delete-window)))
-       ("r" . winner-redo)
-       ("u" . winner-undo)
-       ("=" . balance-windows)))
-  (define-key evil-window-map (kbd key) fn))
 
 ;; Reset these to have all the configuration we just did
 (with-current-buffer (get-buffer "*Messages*") (normal-mode))
