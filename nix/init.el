@@ -1805,6 +1805,8 @@ respectively."
   "'" #'eshell
   "/" #'consult-ripgrep)
 
+;; Keymap graveyard
+
 (define-keymap :prefix 'elfeed-load-map
   "o" #'elfeed-load-opml
   "C-o" #'elfeed-load-opml)
