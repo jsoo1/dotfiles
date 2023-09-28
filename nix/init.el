@@ -757,13 +757,12 @@ Take newline delimited `STRING' and return list of all
 ;; Compilation
 (with-eval-after-load 'compile
   (define-key compilation-mode-map (kbd "C-c C-l") #'recompile))
-(add-hook 'compilation-mode-hook
-          (defun toggle-truncate-lines-off ()
-            (toggle-truncate-lines -1)))
+(add-hook 'compilation-mode-hook #'toggle-truncate-lines-off)
 
 ;; Comint
-(define-key comint-mode-map (kbd "C-c C-k" ) #'comint-clear-buffer)
-(define-key comint-mode-map (kbd "C-d") nil)
+(define-keymap :keymap comint-mode-map
+  "C-c C-k" #'comint-clear-buffer
+  "C-d" nil)
 
 ;; Compilation and shell ansi colors
 (require 'xterm-color)
@@ -796,10 +795,9 @@ Take newline delimited `STRING' and return list of all
 (with-eval-after-load 'company
   (progn
     (global-company-mode)
-    (define-key company-active-map (kbd "C-n") 'company-select-next)
-    (define-key company-active-map (kbd "C-p") 'company-select-previous)
-    (define-key company-search-map (kbd "C-n") 'company-select-next)
-    (define-key company-search-map (kbd "C-p") 'company-select-previous)))
+    (define-keymap :keymap company-active-map
+      "C-n" #'company-select-next
+      "C-p" #'company-select-previous)))
 
 ;; Eglot
 (require 'eglot)
@@ -935,7 +933,6 @@ Take newline delimited `STRING' and return list of all
             (flycheck-disable-checker 'haskell-ghc)))
 (add-hook 'haskell-mode-hook #'yas-minor-mode-on)
 ;; (add-hook 'haskell-mode-hook #'interactive-haskell-mode)
-(define-key haskell-mode-map (kbd "C-c C-f") 'haskell-mode-stylish-buffer)
 (add-hook 'haskell-mode-hook #'make-standard-paragraph-rules)
 (add-hook 'haskell-mode-hook #'highlight-indent-guides-mode)
 ;; (add-hook 'haskell-mode-hook #'eglot-ensure)
@@ -944,7 +941,9 @@ Take newline delimited `STRING' and return list of all
   "Hoogle `QUERY' in eww."
   (interactive "sQuery: ")
   (eww (format "%s/?hoogle=%s" eww-hoogle-url (url-encode-url query))))
-(define-key haskell-mode-map (kbd "C-c C-h") #'eww-hoogle)
+(define-keymap :keymap haskell-mode-map
+  "C-c C-h" #'eww-hoogle)
+  "C-c C-f" #'haskell-mode-stylish-buffer
 
 ;; ;; Agda mode
 ;; (load-library (let ((coding-system-for-read 'utf-8))
@@ -1040,8 +1039,9 @@ Take newline delimited `STRING' and return list of all
              imenu-generic-expression
              `(("Module" "^\\s-*\\(module\\|and\\)\\s-+\\(type|rec\\s-+\\)?\\([a-zA-Z0-9_]+\\)" 3)
                ,@imenu-generic-expression))))
-(define-key tuareg-mode-map (kbd "C-c C-o") #'merlin-occurrences)
-(define-key tuareg-mode-map (kbd "C-c C-c") #'merlin-error-next)
+(define-keymap :keymap tuareg-mode-map
+  "C-c C-o" #'merlin-occurrences
+  "C-c C-c" #'merlin-error-next)
 
 ;; ;; Purescript
 ;; (add-to-list 'load-path "~/.emacs.d/private/purescript-mode")
@@ -1197,11 +1197,11 @@ Return nil if credentials not found."
   (progn
     (sql-set-product-feature
      'postgres :prompt-regexp "^.* λ ")
-    (define-key sql-mode-map (kbd "C-c C-i") #'sql-connect)
-    (define-key sql-mode-map (kbd "C-c C-k")
-      (defun clear-sql-buffer ()
-        (interactive)
-        (with-current-buffer sql-buffer (comint-clear-buffer))))))
+    (define-keymap :keymap sql-mode-map
+      "C-c C-i" #'sql-connect
+      "C-c C-k" (defun clear-sql-buffer ()
+                  (interactive)
+                  (with-current-buffer sql-buffer (comint-clear-buffer))))))
 
 ;; Cassandra/CQL
 (add-to-list 'auto-mode-alist '("\\.schema\\'" . cql-mode))
@@ -1237,13 +1237,13 @@ when send commands with redis protocol."
               (and pipe (list "--pipe"))))))
 
 (with-eval-after-load 'redis
-  (define-key redis-mode-map (kbd "C-c C-i") #'redis-cli)
-  (define-key redis-mode-map (kbd "C-c C-c") #'redis-send-paragraph)
-  (define-key redis-mode-map (kbd "C-c C-b") #'redis-send-buffer-content)
-  (define-key redis-mode-map (kbd "C-c C-k")
-    (defun clear-redis-buffer ()
-      (interactive)
-      (with-current-buffer (get-buffer "*redis*") (comint-clear-buffer)))))
+  (define-keymap :keymap redis-mode-map
+    "C-c C-i" #'redis-cli
+    "C-c C-c" #'redis-send-paragraph
+    "C-c C-b" #'redis-send-buffer-content
+    "C-c C-k" (defun clear-redis-buffer ()
+                (interactive)
+                (with-current-buffer (get-buffer "*redis*") (comint-clear-buffer)))))
 
 ;; jq
 (require 'jq-mode)
