@@ -1146,7 +1146,7 @@ Take newline delimited `STRING' and return list of all
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 (setf
  (alist-get 'rust-mode eglot-server-programs)
- `(,(expand-file-name "bin/rust-analyzer" (package-manager-user-profile))))
+ '("rust-analyzer"))
 (evil-define-key 'normal rust-mode-map (kbd ",") 'my-eglot-mode-map)
 (add-hook 'rust-mode-hook #'eglot-ensure)
 (add-hook 'rust-mode-hook #'eldoc-mode)
