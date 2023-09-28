@@ -802,6 +802,28 @@ Take newline delimited `STRING' and return list of all
 ;; Eglot
 (require 'eglot)
 (add-hook 'eglot-managed-mode-hook #'eldoc-mode)
+(define-keymap :prefix 'my-eglot-mode-map
+  "a" #'eglot-code-actions
+  "b" (define-keymap :prefix 'my-eglot-buffer-map
+        "e" #'eglot-events-buffer
+        "d" #'eglot-stderr-buffer)
+  "C" (define-keymap :prefix 'my-eglot-connection-map
+        "e" #'eglot
+        "r" #'eglot-reconnect
+        "x" #'eglot-shutdown)
+  "e" (define-keymap :prefix 'my-flymake-map
+        "l" #'flymake-show-buffer-diagnostics
+        "n" #'flymake-goto-next-error
+        "p" #'flymake-goto-prev-error)
+  "g" (define-keymap :prefix 'my-eglot-find-map
+        "d" #'xref-find-definitions
+        "D" #'xref-find-definitions-other-window
+        "r" #'xref-find-references
+        "t" #'eglot-find-typeDefinition)
+  "f" #'eglot-format
+  "h" #'eldoc
+  "r" #'eglot-rename
+  "X" #'eglot-signal-didChangeConfiguration)
 
 ;; Indentation
 ;; Per http://emacsredux.com/blog/2013/03/27/indent-region-or-buffer/
@@ -1810,29 +1832,6 @@ respectively."
 (define-keymap :prefix 'elfeed-load-map
   "o" #'elfeed-load-opml
   "C-o" #'elfeed-load-opml)
-
-(define-keymap :prefix 'my-eglot-mode-map
-  "a" #'eglot-code-actions
-  "b" (define-keymap :prefix 'my-eglot-buffer-map
-        "e" #'eglot-events-buffer
-        "d" #'eglot-stderr-buffer)
-  "C" (define-keymap :prefix 'my-eglot-connection-map
-        "e" #'eglot
-        "r" #'eglot-reconnect
-        "x" #'eglot-shutdown)
-  "e" (define-keymap :prefix 'my-flymake-map
-        "l" #'flymake-show-buffer-diagnostics
-        "n" #'flymake-goto-next-error
-        "p" #'flymake-goto-prev-error)
-  "g" (define-keymap :prefix 'my-eglot-find-map
-        "d" #'xref-find-definitions
-        "D" #'xref-find-definitions-other-window
-        "r" #'xref-find-references
-        "t" #'eglot-find-typeDefinition)
-  "f" #'eglot-format
-  "h" #'eldoc
-  "r" #'eglot-rename
-  "X" #'eglot-signal-didChangeConfiguration)
 
 (define-keymap :prefix 'my-git-map
   "A" #'magit-cherry-pick
