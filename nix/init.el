@@ -4,30 +4,12 @@
 ;;; use like any ol init.el
 ;;; Code:
 
+(require 'seq)
+
 (defun make-standard-paragraph-rules ()
   "Return `paragraph-separate' and `paragraph-start' to normal."
   (setq-local paragraph-separate "[ \t\f]*$")
   (setq-local paragraph-start "\f\\|[ \t]*$"))
-
-(require 'seq)
-(defmacro define-prefix-keymap (name docstring &rest bindings)
-  "Declaratively create prefix keymaps.
-
-Define a keymap named `NAME' and docstring `DOCSTRING' with many
-`BINDINGS' at once using `define-key'."
-  `(,#'progn
-     (defvar ,name (make-sparse-keymap) ,docstring)
-     (define-prefix-command (quote ,name))
-     ,@(seq-map
-        (lambda (key-fn)
-          `(define-key (quote ,name) ,(car key-fn)
-             (function
-              ,(pcase (cadr key-fn)
-                 ((pred symbolp) (cadr key-fn))
-                 ((pred (lambda (fn) (symbolp (eval fn)))) (eval (cadr key-fn)))
-                 (_ (cadr key-fn))))))
-        (seq-partition bindings 2))
-     (quote ,name)))
 
 ;; Built in GUI elements
 (setq ring-bell-function 'ignore
@@ -889,14 +871,17 @@ Take newline delimited `STRING' and return list of all
 ;; Emacs Lisp Mode
 (with-eval-after-load 'company
   (add-hook 'emacs-lisp-mode-hook #'company-mode 't))
-(define-key emacs-lisp-mode-map (kbd "C-c C-e") #'edebug-defun)
-(define-key emacs-lisp-mode-map (kbd "C-c C-b") #'eval-buffer)
-(define-key emacs-lisp-mode-map (kbd "C-C C-r") #'eval-region)
+(define-keymap :keymap emacs-lisp-mode-map
+  "C-c C-e" #'edebug-defun
+  "C-c C-b" #'eval-buffer
+  "C-C C-r" #'eval-region)
 (add-hook 'emacs-lisp-mode-hook
           (defun setup-elisp-imenu ()
             (setq-local
              imenu-generic-expression
-             `(("Keymap" "^(define-prefix-keymap\\s-+\\([a-z-]+\\)" 1)
+             `(("Leader Keymap" "^(\\(evil-leader/set-key\\)" 1)
+               ("Prefix Keymap" "(define-keymap\\s-+\\(:prefix\\s-+\\)?'\\([a-z-]+\\)" 2)
+               ("Keymap Override" "(define-keymap\\s-+\\(:keymap\\s-+\\)?\\([a-z-]+\\)" 2)
                ("Hydra" "^(defhydra\\+?\\s-+\\([a-z-]+\\)" 1)
                ,@imenu-generic-expression))))
 
@@ -905,14 +890,16 @@ Take newline delimited `STRING' and return list of all
 (add-hook
  'js-mode-hook
  (defun make-js-mode-keys nil
-   (progn
-     (define-key js-mode-map (kbd "C-c C-s") 'nodejs-repl)
-     (define-key js-mode-map (kbd "C-c C-c") 'nodejs-repl-send-last-expression)
-     (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
-     (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
-     (define-key js-mode-map (kbd "C-c C-l") 'nodejs-repl-load-file)
-     (define-key js-mode-map (kbd "C-c C-k") (defun clear-nodejs-buffer () (interactive) (with-current-buffer "*nodejs*" (comint-clear-buffer))))
-     (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl))))
+   (define-keymap :keymap js-mode-map
+     "C-c C-s" 'nodejs-repl
+     "C-c C-c" 'nodejs-repl-send-last-expression
+     "C-c C-j" 'nodejs-repl-send-line
+     "C-c C-r" 'nodejs-repl-send-region
+     "C-c C-l" 'nodejs-repl-load-file
+     "C-c C-k" (defun clear-nodejs-buffer ()
+                 (interactive)
+                 (with-current-buffer "*nodejs*" (comint-clear-buffer)))
+     "C-c C-z" 'nodejs-repl-switch-to-repl)))
 (setq js-indent-level 4)
 
 ;; Coq
@@ -1585,117 +1572,8 @@ respectively."
      ((lambda (x) (concat (substring x 0 3) ":" (substring x 3 5)))
       (format-time-string "%z" time* zone*)))))
 
-;; Zoom
-(defhydra zoom (:hint nil)
-  "zoom"
-  ("+" text-scale-increase "+")
-  ("=" text-scale-increase "+")
-  ("-" text-scale-decrease "-")
-  ("_" text-scale-decrease "-"))
-
 ;; Keybindings
 (evil-leader/set-leader "<SPC>")
-
-(evil-leader/set-key
-  "<SPC>" 'execute-extended-command
-  "TAB" 'evil-switch-to-windows-last-buffer
-  "a" 'my-process-map
-  "b" 'my-buffer-map
-  "c" 'my-consult-map
-  "d" 'my-directory-map
-  "e" 'my-flycheck-map
-  "f" 'my-file-map
-  "g" 'magit-dispatch
-  "G" 'magit-status
-  "h" help-map
-  "i" 'my-insert-map
-  "j" 'my-jump-map
-  "o" 'my-org-map
-  "p" 'my-project-map
-  "q" 'my-quit-map
-  "s" 'my-search-map
-  "t" 'my-toggle-map
-  "w" 'evil-window-map
-  "x" 'my-text-map
-  "y" 'my-yank-map
-  "z" 'zoom/body
-  "'" 'eshell
-  "/" 'consult-ripgrep)
-
-(define-key help-map (kbd "w") #'woman)
-(define-key help-map (kbd "W") #'man)
-(define-key help-map (kbd "i") #'info-lookup-symbol)
-(define-key help-map (kbd "I") #'info-apropos)
-
-(define-prefix-keymap my-directory-map
-  "my directory commands"
-  "d" dired
-  "/" dired-jump-other-window)
-
-(define-prefix-keymap elfeed-load-map
-  "Various ways of loading feeds"
-  "o" elfeed-load-opml
-  (kbd "C-o") elfeed-load-opml)
-
-(define-prefix-keymap my-eglot-find-map
-  "Find things with eglot"
-  "d" xref-find-definitions
-  "D" xref-find-definitions-other-window
-  "r" xref-find-references
-  "t" eglot-find-typeDefinition)
-
-(define-prefix-keymap my-eglot-buffer-map
-  "Goto eglot buffers"
-  "e" eglot-events-buffer
-  "d" eglot-stderr-buffer)
-
-(define-prefix-keymap my-eglot-connection-map
-  "Manage eglot connections."
-  "e" eglot
-  "r" eglot-reconnect
-  "x" eglot-shutdown)
-
-(define-prefix-keymap my-eglot-mode-map
-  "My eglot bindings"
-  "a" eglot-code-actions
-  "b" my-eglot-buffer-map
-  "C" my-eglot-connection-map
-  "e" my-flymake-map
-  "g" my-eglot-find-map
-  "f" eglot-format
-  "h" eldoc
-  "r" eglot-rename
-  "X" eglot-signal-didChangeConfiguration)
-
-(define-prefix-keymap my-emms-map
-  "my emms bindings"
-  "m" emms
-  "p" emms-pause)
-
-(define-prefix-keymap my-process-map
-  "my process keybindings"
-  "&" async-shell-command
-  "a" pulseaudio-control-hydra/body
-  "b" my-debbugs-modes-map
-  "d" docker
-  "e" gnus
-  "f" elfeed
-  "g" guix
-  "G" elpher-go
-  "i" my-erc-map
-  "l" list-processes
-  "m" my-emms-map
-  "o" org-agenda
-  "p" proced
-  "r" re-builder
-  "t" display-time-world
-  "T" list-timers
-  "w" eww)
-
-(define-prefix-keymap my-debbugs-modes-map
-  "my debbugs modes."
-  "o" debbugs-org
-  "b" debbugs-gnu)
 
 (defun my-erc (port)
   "Open my erc configuration using znc on `PORT'."
@@ -1705,212 +1583,236 @@ respectively."
    :port port
    :nick "jsoo"))
 
-(define-prefix-keymap my-erc-map
-  "my erc keybindings"
-  "f" (defun my-erc-freenode ()
-        "Open erc with my configuration for freenode."
-        (interactive)
-        (my-erc 5555))
-  "l" (defun my-erc-libera ()
-        "Open erc with my configuration for libera."
-        (interactive)
-        (my-erc 5556))
-  "o" (defun my-erc-oftc ()
-        "Open erc with my configuration for oftc."
-        (interactive)
-        (my-erc 5557)))
+(evil-leader/set-key
+  "<SPC>" #'execute-extended-command
+  "TAB" #'evil-switch-to-windows-last-buffer
+  "a" (define-keymap :prefix 'my-process-map
+        "&" #'async-shell-command
+        "a" #'pulseaudio-control-hydra/body
+        "b" (define-keymap
+              :prefix 'my-debbugs-modes-map
+              "o" #'debbugs-org
+              "b" #'debbugs-gnu)
+        "d" #'docker
+        "e" #'gnus
+        "f" #'elfeed
+        "g" #'guix
+        "G" #'elpher-go
+        "i" (define-keymap :prefix 'my-erc-map
+              "f" (defun my-erc-freenode ()
+                    "Open erc with my configuration for freenode."
+                    (interactive)
+                    (my-erc 5555))
+              "l" (defun my-erc-libera ()
+                    "Open erc with my configuration for libera."
+                    (interactive)
+                    (my-erc 5556))
+              "o" (defun my-erc-oftc ()
+                    "Open erc with my configuration for oftc."
+                    (interactive)
+                    (my-erc 5557)))
+        "l" #'list-processes
+        "m" (define-keymap :prefix 'my-emms-map
+              "m" #'emms
+              "p" #'emms-pause)
+        "o" #'org-agenda
+        "p" #'proced
+        "r" #'re-builder
+        "t" #'display-time-world
+        "T" #'list-timers
+        "w" #'eww)
+  "b" (define-keymap :prefix 'my-buffer-map
+        "b" #'switch-to-buffer
+        "B" #'switch-to-buffer-other-window
+        "c" #'my-switch-to-compile-buffer
+        "d" #'kill-buffer-and-window
+        "i" #'ibuffer
+        "k" #'kill-current-buffer
+        "m" (defun switch-to-messages-buffer ()
+              (interactive)
+              (switch-to-buffer (get-buffer-create "*Messages*")))
+        "n" #'normal-mode
+        "R" #'revert-buffer
+        "s" (defun switch-to-scratch-buffer ()
+              (interactive)
+              (switch-to-buffer (get-buffer-create "*scratch*"))))
+  "c" (define-keymap :prefix 'my-consult-map
+        "g" #'project-find-file
+        "m" #'consult-minor-mode-menu)
+  "d" (define-keymap :prefix 'my-directory-map
+        "d" #'dired
+        "/" #'dired-jump-other-window)
+  "e" (define-keymap :prefix 'my-flycheck-map
+        "b" #'flycheck-buffer
+        "d" #'flycheck-describe-checker
+        "e" #'flycheck-mode
+        "n" #'flycheck-next-error
+        "l" #'flycheck-list-errors
+        "p" #'flycheck-previous-error
+        "s" #'flycheck-select-checker)
+  "f" (define-keymap :prefix 'my-file-map
+        "f" #'find-file
+        "g" #'magit-find-file
+        "l" #'find-file-literally
+        "r" #'consult-recent-file
+        "s" #'save-buffer
+        "t" #'find-file-other-tab
+        "y" (defun kill-file-name
+                () (interactive) (kill-new (buffer-file-name (current-buffer)))))
+  "g" #'magit-dispatch
+  "h" (define-keymap :keymap help-map
+        "w" #'woman
+        "W" #'man
+        "i" #'info-lookup-symbol
+        "I" #'info-apropos
+        "D" (define-keymap :prefix 'my-describe-map
+              "a" #'consult-apropos
+              "b" #'describe-bindings
+              "f" #'helpful-function
+              "F" #'describe-face
+              "k" #'helpful-key
+              "m" #'describe-mode
+              "s" #'describe-symbol
+              "t" #'describe-theme
+              "v" #'helpful-variable)
+        "f" #'helpful-symbol
+        "v" #'helpful-variable
+        "k" #'helpful-key
+        "c" #'describe-char)
+  "i" (define-keymap :prefix 'my-insert-map
+        "c" #'insert-char
+        "i" (defun insert-uuid-v4 ()
+              (interactive) (uuidgen nil))
+        "t" (defun insert-time-now-as-iso-8601 ()
+              (interactive) (insert (iso-8601-string)))
+        "T" (defun insert-time-now-as-iso-8601-full ()
+              (interactive) (insert (iso-8601-string-full))))
+  "j" (define-keymap :prefix 'my-jump-map
+        "i" #'consult-imenu
+        "o" #'consult-org-agenda
+        "p" #'switch-to-buffer-other-window
+        "t" #'tab-switch
+        "]" #'evil-jump-to-tag
+        "'" #'consult-mark
+        "=" #'indent-region-or-buffer)
+  "o" (define-keymap :prefix 'my-org-map
+        "a" #'org-agenda
+        "c" #'my-project-org-capture
+        "d" #'org-babel-detangle
+        "g" #'consult-org-heading
+        "l" #'org-store-link
+        "m" (define-keymap :prefix 'my-org-mime-map
+              "m" #'org-mime-htmlize
+              "s" #'org-mime-org-subtree-htmlize
+              "b" #'org-mime-org-buffer-htmlize))
+  "p" (define-keymap :prefix 'my-project-map
+        "&" #'project-async-shell-command
+        "b" #'consult-project-buffer
+        "c" (define-keymap :prefix 'my-project-compile-map
+              "c" #'my-project-recompile
+              "C" #'project-compile)
+        "C" #'my-project-org-capture
+        "d" #'project-find-dir
+        "D" #'project-dired
+        "e" (defun switch-to-project-dir-locals ()
+              (interactive)
+              (find-file (format "%s.dir-locals.el" (project-root (project-current t)))))
+        "f" #'project-find-file
+        "o" (defun switch-to-project-todos ()
+              (interactive)
+              (find-file (format "%sTODOs.org" (project-root (project-current t)))))
+        "p" #'project-switch-project
+        "'" (defun project-eshell-other-window ()
+              (interactive)
+              (switch-to-buffer-other-window (current-buffer))
+              (project-eshell)))
+  "q" (define-keymap :prefix 'my-quit-map
+        "q" #'save-buffers-kill-terminal)
+  "s" (define-keymap :prefix 'my-search-map
+        "g" #'grep-find
+        "s" #'consult-line
+        "p" #'consult-ripgrep)
+  "t" (define-keymap :prefix 'my-toggle-map
+        "c" #'display-fill-column-indicator-mode
+        "d" #'toggle-debug-on-error
+        "D" #'toggle-debug-on-quit
+        "f" #'toggle-frame-fullscreen
+        "h" #'toggle-global-hl-line
+        "i" #'imenu-list-smart-toggle
+        "I" #'highlight-indent-guides-mode
+        "l" #'toggle-truncate-lines
+        "m" #'toggle-mode-line
+        "n" (defun cycle-line-numbers ()
+              (interactive)
+              (setq display-line-numbers (next-line-number display-line-numbers)))
+        "o" (define-keymap :prefix 'my-org-toggle-map
+              "l" #'org-toggle-link-display)
+        "p" #'popper-cycle
+        "P" #'popper-toggle-type
+        "t" #'tab-bar-mode
+        "T" #'consult-theme
+        "w" #'whitespace-mode
+        "x" #'toggle-xclip-mode)
+  "w" 'evil-window-map
+  "x" (define-keymap :prefix 'my-text-map
+        "d" #'delete-trailing-whitespace
+        "p" (define-keymap :prefix 'my-print-map
+              "p" #'print-buffer
+              "P" #'lpr-buffer
+              "r" #'print-region
+              "R" #'lpr-region))
+  "y" (define-keymap :prefix 'my-yank-map
+        "y" #'consult-yank-pop)
+  "z" (defhydra zoom (:hint nil)
+        "zoom"
+        ("+" text-scale-increase "+")
+        ("=" text-scale-increase "+")
+        ("-" text-scale-decrease "-")
+        ("_" text-scale-decrease "-"))
+  "'" #'eshell
+  "/" #'consult-ripgrep)
 
-(define-prefix-keymap my-buffer-map
-  "my buffer keybindings"
-  "b" switch-to-buffer
-  "B" switch-to-buffer-other-window
-  "c" my-switch-to-compile-buffer
-  "d" kill-buffer-and-window
-  "i" ibuffer
-  "k" kill-buffer
-  "m" (defun switch-to-messages-buffer ()
-        (interactive)
-        (switch-to-buffer (get-buffer-create "*Messages*")))
-  "n" normal-mode
-  "R" revert-buffer
-  "s" (defun switch-to-scratch-buffer ()
-        (interactive)
-        (switch-to-buffer (get-buffer-create "*scratch*"))))
+(define-keymap :prefix 'elfeed-load-map
+  "o" #'elfeed-load-opml
+  "C-o" #'elfeed-load-opml)
 
-(define-prefix-keymap my-consult-map
-  "my keybindings to consult"
-  "g" project-find-file
-  "m" consult-minor-mode-menu)
+(define-keymap :prefix 'my-eglot-mode-map
+  "a" 'eglot-code-actions
+  "b" (define-keymap :prefix 'my-eglot-buffer-map
+        "e" #'eglot-events-buffer
+        "d" #'eglot-stderr-buffer)
+  "C" (define-keymap :prefix 'my-eglot-connection-map
+        "e" #'eglot
+        "r" #'eglot-reconnect
+        "x" #'eglot-shutdown)
+  "e" (define-keymap :prefix 'my-flymake-map
+        "l" #'flymake-show-buffer-diagnostics
+        "n" #'flymake-goto-next-error
+        "p" #'flymake-goto-prev-error)
+  "g" (define-keymap :prefix 'my-eglot-find-map
+        "d" #'xref-find-definitions
+        "D" #'xref-find-definitions-other-window
+        "r" #'xref-find-references
+        "t" #'eglot-find-typeDefinition)
+  "f" #'eglot-format
+  "h" #'eldoc
+  "r" #'eglot-rename
+  "X" #'eglot-signal-didChangeConfiguration)
 
-(define-prefix-keymap my-describe-map
-  "my describe keybindings"
-  "a" consult-apropos
-  "b" describe-bindings
-  "f" helpful-function
-  "F" describe-face
-  "k" helpful-key
-  "m" describe-mode
-  "s" describe-symbol
-  "t" describe-theme
-  "v" helpful-variable)
-
-(define-key help-map (kbd "D") my-describe-map)
-(define-key help-map (kbd "f") #'helpful-symbol)
-(define-key help-map (kbd "v") #'helpful-variable)
-(define-key help-map (kbd "k") #'helpful-key)
-(define-key help-map (kbd "c") #'describe-char)
-
-(define-prefix-keymap my-flycheck-map
-  "my flycheck keybindings"
-  "b" flycheck-buffer
-  "d" flycheck-describe-checker
-  "e" flycheck-mode
-  "n" flycheck-next-error
-  "l" flycheck-list-errors
-  "p" flycheck-previous-error
-  "s" flycheck-select-checker)
-
-(define-prefix-keymap my-file-map
-  "my file keybindings"
-  "f" find-file
-  "g" magit-find-file
-  "l" find-file-literally
-  "r" consult-recent-file
-  "s" save-buffer
-  "t" find-file-other-tab
-  "y" (defun kill-file-name
-          () (interactive) (kill-new (buffer-file-name (current-buffer)))))
-
-(define-prefix-keymap my-flymake-map
-  "My bindings for flymake"
-  "l" flymake-show-buffer-diagnostics
-  "n" flymake-goto-next-error
-  "p" flymake-goto-prev-error)
-
-(define-prefix-keymap my-git-map
-  "my git keybindings"
-  "A" magit-cherry-pick
-  "b" magit-branch
-  "c" magit-checkout
-  "d" magit-diff
-  "f" magit-fetch
-  "g" magit-file-dispatch
-  "G" magit-dispatch
-  "O" magit-reset
-  "p" magit-push
-  "r" magit-rebase
-  "s" magit-status
-  "l" magit-log
-  "z" magit-stash)
-
-(define-prefix-keymap my-insert-map
-  "my insertion keybindings"
-  "c" insert-char
-  "i" (defun insert-uuid-v4 ()
-        (interactive) (uuidgen nil))
-  "t" (defun insert-time-now-as-iso-8601 ()
-        (interactive) (insert (iso-8601-string)))
-  "T" (defun insert-time-now-as-iso-8601-full ()
-        (interactive) (insert (iso-8601-string-full))))
-
-(define-prefix-keymap my-jump-map
-  "my jump keybindings"
-  "i" consult-imenu
-  "o" consult-org-agenda
-  "p" switch-to-buffer-other-window
-  "t" tab-switch
-  "]" evil-jump-to-tag
-  "'" consult-mark
-  "=" indent-region-or-buffer)
-
-(define-prefix-keymap my-org-mime-map
-  "my org-mime keybindings"
-  "m" org-mime-htmlize
-  "s" org-mime-org-subtree-htmlize
-  "b" org-mime-org-buffer-htmlize)
-
-(define-prefix-keymap my-org-map
-  "my org bindings"
-  "a" org-agenda
-  "c" my-project-org-capture
-  "d" org-babel-detangle
-  "g" consult-org-heading
-  "l" org-store-link
-  "m" my-org-mime-map)
-
-(define-prefix-keymap my-project-compile-map
-  "my project compilation keybindings"
-  "c" my-project-recompile
-  "C" project-compile)
-
-(define-prefix-keymap my-project-map
-  "my project keybindings"
-  "&" project-async-shell-command
-  "b" consult-project-buffer
-  "c" my-project-compile-map
-  "C" my-project-org-capture
-  "d" project-find-dir
-  "D" project-dired
-  "e" (defun switch-to-project-dir-locals ()
-        (interactive)
-        (find-file (format "%s.dir-locals.el" (project-root (project-current t)))))
-  "f" project-find-file
-  "o" (defun switch-to-project-todos ()
-        (interactive)
-        (find-file (format "%sTODOs.org" (project-root (project-current t)))))
-  "p" project-switch-project
-  "'" (defun project-eshell-other-window ()
-        (interactive)
-        (switch-to-buffer-other-window (current-buffer))
-        (project-eshell)))
-
-(define-prefix-keymap my-quit-map
-  "my quit keybindings"
-  "q" save-buffers-kill-terminal)
-
-(define-prefix-keymap my-search-map
-  "my searching keybindings"
-  "g" grep-find
-  "s" consult-line
-  "p" consult-ripgrep)
-
-(define-prefix-keymap my-text-map
-  "my text keybindings"
-  "d" delete-trailing-whitespace
-  "p" my-print-map)
-
-(define-prefix-keymap my-print-map
-  "printing buffers"
-  "p" print-buffer
-  "P" lpr-buffer
-  "r" print-region
-  "R" lpr-region)
-
-(define-prefix-keymap my-toggle-map
-  "my toggles"
-  "c" display-fill-column-indicator-mode
-  "d" toggle-debug-on-error
-  "D" toggle-debug-on-quit
-  "f" toggle-frame-fullscreen
-  "h" toggle-global-hl-line
-  "i" imenu-list-smart-toggle
-  "I" highlight-indent-guides-mode
-  "l" toggle-truncate-lines
-  "m" toggle-mode-line
-  "n" (defun cycle-line-numbers ()
-        (interactive)
-        (setq display-line-numbers (next-line-number display-line-numbers)))
-  "o" my-org-toggle-map
-  "p" popper-cycle
-  "P" popper-toggle-type
-  "t" tab-bar-mode
-  "T" consult-theme
-  "w" whitespace-mode
-  "x" toggle-xclip-mode)
-
-(define-prefix-keymap my-org-toggle-map
-  "org specific toggles"
-  "l" org-toggle-link-display)
+(define-keymap :prefix 'my-git-map
+  "A" #'magit-cherry-pick
+  "b" #'magit-branch
+  "c" #'magit-checkout
+  "d" #'magit-diff
+  "f" #'magit-fetch
+  "g" #'magit-file-dispatch
+  "G" #'magit-dispatch
+  "O" #'magit-reset
+  "p" #'magit-push
+  "r" #'magit-rebase
+  "s" #'magit-status
+  "l" #'magit-log
+  "z" #'magit-stash)
 
 (pcase-dolist
     (`(,key . ,fn)
@@ -1944,10 +1846,6 @@ respectively."
        ("u" . winner-undo)
        ("=" . balance-windows)))
   (define-key evil-window-map (kbd key) fn))
-
-(define-prefix-keymap my-yank-map
-  "my yanking keybindings"
-  "y" consult-yank-pop)
 
 ;; Reset these to have all the configuration we just did
 (with-current-buffer (get-buffer "*Messages*") (normal-mode))
