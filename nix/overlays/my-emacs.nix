@@ -103,7 +103,6 @@ let
       markdown-mode
       merlin
       meson-mode
-      nix-mode
       nodejs-repl
       ob-restclient
       orderless
@@ -157,10 +156,8 @@ let
           (melpa super)
         ] ++ [
           epkgs.nix-ts-mode
-        ] ++ (with super.tree-sitter-grammars; [
-          tree-sitter-nix
-          tree-sitter-haskell
-        ])));
+          epkgs.treesit-grammars.with-all-grammars
+        ]));
     };
 in
 [ my-emacs-overlay ]

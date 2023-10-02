@@ -1101,7 +1101,7 @@ Take newline delimited `STRING' and return list of all
    (setq-local imenu-generic-expression guile-imenu-generic-expression)))
 
 ;; Nix
-(require 'nix-mode)
+(require 'nix-ts-mode)
 
 (defvar my-nix-format-cmd "nixpkgs-fmt")
 
@@ -1131,7 +1131,7 @@ Take newline delimited `STRING' and return list of all
               (with-current-buffer (get-buffer-create "*my-nix-mode*")
                 (insert-file-contents err-file)
                 (buffer-string))
-              (message "Error: %s ended with errors, leaving buffer alone, see *my-nix-mode* buffer for stderr" cmd)
+              (message "Error: %s ended with errors, leaving buffer alone, see *my-nix-ts-mode* buffer for stderr" cmd)
               (with-temp-buffer
                 (insert-file-contents err-file)
                 (display-warning cmd
@@ -1140,24 +1140,24 @@ Take newline delimited `STRING' and return list of all
       (ignore-errors (delete-file err-file))
       (ignore-errors (delete-file out-file)))))
 
-(add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
+(add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-ts-mode))
 (setf
  nix-nixfmt-bin "nixpkgs-fmt"
- (alist-get 'nix-mode eglot-server-programs)
+ (alist-get 'nix-ts-mode eglot-server-programs)
  '("nil"))
 (defvar nix-format-on-save t
   "Format the nix buffer with nixfmt before saving.")
-(add-hook 'nix-mode-hook #'eglot-ensure)
-(add-hook 'nix-mode-hook #'highlight-indent-guides-mode)
-(add-hook 'nix-mode-hook (defun my-nix-mode-setup ()
+(add-hook 'nix-ts-mode-hook #'eglot-ensure)
+(add-hook 'nix-ts-mode-hook #'highlight-indent-guides-mode)
+(add-hook 'nix-ts-mode-hook (defun my-nix-mode-setup ()
                            (add-hook 'before-save-hook
                                      (defun maybe-nix-format-buffer ()
                                        (when nix-format-on-save
                                          (my-nix-format-buffer)))
                                      nil
                                      t)))
-(evil-define-key 'normal nix-mode-map (kbd ",") 'my-eglot-mode-map)
-(define-key nix-mode-map (kbd "C-c C-f") #'my-nix-format-buffer)
+(evil-define-key 'normal nix-ts-mode-map (kbd ",") 'my-eglot-mode-map)
+(define-key nix-ts-mode-map (kbd "C-c C-f") #'my-nix-format-buffer)
 
 ;; Common Lisp
 (with-eval-after-load 'geiser-guile
