@@ -820,6 +820,7 @@ Take newline delimited `STRING' and return list of all
   "g" (define-keymap :prefix 'my-eglot-find-map
         "d" #'xref-find-definitions
         "D" #'xref-find-definitions-other-window
+        "i" #'consult-imenu
         "r" #'xref-find-references
         "t" #'eglot-find-typeDefinition)
   "f" #'eglot-format
@@ -966,8 +967,8 @@ Take newline delimited `STRING' and return list of all
   (interactive "sQuery: ")
   (eww (format "%s/?hoogle=%s" eww-hoogle-url (url-encode-url query))))
 (define-keymap :keymap haskell-mode-map
-  "C-c C-h" #'eww-hoogle)
-  "C-c C-f" #'haskell-mode-stylish-buffer
+  "C-c C-h" #'eww-hoogle
+  "C-c C-f" #'haskell-mode-stylish-buffer)
 
 ;; ;; Agda mode
 ;; (load-library (let ((coding-system-for-read 'utf-8))
