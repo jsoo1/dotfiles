@@ -93,7 +93,7 @@ in
       eza
       fd
       gawk
-      gitFull
+      git
       graphviz-nox
       neovim
       oil
