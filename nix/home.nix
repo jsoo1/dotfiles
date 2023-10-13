@@ -6,7 +6,7 @@ let
     user = {
       name = "John Soo";
       email = "john.soo@arista.com";
-      signingkey = "71F4C27CC2540312F69F553FD8A148F8CE4DDBC2";
+      signingkey = "B2048DDD7FD2A52E";
     };
     core.editor = "${pkgs.neovim}/bin/nvim";
     diff.renames = true;
