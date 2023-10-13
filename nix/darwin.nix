@@ -70,12 +70,17 @@ in
         machines
         searches
         ssh-known-hosts
-      ;
+        ;
     };
   };
 
   services.nix-daemon = {
     enable = true;
+  };
+
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
   };
 
   nix = {
