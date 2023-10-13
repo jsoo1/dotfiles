@@ -97,7 +97,9 @@
 (require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
 
-(load-file (expand-file-name "local.el" user-emacs-directory))
+(when-let ((local (expand-file-name "local.el" user-emacs-directory))
+           (exists (file-exists-p local)))
+  (load-file local))
 
 ;; Tramp
 (with-eval-after-load 'tramp
