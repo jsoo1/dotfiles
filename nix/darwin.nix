@@ -83,6 +83,7 @@ in
 
   nix = {
     settings.max-jobs = 16;
+    settings.system = "aarch64-darwin";
     settings.trusted-users = [ "johh.soo" ];
     distributedBuilds = true;
     extraOptions = ''
