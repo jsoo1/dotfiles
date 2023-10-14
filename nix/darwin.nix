@@ -90,6 +90,7 @@ in
     settings.sandbox = "relaxed";
     settings.builders-use-substitutes = true;
     settings.builders = "@${machines.path}";
+    settings.fallback = true;
   };
 
   fonts = {
