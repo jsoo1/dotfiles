@@ -82,16 +82,13 @@ in
   };
 
   nix = {
-    settings.max-jobs = 16;
+    distributedBuilds = true;
     settings.system = "aarch64-darwin";
     settings.trusted-users = [ "johh.soo" ];
-    distributedBuilds = true;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-      system-features = benchmark big-parallel local nixos-test
-      builders-use-substitutes = true
-      builders = @/etc/nix/machines
-    '';
+    settings.experimental-features = [ "nix-command" "flakes" "repl-flake" ];
+    settings.system-features = [ "benchmark" "big-parallel" "local" "nixos-test" ];
+    settings.builders-use-substitutes = true;
+    settings.builders = "@${machines.path}";
   };
 
   fonts = {
