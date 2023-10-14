@@ -85,8 +85,9 @@ in
     distributedBuilds = true;
     settings.system = "aarch64-darwin";
     settings.trusted-users = [ "johh.soo" ];
-    settings.experimental-features = [ "nix-command" "flakes" "repl-flake" ];
+    settings.experimental-features = [ "nix-command" "flakes" "repl-flake" "recursive-nix" ];
     settings.system-features = [ "benchmark" "big-parallel" "local" "nixos-test" ];
+    settings.sandbox = "relaxed";
     settings.builders-use-substitutes = true;
     settings.builders = "@${machines.path}";
   };
