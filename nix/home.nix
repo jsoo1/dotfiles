@@ -111,10 +111,10 @@ in
   };
 
   programs = {
-    autojump.enable = isLinux;
+    autojump.enable = true;
     bat.enable = true;
     direnv.enable = true;
-    direnv.enableBashIntegration = isLinux;
+    direnv.enableBashIntegration = true;
     emacs.enable = true;
     emacs.package = pkgs.my-emacs;
     git.enable = true;
