@@ -64,7 +64,7 @@
           { emacs-xclip-soclip-support = soclip.patches.emacs-xclip-support; }
         )
       ] ++ import ./overlays/my-emacs.nix ++ import ./overlays/restream.nix;
-      all-systems = flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" ]
+      all-systems = flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-darwin" ]
         (system: {
           packages = import nixpkgs { inherit system; overlays = overlays'; };
         });
@@ -92,7 +92,7 @@
       };
 
       darwinConfigurations.johhsoo = darwin.lib.darwinSystem {
-        system = "x86_64-darwin";
+        system = "aarch64-darwin";
         modules = [
           ({ pkgs, ... }: {
             nixpkgs.overlays = [ overlays.default ];

@@ -40,16 +40,20 @@ in
 
   config = {
     c-utilities = with pkgs; [
-      gdb
       man-pages
       man-pages-posix
     ] ++ lib.optionals isLinux [
       binutils
       ccls
+      gdb
       rr
     ];
 
-    haskell-utilities = with pkgs; [ haskellPackages.fourmolu ghcid haskell-language-server ];
+    haskell-utilities = with pkgs; [
+      haskellPackages.fourmolu
+      ghcid
+      haskell-language-server
+    ];
 
     macos-quirks = with pkgs; [
       bashInteractive
