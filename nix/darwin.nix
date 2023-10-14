@@ -81,6 +81,10 @@ in
     enableSSHSupport = true;
   };
 
+  launchd.daemons.nix-daemon.serviceConfig = {
+    SoftResourceLimits.NumberOfProcesses = 122880;
+  };
+
   nix = {
     distributedBuilds = true;
     settings.system = "aarch64-darwin";
