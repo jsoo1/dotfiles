@@ -74,6 +74,7 @@ in
 
   services.nix-daemon = {
     enable = true;
+    enableSocketListener = true;
   };
 
   programs.gnupg.agent = {
