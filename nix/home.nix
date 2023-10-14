@@ -149,6 +149,7 @@ in
     enable = true;
 
     config = {
+      EnvironmentVariables.SSH_AUTH_SOCK = config.ssh-auth-sock;
       KeepAlive = true;
       ProgramArguments = [
         "/bin/sh"
