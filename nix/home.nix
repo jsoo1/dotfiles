@@ -74,40 +74,6 @@ in
       EOF
     '';
     "procps/toprc".source = "${dotfiles}/top/toprc";
-    "oil/oshrc".text = ''
-      ${lib.optionalString isDarwin ''
-         # Avoids errors in /etc/bashrc_Apple_Terminal (unused anyways)
-         TERM_PROGRAM_OLD="$TERM_PROGRAM"
-         TERM_PROGRAM=junk
-         source /etc/bashrc
-         TERM_PROGRAM="$TERM_PROGRAM_OLD"
-      ''}
-
-      ${lib.concatStringsSep "\n" (lib.mapAttrsToList (var: val: ''export ${var}="${val}"'')
-        config.programs.bash.sessionVariables)}
-
-      ${lib.concatStringsSep "\n" (lib.mapAttrsToList (var: val: "alias ${var}=${lib.escapeShellArg val}")
-        config.programs.bash.shellAliases)}
-
-      export SKIM_DEFAULT_OPTIONS="${lib.concatStringsSep " " config.programs.skim.defaultOptions}"
-
-      alias tmn='eval "$(tmux-projects)"'
-
-      ${config.programs.bash.initExtra}
-
-      PS1="[osh] $PS1"
-
-      # direnv breaks in osh because of
-      # https://github.com/oilshell/oil/issues/1607
-      _direnv_hook() {
-        local previous_exit_status=$?;
-        eval "$("/Users/johh.soo/.nix-profile/bin/direnv" export bash)";
-        return $previous_exit_status;
-      };
-      if ! [[ "''${PROMPT_COMMAND:-}" =~ _direnv_hook ]]; then
-        PROMPT_COMMAND="_direnv_hook''${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
-      fi
-    '';
   };
 
   programs = {
