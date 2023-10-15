@@ -155,7 +155,7 @@
           {
             home-manager.verbose = true;
             home-manager.useGlobalPkgs = true;
-            home-manager.users.john = import ./home.nix;
+            home-manager.users.john = ./home.nix;
             home-manager.extraSpecialArgs = { inherit dotfiles soclip; };
           }
         ];

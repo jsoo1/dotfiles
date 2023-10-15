@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, pkgs, ... }:
 
 let
   nix-conf = {
@@ -48,14 +48,7 @@ in
 
   environment.shells = [
     pkgs.bashInteractive
-    "/run/current-system/sw/bin/osh"
-    "/run/current-system/sw/bin/oil"
-    "${pkgs.oil}/bin/osh"
-    "${pkgs.oil}/bin/oil"
-  ];
-
-  environment.etc.shells.knownSha256Hashes = [
-    "9d5aa72f807091b481820d12e693093293ba33c73854909ad7b0fb192c2db193"
+    pkgs.oil
   ];
 
   age = {
