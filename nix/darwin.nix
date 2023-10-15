@@ -77,25 +77,27 @@ in
     enableSocketListener = true;
   };
 
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-  };
-
   launchd.daemons.nix-daemon.serviceConfig = {
-    SoftResourceLimits.NumberOfProcesses = 122880;
+    SoftResourceLimits.NumberOfProcesses = 1048576;
   };
 
   nix = {
     distributedBuilds = true;
-    settings.system = "aarch64-darwin";
-    settings.trusted-users = [ "johh.soo" ];
-    settings.experimental-features = [ "nix-command" "flakes" "repl-flake" "recursive-nix" ];
-    settings.system-features = [ "benchmark" "big-parallel" "local" "nixos-test" ];
-    settings.sandbox = "relaxed";
-    settings.builders-use-substitutes = true;
-    settings.builders = "@${machines.path}";
-    settings.fallback = true;
+    settings = {
+      system = "aarch64-darwin";
+      trusted-users = [ "johh.soo" ];
+      experimental-features = [ "nix-command" "flakes" "repl-flake" "recursive-nix" ];
+      system-features = [ "benchmark" "big-parallel" "local" "nixos-test" ];
+      sandbox = "relaxed";
+      builders-use-substitutes = true;
+      builders = "@${machines.path}";
+      fallback = true;
+    };
+  };
+
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
   };
 
   fonts = {
