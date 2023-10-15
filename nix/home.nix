@@ -113,6 +113,7 @@ in
   programs = {
     autojump.enable = true;
     bat.enable = true;
+    bat.config.theme = "Solarized (dark)";
     direnv.enable = true;
     direnv.enableBashIntegration = true;
     emacs.enable = true;
