@@ -62,7 +62,7 @@
     ;; "freecad"
     "garcon"
     "gnuplot"
-    ;; "ibm-capsense-usb-util"
+    "ibm-capsense-usb-util"
     "libnotify"
     "libreoffice"
     "mpd-mpc"
