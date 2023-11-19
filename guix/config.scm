@@ -1,7 +1,8 @@
 (use-modules (gnu) (gnu system setuid) (guix gexp) (ice-9 match))
 (use-package-modules admin base certs cups curl docker emacs
                      fonts fontutils gl gnupg linux ncurses
-                     package-management shells shellutils ssh
+                     package-management security-token
+                     shells shellutils ssh
                      suckless tmux version-control vim vpn
                      web-browsers xdisorg xorg)
 (use-service-modules audio base cups dbus desktop dns docker
@@ -112,6 +113,8 @@ EndSection\n")
 
    (screen-locker-service slock)
    (screen-locker-service xlockmore "xlock")
+
+    (udev-rules-service 'fido2 libfido2 #:groups '("plugdev"))
 
     ;; The following is for xorg without display manager
     x11-socket-directory-service
