@@ -143,12 +143,12 @@ myKeybindings xmobarSignal =
       }
     )
   , ( ( 0, xF86XK_AudioLowerVolume )
-    , spawn "amixer -q set Master 2%-"
+    , spawn "pulsemixer --change-volume -2"
     )
   , ( ( 0, xF86XK_AudioRaiseVolume )
-    , spawn "amixer -q set Master 2%+"
+    , spawn "pulsemixer --change-volume +2"
     )
-  , ( ( 0, xF86XK_AudioMute ), spawn "amixer -q set Master toggle" )
+  , ( ( 0, xF86XK_AudioMute ), spawn "pulsemixer --toggle-mute" )
   , ( ( 0, xF86XK_MonBrightnessUp ), spawn "light -A 2.0" )
   , ( ( 0, xF86XK_MonBrightnessDown ), spawn "light -U 2.0" )
   , ( ( myModMask, xK_n ), moveTo Next NonEmptyWS )
