@@ -18,7 +18,7 @@
     "direnv"
     "docker-cli"
     "dog"
-    "emacs"
+    "emacs-next"
     "exa"
     "fd"
     "fish"
