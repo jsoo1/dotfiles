@@ -118,16 +118,12 @@ EndSection\n")
 
     ;; The following is for xorg without display manager
     x11-socket-directory-service
+    (udev-rules-service 'light light)
+    ; For xorg sans display manager (gentoo wiki)
+    (udev-rules-service 'xorg-rootless (udev-rule
+                                        "99-dev-input-group.rules"
+                                        "SUBSYSTEM==\"input\", ACTION==\"add\", GROUP=\"input\""))
     (modify-services %base-services
-      (udev-service-type c =>
-                         (udev-configuration
-                          (inherit c)
-                          (rules
-                           `(,light ; Use light without sudo
-                             ,(udev-rule ; For xorg sans display manager (gentoo wiki)
-                               "99-dev-input-group.rules"
-                               "SUBSYSTEM==\"input\", ACTION==\"add\", GROUP=\"input\"")
-                             ,@(udev-configuration-rules c)))))
       (console-font-service-type s =>
                                  (map
                                   (match-lambda ((tty . font) `(,tty . ,terminus-psf-font)))
