@@ -112,7 +112,7 @@ function __skim_history -d "Find in history"
 end
 
 function __ls_git_repos -d "List git repos"
-    fd '\.git' '/' -t d -t f -H -I \
+    fd '\.git' '/' -t d -H -I \
         -E '\.gitlab' \
         -E '\.github' \
         -E '\.cache' \

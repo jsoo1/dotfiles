@@ -199,7 +199,7 @@ dmenuGitDirs =
     , "-E 'dist-newstyle'"
     , "-E '\\.opam'"
     , "-E '/s3'"
-    , "-x echo '{//}' ';'"
+    , "| while read -r l; do echo \"${l%/.git/}\"; done"
     , "| dmenu -f -F -p 'repository'"
     ]
   ]
