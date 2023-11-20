@@ -49,6 +49,15 @@
 
 (define username "john")
 
+(define john
+  (user-account
+   (name username)
+   (comment "idiot man")
+   (group "users")
+   (supplementary-groups
+    '("wheel" "netdev" "audio" "video" "lp"))
+   (shell (file-append fish "/bin/fish"))))
+
 (define cst-trackball
   "Section \"InputClass\"
     Identifier \"CST Trackball\"
@@ -128,7 +137,7 @@ EndSection\n")
    (service mingetty-service-type (mingetty-configuration
                                    (tty "tty7")))
    (service mpd-service-type (mpd-configuration
-                              (user username)))
+                              (user john)))
    (service network-manager-service-type)
    (service ntp-service-type)
    (service openssh-service-type (openssh-configuration
@@ -195,13 +204,7 @@ EndSection\n")
     (swap-devices `(,(swap-space
                       (target (uuid "7bcddb1d-889b-4cd4-8335-dc7c4a1a358d")))))
     (users
-     `(,(user-account
-         (name username)
-         (comment "idiot man")
-         (group "users")
-         (supplementary-groups
-          '("wheel" "netdev" "audio" "video" "lp"))
-         (shell (file-append fish "/bin/fish")))
+     `(,john
        ,@%base-user-accounts))
     (packages
      `(;; for HTTPS access
