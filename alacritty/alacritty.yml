@@ -42,7 +42,7 @@ iosevka: &iosevka
     family: Iosevka
     style: Medium Oblique
 
-  size: 13.0
+  size: 15.0
 
 font: *iosevka
 
