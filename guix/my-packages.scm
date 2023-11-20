@@ -97,6 +97,7 @@
 
 (define-public rust-tools
   '("rust"
+    "rust:tools"
     "rust:cargo"))
 
 (define-public guile-tools
