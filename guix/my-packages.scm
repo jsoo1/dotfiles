@@ -47,9 +47,7 @@
   '("firefox"
     "icecat"
     "lynx"
-    ;; FIXME: Borken
-    ;; "ungoogled-chromium"
-    ))
+    "ungoogled-chromium"))
 
 (define-public desktop-tools
   '("alacritty"
@@ -58,9 +56,6 @@
     "compton"
     "dbus"
     "dunst"
-    ;; Broken by python 3.8
-    ;; Waiting for https://forum.freecadweb.org/viewtopic.php?t=38982
-    ;; "freecad"
     "garcon"
     "gnuplot"
     "ibm-capsense-usb-util"
@@ -101,13 +96,7 @@
 
 (define-public rust-tools
   '("rust"
-    "rust:cargo"
-    ;; FIXME: Rebase the patches upstream
-    ;; "rust:rls"
-    ;; "rust:rust-analyzer"
-    ;; "rust:rustfmt"
-    ;; "rust:src"
-    ))
+    "rust:cargo"))
 
 (define-public guile-tools
   '("guile"
