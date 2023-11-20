@@ -21,14 +21,15 @@
               (lambda (f _)
                 (not
                  (or (string-match "\\.ghc\\.environment" f)
+		     (string-match "cabal.project" f)
                      (string-match "dist" f)
                      (string-match "dist-newstyle" f))))))
 
 (define-public my-xmobar
   (let ((commit "release"))
     (package
-      (inherit xmobar)
-      (name "xmobar")
+      (inherit ghc-xmobar)
+      (name "my-ghc-xmobar")
       (version "0.40")
       (source
        (origin
@@ -37,11 +38,11 @@
                (url "https://github.com/jsoo1/xmobar")
                (commit commit)))
          (sha256
-          (base32 "0vbwk60sv6dhcpvm4y7x75f92zl22a26v0gwk4afdkal3m6mfcz2"))
+          (base32 "1npfwxlxywfl69nw2na3hi7il51pac8rch02z0bn3nx2khz92h1n"))
          (file-name (git-file-name name version))))
       (inputs `(("ghc-uuid" ,ghc-uuid)
-                ,@(package-inputs xmobar)))
-      (arguments `(#:tests? #f ,@(package-arguments xmobar))))))
+                ,@(package-inputs ghc-xmobar)))
+      (arguments `(#:tests? #f ,@(package-arguments ghc-xmobar))))))
 
 (define-public my-xmonad
   (package
@@ -59,9 +60,6 @@
     (arguments
      `(#:phases
        (modify-phases %standard-phases
-         (add-after 'install 'make-static
-           (lambda* (#:key outputs #:allow-other-keys)
-             (mkdir-p (assoc-ref outputs "static"))))
          (delete 'install-license-files))))))
 
 my-xmonad

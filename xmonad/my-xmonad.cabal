@@ -21,8 +21,8 @@ executable my-xmonad
                , containers >=0.6 && <0.7
                , process >=1.6.5 && <1.7
                , stm >=2.5 && <2.6
-               , xmonad >=0.15 && <0.16
-               , xmonad-contrib >=0.16 && <0.17
-               , xmobar >=0.40 && <0.41
+               , xmonad
+               , xmonad-contrib
+               , xmobar
                , X11 >=1.9 && <2
   ghc-options: -threaded -rtsopts -O2 "-with-rtsopts=-N6 -M2g"

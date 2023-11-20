@@ -5,7 +5,8 @@
 {-# OPTIONS_GHC -Werror -Wincomplete-record-updates
                         -Wmonomorphism-restriction
                         -Wincomplete-uni-patterns
-                        -Wmissing-deriving-strategies #-}
+                        -Wmissing-deriving-strategies
+                        -Wno-error=deprecations #-}
 
 module Main where
 
@@ -46,27 +47,32 @@ import qualified Xmobar.Config.Template.Parse     as Template
 
 main :: IO ()
 main = do
+  dirs <- getDirectories
+
   replace
   (xmobarQueue, xmobarSignal, xmobarProc) <- startXmobar
-  launch $ docks def
-    { terminal = "alacritty"
-    , focusFollowsMouse = False
-    , borderWidth = 2
-    , modMask = myModMask
-    , normalBorderColor = coerce base03
-    , focusedBorderColor = coerce base0
-    , handleEventHook = handleEventHook def <+> docksEventHook
-    , manageHook = manageDocks <+> manageHook def
-    , layoutHook =
-        avoidStruts $ gaps 5 5 $ ThreeColMid 1 (3/100) (1/2) ||| layoutHook def
-    , logHook = myXmobarPP xmobarQueue
-    , startupHook = traverse_ spawn
-        [ "light -S 30.0"
-        , "compton --config ~/.config/compton/compton.conf"
-        , "xwallpaper --zoom ~/Downloads/richter-lucerne.jpg"
-        ]
-    }
-    `additionalKeys` myKeybindings xmobarSignal
+
+  let cfg = docks def
+       { terminal = "alacritty"
+       , focusFollowsMouse = False
+       , borderWidth = 2
+       , modMask = myModMask
+       , normalBorderColor = coerce base03
+       , focusedBorderColor = coerce base0
+       , handleEventHook = handleEventHook def <+> docksEventHook
+       , manageHook = manageDocks <+> manageHook def
+       , layoutHook =
+           avoidStruts $ gaps 5 5 $ ThreeColMid 1 (3/100) (1/2) ||| layoutHook def
+       , logHook = myXmobarPP xmobarQueue
+       , startupHook = traverse_ spawn
+           [ "light -S 30.0"
+           , "compton --config ~/.config/compton/compton.conf"
+           , "xwallpaper --zoom ~/Downloads/richter-lucerne.jpg"
+           ]
+       }
+       `additionalKeys` myKeybindings xmobarSignal
+
+  launch cfg dirs
 
 
 startXmobar :: IO (STM.TQueue String, STM.TMVar Xmobar.SignalType, ThreadId)
