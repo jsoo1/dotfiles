@@ -132,7 +132,7 @@ myKeybindings xmobarSignal =
     , dmenuGitDirs >>= \dir -> unless (null dir) $ tmuxNewSession dir
     )
   , ( ( myModMask, xK_u ) , spawn "/home/john/.local/bin/clipmenu -p clipboard" )
-  , ( ( myModMask .|. shiftMask , xK_l ) , dmenuLPass )
+  -- , ( ( myModMask .|. shiftMask , xK_l ) , dmenuLPass )
   , ( ( myModMask .|. controlMask, xK_f) , toggleBar xmobarSignal )
   , ( ( myModMask .|. shiftMask, xK_x ), spawn "xlock -mode rain" )
   , ( ( myModMask .|. controlMask, xK_4 ), spawn "scrot" )
@@ -343,7 +343,7 @@ xmobarFmt :: Template.Format
 xmobarFmt = Template.Format
   { Template.fontIndex = 0
   , Template.textRenderInfo = Template.TextRenderInfo
-    { Template.tColorsString = coerce base0 <> ",#00362b"
+    { Template.tColorsString = coerce base0 <> ",#002b36"
     , Template.tBgTopOffset = -1
     , Template.tBgBottomOffset = -1
     , Template.tBoxes = []
@@ -384,7 +384,7 @@ xmobarConf xmobarSignal xmobarQueue =
   pure $ Xmobar.defaultConfig
     { Xmobar.font = "xft:Iosevka:size=12:light:antialias=true"
     , Xmobar.fgColor = coerce base0
-    , Xmobar.bgColor = "#00362B"
+    , Xmobar.bgColor = "#002b36"
     , Xmobar.borderColor = coerce base03
     , Xmobar.border = Xmobar.BottomB
     , Xmobar.alpha = 204

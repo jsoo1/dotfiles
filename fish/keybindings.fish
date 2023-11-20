@@ -112,7 +112,7 @@ function __skim_history -d "Find in history"
 end
 
 function __ls_git_repos -d "List git repos"
-    fd '\.git' '/' -t d -H -I \
+    fd '\.git' '/' -t d -t f -H -I \
         -E '\.gitlab' \
         -E '\.github' \
         -E '\.cache' \
@@ -120,14 +120,17 @@ function __ls_git_repos -d "List git repos"
         -E '\.cargo' \
         -E /gnu/store \
         -E '\.git-credential-cache' \
+        -E IndexedDB \
         -E '\.spago' \
+        -E '\.emacs\.d' \
+        -E '\.racket' \
         -E '/nix/store' \
         -E '/tmp' \
         -E '\.local' \
         -E 'dist-newstyle' \
         -E '\.opam' \
         -E '\/s3' \
-    | sed -E 's/\/\.git$//'
+        -x echo '{//}' ';'
 end
 
 function __skim_git_repos -d "Find a git repo"
