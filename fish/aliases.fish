@@ -59,7 +59,7 @@ function pursuit -a query
 end
 
 function pidof -d 'select a pid via fzy'
-    ps waux | fzy | sed -E 's/[[:space:]]+/ /g' | cut -d ' ' -f 2
+    ps waux | sk | sed -E 's/[[:space:]]+/ /g' | cut -d ' ' -f 2
 end
 
 complete -c pidof --no-files

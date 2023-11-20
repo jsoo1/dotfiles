@@ -189,14 +189,17 @@ dmenuGitDirs =
     , "-E '\\.cargo'"
     , "-E /gnu/store"
     , "-E '\\.git-credential-cache'"
+    , "-E IndexedDB"
     , "-E '\\.spago'"
+    , "-E '\\.emacs\\.d'"
+    , "-E '\\.racket'"
     , "-E '/nix/store'"
     , "-E '/tmp'"
     , "-E '\\.local'"
     , "-E 'dist-newstyle'"
     , "-E '\\.opam'"
     , "-E '/s3'"
-    , "| sed -E 's/\\/\\.git$//'"
+    , "-x echo '{//}' ';'"
     , "| dmenu -f -F -p 'repository'"
     ]
   ]

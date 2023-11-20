@@ -1107,7 +1107,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
             (company-mode)
             (flycheck-mode)
             (turn-on-purescript-indentation)))
-(define-keymap :keymap purecript-mode-map
+(define-keymap :keymap purescript-mode-map
   "C-c C-s" #'psc-ide-server-start
   "C-c C-q" #'psc-ide-server-quit)
 
@@ -1186,8 +1186,9 @@ _]_: toggle use of default sink  _n_: control select sink by name
                                          (my-nix-format-buffer)))
                                      nil
                                      t)))
-(evil-define-key 'normal nix-mode-map (kbd ",") 'my-eglot-mode-map)
-(define-key nix-mode-map (kbd "C-c C-f") #'my-nix-format-buffer)
+(with-eval-after-load 'nix-mode
+  (evil-define-key 'normal nix-mode-map (kbd ",") 'my-eglot-mode-map)
+  (define-key nix-mode-map (kbd "C-c C-f") #'my-nix-format-buffer))
 
 ;; Common Lisp
 (with-eval-after-load 'geiser-guile

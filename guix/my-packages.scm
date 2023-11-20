@@ -181,6 +181,7 @@
     "emacs-haskell-snippets"
     "emacs-helpful"
     "emacs-highlight-indent-guides"
+    "emacs-hydra"
     "emacs-idris-mode"
     "emacs-imenu-list"
     "emacs-let-alist"
