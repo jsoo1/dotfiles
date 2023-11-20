@@ -799,6 +799,9 @@ Take newline delimited `STRING' and return list of all
     (global-company-mode)
     (define-keymap :keymap company-active-map
       "C-n" #'company-select-next
+      "C-p" #'company-select-previous)
+    (define-keymap :keymap company-search-map
+      "C-n" #'company-select-next
       "C-p" #'company-select-previous)))
 
 ;; Eglot
@@ -1064,6 +1067,11 @@ Take newline delimited `STRING' and return list of all
              imenu-generic-expression
              `(("Module" "^\\s-*\\(module\\|and\\)\\s-+\\(type|rec\\s-+\\)?\\([a-zA-Z0-9_]+\\)" 3)
                ,@imenu-generic-expression))))
+
+(add-hook 'tuareg-mode-hook #'eglot-ensure)
+
+(evil-define-key 'normal tuareg-mode-map (kbd ",") 'my-eglot-mode-map)
+
 (define-keymap :keymap tuareg-mode-map
   "C-c C-o" #'merlin-occurrences
   "C-c C-c" #'merlin-error-next)
