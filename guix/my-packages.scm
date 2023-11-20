@@ -18,6 +18,7 @@
     "direnv"
     "docker-cli"
     "dog"
+    "du-dust"
     "emacs-next"
     "exa"
     "fd"
