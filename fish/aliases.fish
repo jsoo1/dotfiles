@@ -1,29 +1,29 @@
 # Git
-abbr --add -U -- gb 'git branch'
-abbr --add -U -- gst 'git status'
-abbr --add -U -- gf 'git fetch'
-abbr --add -U -- ga 'git add'
-abbr --add -U -- gc 'git commit'
-abbr --add -U -- glg 'git log'
-abbr --add -U -- grb 'git rebase'
-abbr --add -U -- gl 'git pull'
-abbr --add -U -- gp 'git push'
-abbr --add -U -- gd 'git diff'
-abbr --add -U -- gm 'git merge'
-abbr --add -U -- gco 'git checkout'
+abbr --add -- gb 'git branch'
+abbr --add -- gst 'git status'
+abbr --add -- gf 'git fetch'
+abbr --add -- ga 'git add'
+abbr --add -- gc 'git commit'
+abbr --add -- glg 'git log'
+abbr --add -- grb 'git rebase'
+abbr --add -- gl 'git pull'
+abbr --add -- gp 'git push'
+abbr --add -- gd 'git diff'
+abbr --add -- gm 'git merge'
+abbr --add -- gco 'git checkout'
 function gitpurge -a ref
     git branch --merged | rg -v "\*" | rg -v "$ref" | xargs -n 1 git branch -d
 end
 alias vim nvim
 # System Utils
-abbr --add -U -- ls "exa"
-abbr --add -U -- ll "exa -l"
-abbr --add -U -- lsa "exa -la"
-abbr --add -U -- lsah "exa -la"
-abbr --add -U -- tree "exa -Ta"
-abbr --add -U -- psg 'ps -e --format pid,command | rg -i'
-abbr --add -U -- rest "loginctl suspend"
-abbr --add -U -- apropos "man -k"
+abbr --add -- ls "exa"
+abbr --add -- ll "exa -l"
+abbr --add -- lsa "exa -la"
+abbr --add -- lsah "exa -la"
+abbr --add -- tree "exa -Ta"
+abbr --add -- psg 'ps -e --format pid,command | rg -i'
+abbr --add -- rest "loginctl suspend"
+abbr --add -- apropos "man -k"
 
 function shep
     herd -s $MY_SHEP_SOCK $argv
@@ -38,18 +38,18 @@ end
 function em
     emacsclient -nw --socket-name term $argv
 end
-abbr --add -U -- e emacsclient -nw --socket-name term $argv
+abbr --add -- e emacsclient -nw --socket-name term $argv
 
 # Tmux
-abbr --add -U -- tmux "tmux new-session -A -s (basename (pwd) | tr '.' '-') -n emacs"
+abbr --add -- tmux "tmux new-session -A -s (basename (pwd) | tr '.' '-') -n emacs"
 function tm
     env tmux new-session -A -s (basename (pwd) | tr '.' '-') -n emacs
 end
-abbr --add -U -- tma "tmux attach -t"
-abbr --add -U -- tml "tmux list-sessions"
+abbr --add -- tma "tmux attach -t"
+abbr --add -- tml "tmux list-sessions"
 
 # Lynx
-abbr --add -U -- lynx lynx -cfg=~/.config/lynx/lynx.cfg
+abbr --add -- lynx lynx -cfg=~/.config/lynx/lynx.cfg
 function google -a query
     lynx -cfg=~/.config/lynx/lynx.cfg "www.google.com/search?q='"$query"'"
 end
