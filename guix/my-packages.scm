@@ -58,7 +58,7 @@
     "dunst"
     "garcon"
     "gnuplot"
-    "ibm-capsense-usb-util"
+    ;; "ibm-capsense-usb-util"
     "libnotify"
     "libreoffice"
     "mpd-mpc"
@@ -84,7 +84,9 @@
     "hlint"
     "hoogle"
     "stylish-haskell"
-    "threadscope"))
+    ;; FIXME
+    ;; "threadscope"
+    ))
 
 (define-public nix-tools
   '("nixfmt"))
