@@ -72,8 +72,7 @@
   '("mkfontdir"
     "mkfontscale"
     "font-dejavu"
-    "font-iosevka"
-    "font-iosevka-term-slab"))
+    "font-iosevka"))
 
 (define-public c-tools
   '("ccls"))
