@@ -1083,6 +1083,10 @@ _]_: toggle use of default sink  _n_: control select sink by name
              `(("Module" "^\\s-*\\(module\\|and\\)\\s-+\\(type|rec\\s-+\\)?\\([a-zA-Z0-9_]+\\)" 3)
                ,@imenu-generic-expression))))
 
+(add-hook 'tuareg-mode-hook #'eglot-ensure)
+
+(evil-define-key 'normal tuareg-mode-map (kbd ",") 'my-eglot-mode-map)
+
 (define-keymap :keymap tuareg-mode-map
   "C-c C-o" #'merlin-occurrences
   "C-c C-c" #'merlin-error-next)
