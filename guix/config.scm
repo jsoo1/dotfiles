@@ -75,9 +75,8 @@ EndSection\n")
    fontconfig-file-system-service
    (service nix-service-type (nix-configuration
                               (package nix)
-                              (extra-config '("keep-derivations = true"
-                                              "keep-outputs = true"
-                                              "sandbox-paths = /bin/sh=/nix/store/iyqah3h6ywjdxl6xmsdxqv26x71i091v-busybox-static-x86_64-unknown-linux-musl-1.32.1"))))
+                              (extra-config '("keep-derivations = true\n"
+                                              "keep-outputs = true\n"))))
    (service kmscon-service-type (kmscon-configuration
                                  (virtual-terminal "tty8")
                                  ;; (scrollback "100000")
