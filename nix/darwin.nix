@@ -85,6 +85,7 @@ in
       builders-use-substitutes = true;
       builders = "@${machines.path}";
       fallback = true;
+      allow-unsafe-native-code-during-evaluation = true;
     };
   };
 
