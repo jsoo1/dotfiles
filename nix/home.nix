@@ -14,6 +14,7 @@ let
     commit.gpgsign = true;
     branch.autoSetupMerge = false;
     advice.detachedHead = false;
+    init.defaultBranch = "release";
   };
 
 in
