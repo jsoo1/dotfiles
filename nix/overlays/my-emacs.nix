@@ -45,6 +45,7 @@ let
       diredfl
       docker
       dockerfile-mode
+      dune
       editorconfig
       elf-mode
       elfeed
