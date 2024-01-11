@@ -64,7 +64,7 @@
           { emacs-xclip-soclip-support = soclip.patches.emacs-xclip-support; }
         )
       ] ++ import ./overlays/my-emacs.nix ++ import ./overlays/restream.nix;
-      all-systems = flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-darwin" ]
+      all-systems = flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ]
         (system: {
           packages = import nixpkgs { inherit system; overlays = overlays'; };
         });
