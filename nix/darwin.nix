@@ -77,11 +77,9 @@ in
   nix = {
     distributedBuilds = true;
     settings = {
-      system = "aarch64-darwin";
       trusted-users = [ "johh.soo" ];
       experimental-features = [ "nix-command" "flakes" "repl-flake" "recursive-nix" ];
       system-features = [ "benchmark" "big-parallel" "local" "nixos-test" ];
-      sandbox = "relaxed";
       builders-use-substitutes = true;
       builders = "@${machines.path}";
       fallback = true;
