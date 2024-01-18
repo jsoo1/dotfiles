@@ -3,20 +3,20 @@
 let
   nix-conf = {
     file = pkgs.copyPathToStore ./nix.conf.age;
-    path = "/Users/johh.soo/.config/nix/nix.conf";
-    owner = "johh.soo";
+    path = "${config.users.users."johh.soo".home}/.config/nix/nix.conf";
+    owner = config.users.users."johh.soo".name;
   };
 
   ssh-conf = {
     file = pkgs.copyPathToStore ./.sshconfig.age;
-    path = "/Users/johh.soo/.ssh/config";
-    owner = "johh.soo";
+    path = "${config.users.users."johh.soo".home}/.ssh/config";
+    owner = config.users.users."johh.soo".name;
   };
 
   github = {
     file = pkgs.copyPathToStore ./github.age;
     path = "/Users/johh.soo/.config/nix/github";
-    owner = "johh.soo";
+    owner = config.users.users."johh.soo".name;
   };
 
   machines = {
