@@ -718,6 +718,10 @@ Take newline delimited `STRING' and return list of all
 ;; Consult
 (global-set-key (kbd "M-y") 'consult-yank-pop)
 (global-set-key (kbd "C-s") 'consult-line)
+(with-eval-after-load 'consult
+  (unless (string-match-p "--hidden" consult-ripgrep-args)
+    (setq consult-ripgrep-args
+          (concat consult-ripgrep-args " --hidden"))))
 
 ;; Embark
 (require 'embark-consult)
