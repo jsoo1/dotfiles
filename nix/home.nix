@@ -117,7 +117,10 @@ in
     enable = true;
 
     config = {
-      EnvironmentVariables.SSH_AUTH_SOCK = config.ssh-auth-sock;
+      EnvironmentVariables = {
+        SSH_AUTH_SOCK = config.ssh-auth-sock;
+        NIX_PATH = "nixpkgs=${pkgs.path}";
+      };
       KeepAlive = true;
       ProgramArguments = [
         "/bin/sh"
