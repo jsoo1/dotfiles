@@ -9,7 +9,10 @@ let
   sessionVariables = {
     EDITOR = em;
     ALTERNATE_EDITOR = "nvim";
+  } // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+    NIX_PATH = "nixpkgs=${pkgs.path}";
   };
+
   shellAliases =
     lib.optionalAttrs pkgs.stdenv.isDarwin { top = "${pkgs.htop}/bin/htop"; } // {
       inherit em;
