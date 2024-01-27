@@ -5,8 +5,8 @@ let
   gitconfig = {
     user = {
       name = "John Soo";
-      email = "john.soo@arista.com";
-      signingkey = "B2048DDD7FD2A52E";
+      email = "johh.soo@arista.com";
+      signingkey = "05BB AC5F A7FE 5527 3FE2  AC2A A3D4 605B 5EF5 F9C7";
     };
     core.editor = "${pkgs.neovim}/bin/nvim";
     diff.renames = true;
