@@ -41,6 +41,7 @@
   #:use-module (gnu services networking)
   #:use-module (gnu services nix)
   #:use-module (gnu services pm)
+  #:use-module (gnu services security-token)
   #:use-module (gnu services shepherd)
   #:use-module (gnu services ssh)
   #:use-module (gnu services sound)
@@ -149,6 +150,7 @@ EndSection\n")
    (service tlp-service-type (tlp-configuration
                               (tlp-default-mode "BAT")
                               (usb-autosuspend? #f)))
+   (service pcscd-service-type)
    (service gpm-service-type (gpm-configuration))
    (service qemu-binfmt-service-type (qemu-binfmt-configuration
                                       (platforms
