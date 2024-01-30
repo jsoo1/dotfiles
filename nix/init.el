@@ -1321,8 +1321,12 @@ when send commands with redis protocol."
 
 ;; Docker
 ;; dockerfile
-(require 'dockerfile-mode)
-(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+(require 'dockerfile-ts-mode)
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-ts-mode))
+
+;; Groovy
+(require 'groovy-mode)
+(add-to-list 'auto-mode-alist '("Jenkinsfile\\'" . groovy-mode))
 
 ;; Shellcheck
 (add-hook 'sh-mode-hook #'flycheck-mode)
