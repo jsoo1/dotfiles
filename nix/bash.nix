@@ -54,6 +54,7 @@ in
           bind -m emacs-standard '"\${kbd}": ${val}'
         '';
         bold = text: "\\[\\033[0;1m\\]${text}\\[\\033[0m\\]";
+        green = text: "\\[\\033[0;32m\\]${text}\\[\\033[0m\\]";
         red = text: "\\[\\033[0;1;31m\\]${text}\\[\\033[0m\\]";
         yellow = text: "\\[\\033[0;33m\\]${text}\\[\\033[0m\\]";
         cyan = text: "\\[\\033[0;36m\\]${text}\\[\\033[0m\\]";
@@ -92,9 +93,17 @@ in
           (git branch 2>/dev/null | awk '/^\*/ { $1=""; print $0 }') || echo ""
         }
 
+        function _k8sctx {
+          if ! (type -p kubectl 2>&1 1>/dev/null); then
+            return
+          else
+            echo "($(kubectl config current-context 2>/dev/null || echo none)) "
+          fi
+        }
+
         PS1="${fmt bold bold "\\u@"}${fmt red cyan "\\h"} \\W${
           fmt yellow purple "\\$(_cbr)"
-        } $ "
+        } ${fmt green green "\\$(_k8sctx)"}$ "
 
         if [[ "" != $BASH_VERSION ]]; then
           PS0="$(echo -n '\D{%F %T%z}\n')"
