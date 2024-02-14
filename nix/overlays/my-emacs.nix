@@ -82,6 +82,7 @@ let
       go-mode
       graphql-mode
       graphviz-dot-mode
+      groovy-mode
       guix
       (haskell-mode.overrideAttrs (o: {
         # Fixes use of removed function.
