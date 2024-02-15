@@ -15,6 +15,7 @@ let
     branch.autoSetupMerge = false;
     advice.detachedHead = false;
     init.defaultBranch = "release";
+    url."git@github.com:".insteadOf = "https://github.com/";
   };
 
 in
