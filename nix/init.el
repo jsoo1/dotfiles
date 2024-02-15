@@ -932,6 +932,12 @@ Take newline delimited `STRING' and return list of all
      "C-c C-z" 'nodejs-repl-switch-to-repl)))
 (setq js-indent-level 4)
 
+;; Json
+(require 'json-ts-mode)
+(add-to-list 'auto-mode-alist '("\\.json\\'" . json-ts-mode))
+(add-hook 'json-ts-mode-hook (defun disable-json-flycheckers ()
+                               (flycheck-disable-checker 'json-python-json)))
+
 ;; Coq
 (setq proof-three-window-mode-policy 'hybrid
       proof-script-fly-past-comments t
