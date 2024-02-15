@@ -22,6 +22,9 @@ import           Data.Maybe                       (listToMaybe)
 import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
 import           System.Process                   (createPipe)
+import qualified Xmobar
+import qualified Xmobar.Config.Actions            as Action
+import qualified Xmobar.Config.Template.Parse     as Template
 import           XMonad
 import           XMonad.Actions.CycleWS           (WSType (..), moveTo, shiftTo)
 import           XMonad.Actions.WindowBringer
@@ -40,9 +43,6 @@ import           XMonad.Util.Replace
 import           XMonad.Util.Run                  (runInTerm,
                                                    runProcessWithInput,
                                                    spawnPipe)
-import qualified Xmobar
-import qualified Xmobar.Config.Actions            as Action
-import qualified Xmobar.Config.Template.Parse     as Template
 
 
 main :: IO ()
@@ -462,12 +462,12 @@ titleFor windowNames wsId =
 
 
 titleFormat :: (Show a, Show b) => (a, Maybe b) -> String
-titleFormat (_, windowName) = (++ " ") $ take 20 $ maybe emptyTitle show windowName
+titleFormat (_, windowName) = (++ " ") $ take 30 $ maybe emptyTitle show windowName
 
 
 hiddenTitle :: (Show a, Ord k) => Map.Map k (Maybe a) -> k -> String
 hiddenTitle windowNames wsId =
-    (++ " ") $ take 20 $ maybe emptyTitle show $ join $ Map.lookup wsId windowNames
+    (++ " ") $ take 30 $ maybe emptyTitle show $ join $ Map.lookup wsId windowNames
 
 
 allTitles :: WindowSet -> X WorkspaceTitles
