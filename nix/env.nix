@@ -105,7 +105,6 @@ in
       perl # for skim (???)
       pv
       rage
-      recutils
       ripgrep
       shellcheck
       tealdeer
