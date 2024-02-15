@@ -120,7 +120,7 @@ in
     config = {
       EnvironmentVariables = {
         SSH_AUTH_SOCK = config.ssh-auth-sock;
-        NIX_PATH = "nixpkgs=${pkgs.path}";
+        NIX_PATH = "nixpkgs=${pkgs.path}:ssh-auth-sock=${config.ssh-auth-sock}";
       };
       KeepAlive = true;
       ProgramArguments = [
