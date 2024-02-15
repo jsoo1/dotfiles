@@ -145,11 +145,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1695550077,
-        "narHash": "sha256-xoxR/iY69/3lTnnZDP6gf3J46DUKPcf+Y1jH03tfZXE=",
+        "lastModified": 1707919853,
+        "narHash": "sha256-qxmBGDzutuJ/tsX4gp+Mr7fjxOZBbeT9ixhS5o4iFOw=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "a88df2fb101778bfd98a17556b3a2618c6c66091",
+        "rev": "043ba285c6dc20f36441d48525402bcb9743c498",
         "type": "github"
       },
       "original": {
@@ -248,16 +248,16 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1695597644,
-        "narHash": "sha256-kSGtbfkXj//WMNig+aeB3RCAuQmH7JfRZPtWk/Xkxss=",
+        "lastModified": 1708020781,
+        "narHash": "sha256-Fc/0Fz04LNFTD5ePFB6mXLJyDF2z9v+NdNrzSGeeh5s=",
         "owner": "jsoo1",
         "repo": "nixpkgs",
-        "rev": "28849062554b8b049708be4dae646b98b5a0677c",
+        "rev": "8155168ab6c6237837cc894f3874b8c71e0737ed",
         "type": "github"
       },
       "original": {
         "owner": "jsoo1",
-        "ref": "release-2023-09-24",
+        "ref": "release-2024-02-15",
         "repo": "nixpkgs",
         "type": "github"
       }
