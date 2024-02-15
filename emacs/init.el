@@ -1174,7 +1174,7 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (setf
  nix-nixfmt-bin "nixpkgs-fmt"
  (alist-get 'nix-mode eglot-server-programs)
- '("rnix-lsp"))
+ '("nil"))
 (defvar nix-format-on-save t
   "Format the nix buffer with nixfmt before saving.")
 (add-hook 'nix-mode-hook #'eglot-ensure)
