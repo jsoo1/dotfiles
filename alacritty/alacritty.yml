@@ -112,6 +112,7 @@ selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"
   save_to_clipboard: false
 
+title: null
 dynamic_title: true
 
 cursor:
