@@ -11,7 +11,7 @@
  (channel
   (name 'nonguix)
   (url "https://gitlab.com/nonguix/nonguix")
-  (commit "16e9c0d69b7e786f3c86ab5f6f7a20e1f28603ce")
+  (commit "10318ef7dd53c946bae9ed63f7e0e8bb8941b6b1")
   (introduction
    (make-channel-introduction
     "897c1a470da759236cc11798f4e0a5f7d4d59fbc"
