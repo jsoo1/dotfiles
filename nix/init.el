@@ -1195,7 +1195,7 @@ Take newline delimited `STRING' and return list of all
 (add-hook 'rust-mode-hook #'eldoc-mode)
 (add-hook 'rust-mode-hook #'company-mode)
 (add-hook 'rust-mode-hook
-          (defun disable-rust-flycheck ()
+          (defun disable-flycheck ()
             (flycheck-mode -1)))
 (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
 (setq
