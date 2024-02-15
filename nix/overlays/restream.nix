@@ -9,7 +9,6 @@
 
         runHook postInstall
       '';
-      patches = [ ./restream-invert.patch ];
     });
   })
 ]
