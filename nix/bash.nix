@@ -87,7 +87,9 @@ in
         fi
 
         # Git stuff
-        [ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ${config.ssh-auth-sock}
+        ${lib.optionalString pkgs.stdenv.hostPlatform.isLinux
+          ''[ -n "$SSH_AUTH_SOCK" ] && ln -sf "$SSH_AUTH_SOCK" ${config.ssh-auth-sock}''
+        }
 
         function _cbr {
           (git branch 2>/dev/null | awk '/^\*/ { $1=""; print $0 }') || echo ""
