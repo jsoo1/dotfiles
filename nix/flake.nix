@@ -21,7 +21,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
-      url = "github:jsoo1/nix-darwin/release-a179a33";
+      url = "github:jsoo1/nix-darwin/jsoo1/2024-02-18";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     deadnix = {
