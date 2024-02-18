@@ -10,7 +10,7 @@ let
     EDITOR = em;
     ALTERNATE_EDITOR = "nvim";
   } // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
-    NIX_PATH = "nixpkgs=${pkgs.path}";
+    NIX_PATH = "nixpkgs=${pkgs.path}\${SSH_AUTH_SOCK:+:ssh-auth-sock=$SSH_AUTH_SOCK}";
   };
 
   shellAliases =

@@ -90,12 +90,11 @@
                     (string-match-p (rx bol (eval (getenv "HOME"))) p))
                   nix-profiles)))) ;
 
-(setq exec-path '("~/.local/.bin"
-                  "/run/current-system/profile/bin"
-                  "/run/current-system/profile/sbin"
-                  "~/dotfiles/emacs/"))
 (require 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
+(exec-path-from-shell-copy-env "PATH")
+(exec-path-from-shell-copy-env "NIX_PATH")
+(exec-path-from-shell-copy-env "SSH_AUTH_SOCK")
 
 (when-let ((local (expand-file-name "local.el" user-emacs-directory))
            (exists (file-exists-p local)))
