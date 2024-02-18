@@ -52,7 +52,7 @@ in
   ];
 
   age = {
-    sshKeyPaths = [ "/Users/johh.soo/.ssh/id_rsa" ];
+    sshKeyPaths = [ "/Users/johh.soo/.ssh/rage_rsa" ];
     secrets = {
       inherit
         nix-conf
