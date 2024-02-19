@@ -70,7 +70,7 @@ in
   nix = {
     distributedBuilds = true;
     settings = {
-      trusted-users = [ "johh.soo" ];
+      extra-trusted-users = [ "johh.soo" ];
       experimental-features = [ "nix-command" "flakes" "repl-flake" "recursive-nix" ];
       system-features = [ "benchmark" "big-parallel" "local" "nixos-test" ];
       builders-use-substitutes = true;
