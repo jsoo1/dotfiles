@@ -3,7 +3,7 @@
 let
   nix-conf = {
     file = pkgs.copyPathToStore ./nix.conf.age;
-    path = "${config.users.users."johh.soo".home}/.config/nix/nix.conf";
+    path = "/etc/nix/nix-2.conf";
     owner = config.users.users."johh.soo".name;
   };
 
@@ -70,13 +70,16 @@ in
   nix = {
     distributedBuilds = true;
     settings = {
-      extra-trusted-users = [ "johh.soo" ];
+      trusted-users = [ "root" "@admin" "johh.soo" ];
       experimental-features = [ "nix-command" "flakes" "repl-flake" "recursive-nix" ];
       system-features = [ "benchmark" "big-parallel" "local" "nixos-test" ];
       builders-use-substitutes = true;
       fallback = true;
       allow-unsafe-native-code-during-evaluation = true;
     };
+    extraOptions = ''
+      include ${nix-conf.path}
+    '';
     linux-builder = {
       enable = true;
       supportedFeatures = [ "kvm" "benchmark" "big-parallel" ];
