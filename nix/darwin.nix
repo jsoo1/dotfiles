@@ -19,12 +19,6 @@ let
     owner = config.users.users."johh.soo".name;
   };
 
-  machines = {
-    file = pkgs.copyPathToStore ./machines.age;
-    path = "/etc/nix/machines";
-    owner = "root";
-  };
-
   ssh-known-hosts = {
     file = pkgs.copyPathToStore ./ssh_known_hosts.age;
     path = "/etc/ssh/ssh_known_hosts2";
@@ -58,7 +52,6 @@ in
         nix-conf
         ssh-conf
         github
-        machines
         searches
         ssh-known-hosts
         ;
@@ -81,7 +74,6 @@ in
       experimental-features = [ "nix-command" "flakes" "repl-flake" "recursive-nix" ];
       system-features = [ "benchmark" "big-parallel" "local" "nixos-test" ];
       builders-use-substitutes = true;
-      builders = "@${machines.path}";
       fallback = true;
       allow-unsafe-native-code-during-evaluation = true;
     };
