@@ -73,7 +73,6 @@ in
       trusted-users = [ "root" "@admin" "johh.soo" ];
       experimental-features = [ "nix-command" "flakes" "repl-flake" "recursive-nix" ];
       system-features = [ "benchmark" "big-parallel" "local" "nixos-test" ];
-      builders-use-substitutes = true;
       fallback = true;
       allow-unsafe-native-code-during-evaluation = true;
     };
