@@ -85,6 +85,10 @@ in
       fallback = true;
       allow-unsafe-native-code-during-evaluation = true;
     };
+    linux-builder = {
+      enable = true;
+      supportedFeatures = [ "kvm" "benchmark" "big-parallel" ];
+    };
   };
 
   programs.gnupg.agent = {
