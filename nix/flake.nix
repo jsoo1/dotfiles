@@ -116,29 +116,34 @@
         extraSpecialArgs = { inherit dotfiles soclip; };
       };
 
-      nixosConfigurations.vbox = packages.x86_64-linux.nixos {
+      nixosConfigurations.vm = packages.aarch64-linux.nixos {
         imports = [
-          "${nixpkgs}/nixos/modules/virtualisation/virtualbox-image.nix"
-          ({ lib, pkgs, ... }: {
-            # cribbed from  installer/virtualbox-demo.nix
-            # FIXME: UUID detection is currently broken
-            boot.loader.grub.fsIdentifier = "provided";
+          "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"
+          ({ lib, pkgs, config, ... }: {
+            networking.hostName = "nixos-testing";
 
-            # Add some more video drivers to give X11 a shot at working in
-            # VMware and QEMU.
-            services.xserver.videoDrivers = lib.mkOverride 40 [
-              "virtualbox"
-              "vmware"
-              "cirrus"
-              "vesa"
-              "modesetting"
-            ];
+            networking.nameservers = [ "8.8.8.8" ];
 
-            powerManagement.enable = false;
+            system.stateVersion = "24.05";
 
-            system.stateVersion = "22.05";
+            services.openssh.listenAddresses = [{
+              port = 22;
+              addr = "127.0.0.1";
+            }];
 
-            networking.hostName = "vbox";
+            virtualisation = {
+              graphics = false;
+              diskSize = 24 * 1024;
+              memorySize = 4 * 1024;
+              forwardPorts = [{
+                from = "host";
+                guest.port =
+                  (lib.head config.services.openssh.listenAddresses).port;
+                host.port = 2225;
+              }];
+              mountHostNixStore = true;
+              useHostCerts = true;
+            };
           })
           {
             boot.kernelPatches = [{
