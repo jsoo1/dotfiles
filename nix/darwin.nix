@@ -120,5 +120,8 @@ in
     name = "johh.soo";
     home = "/Users/johh.soo";
     shell = pkgs.bashInteractive;
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILK6/O2/x73878Nz0Jy4nhL8A4lJqH+G43oOZI2yejB4 cardno:18_556_863"
+    ];
   };
 }
