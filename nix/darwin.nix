@@ -83,13 +83,19 @@ in
       enable = true;
       supportedFeatures = [ "kvm" "benchmark" "big-parallel" ];
       maxJobs = 4;
-      config.virtualisation = {
-        cores = 4;
-        darwin-builder = {
-          diskSize = 128 * 1024;
-          memorySize = 6 * 1024;
+      config = ({ pkgs, ... }: {
+        environment.defaultPackages = [ pkgs.neovim ];
+        users.users.root.openssh.authorizedKeys.keys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILK6/O2/x73878Nz0Jy4nhL8A4lJqH+G43oOZI2yejB4 cardno:18_556_863"
+        ];
+        virtualisation = {
+          cores = 4;
+          darwin-builder = {
+            diskSize = 128 * 1024;
+            memorySize = 6 * 1024;
+          };
         };
-      };
+      });
     };
   };
 
