@@ -81,6 +81,7 @@ in
     '';
     linux-builder = {
       enable = true;
+      ephemeral = true;
       supportedFeatures = [ "kvm" "benchmark" "big-parallel" ];
       maxJobs = 4;
       config = ({ pkgs, ... }: {
@@ -91,6 +92,7 @@ in
         virtualisation = {
           cores = 4;
           darwin-builder = {
+            min-free = 0;
             diskSize = 128 * 1024;
             memorySize = 6 * 1024;
           };
