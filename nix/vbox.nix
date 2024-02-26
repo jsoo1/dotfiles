@@ -1,5 +1,5 @@
 # A VM I use sometimes to use a nixos system that has no other tenants
-{ config, lib, pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   # imports = [
@@ -12,25 +12,15 @@
   security.sudo.wheelNeedsPassword = false;
 
   nix = {
-    settings.trusted-users = [ "@wheel" ];
-    extraOptions = ''
-      build-users-group = nixbld
-
-      max-jobs = 16
-      cores = 0
-      sandbox = false
-
-      substituters = https://cache.nixos.org/
-      trusted-substituters =
-      trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
-      require-sigs = true
-      allowed-users = *
-      system-features = benchmark big-parallel local nixos-test recursive-nix
-      builders-use-substitutes = true
-      require-sigs = false
-      experimental-features = nix-command flakes recursive-nix
-      sandbox-paths = /etc/nix-serve/nix-serve.sec=/etc/nix-serve/signing-key.sec
-    '';
+    settings = {
+      experimental-features = [ "nix-command" "flakes" "recursive-nix" ];
+      trusted-users = [ "@wheel" ];
+      allowed-users = [ "*" ];
+      build-users-group = "nixbld";
+      require-sigs = true;
+      sandbox = "relaxed";
+      system-features = [ "benchmark" "big-parallel" "nixos-test" "recursive-nix" ];
+    };
   };
 
   programs.git = {
@@ -44,15 +34,13 @@
   services.openssh = {
     enable = true;
     settings.PasswordAuthentication = true;
+    settings.StreamLocalBindUnlink = true;
     openFirewall = true;
-    extraConfig = ''
-      StreamLocalBindUnlink yes
-    '';
   };
 
   environment = {
     enableDebugInfo = true;
-    variables.EDITOR = "${pkgs.neovim}/bin/nvim";
+    variables.EDITOR = "${lib.getExe pkgs.neovim}";
     defaultPackages = with pkgs; [
       curl
       direnv
@@ -73,6 +61,8 @@
       watch
     ];
   };
+
+  users.mutableUsers = false;
 
   users.users.john = {
     password = "john";
