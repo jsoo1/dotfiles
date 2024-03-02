@@ -72,6 +72,7 @@
   '("mkfontdir"
     "mkfontscale"
     "font-dejavu"
+    "font-google-noto"
     "font-iosevka"))
 
 (define-public c-tools
