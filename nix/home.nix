@@ -13,6 +13,7 @@ let
     fetch.prune = true;
     github.user = "jsoo1";
     commit.gpgsign = true;
+    commit.cleanup = "scissors";
     branch.autoSetupMerge = false;
     advice.detachedHead = false;
     init.defaultBranch = "release";
