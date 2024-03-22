@@ -85,6 +85,7 @@ in
     autojump.enable = true;
     bat.enable = true;
     bat.config.theme = "Solarized (dark)";
+    bat.config.style = "plain";
     direnv.enable = true;
     direnv.enableBashIntegration = true;
     emacs.enable = true;
