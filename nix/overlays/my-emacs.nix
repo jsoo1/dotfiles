@@ -110,6 +110,7 @@ let
       orderless
       org-mime
       origami
+      pcap-mode
       popper
       proof-general
       protobuf-mode

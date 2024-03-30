@@ -872,6 +872,14 @@ Take newline delimited `STRING' and return list of all
 ;; Restclient
 (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode))
 
+;; pcap-mode
+(require 'pcap-mode)
+(add-hook 'pcap-mode-hook
+          (defun make-pcap-mode-ctrl-c-map ()
+            (local-set-key (kbd "C-c") pcap-mode-map)))
+(define-keymap :keymap pcap-mode-map
+  "RET" #'pcap-mode-view-pkt-contents)
+
 ;; Editorconfig
 (require 'editorconfig)
 (editorconfig-mode 1)

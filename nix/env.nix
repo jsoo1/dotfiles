@@ -84,6 +84,7 @@ in
     socket-utilities = with pkgs; [
       libressl # see "nc" in extraOutputsToInstall
       socat
+      wireshark-cli
     ];
 
     shell-utilities = with pkgs; lib.optionals isLinux [ iftop linuxPackages.perf ] ++ [
