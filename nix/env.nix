@@ -108,6 +108,7 @@ in
       rage
       ripgrep
       shellcheck
+      shfmt
       tealdeer
       unar
       watch
