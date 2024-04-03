@@ -144,7 +144,6 @@
     "emacs-dhall-mode"
     "emacs-dired-git-info"
     "emacs-diredfl"
-    "emacs-docker"
     "emacs-dockerfile-mode"
     "emacs-ediprolog"
     "emacs-editorconfig"

@@ -1655,7 +1655,6 @@ respectively."
               :prefix 'my-debbugs-modes-map
               "o" #'debbugs-org
               "b" #'debbugs-gnu)
-        "d" #'docker
         "e" #'gnus
         "f" #'elfeed
         "g" #'guix
