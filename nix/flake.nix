@@ -91,7 +91,7 @@
           "${packages.x86_64-linux.lib.getExe activate}";
       };
 
-      darwinConfigurations.johhsoo = darwin.lib.darwinSystem {
+      darwinConfigurations.johhsD759KPm = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
           ({ pkgs, ... }: {

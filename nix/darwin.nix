@@ -36,7 +36,7 @@ in
 {
   imports = [ ./env.nix ];
 
-  networking.hostName = "johhsoo";
+  networking.hostName = "johhsD759KPm";
 
   environment.systemPackages = config.shell-utilities;
 
