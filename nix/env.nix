@@ -104,6 +104,7 @@ in
       parallel
       peep
       perl # for skim (???)
+      pstree
       pv
       rage
       ripgrep
