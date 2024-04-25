@@ -40,11 +40,11 @@ in
 
   config = {
     c-utilities = with pkgs; [
+      binutils
+      ccls
       man-pages
       man-pages-posix
     ] ++ lib.optionals isLinux [
-      binutils
-      ccls
       gdb
       rr
     ];
