@@ -132,6 +132,8 @@ in
         "-c"
         "/bin/wait4path ${pkgs.my-emacs}/bin/emacs &amp;&amp; exec ${pkgs.my-emacs}/bin/emacs --fg-daemon=${config.home.username}"
       ];
+      SoftResourceLimits.NumberOfFiles = 128000;
+      HardResourceLimits.NumberOfFiles = 524288;
     };
   };
 }
