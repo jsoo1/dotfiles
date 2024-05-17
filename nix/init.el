@@ -877,6 +877,9 @@ Take newline delimited `STRING' and return list of all
 (add-hook 'pcap-mode-hook
           (defun make-pcap-mode-ctrl-c-map ()
             (local-set-key (kbd "C-c") pcap-mode-map)))
+(add-hook 'pcap-mode-hook
+          (defun correct-tshark-location ()
+            (setq-local pcap-mode-tshark-executable (executable-find "tshark"))))
 (define-keymap :keymap pcap-mode-map
   "RET" #'pcap-mode-view-pkt-contents)
 
