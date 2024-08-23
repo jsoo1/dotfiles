@@ -925,6 +925,41 @@ Take newline delimited `STRING' and return list of all
                ("Hydra" "^(defhydra\\+?\\s-+\\([a-z-]+\\)" 1)
                ,@imenu-generic-expression))))
 
+;; Java
+(add-to-list 'file-name-handler-alist '("\\.class$" . javap-handler))
+(add-to-list 'auto-mode-alist '("\\.pom\\'" . web-mode))
+(with-eval-after-load 'java-mode
+  (define-keymap :keymap java-mode-map
+  "C-c C-d" #'jdb))
+
+(defun javap-handler (op &rest args)
+  "Handle .class files by putting the output of javap in the buffer."
+  (cond
+   ((eq op 'get-file-buffer)
+    (let ((file (car args)))
+      (with-current-buffer (create-file-buffer file)
+        (call-process "javap" nil (current-buffer) nil "-verbose"
+                      "-classpath" (file-name-directory file)
+                      (file-name-sans-extension
+                       (file-name-nondirectory file)))
+        (setq buffer-file-name file)
+        (setq buffer-read-only t)
+        (set-buffer-modified-p nil)
+        (goto-char (point-min))
+        (java-mode)
+        (current-buffer))))
+   ((javap-handler-real op args))))
+
+(defun javap-handler-real (operation args)
+  "Run the real handler without the javap handler installed."
+  (let ((inhibit-file-name-handlers
+         (cons 'javap-handler
+               (and (eq inhibit-file-name-operation operation)
+                    inhibit-file-name-handlers)))
+        (inhibit-file-name-operation operation))
+    (apply operation args)))
+
+
 ;; JavaScript
 (require 'nodejs-repl)
 (add-hook
