@@ -831,6 +831,7 @@ Take newline delimited `STRING' and return list of all
         "t" #'eglot-find-typeDefinition)
   "f" #'eglot-format
   "h" #'eldoc
+  "i" #'eglot-inlay-hints-mode
   "r" #'eglot-rename
   "X" #'eglot-signal-didChangeConfiguration)
 
