@@ -89,7 +89,6 @@ in
     shell-utilities = with pkgs; lib.optionals isLinux [ iftop linuxPackages.perf ] ++ [
       bash-completion
       bottom
-      cachix
       coreutils
       dogdns
       du-dust
@@ -98,11 +97,13 @@ in
       gawk
       git
       graphviz-nox
+      mosh
       neovim
       oil
       parallel
       peep
       perl # for skim (???)
+      pigz
       pstree
       pv
       rage
