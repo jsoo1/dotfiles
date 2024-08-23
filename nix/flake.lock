@@ -218,7 +218,6 @@
     },
     "root": {
       "inputs": {
-        "aristapkgs": "aristapkgs",
         "darwin": "darwin",
         "deadnix": "deadnix",
         "dotfiles": "dotfiles",
