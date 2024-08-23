@@ -31,7 +31,7 @@ in
   ];
 
   home = {
-    extraOutputsToInstall = [ "doc" "nc" ];
+    extraOutputsToInstall = [ "doc" ];
 
     stateVersion = "22.05";
 

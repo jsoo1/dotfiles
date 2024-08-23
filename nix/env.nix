@@ -1,6 +1,6 @@
 { lib, pkgs, ... }:
 let
-  inherit (pkgs.stdenv.hostPlatform) isLinux;
+  inherit (pkgs.stdenv.hostPlatform) isLinux isDarwin;
 in
 
 {
@@ -81,39 +81,45 @@ in
     remarkable-utilities = with pkgs; [ restream ];
 
     socket-utilities = with pkgs; [
-      libressl # see "nc" in extraOutputsToInstall
+      libressl.nc
+      libressl
       socat
       wireshark-cli
     ];
 
-    shell-utilities = with pkgs; lib.optionals isLinux [ iftop linuxPackages.perf ] ++ [
-      bash-completion
-      bottom
-      coreutils
-      dogdns
-      du-dust
-      eza
-      fd
-      gawk
-      git
-      graphviz-nox
-      mosh
-      neovim
-      oil
-      parallel
-      peep
-      perl # for skim (???)
-      pigz
-      pstree
-      pv
-      rage
-      ripgrep
-      shellcheck
-      shfmt
-      tealdeer
-      unar
-      watch
-    ];
+    shell-utilities = with pkgs;
+      lib.optionals isLinux [
+        iftop
+        linuxPackages.perf
+      ] ++ lib.optionals isDarwin [
+        bash-completion
+      ] ++ [
+        bottom
+        coreutils
+        dogdns
+        du-dust
+        eza
+        fd
+        gawk
+        git
+        graphviz-nox
+        mosh
+        neovim
+        oil
+        parallel
+        peep
+        perl # for skim (???)
+        pigz
+        pstree
+        pv
+        rage
+        ripgrep
+        shellcheck
+        shfmt
+        tealdeer
+        unar
+        watch
+      ];
 
     terraform-utilities = with pkgs; [ terraform-ls ];
   };
