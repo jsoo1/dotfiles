@@ -1290,11 +1290,8 @@ See URL `http://pypi.python.org/pypi/ruff'."
   rust-imenu-generic-expression))
 
 ;; SQL
-(require 'origami)
-
-(add-hook 'sql-mode-hook #'origami-mode)
-
 (setq sql-sqlite-program "sqlite3")
+
 ;; Inspired by:
 ;; https://github.com/alezost/emacs-config/blob/master/utils/al-sql.el#L47
 (defun my-sql-password-from-auth-source (_ _ user server _ _)
@@ -1374,9 +1371,6 @@ when send commands with redis protocol."
 ;; jq
 (require 'jq-mode)
 (add-to-list 'auto-mode-alist '("\\.jq\\'" . jq-mode))
-
-;; Xml
-(add-hook 'nxml-mode-hook #'origami-mode)
 
 ;; YAML
 (require 'yaml-mode)
@@ -1605,7 +1599,6 @@ when send commands with redis protocol."
  :overline nil
  :foreground my-base0
  :background my-base02)
- ;; :box `(:line-width 1 :color ,my-base02 :style unspecified))
 
 (set-face-attribute
  'mode-line-inactive nil
@@ -1613,7 +1606,6 @@ when send commands with redis protocol."
  :underline nil
  :foreground my-base01
  :background "unspecified")
- ;; :box `(:line-width 1 :color ,my-base03 :style unspecified))
 
 (defun evil-state-foreground (state)
   "The mode line color for evil-state `STATE'."
