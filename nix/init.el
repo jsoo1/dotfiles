@@ -1796,7 +1796,7 @@ respectively."
   "h" (define-keymap :keymap help-map
         "w" #'woman
         "W" #'man
-        "i" #'info-lookup-symbol
+        "i" #'consult-info
         "I" #'info-apropos
         "D" (define-keymap :prefix 'my-describe-map
               "a" #'consult-apropos
