@@ -76,7 +76,6 @@ in
       nix-prefetch
       nix-top
       nix-tree
-      rnix-lsp
     ];
 
     remarkable-utilities = with pkgs; [ restream ];

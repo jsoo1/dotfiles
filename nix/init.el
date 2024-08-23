@@ -1568,16 +1568,16 @@ when send commands with redis protocol."
  :underline nil
  :overline nil
  :foreground my-base0
- :background my-base02
- :box `(:line-width 1 :color ,my-base02 :style unspecified))
+ :background my-base02)
+ ;; :box `(:line-width 1 :color ,my-base02 :style unspecified))
 
 (set-face-attribute
  'mode-line-inactive nil
  :overline nil
  :underline nil
  :foreground my-base01
- :background "unspecified"
- :box `(:line-width 1 :color ,my-base03 :style unspecified))
+ :background "unspecified")
+ ;; :box `(:line-width 1 :color ,my-base03 :style unspecified))
 
 (defun evil-state-foreground (state)
   "The mode line color for evil-state `STATE'."

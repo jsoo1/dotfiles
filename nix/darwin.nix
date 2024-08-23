@@ -106,10 +106,7 @@ in
     enableSSHSupport = true;
   };
 
-  fonts = {
-    fonts = [ pkgs.iosevka ];
-    fontDir.enable = true;
-  };
+  fonts.packages = [ pkgs.iosevka ];
 
   programs.bash.enable = true;
   programs.bash.enableCompletion = true; # breaks with osh

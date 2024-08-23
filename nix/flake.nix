@@ -2,7 +2,7 @@
   description = "A home-manager/nix-darwin configuration";
   inputs = {
     emacs = {
-      url = "github:jsoo1/emacs-overlay/2023-11-14";
+      url = "github:jsoo1/emacs-overlay/2024-08-23";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
@@ -15,13 +15,13 @@
       url = "github:edolstra/flake-compat";
     };
     flake-utils.url = "github:numtide/flake-utils";
-    nixpkgs.url = "github:jsoo1/nixpkgs/release-2024-02-15";
+    nixpkgs.url = "github:jsoo1/nixpkgs/release-2024-08-23";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
-      url = "github:jsoo1/nix-darwin/jsoo1/2024-02-18";
+      url = "github:jsoo1/nix-darwin/jsoo1/2024-08-23";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     deadnix = {
