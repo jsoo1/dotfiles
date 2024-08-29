@@ -997,7 +997,7 @@ To override the path to the ruff executable, set
 See URL `http://pypi.python.org/pypi/ruff'."
   :command ("ruff"
             "check"
-            "--outputt-format=concise"
+            "--output-format=concise"
             (eval (when buffer-file-name
                     (concat "--stdin-filename=" buffer-file-name)))
             "-")
