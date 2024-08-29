@@ -70,7 +70,7 @@ in
 
     nix-utilities = with pkgs; [
       deadnix
-      nil
+      nixd
       nixpkgs-fmt
       nix-diff
       nix-prefetch

@@ -1248,7 +1248,7 @@ See URL `http://pypi.python.org/pypi/ruff'."
 (setf
  nix-nixfmt-bin "nixpkgs-fmt"
  (alist-get 'nix-ts-mode eglot-server-programs)
- '("nil"))
+ '("nixd"))
 (defvar nix-format-on-save t
   "Format the nix buffer with nixfmt before saving.")
 (add-hook 'nix-ts-mode-hook #'eglot-ensure)
