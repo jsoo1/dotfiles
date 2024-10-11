@@ -42,7 +42,21 @@
          (file-name (git-file-name name version))))
       (inputs `(("ghc-uuid" ,ghc-uuid)
                 ,@(package-inputs ghc-xmobar)))
-      (arguments `(#:tests? #f ,@(package-arguments ghc-xmobar))))))
+      (arguments `(#:tests? #f
+                   #:configure-flags (list "--flags=all_extensions" "--flags=with_threaded")
+                   #:phases
+                   (modify-phases %standard-phases
+                     (add-before 'configure 'jailbreak
+                       (lambda _
+                         (substitute* "xmobar.cabal"
+                           (("base >= 4.11.0 && < 4.16") "base"))))
+                     (add-after 'install 'remove-binaries
+                       (lambda* (#:key outputs #:allow-other-keys)
+                         (delete-file-recursively (string-append (assoc-ref outputs "out") "/bin"))))
+                     (add-before 'build 'patch-test-shebang
+                       (lambda* (#:key inputs #:allow-other-keys)
+                         (substitute* "test/Xmobar/Plugins/Monitors/AlsaSpec.hs"
+                           (("/bin/bash") (which "bash")))))))))))
 
 (define-public my-xmonad
   (package

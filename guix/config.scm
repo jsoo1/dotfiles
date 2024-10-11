@@ -118,6 +118,7 @@ EndSection\n")
    (service cups-service-type (cups-configuration (web-interface? #t)))
    (service dnsmasq-service-type (dnsmasq-configuration
                                   (servers '("1.1.1.1"))))
+   (service containerd-service-type)
    (service docker-service-type)
    (service dbus-root-service-type)
    (service elogind-service-type)
@@ -210,22 +211,20 @@ EndSection\n")
        ,@%base-user-accounts))
     (packages
      `(;; for HTTPS access
-       ,curl ,nss-certs
-             ;; essentials
-             ,iproute ,git ,openssh ,gnupg ,ncurses
-             ;; ???
-             ,glibc-utf8-locales
-             ;; text editors
-             ,neovim ,emacs-no-x
-             ;; for keyboards
-             ,bluez
-             ;; backlight config
-             ,light
-             ,@%base-packages))
+       ,curl
+       ;; essentials
+       ,iproute ,git ,openssh ,gnupg ,ncurses
+       ;; ???
+       ,glibc-utf8-locales
+       ;; text editors
+       ,neovim ,emacs-no-x
+       ;; for keyboards
+       ,bluez
+       ;; backlight config
+       ,light
+       ,@%base-packages))
     (setuid-programs
-     `(,(setuid-program
-         (program (file-append docker-cli "/bin/docker")))
-       ;; Stuff for xorg without display manager.
+     `(;; Stuff for xorg without display manager.
        ;; startx and X need to be in setuid-programs.
        ;; They also need extra tweaks in the chown-file service below.
        ,(setuid-program

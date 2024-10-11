@@ -73,6 +73,8 @@
     "mkfontscale"
     "font-dejavu"
     "font-google-noto"
+    "font-google-noto-sans-cjk"
+    "font-google-noto-serif-cjk"
     "font-iosevka"))
 
 (define-public c-tools
