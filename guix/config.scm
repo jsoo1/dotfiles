@@ -46,7 +46,10 @@
   #:use-module (gnu services ssh)
   #:use-module (gnu services sound)
   #:use-module (gnu services virtualization)
-  #:use-module (gnu services xorg))
+  #:use-module (gnu services xorg)
+
+  #:use-module ((nongnu packages linux) #:prefix nongnu:)
+  #:use-module ((nongnu system linux-initrd) #:prefix nongnu:))
 
 (define username "john")
 
@@ -185,13 +188,14 @@ EndSection\n")
     (timezone "America/Denver")
     (locale "en_US.utf8")
     (keyboard-layout ctrl-nocaps)
-    (initrd-modules %base-initrd-modules)
     (bootloader
      (bootloader-configuration
       (bootloader grub-efi-bootloader)
       (targets '("/boot/efi"))
       (keyboard-layout ctrl-nocaps)))
-    (kernel linux-libre-with-bpf)
+    (kernel nongnu:linux)
+    (initrd nongnu:microcode-initrd)
+    (firmware `(,nongnu:linux-firmware))
     (file-systems
      (cons* (file-system
               (mount-point "/boot/efi")

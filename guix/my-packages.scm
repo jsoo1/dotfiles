@@ -13,11 +13,14 @@
   '("aspell"
     "aspell-dict-en"
     "bat"
-    "bpftrace"
+    ;; FIXME: broken
+    ;; "bpftrace"
     "cups"
     "direnv"
     "docker-cli"
-    "dog"
+    ;; :(
+    ;; "dog"
+    "bind:utils"
     "du-dust"
     "emacs-next"
     "exa"

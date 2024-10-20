@@ -5,18 +5,18 @@
   (branch "john")
   (introduction
    (make-channel-introduction
-    "f8e56964dfbbfc7b1517e954d63c86373dfa7031"
+    "ebc6c866f9c3845a2aff09937e93bb5454ab3cd5"
     (openpgp-fingerprint
      "5A15 8FAF 406A 748A 81A9  DC4E 4F43 7A76 B448 A23B"))))
  (channel
   (name 'nonguix)
-  (url "https://gitlab.com/nonguix/nonguix")
-  (commit "e355a2ff675abd48f671a867c211c98707ca1e82")
+  (url "file:///home/john/projects/nonguix/.git")
+  (commit "cc6667726df28b18f07c18b824695ad271757b55")
   (introduction
    (make-channel-introduction
-    "897c1a470da759236cc11798f4e0a5f7d4d59fbc"
+    "50efe4e85f29a457bdcc20b3028ab4c660d3cdd0"
     (openpgp-fingerprint
-     "2A39 3FFF 68F4 EF7A 3D29  12AF 6F51 20A0 22FB B2D5"))))
+     "5A15 8FAF 406A 748A 81A9  DC4E 4F43 7A76 B448 A23B"))))
  (channel
   (name 'private)
   (url "file:///home/john/projects/guix-channel/.git")
