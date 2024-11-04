@@ -102,7 +102,11 @@ in
         fd
         gawk
         git
+        (google-cloud-sdk.withExtraComponents [
+          google-cloud-sdk.components.gke-gcloud-auth-plugin
+        ])
         graphviz-nox
+        yq
         mosh
         neovim
         oil
