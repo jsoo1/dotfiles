@@ -109,7 +109,6 @@ let
       ob-restclient
       orderless
       org-mime
-      origami
       pcap-mode
       popper
       proof-general
