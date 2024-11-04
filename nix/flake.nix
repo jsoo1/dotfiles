@@ -46,7 +46,9 @@
     }:
     let
       inherit (nixpkgs) lib;
-      toSpecific = f: systems: lib.foldAttrs lib.mergeAttrs { } (lib.map f systems);
+      toSpecific = systems: f: lib.foldAttrs lib.mergeAttrs { } (lib.map f systems);
+      overlays.default = pkgsFinal: pkgsPrev:
+        pkgsPrev.lib.composeManyExtensions overlays' pkgsFinal pkgsPrev;
       overlays' = [
         deadnix.overlays.default
         emacs.overlay
@@ -61,16 +63,14 @@
       ++ import ./overlays/my-emacs.nix
       ++ import ./overlays/restream.nix
       ++ import ./overlays/default-shell.nix;
-      all-systems = toSpecific
-        (system: {
-          packages.${system} = import aristapkgs { inherit system; overlays = overlays'; };
-        }) [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
+      all-systems = toSpecific [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ] (system: {
+        packages.${system} = import nixpkgs { inherit system; overlays = [ overlays.default ]; };
+      });
     in
     rec {
       inherit (all-systems) packages;
 
-      overlays.default = pkgsFinal: pkgsPrev:
-        pkgsPrev.lib.composeManyExtensions overlays' pkgsFinal pkgsPrev;
+      inherit overlays;
 
       # Single home-manager reconfigure command for flakeless systems.
       # Usage: `nix-shell ~/dotfiles/nix/shell.nix`
