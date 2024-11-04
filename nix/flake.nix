@@ -4,7 +4,6 @@
     emacs = {
       url = "github:jsoo1/emacs-overlay/2024-08-23";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
     };
     dotfiles = {
       flake = false;
@@ -14,7 +13,6 @@
       flake = false;
       url = "github:edolstra/flake-compat";
     };
-    flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:jsoo1/nixpkgs/release-2024-08-23";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -27,35 +25,34 @@
     deadnix = {
       url = "github:astro/deadnix";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.utils.follows = "flake-utils";
     };
     nil = {
       url = "github:oxalica/nil";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
     };
     soclip.url = "git+https://git.sr.ht/~jsoo/soclip?ref=release";
   };
-
   outputs =
-    { self
+    { aristapkgs
     , deadnix
     , dotfiles
     , emacs
     , nil
     , nixpkgs
-    , flake-utils
     , home-manager
     , darwin
     , soclip
     , ...
     }:
     let
+      inherit (nixpkgs) lib;
+      toSpecific = f: systems: lib.foldAttrs lib.mergeAttrs { } (lib.map f systems);
       overlays' = [
         deadnix.overlays.default
         emacs.overlay
         soclip.overlays.default
         nil.overlays.nil
+        aristapkgs.overlays.default
       ] ++ [
         (_: _:
           { emacs-xclip-soclip-support = soclip.patches.emacs-xclip-support; }
@@ -64,10 +61,10 @@
       ++ import ./overlays/my-emacs.nix
       ++ import ./overlays/restream.nix
       ++ import ./overlays/default-shell.nix;
-      all-systems = flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ]
+      all-systems = toSpecific
         (system: {
-          packages = import nixpkgs { inherit system; overlays = overlays'; };
-        });
+          packages.${system} = import aristapkgs { inherit system; overlays = overlays'; };
+        }) [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
     in
     rec {
       inherit (all-systems) packages;
@@ -94,9 +91,9 @@
       darwinConfigurations.johhsD759KPm = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
-          ({ pkgs, ... }: {
-            nixpkgs.overlays = [ overlays.default ];
-          })
+          {
+            nixpkgs.pkgs = packages.aarch64-darwin;
+          }
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
@@ -119,7 +116,8 @@
       nixosConfigurations.vm = packages.aarch64-linux.nixos {
         imports = [
           "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"
-          ({ lib, pkgs, config, ... }: {
+          ({ lib, config, ... }: {
+            nixpkgs.pkgs = packages.aarch64-linux;
             networking.hostName = "nixos-testing";
 
             networking.nameservers = [ "8.8.8.8" ];
