@@ -33,8 +33,7 @@
     soclip.url = "git+https://git.sr.ht/~jsoo/soclip?ref=release";
   };
   outputs =
-    { aristapkgs
-    , deadnix
+    { deadnix
     , dotfiles
     , emacs
     , nil
@@ -54,7 +53,6 @@
         emacs.overlay
         soclip.overlays.default
         nil.overlays.nil
-        aristapkgs.overlays.default
       ] ++ [
         (_: _:
           { emacs-xclip-soclip-support = soclip.patches.emacs-xclip-support; }
