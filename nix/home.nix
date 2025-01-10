@@ -96,6 +96,8 @@ in
     gpg.enable = true;
     htop.enable = isDarwin;
     jq.enable = true;
+    jujutsu.enable = true;
+    jujutsu.settings = gitconfig;
     soclip.enable = true;
     skim.defaultOptions = [ "-m" "--color=bw" "--layout=reverse" ];
     skim.enable = true;
