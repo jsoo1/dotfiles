@@ -166,13 +166,15 @@
 
 ;; VC
 (setq vc-follow-symlinks 't)
-(with-eval-after-load 'vc
-  (defadvice vc-mode-line (after strip-backend () activate)
-    (when (stringp vc-mode)
-      (let ((noback (replace-regexp-in-string
-                     (format "^ %s." (vc-backend buffer-file-name))
-                     " " vc-mode)))
-        (setq vc-mode noback)))))
+
+(defun vc-mode-line--strip-vc-backend (foo &optional arg)
+  (when (stringp vc-mode)
+    (let ((noback (replace-regexp-in-string
+                   (format "^[\\t ]+%s." (vc-backend buffer-file-name))
+                   " " vc-mode)))
+      (setq vc-mode noback))))
+
+(advice-add 'vc-mode-line :after #'vc-mode-line--strip-vc-backend)
 
 ;; Elfeed
 (when (eq 'darwin system-type)

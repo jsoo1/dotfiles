@@ -42,7 +42,7 @@ in
 
   environment.shells = [
     pkgs.bashInteractive
-    pkgs.oil
+    pkgs.oils-for-unix
   ];
 
   age = {
@@ -71,7 +71,7 @@ in
     distributedBuilds = true;
     settings = {
       trusted-users = [ "root" "@admin" "johh.soo" ];
-      experimental-features = [ "nix-command" "flakes" "repl-flake" "recursive-nix" ];
+      experimental-features = [ "nix-command" "flakes" "recursive-nix" ];
       system-features = [ "benchmark" "big-parallel" "local" "nixos-test" ];
       fallback = true;
       allow-unsafe-native-code-during-evaluation = true;

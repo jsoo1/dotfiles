@@ -109,7 +109,7 @@ in
         yq
         mosh
         neovim
-        oil
+        oils-for-unix
         parallel
         peep
         perl # for skim (???)
