@@ -21,6 +21,14 @@ let
     rebase.updateRefs = true;
   };
 
+  jjconfig = gitconfig // {
+    ui.pager = "bat --paging=auto";
+    signing = {
+      sign-all = true;
+      backend = "gpg";
+      key = "B20E410388BD3540";
+    };
+  };
 in
 {
   imports = [
@@ -97,7 +105,7 @@ in
     htop.enable = isDarwin;
     jq.enable = true;
     jujutsu.enable = true;
-    jujutsu.settings = gitconfig;
+    jujutsu.settings = jjconfig;
     soclip.enable = true;
     skim.defaultOptions = [ "-m" "--color=bw" "--layout=reverse" ];
     skim.enable = true;
