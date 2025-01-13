@@ -1,6 +1,9 @@
 let
-  elpa = pkgs: { elpaPackages, ... }:
-    with elpaPackages; [
+  elpa =
+    pkgs:
+    { elpaPackages, ... }:
+    with elpaPackages;
+    [
       consult
       csv-mode
       debbugs
@@ -24,14 +27,18 @@ let
       xref
       yasnippet
     ];
-  manual = { manualPackages, ... }:
+  manual =
+    { manualPackages, ... }:
     with manualPackages;
     [
       # cedille - Broken
       agda2-mode
     ];
-  melpa = pkgs: { melpaPackages, ... }:
-    with melpaPackages; [
+  melpa =
+    pkgs:
+    { melpaPackages, ... }:
+    with melpaPackages;
+    [
       aio
       anzu
       base16-theme
@@ -120,7 +127,8 @@ let
       xterm-color
       yaml-mode
     ];
-  my-emacs-overlay = self: super:
+  my-emacs-overlay =
+    self: super:
     let
       emacs = self.mkGitEmacs "my-emacs-nox" ./emacs-rev.json {
         withNS = false;
@@ -134,15 +142,18 @@ let
       };
     in
     {
-      my-emacs = (emacs.pkgs.emacsWithPackages (epkgs:
+      my-emacs = emacs.pkgs.emacsWithPackages (
+        epkgs:
         builtins.concatMap (f: f epkgs) [
           (elpa super)
           manual
           (melpa super)
-        ] ++ [
+        ]
+        ++ [
           epkgs.nix-ts-mode
           epkgs.treesit-grammars.with-all-grammars
-        ]));
+        ]
+      );
     };
 in
 [ my-emacs-overlay ]
