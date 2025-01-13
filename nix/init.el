@@ -110,6 +110,13 @@
 ;; Pinentry
 (setf epa-pinentry-mode 'loopback)
 
+;; Server socket dir workarounds (`server-socket-dir' does not use
+;; DARWIN_USER_TEMP_DIR)
+(when (eq 'darwin system-type)
+  (setf server-socket-dir
+        (expand-file-name (format "emacs%d" (user-uid))
+                          temporary-file-directory)))
+
 ;; Color setup
 (defvar my-base03  "#002b36" "Theme base03.")
 (defvar my-base02  "#073642" "Theme base02.")
