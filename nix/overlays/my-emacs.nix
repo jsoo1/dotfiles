@@ -127,7 +127,7 @@ let
         withX = false;
         withGTK3 = false;
         # Workaround for https://github.com/nix-community/emacs-overlay/issues/318
-        withNativeCompilation = false;
+        withNativeCompilation = true;
         withSQLite3 = true;
         withWebP = false;
         withTreeSitter = true;
