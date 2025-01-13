@@ -1222,7 +1222,7 @@ See URL `http://pypi.python.org/pypi/ruff'."
 ;; Nix
 (require 'nix-ts-mode)
 
-(defvar my-nix-format-cmd "nixpkgs-fmt")
+(defvar my-nix-format-cmd "nixfmt")
 
 ;; Cribbed from haskell-mode/haskell-commands.el::haskell-mode-buffer-apply-command
 (defun my-nix-format-buffer ()
