@@ -141,7 +141,6 @@ let
       emacs = self.mkGitEmacs "my-emacs-nox" ./emacs-rev.json {
         withNS = false;
         withX = false;
-        withGTK2 = false;
         withGTK3 = false;
         # Workaround for https://github.com/nix-community/emacs-overlay/issues/318
         withNativeCompilation = false;

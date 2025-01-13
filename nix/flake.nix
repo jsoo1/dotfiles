@@ -2,7 +2,7 @@
   description = "A home-manager/nix-darwin configuration";
   inputs = {
     emacs = {
-      url = "github:jsoo1/emacs-overlay/2024-08-23";
+      url = "github:jsoo1/emacs-overlay/2025-01-11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     dotfiles = {
