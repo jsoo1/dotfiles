@@ -71,6 +71,7 @@ in
     nix-utilities = with pkgs; [
       deadnix
       nixd
+      nixfmt-rfc-style
       nixpkgs-fmt
       nix-diff
       nix-prefetch
