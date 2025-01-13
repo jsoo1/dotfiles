@@ -138,6 +138,9 @@
 ;; Recentf
 (recentf-mode 1)
 
+;; Savehist
+(savehist-mode 1)
+
 ;; Grep
 (with-eval-after-load 'grep
   (grep-apply-setting 'grep-find-command '("rg --no-heading -nIH ''" . 23)))
