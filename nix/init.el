@@ -510,6 +510,9 @@
 (with-eval-after-load 'proced (evil-collection-proced-setup))
 (with-eval-after-load 'process-list (evil-collection-process-menu-setup))
 (with-eval-after-load 'tar-mode (evil-collection-tar-mode-setup))
+(with-eval-after-load 'vc-mode (evil-collection-vc-dir-setup))
+(with-eval-after-load 'vc-mode (evil-collection-vc-git-setup))
+(with-eval-after-load 'vc-mode (evil-collection-vc-annotate-setup))
 (global-evil-leader-mode)
 
 (evil-set-initial-state 'compilation-mode 'normal)
