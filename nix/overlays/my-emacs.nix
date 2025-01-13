@@ -57,14 +57,7 @@ let
       envrc
       eredis
       eshell-syntax-highlighting
-      (evil.overrideAttrs (o: {
-        src = pkgs.fetchFromGitHub {
-          owner = "jsoo1";
-          repo = "evil";
-          rev = "dc48c6917b05040815f6cafc3ae25f550f1cd11d";
-          hash = "sha256-qap0zbqaf/uPt0IbyyG99G5kzcX0odta8jlr/y+1FRQ=";
-        };
-      }))
+      evil
       evil-anzu
       evil-collection
       evil-commentary
@@ -84,16 +77,7 @@ let
       graphviz-dot-mode
       groovy-mode
       guix
-      (haskell-mode.overrideAttrs (o: {
-        # Fixes use of removed function.
-        # Check this next update
-        src = pkgs.fetchFromGitHub {
-          owner = "jsoo1";
-          repo = "haskell-mode";
-          rev = "3ece1f3c40b7428c976596e805a3384fa0673ee8";
-          hash = "sha256-H1H26Kepxp1+cP9ysUUaBtHEnXwLL5icpfbOvNhnpNQ=";
-        };
-      }))
+      haskell-mode
       haskell-snippets
       helpful
       highlight-indent-guides
