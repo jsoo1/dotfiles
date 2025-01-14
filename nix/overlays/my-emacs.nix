@@ -135,7 +135,7 @@ let
         withX = false;
         withGTK3 = false;
         # Workaround for https://github.com/nix-community/emacs-overlay/issues/318
-        withNativeCompilation = true;
+        withNativeCompilation = self.stdenv.hostPlatform.isDarwin;
         withSQLite3 = true;
         withWebP = false;
         withTreeSitter = true;
