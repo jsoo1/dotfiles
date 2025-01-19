@@ -77,6 +77,7 @@
 (setq gc-cons-threshold (* 2 1000 1000 10))
 
 ;; Paths
+;; FIXME: This can probably go to /dev/null
 (defun package-manager-user-profile ()
   "Setup env for nix/guix."
   (let* ((guix-profile (getenv "GUIX_PROFILE"))
