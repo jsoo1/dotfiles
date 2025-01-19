@@ -105,6 +105,8 @@
   (setq enable-remote-dir-locals t))
 
 ;; Pinentry
+;; WARNING: This can be unsafe - values put into the
+;; minibuffer can be saved in plaintext
 (setf epa-pinentry-mode 'loopback)
 
 ;; Color setup
