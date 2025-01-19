@@ -17,7 +17,6 @@
     ;; "bpftrace"
     "cups"
     "direnv"
-    "docker-cli"
     ;; :(
     ;; "dog"
     "bind:utils"
