@@ -1218,10 +1218,6 @@ _]_: toggle use of default sink  _n_: control select sink by name
   rust-imenu-generic-expression))
 
 ;; SQL
-(require 'origami)
-
-(add-hook 'sql-mode-hook #'origami-mode)
-
 (setq sql-sqlite-program "sqlite3")
 ;; Inspired by:
 ;; https://github.com/alezost/emacs-config/blob/master/utils/al-sql.el#L47
@@ -1304,9 +1300,6 @@ when send commands with redis protocol."
  (alist-get 'java-mode eglot-server-programs)
  '("java-language-server"))
 (evil-define-key 'normal java-mode-map (kbd ",") 'my-eglot-mode-map)
-
-;; Xml
-(add-hook 'nxml-mode-hook #'origami-mode)
 
 ;; YAML
 (require 'yaml-mode)
