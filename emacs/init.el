@@ -1856,27 +1856,6 @@ respectively."
   "'" #'eshell
   "/" #'consult-ripgrep)
 
-;; Keymap graveyard
-
-(define-keymap :prefix 'elfeed-load-map
-  "o" #'elfeed-load-opml
-  "C-o" #'elfeed-load-opml)
-
-(define-keymap :prefix 'my-git-map
-  "A" #'magit-cherry-pick
-  "b" #'magit-branch
-  "c" #'magit-checkout
-  "d" #'magit-diff
-  "f" #'magit-fetch
-  "g" #'magit-file-dispatch
-  "G" #'magit-dispatch
-  "O" #'magit-reset
-  "p" #'magit-push
-  "r" #'magit-rebase
-  "s" #'magit-status
-  "l" #'magit-log
-  "z" #'magit-stash)
-
 ;; Reset these to have all the configuration we just did
 (with-current-buffer (get-buffer "*Messages*") (normal-mode))
 
