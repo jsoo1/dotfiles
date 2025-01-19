@@ -29,7 +29,8 @@ SYMLINKS = \
 	$(HOME)/.emacs.d/init.el \
 	$(HOME)/.emacs.d/feeds \
 	$(HOME)/.emacs.d/eshell/alias \
-	$(HOME)/.local/share/applications/defaults.list \
+	$(XDG_HOME)/mimeapps.list \
+	$(HOME)/.local/share/applications/mimeapps.list \
 	$(XDG_HOME)/alacritty/alacritty.toml \
 	$(HOME)/.bashrc \
 	$(HOME)/.bash_profile \
