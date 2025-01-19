@@ -3,18 +3,6 @@
 
 let abbr cmd arg = return $ ":! " ++ cmd ++ " " ++ arg
 
--- hoogle
-:def! haddocks (\arg -> return $ ":! hoogle --color --info \'" ++ arg ++ "\'")
-:def! hoogle (\arg -> return $ ":! hoogle --color \'" ++ arg ++ "\'")
-
--- vpin
-:def! vpin (abbr "vpin")
-:def! vpout (abbr "vpout")
-:def! vpst (abbr "vpst")
-
--- rest
-:def! rest (abbr "loginctl suspend")
-
 -- emacsclient
 :def! em (abbr "TERM=xterm-24bits emacsclient -nw --socket-name term")
 
@@ -27,17 +15,3 @@ let abbr cmd arg = return $ ":! " ++ cmd ++ " " ++ arg
 :def! ls (abbr "ls")
 :def! clear (abbr "clear")
 :def! ssh (abbr "ssh")
-
--- git
-:def! gst (abbr "git status")
-:def! gf (abbr "git fetch")
-:def! gl (abbr "git pull")
-:def! ga (abbr "git add")
-:def! gc (abbr "git commit")
-:def! glg (abbr "git log")
-:def! gb (abbr "git branch")
-:def! grb (abbr "git rebase")
-:def! gd (abbr "git diff")
-:def! gm (abbr "git merge")
-:def! gp (abbr "git push")
-:def! gco (abbr "git checkout")
