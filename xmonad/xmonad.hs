@@ -382,7 +382,8 @@ bar xmobarSignal xmobarQueue = Template.Bar
 xmobarConf :: STM.TMVar Xmobar.SignalType -> STM.TQueue String -> IO Xmobar.Config
 xmobarConf xmobarSignal xmobarQueue =
   pure $ Xmobar.defaultConfig
-    { Xmobar.font = "xft:Iosevka:size=12:light:antialias=true"
+    { Xmobar.font = "xft:Iosevka:style=light:size=12:antialias=true"
+    , Xmobar.additionalFonts = [ "xft:Noto Sans:style=light:size=12" ]
     , Xmobar.fgColor = coerce base0
     , Xmobar.bgColor = "#002b36"
     , Xmobar.borderColor = coerce base03
