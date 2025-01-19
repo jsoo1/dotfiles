@@ -31,6 +31,7 @@
     "groff"
     ;; FIXME: Broken
     ;; "lastpass-cli"
+    "jq"
     "make"
     "mosh"
     "mpv"
@@ -95,9 +96,7 @@
     "hoogle"
     "stylish-haskell"
     "tree-sitter-haskell"
-    ;; FIXME
-    ;; "threadscope"
-    ))
+    "threadscope"))
 
 (define-public nix-tools
   '("nixfmt"
