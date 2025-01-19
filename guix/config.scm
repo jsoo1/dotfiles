@@ -129,7 +129,7 @@ EndSection\n")
                                       (challenge-response-authentication? #f)
                                       (password-authentication? #f)))
    (service pam-limits-service-type (list
-                                     (pam-limits-entry "john" 'both 'nofile 100000)))
+                                     (pam-limits-entry username 'both 'nofile 100000)))
    desktop:polkit-wheel-service
    (service pm:tlp-service-type (pm:tlp-configuration
                                  (tlp-default-mode "BAT")
