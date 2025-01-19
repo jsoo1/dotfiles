@@ -70,14 +70,6 @@
     Option \"AccelSpeed\" \"1\"
 EndSection\n")
 
-(define touchscreen-disable
-  "Section \"InputClass\"
-    Identifier \"Touchscreen Disable\"
-    MatchIsTouchscreen \"on\"
-    MatchProduct \"ELAN Touchscreen\"
-    Option \"ignore\" \"on\"
-EndSection\n")
-
 (define ctrl-nocaps (keyboard-layout "us" #:options '("ctrl:nocaps")))
 
 (define xorg-conf
