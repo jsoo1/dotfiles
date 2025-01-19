@@ -48,7 +48,6 @@
 
 (define-public browsers
   '("firefox"
-    "icecat"
     "lynx"
     "ungoogled-chromium"))
 
