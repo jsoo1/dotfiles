@@ -79,7 +79,9 @@
     "font-iosevka"))
 
 (define-public c-tools
-  '("ccls"))
+  '("ccls"
+    "tree-sitter-c"
+    "tree-sitter-cpp"))
 
 (define-public go-tools
   '("tree-sitter-go"
@@ -92,21 +94,25 @@
     "hlint"
     "hoogle"
     "stylish-haskell"
+    "tree-sitter-haskell"
     ;; FIXME
     ;; "threadscope"
     ))
 
 (define-public nix-tools
-  '("nixfmt"))
+  '("nixfmt"
+    "tree-sitter-org"))
 
 (define-public ocaml-tools
   '("dune"
-    "opam"))
+    "opam"
+    "tree-sitter-ocaml"))
 
 (define-public rust-tools
   '("rust"
     "rust:tools"
-    "rust:cargo"))
+    "rust:cargo"
+    "tree-sitter-rust"))
 
 (define-public guile-tools
   '("guile"
