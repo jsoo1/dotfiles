@@ -59,7 +59,7 @@
    (comment "idiot man")
    (group "users")
    (supplementary-groups
-    '("wheel" "netdev" "audio" "video" "lp"))
+    '("wheel" "netdev" "audio" "video" "lp" "kvm"))
    (shell (file-append fish "/bin/fish"))))
 
 (define cst-trackball
