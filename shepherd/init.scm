@@ -9,7 +9,7 @@
     #:docstring "Emacs terminal deamon."
     #:respawn? #f
     #:start (make-forkexec-constructor
-             '("/home/john/.guix-profile/bin/emacs" "--fg-daemon=term")
+             '("/home/john/.guix-profile/bin/emacs" "--fg-daemon=term" "--debug-init")
              #:user "john"
              #:log-file "/home/john/var/log/emacs-term.log")
     #:stop (make-kill-destructor)
