@@ -266,7 +266,7 @@
 
 (with-eval-after-load 'term
   (set-face-attribute 'term nil
-                      :background "unspecified-bg")
+                      :background "yellow")
   (set-face-attribute 'term-color-black nil
                       :background "unspecified-bg"))
 
@@ -1519,7 +1519,7 @@ when send commands with redis protocol."
  :overline nil
  :foreground my-base0
  :background my-base02
- :box `(:line-width 1 :color ,my-base02 :style unspecified))
+ :box `(:line-width 1 :color ,my-base02))
 
 (set-face-attribute
  'mode-line-inactive nil
@@ -1527,7 +1527,7 @@ when send commands with redis protocol."
  :underline nil
  :foreground my-base01
  :background "unspecified"
- :box `(:line-width 1 :color ,my-base03 :style unspecified))
+ :box `(:line-width 1 :color ,my-base03))
 
 (defun evil-state-foreground (state)
   "The mode line color for evil-state `STATE'."
