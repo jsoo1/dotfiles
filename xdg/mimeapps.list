@@ -2,6 +2,6 @@
 application/pdf=org.pwmt.zathura.desktop
 application/oxps=org.pwmt.zathura.desktop
 application/epub+zip=org.pwmt.zathura.desktop
-application/xml=icecat.desktop
-application/html=icecat.desktop
+application/xml=firefox.desktop
+application/html=firefox.desktop
 application/json=emacs.desktop

@@ -79,8 +79,11 @@ $(HOME)/.emacs.d/feeds: | $(HOME)/.emacs.d ## subscriptions for elfeed
 $(HOME)/.emacs.d/eshell/alias: | $(HOME)/.emacs.d/eshell
 	$(ln) $(PWD)/emacs/eshell/alias $@
 
-$(HOME)/.local/share/applications/defaults.list: | $(HOME)/.local/share/applications ## Default mime handlers
-	$(ln) $(PWD)/xdg/defaults.list $@
+$(XDG_HOME)/mimeapps.list: | $(XDG_HOME) ## Default mime handlers
+	$(ln) $(PWD)/xdg/mimeapps.list $@
+
+$(HOME)/.local/share/applications/mimeapps.list: | $(XDG_HOME)/mimeapps.list $(HOME)/.local/share/applications ## Default mime handlers
+	$(ln) $(XDG_HOME)/mimeapps.list $@
 
 $(XDG_HOME)/alacritty/alacritty.yml: | $(XDG_HOME)/alacritty ## Alacritty configuration
 	$(ln) $(PWD)/alacritty/alacritty.yml $@
