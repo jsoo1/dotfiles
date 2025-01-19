@@ -17,6 +17,7 @@
         desktop-tools
         fonts
         c-tools
+        go-tools
         haskell-tools
         nix-tools
         ocaml-tools

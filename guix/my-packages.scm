@@ -81,6 +81,10 @@
 (define-public c-tools
   '("ccls"))
 
+(define-public go-tools
+  '("tree-sitter-go"
+    "tree-sitter-gomod"))
+
 (define-public haskell-tools
   '("cabal-install"
     "ghc"
