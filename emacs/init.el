@@ -628,9 +628,8 @@
 (setq org-todo-keywords
       '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELLED"))
       org-capture-templates
-      '(("t" "Todo" entry (file+headline "" "Todos")
-         "* TODO %U %?
-  %a")
+      '(("t" "Plain Todo" entry (file+headline "" "Todos")
+         "* TODO %?")
         ("p" "Plain Todo" entry (file+headline "" "Todos")
          "* TODO %?")
         ("n" "Note" entry (file+headline "" "Notes")
