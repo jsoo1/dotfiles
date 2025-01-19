@@ -61,7 +61,7 @@
 (setq custom-file "/dev/null")
 
 ;; Tab width
-(setq tab-width 4)
+(setq-default tab-width 4)
 
 ;; Trailing whitespace
 (defvar delete-trailing-whitespace-on-save t
