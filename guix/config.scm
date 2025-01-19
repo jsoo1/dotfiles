@@ -1,52 +1,43 @@
 (define-module (config)
-  #:use-module (ice-9 match)
-  #:use-module (guix gexp)
-
   #:use-module (gnu)
-  #:use-module (gnu system setuid)
-  #:use-module (gnu packages admin)
-  #:use-module (gnu packages base)
-  #:use-module (gnu packages certs)
-  #:use-module (gnu packages cups)
-  #:use-module (gnu packages curl)
-  #:use-module (gnu packages emacs)
-  #:use-module (gnu packages fonts)
-  #:use-module (gnu packages fontutils)
+  #:use-module (guix gexp)
+  #:use-module (ice-9 match)
+
+  #:use-module ((gnu packages curl) #:prefix curl:)
+  #:use-module ((gnu packages emacs) #:prefix emacs:)
+  #:use-module ((gnu packages fonts) #:prefix fonts:)
+  #:use-module ((gnu packages gnupg) #:prefix gnupg:)
+  #:use-module ((gnu packages linux) #:prefix linux:)
+  #:use-module ((gnu packages ncurses) #:prefix ncurses:)
+  #:use-module ((gnu packages security-token) #:prefix security-token:)
+  #:use-module ((gnu packages shells) #:prefix shells:)
+  #:use-module ((gnu packages ssh) #:prefix ssh:)
+  #:use-module ((gnu packages tmux) #:prefix tmux:)
+  #:use-module ((gnu packages version-control) #:prefix version-control:)
+  #:use-module ((gnu packages vim) #:prefix vim:)
+  #:use-module ((gnu packages xdisorg) #:prefix xdisorg:)
+  ;; FIXME: prefixing breaks g-exps
   #:use-module (gnu packages gl)
-  #:use-module (gnu packages gnupg)
-  #:use-module (gnu packages linux)
-  #:use-module (gnu packages ncurses)
-  #:use-module (gnu packages man)
-  #:use-module (gnu packages package-management)
-  #:use-module (gnu packages security-token)
-  #:use-module (gnu packages shells)
-  #:use-module (gnu packages shellutils)
-  #:use-module (gnu packages ssh)
-  #:use-module (gnu packages suckless)
-  #:use-module (gnu packages tmux)
-  #:use-module (gnu packages version-control)
-  #:use-module (gnu packages vim)
-  #:use-module (gnu packages vpn)
-  #:use-module (gnu packages web-browsers)
-  #:use-module (gnu packages xdisorg)
   #:use-module (gnu packages xorg)
 
-  #:use-module (gnu services audio)
-  #:use-module (gnu services base)
-  #:use-module (gnu services cups)
-  #:use-module (gnu services dbus)
-  #:use-module (gnu services desktop)
-  #:use-module (gnu services dns)
-  #:use-module (gnu services docker)
-  #:use-module (gnu services networking)
-  #:use-module (gnu services nix)
-  #:use-module (gnu services pm)
-  #:use-module (gnu services security-token)
-  #:use-module (gnu services shepherd)
-  #:use-module (gnu services ssh)
-  #:use-module (gnu services sound)
-  #:use-module (gnu services virtualization)
+  #:use-module ((gnu services audio) #:prefix audio:)
+  #:use-module ((gnu services base) #:prefix base:)
+  #:use-module ((gnu services cups) #:prefix cups:)
+  #:use-module ((gnu services dbus) #:prefix dbus:)
+  #:use-module ((gnu services desktop) #:prefix desktop:)
+  #:use-module ((gnu services dns) #:prefix dns:)
+  #:use-module ((gnu services networking) #:prefix networking:)
+  #:use-module ((gnu services nix) #:prefix nix:)
+  #:use-module ((gnu services pm) #:prefix pm:)
+  #:use-module ((gnu services security-token) #:prefix security-token:)
+  #:use-module ((gnu services shepherd) #:prefix shepherd:)
+  #:use-module ((gnu services ssh) #:prefix ssh:)
+  #:use-module ((gnu services sound) #:prefix sound:)
+  #:use-module ((gnu services virtualization) #:prefix virtualization:)
+  ;; FIXME: prefixing breaks g-exps
   #:use-module (gnu services xorg)
+
+  #:use-module ((gnu system setuid) #:prefix setuid:)
 
   #:use-module ((nongnu packages linux) #:prefix nongnu:)
   #:use-module ((nongnu system linux-initrd) #:prefix nongnu:))
@@ -60,7 +51,7 @@
    (group "users")
    (supplementary-groups
     '("wheel" "netdev" "audio" "video" "lp" "kvm"))
-   (shell (file-append fish "/bin/fish"))))
+   (shell (file-append shells:fish "/bin/fish"))))
 
 (define cst-trackball
   "Section \"InputClass\"
@@ -102,24 +93,23 @@ EndSection\n")
 
 (define terminus-psf-font
   (file-append
-   font-terminus "/share/consolefonts/ter-v22n.psf.gz"))
+   fonts:font-terminus "/share/consolefonts/ter-v22n.psf.gz"))
 
 (define my-services
   (cons*
-   (service bluetooth-service-type (bluetooth-configuration
-                                    (auto-enable? #t)))
-   (service alsa-service-type)
-   (service cups-pk-helper-service-type)
-   (service cups-service-type (cups-configuration (web-interface? #t)))
-   (service dnsmasq-service-type (dnsmasq-configuration
-                                  (servers '("1.1.1.1"))))
-   (service dbus-root-service-type)
-   (service elogind-service-type)
-   fontconfig-file-system-service
-   (service nix-service-type (nix-configuration
-                              (package nix)
-                              (extra-config '("keep-derivations = true\n"
-                                              "keep-outputs = true\n"))))
+   (service desktop:bluetooth-service-type (desktop:bluetooth-configuration
+                                            (auto-enable? #t)))
+   (service sound:alsa-service-type)
+   (service desktop:cups-pk-helper-service-type)
+   (service cups:cups-service-type (cups:cups-configuration (web-interface? #t)))
+   (service dns:dnsmasq-service-type (dns:dnsmasq-configuration
+                                      (servers '("1.1.1.1"))))
+   (service dbus:dbus-root-service-type)
+   (service desktop:elogind-service-type)
+   desktop:fontconfig-file-system-service
+   (service nix:nix-service-type (nix:nix-configuration
+                                  (extra-config '("keep-derivations = true\n"
+                                                  "keep-outputs = true\n"))))
    (service kmscon-service-type (kmscon-configuration
                                  (virtual-terminal "tty8")
                                  ;; (scrollback "100000")
@@ -131,37 +121,37 @@ EndSection\n")
                                  ))
    (service mingetty-service-type (mingetty-configuration
                                    (tty "tty7")))
-   (service mpd-service-type (mpd-configuration
-                              (user john)))
-   (service network-manager-service-type)
-   (service ntp-service-type)
-   (service openssh-service-type (openssh-configuration
-                                  (challenge-response-authentication? #f)
-                                  (password-authentication? #f)))
+   (service audio:mpd-service-type (audio:mpd-configuration
+                                    (user john)))
+   (service networking:network-manager-service-type)
+   (service networking:ntp-service-type)
+   (service ssh:openssh-service-type (ssh:openssh-configuration
+                                      (challenge-response-authentication? #f)
+                                      (password-authentication? #f)))
    (service pam-limits-service-type (list
                                      (pam-limits-entry "john" 'both 'nofile 100000)))
-   polkit-wheel-service
-   (service tlp-service-type (tlp-configuration
-                              (tlp-default-mode "BAT")
-                              (usb-autosuspend? #f)))
-   (service pcscd-service-type)
+   desktop:polkit-wheel-service
+   (service pm:tlp-service-type (pm:tlp-configuration
+                                 (tlp-default-mode "BAT")
+                                 (usb-autosuspend? #f)))
+   (service security-token:pcscd-service-type)
    (service gpm-service-type (gpm-configuration))
-   (service qemu-binfmt-service-type (qemu-binfmt-configuration
-                                      (platforms
-                                       (lookup-qemu-platforms "arm" "aarch64" "mips64el"))))
-   (service udisks-service-type)
-   (service usb-modeswitch-service-type)
-   (service wpa-supplicant-service-type)
+   (service virtualization:qemu-binfmt-service-type (virtualization:qemu-binfmt-configuration
+                                                     (platforms
+                                                      (virtualization:lookup-qemu-platforms "arm" "aarch64" "mips64el"))))
+   (service desktop:udisks-service-type)
+   (service networking:usb-modeswitch-service-type)
+   (service networking:wpa-supplicant-service-type)
 
    (service screen-locker-service-type (screen-locker-configuration
                                         (name "xlock")
-                                        (program (file-append xlockmore "/bin/xlock"))))
+                                        (program (file-append xdisorg:xlockmore "/bin/xlock"))))
 
-    (udev-rules-service 'fido2 libfido2 #:groups '("plugdev"))
+    (udev-rules-service 'fido2 security-token:libfido2 #:groups '("plugdev"))
 
     ;; The following is for xorg without display manager
-    (service x11-socket-directory-service-type)
-    (udev-rules-service 'light light)
+    (service desktop:x11-socket-directory-service-type)
+    (udev-rules-service 'light linux:light)
     ; For xorg sans display manager (gentoo wiki)
     (udev-rules-service 'xorg-rootless (udev-rule
                                         "99-dev-input-group.rules"
@@ -205,29 +195,29 @@ EndSection\n")
        ,@%base-user-accounts))
     (packages
      `(;; for HTTPS access
-       ,curl
+       ,curl:curl
        ;; essentials
-       ,iproute ,git ,openssh ,gnupg ,ncurses
+       ,linux:iproute ,version-control:git ,ssh:openssh ,gnupg:gnupg ,ncurses:ncurses ,tmux:tmux
        ;; ???
        ,glibc-utf8-locales
        ;; text editors
-       ,neovim ,emacs-no-x
+       ,vim:neovim ,emacs:emacs-no-x
        ;; for keyboards
-       ,bluez
+       ,linux:bluez
        ;; backlight config
-       ,light
+       ,linux:light
        ,@%base-packages))
     (setuid-programs
      `(;; Stuff for xorg without display manager.
        ;; startx and X need to be in setuid-programs.
        ;; They also need extra tweaks in the chown-file service below.
-       ,(setuid-program
+       ,(setuid:setuid-program
          (program (file-append xorg-server "/bin/X"))
          (user username)
          (group "input")
          (setuid? #f)
          (setgid? #t))
-       ,(setuid-program
+       ,(setuid:setuid-program
          (program startx)
          (user username)
          (group "input")
