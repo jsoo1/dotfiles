@@ -19,7 +19,9 @@ set -xg GUIX_PROFILE /home/john/.guix-profile
 set -xg GIT_EXEC_PATH /run/current-system/profile/libexec/git-core
 
 # Or this
-set -xg GUILE_LOAD_PATH $GUILE_LOAD_PATH /home/john/.guix-profile/share/guile/site/3.0
+if not contains /home/john/.guix-profile/share/guile/site/3.0 $GUILE_LOAD_PATH
+    set -xg GUILE_LOAD_PATH $GUILE_LOAD_PATH /home/john/.guix-profile/share/guile/site/3.0
+end
 
 # cargo
 set -x CARGO_HOME "$HOME/.cargo"

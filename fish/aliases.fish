@@ -16,11 +16,11 @@ function gitpurge -a ref
 end
 alias vim nvim
 # System Utils
-abbr --add -- ls "exa"
-abbr --add -- ll "exa -l"
-abbr --add -- lsa "exa -la"
-abbr --add -- lsah "exa -la"
-abbr --add -- tree "exa -Ta"
+abbr --add -- ls "eza"
+abbr --add -- ll "eza -l"
+abbr --add -- lsa "eza -la"
+abbr --add -- lsah "eza -la"
+abbr --add -- tree "eza -Ta"
 abbr --add -- psg 'ps -e --format pid,command | rg -i'
 abbr --add -- rest "loginctl suspend"
 abbr --add -- apropos "man -k"
