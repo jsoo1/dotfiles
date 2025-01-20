@@ -106,7 +106,7 @@ end
 function __skim_history -d "Find in history"
     begin
         history | sk | read -l result
-        and commandline -- $result
+        and commandline -it -- $result
     end
     commandline -f repaint
 end

@@ -13,7 +13,6 @@ XDG_HOME_DIRS = \
 	alacritty \
 	compton \
 	dunst \
-	fish \
 	git \
 	guix \
 	lynx \
@@ -25,7 +24,6 @@ DIRS = \
 	$(foreach dir,$(XDG_HOME_DIRS),$(XDG_HOME)/$(dir))
 
 SYMLINKS = \
-	$(HOME)/.profile \
 	$(HOME)/.emacs.d/init.el \
 	$(HOME)/.emacs.d/feeds \
 	$(HOME)/.emacs.d/eshell/alias \
@@ -35,13 +33,7 @@ SYMLINKS = \
 	$(HOME)/.bashrc \
 	$(HOME)/.bash_profile \
 	$(XDG_HOME)/compton/compton.conf \
-	$(XDG_HOME)/chromium-flags.conf \
 	$(XDG_HOME)/dunst/dunstrc \
-	$(XDG_HOME)/fish/aliases.fish \
-	$(XDG_HOME)/fish/colors.fish \
-	$(XDG_HOME)/fish/config.fish \
-	$(XDG_HOME)/fish/fish_prompt.fish \
-	$(XDG_HOME)/fish/keybindings.fish \
 	$(HOME)/.ghci \
 	$(HOME)/.gnupg/gnupg.conf \
 	$(HOME)/.gnus \
@@ -68,9 +60,6 @@ help:
 	@grep -E '^[a-zA-Z_()$$. /-]+:.*?## .*$$' Makefile | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 # ------------ softlinks -------------
-$(HOME)/.profile: | $(HOME) ## The profile for session initialization. Not posix compliant.
-	$(ln) $(PWD)/.profile $@
-
 $(HOME)/.emacs.d/init.el: | $(HOME)/.emacs.d ## Emacs initialization file
 	$(ln) $(PWD)/emacs/init.el $@
 
@@ -95,29 +84,11 @@ $(HOME)/.bashrc: | $(HOME) ## Bash configuration (per shell)
 $(HOME)/.bash_profile: | $(HOME) ## Bash configuration (per session)
 	$(ln) $(PWD)/bash/.bash_profile $@
 
-$(XDG_HOME)/chromium-flags.conf: | $(XDG_HOME) ## Compton configuration
-	$(ln) $(PWD)/chromium/chromium-flags.conf $@
-
 $(XDG_HOME)/compton/compton.conf: | $(XDG_HOME)/compton ## Compton configuration
 	$(ln) $(PWD)/compton/compton.conf $@
 
 $(XDG_HOME)/dunst/dunstrc: | $(XDG_HOME)/dunst ## Dunst configuration
 	$(ln) $(PWD)/dunst/dunstrc $@
-
-$(XDG_HOME)/fish/aliases.fish: | $(XDG_HOME)/fish ## Fish aliases, abbreviations, and functions
-	$(ln) $(PWD)/fish/aliases.fish $@
-
-$(XDG_HOME)/fish/colors.fish: | $(XDG_HOME)/fish ## Fish color definitions
-	$(ln) $(PWD)/fish/colors.fish $@
-
-$(XDG_HOME)/fish/config.fish: | $(XDG_HOME)/fish ## Fish initialization
-	$(ln) $(PWD)/fish/config.fish $@
-
-$(XDG_HOME)/fish/fish_prompt.fish: | $(XDG_HOME)/fish ## Fish prompt
-	$(ln) $(PWD)/fish/fish_prompt.fish $@
-
-$(XDG_HOME)/fish/keybindings.fish: | $(XDG_HOME)/fish ## Fish keybindings
-	$(ln) $(PWD)/fish/keybindings.fish $@
 
 $(HOME)/.ghci: | $(HOME) ## ghci configuration
 	$(ln) $(PWD)/ghci/.ghci $@
