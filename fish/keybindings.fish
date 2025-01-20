@@ -140,31 +140,6 @@ function __skim_git_repos -d "Find a git repo"
     end
 end
 
-function skim_docker_images -d "Find a docker image"
-    begin
-        docker images \
-        | awk '{ print $1 ":" $2 " " $3 }' \
-        | rg -v 'REPOSITORY:TAG' \
-        | column -t \
-        | sk \
-        | awk '{ print $1 }' \
-        | read -l result
-        and commandline -it -- $result
-    end
-end
-
-function skim_docker_containers -d "Find a docker container"
-    begin
-        docker ps -a \
-        | awk '{ print $1 ":" $2 " " $3 }' \
-        | rg -v '^CONTAINER:ID' \
-        | sk \
-        | awk '{ print $1 }' \
-        | read -l result
-        and commandline -it -- $result
-    end
-end
-
 function skim_lpass -d "Get a password"
     if test (lpass status) = "Not logged in."; lpass login jsoo1@asu.edu; end
     and lpass ls --color=never \
