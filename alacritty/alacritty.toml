@@ -1,5 +1,6 @@
 # dynamic_title = true
 # enable_experimental_conpty_backend = false
+[general]
 live_config_reload = true
 # tabspaces = 4
 
@@ -1779,7 +1780,7 @@ multiplier = 3
 save_to_clipboard = false
 semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
 
-[shell]
+[terminal.shell]
 args = ["--login"]
 program = "/home/john/.guix-profile/bin/fish"
 
