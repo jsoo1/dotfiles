@@ -22,7 +22,7 @@
     "bind:utils"
     "du-dust"
     "emacs-next"
-    "exa"
+    "eza"
     "fd"
     "fish"
     "fish-foreign-env" ; Busted for now. Let's fix it.
