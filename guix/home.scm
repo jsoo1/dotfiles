@@ -28,6 +28,7 @@
   #:use-module (emacs)
   #:use-module (xmonad)
 
+  #:use-module ((channels) #:prefix channels:)
   #:use-module ((env) #:prefix env:))
 
 ;; Emacs
@@ -120,6 +121,8 @@ end
       ,(simple-service 'fish-extra-init
                        home-fish-service-type fish-config)
       ,(service home-fish-service-type)
+      ;; Channels
+      ,(service home-channels-service-type channels:default)
       ;; Basics
       ,(simple-service 'home-env-vars-service
                        home-environment-variables-service-type env-vars)
