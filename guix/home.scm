@@ -7,6 +7,7 @@
 
   #:use-module (gnu home)
   #:use-module (gnu home services)
+  #:use-module (gnu home services desktop)
   #:use-module (gnu home services shells)
   #:use-module (gnu home services shepherd)
 
@@ -19,6 +20,7 @@
   #:use-module (gnu packages gawk)
   #:use-module (gnu packages linux)
   #:use-module (gnu packages vim)
+  #:use-module ((gnu packages xorg) #:prefix xorg:)
 
   #:use-module (clipmenud)
   #:use-module (dmenu)
@@ -62,11 +64,18 @@
 (define-public aliases.fish
   (local-file "../fish/aliases.fish"))
 
+(define-public xsession
+  (program-file "xsession"
+    #~(begin
+       (system* #$(file-append xorg:xsetroot "/bin/xsetroot")
+		"-cursor_name" "left_ptr")
+       (execl #$(file-append my-xmonad "/bin/my-xmonad")))))
+
 (define-public startx.fish
-  (mixed-text-file "startx.fish" "
+  (mixed-text-file "startx.fish" "\
 if test (tty) = /dev/tty1 && status is-login
-    xinit ~/.xsession -- /run/setuid-programs/*startx vt1
-    loginctl terminate-session (loginctl list-sessions | gawk '/tty1/ { print $1 }')
+    xinit " xsession " -- /run/setuid-programs/startx vt1
+    loginctl terminate-session (loginctl list-sessions | awk '/tty1/ { print $1 }')
 end
 "))
 
@@ -100,6 +109,9 @@ end
    (packages env:default)
    (services
     `(;; Shepherd
+      ;; Desktop
+      ,(service home-dbus-service-type)
+      ;; Shepherd
       ,(service home-emacs-service-type emacs-service)
       ,(service home-dunst-service-type)
       ,(service home-clipmenud-service-type)
