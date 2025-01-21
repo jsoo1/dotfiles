@@ -125,9 +125,8 @@
 (define-public desktop-tools
   (list
    alacritty
-   alsa-utils
    compton
-   dbus
+   my-dmenu
    garcon
    gnuplot
    libnotify
@@ -313,7 +312,6 @@
 
 (define-public default
   (append
-   `(,my-dmenu ,my-xmonad)
    languages
    utilities
    browsers
