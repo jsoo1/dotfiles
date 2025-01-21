@@ -104,6 +104,10 @@ end
                   home-profile-service-type
                   `(,coreutils ,bash ,neovim ,procps ,grep ,gawk ,sed)))
 
+;; Dotfiles
+(define-public xdg-config-files
+  `(("procps/toprc" ,(local-file "../top/toprc"))))
+
 ;; Home Environment
 (define-public default
   (home-environment
@@ -124,6 +128,7 @@ end
       ;; Channels
       ,(service home-channels-service-type channels:default)
       ;; Basics
+      ,(service home-xdg-configuration-files-service-type xdg-config-files)
       ,(simple-service 'home-env-vars-service
                        home-environment-variables-service-type env-vars)
       ;; Needed in container
