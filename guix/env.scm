@@ -135,7 +135,6 @@
    mpd-mpc
    pamixer
    pulsemixer
-   pulseaudio
    scrot
    wireless-tools))
 
@@ -204,13 +203,11 @@
    xdotool
    xev
    xfontsel
-   xinit
    xinput
    xlockmore
    xmessage
    xrandr
    xsel
-   xsetroot
    xwallpaper))
 
 (define-public emacs-packages
