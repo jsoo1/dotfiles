@@ -1,12 +1,3 @@
-function shep
-    herd --socket $XDG_RUNTIME_DIR/shepherd/socket $argv
-end
-
-# Skim
-function sk
-    TERM=xterm-256color command sk $argv
-end
-
 # Emacs
 function em
     emacsclient -nw --socket-name term $argv
