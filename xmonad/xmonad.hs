@@ -22,6 +22,7 @@ import           Data.Maybe                       (listToMaybe)
 import           Graphics.X11.ExtraTypes.XF86
 import           System.IO
 import           System.Process                   (createPipe)
+import           System.Environment               (getExecutablePath, getArgs)
 import qualified Xmobar
 import qualified Xmobar.Config.Actions            as Action
 import qualified Xmobar.Config.Template.Parse     as Template
@@ -47,6 +48,10 @@ import           XMonad.Util.Run                  (runInTerm,
 
 main :: IO ()
 main = do
+  selfExecutable <- getExecutablePath
+
+  argv <- getArgs
+
   dirs <- getDirectories
 
   replace
@@ -70,7 +75,7 @@ main = do
            , "xwallpaper --zoom ~/Downloads/richter-lucerne.jpg"
            ]
        }
-       `additionalKeys` myKeybindings xmobarSignal
+       `additionalKeys` myKeybindings (selfExecutable : argv) xmobarSignal
 
   launch cfg dirs
 
@@ -117,9 +122,9 @@ toggleBar xmobarSignal = do
   refresh
 
 
-myKeybindings :: STM.TMVar Xmobar.SignalType -> [((KeyMask, KeySym), X ())]
-myKeybindings xmobarSignal =
-  [ ( ( myModMask, xK_q ), fmap lines dmenuSelectXmonad >>= \case
+myKeybindings :: [FilePath] -> STM.TMVar Xmobar.SignalType -> [((KeyMask, KeySym), X ())]
+myKeybindings argv xmobarSignal =
+  [ ( ( myModMask, xK_q ), fmap lines (dmenuSelectXmonad argv) >>= \case
         []       -> pure ()
         (xmnd:_) -> restart xmnd True
     )
@@ -228,16 +233,10 @@ terminateSession session = void $ runProcessWithInput "loginctl"
   ""
 
 
-dmenuSelectXmonad :: X String
+dmenuSelectXmonad :: [FilePath] -> X String
 dmenuSelectXmonad =
-  runProcessWithInput "bash"
-  [ "-c"
-  , mconcat $ intersperse " | "
-    [ "for f in ~/.{guix-profile,cabal}/bin/my-xmonad; do echo $f; done"
-    , "dmenu -f -F -p 'restart with'"
-    ]
-  ]
-  ""
+  runProcessWithInput "dmenu" [ "-f" , "-F" , "-p" , "restart with"]
+    . mconcat . intersperse " "
 
 
 dmenuLPass :: X ()
