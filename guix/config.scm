@@ -1,8 +1,6 @@
 (define-module (config)
   #:use-module (gnu)
   #:use-module (guix gexp)
-  #:use-module (guix packages)
-  #:use-module (guix build-system trivial)
   #:use-module (ice-9 match)
 
   #:use-module ((gnu packages curl) #:prefix curl:)
@@ -72,7 +70,7 @@ EndSection\n")
    (server-arguments
     `("-keeptty" ,@%default-xorg-server-arguments))))
 
-(define startx-command
+(define startx
   (program-file
    "startx"
    #~(begin
@@ -92,26 +90,6 @@ EndSection\n")
         "-logverbose" "-verbose" "-terminate"
         (append '#$(xorg-configuration-server-arguments xorg-conf)
                 (cdr (command-line)))))))
-
-(define startx
-  (package
-    (name "startx")
-    (version "0")
-    (source startx-command)
-    (build-system trivial-build-system)
-    (arguments
-      (list
-        #:modules '((guix build utils))
-        #:builder
-          #~(begin
-             (use-modules (guix build utils))
-             (let ((bin (string-append #$output "/bin")))
-               (mkdir-p bin)
-               (symlink #$source (string-append bin "/startx"))))))
-    (home-page #f)
-    (synopsis #f)
-    (description #f)
-    (license #f)))
 
 (define terminus-psf-font
   (file-append
@@ -240,7 +218,7 @@ EndSection\n")
          (setuid? #f)
          (setgid? #t))
        ,(setuid:setuid-program
-         (program (file-append startx "/bin/startx"))
+         (program startx)
          (user username)
          (group "input")
          (setuid? #f)
