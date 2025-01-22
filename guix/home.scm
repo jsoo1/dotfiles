@@ -7,20 +7,29 @@
 
   #:use-module (gnu home)
   #:use-module (gnu home services)
+  #:use-module (gnu home services dotfiles)
   #:use-module (gnu home services desktop)
+  #:use-module (gnu home services guix)
   #:use-module (gnu home services shells)
   #:use-module (gnu home services shepherd)
+  #:use-module (gnu home services sound)
 
   #:use-module (gnu services)
   #:use-module (gnu services configuration)
+  #:use-module (gnu services xorg)
 
   #:use-module (gnu packages base)
   #:use-module (gnu packages bash)
+  #:use-module (gnu packages compton)
   #:use-module (gnu packages emacs)
   #:use-module (gnu packages gawk)
+  #:use-module ((gnu packages gl) #:prefix gl:)
+  #:use-module (gnu packages glib)
   #:use-module (gnu packages linux)
+  #:use-module (gnu packages pulseaudio)
   #:use-module (gnu packages vim)
   #:use-module ((gnu packages xorg) #:prefix xorg:)
+  #:use-module ((gnu packages xdisorg) #:prefix xdisorg:)
 
   #:use-module (clipmenud)
   #:use-module (dmenu)
@@ -28,6 +37,7 @@
   #:use-module (emacs)
   #:use-module (xmonad)
 
+  #:use-module ((config) #:prefix config:)
   #:use-module ((channels) #:prefix channels:)
   #:use-module ((env) #:prefix env:))
 
@@ -65,24 +75,63 @@
 (define-public aliases.fish
   (local-file "../fish/aliases.fish"))
 
-(define-public xsession
-  (program-file "xsession"
-    #~(begin
-       (system* #$(file-append xorg:xsetroot "/bin/xsetroot")
-		"-cursor_name" "left_ptr")
-       (execl #$(file-append my-xmonad "/bin/my-xmonad")))))
+(define cst-trackball
+  "Section \"InputClass\"
+    Identifier \"CST Trackball\"
+    MatchProduct \"CST CST USB UNITRAC\"
+    Driver \"libinput\"
+    Option \"AccelSpeed\" \"1\"
+EndSection\n")
 
-(define-public startx.fish
-  (mixed-text-file "startx.fish" "\
-if test (tty) = /dev/tty1 && status is-login
-    xinit " xsession " -- /run/setuid-programs/startx vt1
-    loginctl terminate-session (loginctl list-sessions | awk '/tty1/ { print $1 }')
-end
-"))
+(define xorg-conf
+  (xorg-configuration
+   (keyboard-layout config:ctrl-nocaps)
+   (extra-config `(,cst-trackball))
+   (server-arguments
+    `("-keeptty" ,@%default-xorg-server-arguments))))
+
+(define-public xsession
+  (program-file
+   "xsession"
+   #~(begin
+       (system* #$(file-append xorg:xsetroot "/bin/xsetroot")
+                "-cursor_name" "left_ptr")
+
+       (spawn #$(file-append xdisorg:clipmenu "/bin/clipmenud")
+              '(#$(file-append xdisorg:clipmenu "/bin/clipmenud")))
+
+       (execl #$(file-append my-xmonad "/bin/my-xmonad")
+              #$(file-append my-xmonad "/bin/my-xmonad")))))
+
+(define-public startx
+  (program-file
+   "startx"
+   #~(begin
+       (setenv
+        "XORG_DRI_DRIVER_PATH" (string-append #$(identity gl:mesa) "/lib/dri"))
+       (setenv
+        "XKB_BINDIR" (string-append #$(identity xorg:xkbcomp) "/bin"))
+
+       (apply
+        execl
+        (string-append #$(identity xorg:xorg-server) "/bin/X")
+        (string-append #$(identity xorg:xorg-server) "/bin/X")
+        "-config" #$(xorg-configuration->file xorg-conf)
+        "-configdir" #$(xorg-configuration-directory
+                        (xorg-configuration-modules xorg-conf))
+        "-logverbose" "-verbose" "-terminate"
+        (append '#$(xorg-configuration-server-arguments xorg-conf)
+                (cdr (command-line)))))))
+
+(define-public startx.scm
+  #~(when (string= "/dev/tty1" (readlink (readlink "/dev/stdin")))
+      (execl #$(file-append xorg:xinit "/bin/xinit")
+             #$(file-append xorg:xinit "/bin/xinit")
+             #$xsession "--" #$startx "vt1")))
 
 (define fish-config
   (home-fish-extension
-   (config `(,config.fish ,aliases.fish ,fish_prompt.fish ,keybindings.fish ,startx.fish))
+   (config `(,config.fish ,aliases.fish ,fish_prompt.fish ,keybindings.fish))
    (aliases `(("vim" . "nvim")))
    (abbreviations
     `(("gst" . "git status")
@@ -95,6 +144,11 @@ end
       ("tma" . "tmux attach -t")
       ("tml" . "tmux list-sessions")
       ("tmux" . "tmux new-session -A -s (basename (pwd) | tr '.' '-') -n emacs")))))
+
+;; Sound
+(define pipewire-config
+  (home-pipewire-configuration
+   (enable-pulseaudio? #t)))
 
 ;; Base Env
 ;; Provides what would normally be in a guix operating-system,
@@ -113,9 +167,13 @@ end
   (home-environment
    (packages env:default)
    (services
-    `(;; Shepherd
+    `(;; Sound
+      ,(service home-pipewire-service-type pipewire-config)
       ;; Desktop
       ,(service home-dbus-service-type)
+      ;; X
+      ,(simple-service 'startx home-run-on-first-login-service-type startx.scm)
+      ,(service home-x11-service-type)
       ;; Shepherd
       ,(service home-emacs-service-type emacs-service)
       ,(service home-dunst-service-type)
