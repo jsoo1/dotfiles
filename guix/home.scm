@@ -42,10 +42,11 @@
   #:use-module ((env) #:prefix env:))
 
 ;; Emacs
+(define emacs-socket-name "term")
 (define emacs-service
   (home-emacs-configuration
    (package emacs-next)
-   (socket-name "term")))
+   (socket-name emacs-socket-name)))
 
 ;; Env Vars
 (define-public chromium-flags
@@ -54,8 +55,11 @@
 --force-dark-mode
 "))
 
+(define-public editor
+  (string-append "emacsclient -t --socket-name=" emacs-socket-name))
+
 (define-public env-vars
-  `(("EDITOR" . "emacsclient -t --socket-name=term")
+  `(("EDITOR" . ,editor)
     ("ALTERNATE_EDITOR" . "nvim")
     ("PATH" . "${HOME}/.local/bin${PATH:+:$PATH}")
     ("CHROMIUM_FLAGS" . ,chromium-flags)
