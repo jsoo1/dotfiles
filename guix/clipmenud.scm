@@ -24,7 +24,7 @@
         (respawn? #f)
         (start #~(make-forkexec-constructor
                   '(#$(file-append package "/bin/clipmenud"))
-                  #:log-file (string-append %user-log-dir "clipmenud.log")))
+                  #:log-file (string-append %user-log-dir "/clipmenud.log")))
         (stop #~(make-kill-destructor))))))
 
 (define-public home-clipmenud-service-type
