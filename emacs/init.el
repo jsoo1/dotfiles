@@ -85,7 +85,11 @@
                   "/run/current-system/profile/bin"
                   "/run/current-system/profile/sbin"
                   "~/dotfiles/emacs/"))
-(load-file (expand-file-name "local.el" user-emacs-directory))
+
+(when-let*
+    ((local-el (expand-file-name "local.el" user-emacs-directory))
+     (file-exists-p local-el)
+     (load-file local-el)))
 
 ;; Tramp
 (with-eval-after-load 'tramp
