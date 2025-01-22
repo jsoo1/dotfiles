@@ -139,8 +139,6 @@
 
 (define-public fonts
   (list
-   mkfontdir
-   mkfontscale
    font-dejavu
    font-google-noto
    font-google-noto-sans-cjk
