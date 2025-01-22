@@ -1379,14 +1379,16 @@ when send commands with redis protocol."
             (flycheck-mode -1)))
 
 ;; Go
-(evil-define-key 'normal go-mode-map (kbd ",") 'my-eglot-mode-map)
-(add-hook 'go-mode-hook #'eglot-ensure)
-(add-hook 'go-mode-hook #'eldoc-mode)
-(add-hook 'go-mode-hook #'eldoc-mode #'company-mode)
-(add-hook 'go-mode-hook
+(evil-define-key 'normal go-ts-mode-map (kbd ",") 'my-eglot-mode-map)
+(add-hook 'go-ts-mode-hook #'eglot-ensure)
+(add-hook 'go-ts-mode-hook #'eldoc-mode)
+(add-hook 'go-ts-mode-hook #'eldoc-mode #'company-mode)
+(add-hook 'go-ts-mode-hook
           (defun disable-go-flycheck ()
             (flycheck-mode -1)))
-(setf (alist-get 'go-mode eglot-server-programs) '("gopls"))
+(setf (alist-get 'go-ts-mode eglot-server-programs) '("gopls"))
+(add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
+(add-to-list 'auto-mode-alist '("\\go.mod\\'" . go-mod-ts-mode))
 
 ;; C++
 (evil-define-key 'normal c++-mode-map (kbd ",") 'my-eglot-mode-map)
