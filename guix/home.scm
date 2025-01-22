@@ -180,8 +180,8 @@ EndSection\n")
       ,(service home-x11-service-type)
       ;; Shepherd
       ,(service home-emacs-service-type emacs-service)
-      ,(service home-dunst-service-type)
-      ,(service home-clipmenud-service-type)
+      ; ,(service home-dunst-service-type)
+      ; ,(service home-clipmenud-service-type)
       ,(service home-shepherd-service-type)
       ;; Shell
       ,(simple-service 'fish-extra-init
