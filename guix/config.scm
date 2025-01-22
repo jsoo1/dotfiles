@@ -53,43 +53,8 @@
     '("wheel" "netdev" "audio" "video" "lp" "kvm"))
    (shell (file-append shells:fish "/bin/fish"))))
 
-(define cst-trackball
-  "Section \"InputClass\"
-    Identifier \"CST Trackball\"
-    MatchProduct \"CST CST USB UNITRAC\"
-    Driver \"libinput\"
-    Option \"AccelSpeed\" \"1\"
-EndSection\n")
-
-(define ctrl-nocaps (keyboard-layout "us" #:options '("ctrl:nocaps")))
-
-(define xorg-conf
-  (xorg-configuration
-   (keyboard-layout ctrl-nocaps)
-   (extra-config `(,cst-trackball))
-   (server-arguments
-    `("-keeptty" ,@%default-xorg-server-arguments))))
-
-(define startx
-  (program-file
-   "startx"
-   #~(begin
-       (setenv
-        "XORG_DRI_DRIVER_PATH" (string-append #$mesa "/lib/dri"))
-       (setenv
-        "XKB_BINDIR" (string-append #$xkbcomp "/bin"))
-
-       ;; X doesn't accept absolute paths when run with suid
-       (apply
-        execl
-        (string-append #$xorg-server "/bin/X")
-        (string-append #$xorg-server "/bin/X")
-        "-config" #$(xorg-configuration->file xorg-conf)
-        "-configdir" #$(xorg-configuration-directory
-                        (xorg-configuration-modules xorg-conf))
-        "-logverbose" "-verbose" "-terminate"
-        (append '#$(xorg-configuration-server-arguments xorg-conf)
-                (cdr (command-line)))))))
+(define-public ctrl-nocaps
+  (keyboard-layout "us" #:options '("ctrl:nocaps")))
 
 (define terminus-psf-font
   (file-append
@@ -207,23 +172,6 @@ EndSection\n")
        ;; backlight config
        ,linux:light
        ,@%base-packages))
-    (setuid-programs
-     `(;; Stuff for xorg without display manager.
-       ;; startx and X need to be in setuid-programs.
-       ;; They also need extra tweaks in the chown-file service below.
-       ,(setuid:setuid-program
-         (program (file-append xorg-server "/bin/X"))
-         (user username)
-         (group "input")
-         (setuid? #f)
-         (setgid? #t))
-       ,(setuid:setuid-program
-         (program startx)
-         (user username)
-         (group "input")
-         (setuid? #f)
-         (setgid? #t))
-       ,@%setuid-programs))
     (services my-services)
     ;; Allow resolution of '.local' host names with mDNS.
     (name-service-switch %mdns-host-lookup-nss)))

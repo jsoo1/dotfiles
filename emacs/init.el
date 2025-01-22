@@ -77,25 +77,11 @@
 (setq gc-cons-threshold (* 2 1000 1000 10))
 
 ;; Paths
-;; FIXME: This can probably go to /dev/null
-(defun package-manager-user-profile ()
-  "Setup env for nix/guix."
-  (let* ((guix-profile (getenv "GUIX_PROFILE"))
-         (nix-profile (getenv "NIX_PROFILE"))
-         (nix-profiles* (getenv "NIX_PROFILES"))
-         (nix-profiles (when nix-profiles*
-                         (split-string nix-profiles* "\\s-+"))))
-    (or guix-profile
-        nix-profile
-        (seq-find (lambda (p)
-                    (string-match-p (rx bol (eval (getenv "HOME"))) p))
-                  nix-profiles)))) ;
-
 (setq exec-path '("~/.local/.bin"
-                  "/run/setuid-programs"
+                  "~/.guix-home/profile/bin"
+                  "~/.guix-home/profile/sbin"
+                  "/run/privileged/bin"
                   "~/.config/guix/current/bin"
-                  "~/.guix-profile/bin"
-                  "~/.guix-profile/sbin"
                   "/run/current-system/profile/bin"
                   "/run/current-system/profile/sbin"
                   "~/dotfiles/emacs/"))
@@ -895,10 +881,6 @@ _]_: toggle use of default sink  _n_: control select sink by name
 (require 'idris-mode)
 (require 'inferior-idris)
 (require 'idris-ipkg-mode)
-(when (package-manager-user-profile)
-  (setq idris-interpreter-path
-        (expand-file-name "bin/idris" (package-manager-user-profile))))
-
 
 (dolist (f `((idris-active-term-face        ,my-base00)
              (idris-semantic-type-face      ,my-yellow)
@@ -1094,8 +1076,8 @@ _]_: toggle use of default sink  _n_: control select sink by name
   "C-c C-c" #'merlin-error-next)
 
 ;; TODO: Remove when these are properly packaged in guix
-(load-file "~/.guix-profile/share/emacs/site-lisp/dune.el")
-(load-file "~/.guix-profile/share/emacs/site-lisp/dune-flymake.el")
+(load-file "~/.guix-home/profile/share/emacs/site-lisp/dune.el")
+(load-file "~/.guix-home/profile/share/emacs/site-lisp/dune-flymake.el")
 
 ;; Purescript
 (add-to-list 'load-path "~/.emacs.d/private/purescript-mode")
