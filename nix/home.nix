@@ -117,10 +117,22 @@ in
 
   services.gpg-agent.enable = isLinux;
 
+  systemd.user.sockets.emacs = {
+    Unit.Description = "Emacs socket";
+    Socket = {
+      DirectoryMode = "0700";
+      ListenStream = "%t/emacs/${config.home.username}";
+      SocketMode = "0600";
+    };
+    Install.WantedBy = [ "sockets.target" ];
+  };
+
   systemd.user.services.emacs = {
-    Unit.Description = "Emacs Daemon";
-    Unit.Documentation = "man:emacs(1)";
-    Install.WantedBy = [ "default.target" ];
+    Unit = {
+      Description = "Emacs Daemon";
+      Documentation = "man:emacs(1)";
+      Requires = [ "emacs.socket" ];
+    };
     Service = {
       Environment = ''SSH_AUTH_SOCK="${config.ssh-auth-sock}"'';
       ExecStart = "${pkgs.my-emacs}/bin/emacs --fg-daemon=${config.home.username}";
