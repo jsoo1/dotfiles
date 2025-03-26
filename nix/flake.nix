@@ -60,7 +60,8 @@
       ]
       ++ import ./overlays/my-emacs.nix
       ++ import ./overlays/restream.nix
-      ++ import ./overlays/default-shell.nix;
+      ++ import ./overlays/default-shell.nix
+      ++ import ./overlays/groovy-language-server.nix;
       all-systems = toSpecific [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ] (system: {
         packages.${system} = import nixpkgs { inherit system; overlays = [ overlays.default ]; };
       });
