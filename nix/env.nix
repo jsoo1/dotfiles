@@ -36,26 +36,33 @@ in
     terraform-utilities = lib.mkOption {
       type = lib.types.listOf lib.types.package;
     };
+
+    experimental-utilities = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
+    };
   };
 
-  config = {
-    c-utilities = with pkgs; [
-      binutils
-      ccls
-      man-pages
-      man-pages-posix
-    ] ++ lib.optionals isLinux [
-      gdb
-      rr
-    ];
+  config = with pkgs; {
+    c-utilities = lib.mkDefault (
+      [
+        binutils
+        ccls
+        man-pages
+        man-pages-posix
+      ]
+      ++ lib.optionals isLinux [
+        gdb
+        rr
+      ]
+    );
 
-    haskell-utilities = with pkgs; [
+    haskell-utilities = lib.mkDefault [
       haskellPackages.fourmolu
-      ghcid
+      ghciwatch
       haskell-language-server
     ];
 
-    macos-quirks = with pkgs; [
+    macos-quirks = lib.mkDefault [
       bashInteractive
       gnutar
       less
@@ -68,7 +75,7 @@ in
       dogdns
     ];
 
-    nix-utilities = with pkgs; [
+    nix-utilities = lib.mkDefault [
       deadnix
       nixd
       nixfmt-rfc-style
@@ -79,22 +86,24 @@ in
       nix-tree
     ];
 
-    remarkable-utilities = with pkgs; [ restream ];
+    remarkable-utilities = lib.mkDefault [ restream ];
 
-    socket-utilities = with pkgs; [
+    socket-utilities = [
       libressl.nc
       libressl
       socat
       wireshark-cli
     ];
 
-    shell-utilities = with pkgs;
+    shell-utilities = lib.mkDefault (
       lib.optionals isLinux [
         iftop
         linuxPackages.perf
-      ] ++ lib.optionals isDarwin [
+      ]
+      ++ lib.optionals isDarwin [
         bash-completion
-      ] ++ [
+      ]
+      ++ [
         bottom
         coreutils
         dogdns
@@ -119,13 +128,17 @@ in
         pv
         rage
         ripgrep
+        sha2wordlist
         shellcheck
         shfmt
         tealdeer
         unar
         watch
-      ];
+      ]
+    );
 
-    terraform-utilities = with pkgs; [ terraform-ls ];
+    terraform-utilities = lib.mkDefault [ terraform-ls ];
+
+    experimental-utilities = lib.mkDefault [ groovy-language-server ];
   };
 }

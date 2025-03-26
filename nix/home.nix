@@ -49,6 +49,7 @@ in
       config.nix-utilities
       config.socket-utilities
       config.terraform-utilities
+      config.experimental-utilities
     ] ++ lib.optionals isLinux (lib.concatLists [
       config.shell-utilities
       [ pkgs.iosevka pkgs.procps ]

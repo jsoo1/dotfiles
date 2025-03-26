@@ -6,7 +6,7 @@ let
       mitm-cache,
       gradle,
       makeWrapper,
-      jre,
+      jre8,
     }:
 
     stdenv.mkDerivation {
@@ -45,9 +45,11 @@ let
         cp build/libs/*-all.jar \
           $out/share/java/groovy-language-server-all.jar
 
-        makeWrapper ${jre}/bin/java $out/bin/groovyls \
+        makeWrapper ${jre8}/bin/java $out/bin/groovyls \
           --add-flags "-jar $out/share/java/groovy-language-server-all.jar"
       '';
+
+      meta.mainProgram = "groovyls";
     };
 in
 
