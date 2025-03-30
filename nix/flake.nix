@@ -53,6 +53,7 @@
         (_: _:
           { emacs-xclip-soclip-support = soclip.patches.emacs-xclip-support; }
         )
+        (_: _: { inherit self; })
       ]
       ++ import ./overlays/my-emacs.nix
       ++ import ./overlays/restream.nix
