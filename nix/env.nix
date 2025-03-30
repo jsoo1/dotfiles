@@ -73,6 +73,7 @@ in
       rage
       rsync
       dogdns
+      self.packages.x86_64-linux.systemd.man
     ];
 
     nix-utilities = lib.mkDefault [
