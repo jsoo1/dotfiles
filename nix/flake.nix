@@ -9,10 +9,6 @@
       flake = false;
       url = "git+https://git.sr.ht/~jsoo/dotfiles?ref=release";
     };
-    flake-compat = {
-      flake = false;
-      url = "github:edolstra/flake-compat";
-    };
     nixpkgs.url = "github:jsoo1/nixpkgs/release-2025-01-11";
     home-manager = {
       url = "github:nix-community/home-manager";
