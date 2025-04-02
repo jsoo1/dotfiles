@@ -1,4 +1,10 @@
-{ pkgs, dotfiles, soclip, config, lib, ... }:
+{
+  pkgs,
+  soclip,
+  config,
+  lib,
+  ...
+}:
 let
   inherit (pkgs.stdenv.hostPlatform) isLinux isDarwin;
 
@@ -59,14 +65,14 @@ in
     ]);
 
     file = {
-      ".ghci".source = "${dotfiles}/ghci/.ghci";
-      ".haskeline".source = "${dotfiles}/ghci/.haskeline";
-      ".psqlrc".source = "${dotfiles}/psql/.psqlrc";
-      ".vimrc".source = "${dotfiles}/minimal/.vimrc";
-      ".emacs.d/eshell/alias".source = "${dotfiles}/emacs/eshell/alias";
+      ".ghci".source = "${../ghci/.ghci}";
+      ".haskeline".source = "${../ghci/.haskeline}";
+      ".psqlrc".source = "${../psql/.psqlrc}";
+      ".vimrc".source = "${../minimal/.vimrc}";
+      ".emacs.d/eshell/alias".source = "${../emacs/eshell/alias}";
       ".emacs.d/feeds" = lib.mkIf isDarwin {
         recursive = true;
-        source = "${dotfiles}/rss";
+        source = "${../rss}";
       };
     };
 
@@ -78,16 +84,16 @@ in
   xdg.enable = true;
 
   xdg.configFile = {
-    "nvim/init.vim".source = "${dotfiles}/minimal/.vimrc";
+    "nvim/init.vim".source = "${../minimal/.vimrc}";
     "tmux/tmux.conf".source = pkgs.runCommand "tmux.conf" { } ''
       cat <<EOF > $out
-      $(cat "${dotfiles}/nix/.tmux.conf")
+      $(cat "${../nix/.tmux.conf}")
 
       # clipboard for remotes
       set -s copy-command '${if isDarwin then "pbcopy" else "socopy"}'
       EOF
     '';
-    "procps/toprc".source = "${dotfiles}/top/toprc";
+    "procps/toprc".source = "${../top/toprc}";
   };
 
   programs = {

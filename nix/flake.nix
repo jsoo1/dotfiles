@@ -5,10 +5,6 @@
       url = "github:jsoo1/emacs-overlay/2025-01-11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    dotfiles = {
-      flake = false;
-      url = "git+https://git.sr.ht/~jsoo/dotfiles?ref=release";
-    };
     nixpkgs.url = "github:jsoo1/nixpkgs/release-2025-01-11";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -30,7 +26,6 @@
   };
   outputs =
     { deadnix
-    , dotfiles
     , emacs
     , nil
     , nixpkgs
@@ -94,7 +89,7 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.users."johh.soo" = import ./home.nix;
-            home-manager.extraSpecialArgs = { inherit dotfiles soclip; };
+            home-manager.extraSpecialArgs = { inherit soclip; };
           }
           ./darwin.nix
         ];
@@ -106,7 +101,7 @@
           ./home.nix
           { home = { username = "john"; homeDirectory = "/home/john"; }; }
         ];
-        extraSpecialArgs = { inherit dotfiles soclip; };
+        extraSpecialArgs = { inherit soclip; };
       };
 
       nixosConfigurations.vm = packages.aarch64-linux.nixos {
@@ -155,7 +150,7 @@
             home-manager.verbose = true;
             home-manager.useGlobalPkgs = true;
             home-manager.users.john = ./home.nix;
-            home-manager.extraSpecialArgs = { inherit dotfiles soclip; };
+            home-manager.extraSpecialArgs = { inherit soclip; };
           }
         ];
       };
