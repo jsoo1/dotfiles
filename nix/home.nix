@@ -125,7 +125,11 @@ in
     jujutsu.enable = true;
     jujutsu.settings = jjconfig;
     soclip.enable = true;
-    skim.defaultOptions = [ "-m" "--color=bw" "--layout=reverse" ];
+    skim.defaultOptions = [
+      "-m"
+      "--color=bw"
+      "--layout=reverse"
+    ];
     skim.enable = true;
     tmux.enable = true;
     tmux.package = pkgs.tmux;
