@@ -744,7 +744,6 @@ Take newline delimited `STRING' and return list of all
 ;; Line numbers
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (setq-default display-line-numbers-type nil)
-(global-hl-line-mode +1)
 (defun toggle-global-hl-line ()
   "Toggle function `global-hl-line-mode'."
   (interactive)
