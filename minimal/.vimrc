@@ -21,7 +21,6 @@ set hlsearch
 set incsearch
 set backupdir=~/.local/share/vim/backup
 set splitright
-set splitbottom
 call system(['mkdir', '-p', expand('~/.local/share/vim/backup')])
 
 if executable('rg')
