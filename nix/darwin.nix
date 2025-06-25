@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
   nix-conf = {
@@ -59,7 +64,6 @@ in
   };
 
   services.nix-daemon = {
-    enable = true;
     enableSocketListener = true;
   };
 
@@ -70,11 +74,26 @@ in
   nix = {
     distributedBuilds = true;
     settings = {
-      trusted-users = [ "root" "@admin" "johh.soo" ];
-      experimental-features = [ "nix-command" "flakes" "recursive-nix" ];
-      system-features = [ "benchmark" "big-parallel" "local" "nixos-test" ];
+      trusted-users = [
+        "root"
+        "@admin"
+        "johh.soo"
+      ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+        "recursive-nix"
+      ];
+      system-features = [
+        "apple-virt"
+        "benchmark"
+        "big-parallel"
+        "local"
+        "nixos-test"
+      ];
       fallback = true;
       allow-unsafe-native-code-during-evaluation = true;
+      builders-use-substitutes = lib.mkForce false;
     };
     extraOptions = ''
       include ${nix-conf.path}
@@ -82,22 +101,33 @@ in
     linux-builder = {
       enable = true;
       ephemeral = true;
-      supportedFeatures = [ "kvm" "benchmark" "big-parallel" ];
+      supportedFeatures = [
+        "kvm"
+        "benchmark"
+        "big-parallel"
+      ];
       maxJobs = 4;
-      config = ({ pkgs, ... }: {
-        environment.defaultPackages = [ pkgs.neovim ];
-        users.users.root.openssh.authorizedKeys.keys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILK6/O2/x73878Nz0Jy4nhL8A4lJqH+G43oOZI2yejB4 cardno:18_556_863"
-        ];
-        virtualisation = {
-          cores = 4;
-          darwin-builder = {
-            min-free = 0;
-            diskSize = 128 * 1024;
-            memorySize = 6 * 1024;
+      config = (
+        { pkgs, ... }:
+        {
+          environment.defaultPackages = [ pkgs.neovim ];
+          users.users.root.openssh.authorizedKeys.keys = [
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILK6/O2/x73878Nz0Jy4nhL8A4lJqH+G43oOZI2yejB4 cardno:18_556_863"
+          ];
+          nix.settings = {
+            substituters = lib.mkForce [ ];
+            extra-experimental-features = [ "nix-command" ];
           };
-        };
-      });
+          virtualisation = {
+            cores = 4;
+            darwin-builder = {
+              min-free = 0;
+              diskSize = 128 * 1024;
+              memorySize = 6 * 1024;
+            };
+          };
+        }
+      );
     };
   };
 
@@ -109,11 +139,13 @@ in
   fonts.packages = [ pkgs.iosevka ];
 
   programs.bash.enable = true;
-  programs.bash.enableCompletion = true; # breaks with osh
+  programs.bash.completion.enable = true; # breaks with osh
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
+
+  system.primaryUser = "johh.soo";
 
   users.users."johh.soo" = {
     name = "johh.soo";

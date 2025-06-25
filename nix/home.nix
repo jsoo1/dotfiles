@@ -48,21 +48,32 @@ in
     extraOutputsToInstall = [ "doc" ];
 
     stateVersion = "22.05";
+    enableNixpkgsReleaseCheck = false;
 
-    packages = lib.concatLists [
-      config.haskell-utilities
-      config.c-utilities
-      config.nix-utilities
-      config.socket-utilities
-      config.terraform-utilities
-      config.experimental-utilities
-    ] ++ lib.optionals isLinux (lib.concatLists [
-      config.shell-utilities
-      [ pkgs.iosevka pkgs.procps ]
-    ]) ++ lib.optionals isDarwin (lib.concatLists [
-      config.macos-quirks
-      config.remarkable-utilities
-    ]);
+    packages =
+      lib.concatLists [
+        config.haskell-utilities
+        config.c-utilities
+        config.nix-utilities
+        config.socket-utilities
+        config.terraform-utilities
+        config.experimental-utilities
+      ]
+      ++ lib.optionals isLinux (
+        lib.concatLists [
+          config.shell-utilities
+          [
+            pkgs.iosevka
+            pkgs.procps
+          ]
+        ]
+      )
+      ++ lib.optionals isDarwin (
+        lib.concatLists [
+          config.macos-quirks
+          config.remarkable-utilities
+        ]
+      );
 
     file = {
       ".ghci".source = "${../ghci/.ghci}";

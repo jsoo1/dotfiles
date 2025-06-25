@@ -2,16 +2,16 @@
   description = "A home-manager/nix-darwin configuration";
   inputs = {
     emacs = {
-      url = "github:jsoo1/emacs-overlay/2025-01-11";
+      url = "github:jsoo1/emacs-overlay/2025-06-25";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs.url = "github:jsoo1/nixpkgs/release-2025-01-11";
+    nixpkgs.url = "github:jsoo1/nixpkgs/release-2025-06-25";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
-      url = "github:jsoo1/nix-darwin/jsoo1/2024-08-23";
+      url = "github:jsoo1/nix-darwin/jsoo1/2025-06-25";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     deadnix = {
@@ -25,37 +25,39 @@
     soclip.url = "git+https://git.sr.ht/~jsoo/soclip?ref=release";
   };
   outputs =
-    { deadnix
-    , emacs
-    , nil
-    , nixpkgs
-    , home-manager
-    , darwin
-    , soclip
-    , ...
+    {
+      deadnix,
+      emacs,
+      nil,
+      nixpkgs,
+      home-manager,
+      darwin,
+      soclip,
+      self,
     }:
     let
       inherit (nixpkgs) lib;
       toSpecific = systems: f: lib.foldAttrs lib.mergeAttrs { } (lib.map f systems);
-      overlays.default = pkgsFinal: pkgsPrev:
-        pkgsPrev.lib.composeManyExtensions overlays' pkgsFinal pkgsPrev;
-      overlays' = [
-        deadnix.overlays.default
-        emacs.overlay
-        soclip.overlays.default
-        nil.overlays.nil
-      ] ++ [
-        (_: _:
-          { emacs-xclip-soclip-support = soclip.patches.emacs-xclip-support; }
-        )
-        (_: _: { inherit self; })
-      ]
-      ++ import ./overlays/my-emacs.nix
-      ++ import ./overlays/restream.nix
-      ++ import ./overlays/default-shell.nix
-      ++ import ./overlays/groovy-language-server.nix;
+      overlays.default =
+        pkgsFinal: pkgsPrev: pkgsPrev.lib.composeManyExtensions overlays' pkgsFinal pkgsPrev;
+      overlays' =
+        [
+          deadnix.overlays.default
+          emacs.overlay
+          soclip.overlays.default
+          nil.overlays.nil
+          (_: _: { emacs-xclip-soclip-support = soclip.patches.emacs-xclip-support; })
+          (_: _: { inherit self; })
+        ]
+        ++ import ./overlays/my-emacs.nix
+        ++ import ./overlays/restream.nix
+        ++ import ./overlays/default-shell.nix
+        ++ import ./overlays/groovy-language-server.nix;
       all-systems = toSpecific [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ] (system: {
-        packages.${system} = import nixpkgs { inherit system; overlays = [ overlays.default ]; };
+        packages.${system} = import nixpkgs {
+          inherit system;
+          overlays = [ overlays.default ];
+        };
       });
     in
     rec {
@@ -81,6 +83,7 @@
 
       darwinConfigurations.johhsD759KPm = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
+        enableNixpkgsReleaseCheck = false;
         modules = [
           {
             nixpkgs.pkgs = packages.aarch64-darwin;
@@ -99,7 +102,12 @@
         pkgs = packages.x86_64-linux;
         modules = [
           ./home.nix
-          { home = { username = "john"; homeDirectory = "/home/john"; }; }
+          {
+            home = {
+              username = "john";
+              homeDirectory = "/home/john";
+            };
+          }
         ];
         extraSpecialArgs = { inherit soclip; };
       };
@@ -107,43 +115,50 @@
       nixosConfigurations.vm = packages.aarch64-linux.nixos {
         imports = [
           "${nixpkgs}/nixos/modules/virtualisation/qemu-vm.nix"
-          ({ lib, config, ... }: {
-            nixpkgs.pkgs = packages.aarch64-linux;
-            networking.hostName = "nixos-testing";
+          (
+            { lib, config, ... }:
+            {
+              nixpkgs.pkgs = packages.aarch64-linux;
+              networking.hostName = "nixos-testing";
 
-            networking.nameservers = [ "8.8.8.8" ];
+              networking.nameservers = [ "8.8.8.8" ];
 
-            system.stateVersion = "24.05";
+              system.stateVersion = "24.05";
 
-            services.openssh.listenAddresses = [{
-              port = 22;
-              addr = "127.0.0.1";
-            }];
+              services.openssh.listenAddresses = [
+                {
+                  port = 22;
+                  addr = "127.0.0.1";
+                }
+              ];
 
-            virtualisation = {
-              graphics = false;
-              diskSize = 24 * 1024;
-              memorySize = 4 * 1024;
-              forwardPorts = [{
-                from = "host";
-                guest.port =
-                  (lib.head config.services.openssh.listenAddresses).port;
-                host.port = 2225;
-              }];
-              mountHostNixStore = true;
-              useHostCerts = true;
-            };
-          })
-          {
-            boot.kernelPatches = [{
-              name = "bpf-config";
-              patch = null;
-              extraConfig = ''
-                LOCKDEP y
-                LOCK_STAT y
-              '';
-            }];
-          }
+              virtualisation = {
+                graphics = false;
+                cores = 8;
+                diskSize = 24 * 1024;
+                memorySize = 4 * 1024;
+                forwardPorts = [
+                  {
+                    from = "host";
+                    guest.port = (lib.head config.services.openssh.listenAddresses).port;
+                    host.port = 2225;
+                  }
+                ];
+                mountHostNixStore = true;
+                useHostCerts = true;
+              };
+            }
+          )
+          # {
+          #   boot.kernelPatches = [{
+          #     name = "bpf-config";
+          #     patch = null;
+          #     extraConfig = ''
+          #       LOCKDEP y
+          #       LOCK_STAT y
+          #     '';
+          #   }];
+          # }
           ./vbox.nix
           home-manager.nixosModules.home-manager
           {
