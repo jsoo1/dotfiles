@@ -1424,6 +1424,13 @@ when send commands with redis protocol."
 ;; Groovy
 (require 'groovy-mode)
 (add-to-list 'auto-mode-alist '("Jenkinsfile\\'" . groovy-mode))
+(setf (alist-get 'groovy-mode eglot-server-programs)
+      `("groovyls"
+        :initializationOptions
+        (:groovy
+         (:classpath ,(vconcat
+                       (directory-files-recursively "~/.groovy/grapes" "\\.jar$"))))))
+(evil-define-key 'normal groovy-mode-map (kbd ",") 'my-eglot-mode-map)
 
 ;; Shellcheck
 (add-hook 'sh-mode-hook #'flycheck-mode)
