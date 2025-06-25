@@ -14,21 +14,11 @@
       url = "github:jsoo1/nix-darwin/jsoo1/2025-06-25";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    deadnix = {
-      url = "github:astro/deadnix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nil = {
-      url = "github:oxalica/nil";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     soclip.url = "git+https://git.sr.ht/~jsoo/soclip?ref=release";
   };
   outputs =
     {
-      deadnix,
       emacs,
-      nil,
       nixpkgs,
       home-manager,
       darwin,
@@ -42,10 +32,8 @@
         pkgsFinal: pkgsPrev: pkgsPrev.lib.composeManyExtensions overlays' pkgsFinal pkgsPrev;
       overlays' =
         [
-          deadnix.overlays.default
           emacs.overlay
           soclip.overlays.default
-          nil.overlays.nil
           (_: _: { emacs-xclip-soclip-support = soclip.patches.emacs-xclip-support; })
           (_: _: { inherit self; })
         ]
