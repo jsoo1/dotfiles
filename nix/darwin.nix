@@ -71,6 +71,8 @@ in
     SoftResourceLimits.NumberOfProcesses = 1048576;
   };
 
+  ids.uids.nixbld = 383;
+
   nix = {
     distributedBuilds = true;
     settings = {
