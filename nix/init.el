@@ -1286,7 +1286,7 @@ See URL `http://pypi.python.org/pypi/ruff'."
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-mode))
 (setf
  (alist-get 'rust-mode eglot-server-programs)
- '("rust-analyzer"))
+ '("rust-analyzer" :initializationOptions (:check (:command "clippy" :extraArgs "-D clippy::all"))))
 (evil-define-key 'normal rust-mode-map (kbd ",") 'my-eglot-mode-map)
 (add-hook 'rust-mode-hook #'eglot-ensure)
 (add-hook 'rust-mode-hook #'eldoc-mode)
