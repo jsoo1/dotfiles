@@ -9,6 +9,10 @@ let
   sessionVariables = {
     EDITOR = em;
     ALTERNATE_EDITOR = "nvim";
+    B5_CONFIG = pkgs.writers.writeText "b5.conf" ''
+      [features]
+      job-attach-tool = "stream"
+    '';
   } // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
     NIX_PATH = "nixpkgs=${pkgs.path}\${SSH_AUTH_SOCK:+:ssh-auth-sock=$SSH_AUTH_SOCK}";
   };
